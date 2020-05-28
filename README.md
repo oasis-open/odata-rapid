@@ -1,5 +1,3 @@
-=== README.md ===
-
 # README
 
 ## OASIS TC Open Repository: odata-rapid
