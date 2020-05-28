@@ -57,7 +57,7 @@ repository, displays a link to a document listing contributions to the repositor
 
 This TC Open Repository, as with GitHub public repositories generally, also accepts public feedback from 
 any GitHub user.  Public feedback includes opening issues, authoring and editing comments, participating 
-in conversations, making wiki edits, creating repository stars, and making suggestions via pull requests.  
+in conversations, making wiki edits, creating repository stars, and making suggestions via pull requests. 
 Such feedback does not constitute an OASIS TC Open Repository contribution. Some details are presented 
 under "Read permissions" in the table of 
 [permission levels for a GitHub organization](https://help.github.com/articles/repository-permission-levels-for-an-organization/). 
