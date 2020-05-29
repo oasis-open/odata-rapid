@@ -18,7 +18,7 @@ document for other details.
 
 Content accepted as "contributions" to this TC Open Repository, as defined below, are distinct from 
 any [Contributions](https://www.oasis-open.org/policies-guidelines/ipr#contributions) made to the 
-associated [<tc name>](https://www.oasis-open.org/committees/<tc-name>/) itself. Participation in the 
+associated [OASIS Open Data Protocol (OData) TC](https://www.oasis-open.org/committees/odata) itself. Participation in the 
 associated Technical Committee is governed by the 
 [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process),
 [IPR Policy](https://www.oasis-open.org/policies-guidelines/ipr), 
@@ -45,7 +45,7 @@ to the TC's specifications, including any applicable
 
 Formally, "contribution" to this TC Open Repository refers to content merged into the "Code" repository 
 (repository changes represented by code 
-[commits](https://github.com/oasis-open/odata-rapid/commits/master) commits), following the 
+[commits](https://github.com/oasis-open/odata-rapid/commits/master)), following the 
 GitHub definition of [contributor](https://help.github.com/articles/github-glossary/#contributor): 
 "someone who has contributed to a project by having a pull request merged but does not have collaborator 
 [i.e. direct write] access." Anyone who signs the TC Open Repository 
