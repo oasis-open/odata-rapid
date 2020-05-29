@@ -57,6 +57,8 @@ Current Maintainers</a> of this TC Open Repository are:
 
 * George Ericson, george.ericson@dell.com, https://github.com/GEricson, Dell
 
+* Gerald Krause, gerald.krause@sap.com, https://github.com/GeraldKrause, SAP SE
+
 * Hubert Heijkers, hubert.heijkers@nl.ibm.com, https://github.com/Hubert-Heijkers, IBM
 
 * Mark Biamonte, markbiamonte@progress.net, https://github.com/markbnc, Progress Software
@@ -71,13 +73,11 @@ Current Maintainers</a> of this TC Open Repository are:
 
 * Wojtek Trocki, wtrocki@redhat.com, https://github.com/wtrocki, Red Hat
 
-* Gerald Krause, gerald.krause@sap.com, https://github.com/GeraldKrause, SAP SE
-
 ## About OASIS TC Open Repositories
 
 - [TC Open Repositories: Overview and Resources](https://www.oasis-open.org/resources/open-repositories/)
 
-- [Frequently Asked Questions]https://www.oasis-open.org/resources/open-repositories/faq)
+- [Frequently Asked Questions](https://www.oasis-open.org/resources/open-repositories/faq)
 
 - [Open Source Licenses](https://www.oasis-open.org/resources/open-repositories/licenses)
 
