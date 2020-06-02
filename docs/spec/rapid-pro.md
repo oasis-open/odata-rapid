@@ -15,7 +15,11 @@ The RAPID profile defines conventions and best practices for services that:
 
 ## Why REST?
 
-REST defines an extremely popular architectural style for designing APIs where URLs represent resources that clients interact with using simple GET, PUT, PATCH, POST and DELETE operations.
+REST defines an extremely popular architectural style for designing APIs where URLs represent resources that clients interact with using a simple set of intrinsic read, insert, update, create, and delete operations.  For internet access, these map respectively onto the familiar HTTP GET, PUT, PATCH, POST and DELETE operations.
+
+In addition the RAPID profile includes two extrinsic operations, function and action.  While often overlooked in RESTful interfaces, these operations are consistent with REST and allow allow complex operations to be included in the service while not adding extraneous resource state. They also map to HTTP POST operations.
+
+Functions do not create side effects on the resources of a RAPID service.  Actions may create side effects.  The extrinsic operations enable passing parameters and getting results that are not integral with the state of a resource.  In addition to the intrinsic operations, the extrinsic operations allow complex operations to be included in the service while keeping resource designs simple.
 
 REST has been criticized as not allowing you to specify the data you want returned, resulting either in over-fetching data or having to make multiple requests to fetch the desired data. However, there is nothing in the architecture of REST that restricts the ability to further specify what data is retrieved from a resource; REST itself just doesn't define such patterns. You don't need to abandon the benefits of REST in order to have an API that gives you fine-grained control over how you retrieve and work with resources.
 
@@ -25,15 +29,25 @@ Sweet. Who says you can't have it all?
 
 # Resource Description
 
-RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service. For more information on the RAPID resource description language, see [RAPID-PRO Resource Description](./rapid-pro-resource_description.md).
+RAPID services describe their resources through a simple and concise JSON representation.  This enables generic clients understand the resources of the service. For more information on the RAPID resource description language, see [RAPID-PRO Resource Description](./rapid-pro-resource_description.md).
+
+## Resource metadata
+
+RAPID uses properties prefixed with the "@" symbol to denote metadata about the containing element. 
+
+# Resource containment hierarchy
+
+A RAPID service has one top level container of resources (the entitycontainer).  The entitycontainer contains all other resources of the service.   Every RAPID resource is contained in exactly one container.  Entitysets and Singletons are subcontainers of the entitycontainer.  Entitysets represent a container that contains a collection of zero of more resources.  A singleton is a container of at most one resource.  A  singleton or entityset may be declared explicitely in the context of an entitycontainer, or may be declared implicity in the declaraion of a containment navigationproperty.
+
+In RAPID responses, the @context property identifies the container of the returned resource.  
 
 # RAPID Requests
 
-RAPID uses standard GET, POST, PATCH, and DELETE requests to retrieve and update resources.
+RAPID uses standard GET, PUT, PATCH, POST, and DELETE requests to retrieve and update resources.
 
 ## Retrieving a Resource
 
-RAPID services support retrieving a resource using the GET method:
+RAPID services support retrieving a resource using the GET operation:
  
 |Template| GET {resource-path}  
 | ---------- | :--------------------------------------------------- | 
@@ -50,9 +64,8 @@ RAPID services return individual resources as a json object.
 }
 ```
 
-RAPID responses are self-describing. The first line says that the response is described by the "company" singleton defined in the $metadata resource. The $metadata resource may be represented as a relative or absolute URI.
-
-RAPID uses properties prefixed with the "@" symbol to denote control information that is not part of the data.
+RAPID responses are self-describing.
+The first line says that the response is described by the "company" singleton defined in the $metadata resource. The $metadata resource may be represented as a relative or absolute URI.
 
 RAPID payloads use native JSON types for string, boolean, and double values. Dates, Times, and DateTimeOffset values are represented as ISO-8601 strings.
 
@@ -128,11 +141,11 @@ Individual members of a collection can be identified by appending the key to the
 }
 ```
 
-Here the context property specifies that the result is an individual resource within the employees collection of the company.
+Here the $entity segment in the context property specifies that the result is an individual resource within the employees entityset of the company.
 
 ## Selecting Individual Properties of Resources Within a Collection
 
-Query options are composable; the client can select a subset of properties to be returned for each instance in the collection.
+The client may use the select query option to specify a subset of properties to be returned for each instance in the collection.
  
 |Template | GET {collection-resource-path}?select={propertyName,…}
 |---------- |:---------------------------------------------------|
