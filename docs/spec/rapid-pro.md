@@ -15,11 +15,11 @@ The RAPID profile defines conventions and best practices for services that:
 
 ## Why REST?
 
-REST defines an extremely popular architectural style for designing APIs where URLs represent resources that clients interact with using a simple set of intrinsic read, insert, update, create, and delete operations.  For internet access, these map respectively onto the familiar HTTP GET, PUT, PATCH, POST and DELETE operations.
+REST defines an extremely popular architectural style for designing APIs where URLs represent resources that clients interact with using a simple set of intrinsic read, insert, update, create, and delete operations.  For internet access, these map respectively onto the familiar HTTP GET, PUT, PATCH, POST and DELETE methods.
 
-The RAPID profile includes two extrinsic operations, function and action.  While often overlooked in RESTful interfaces, these operations are consistent with REST and allow complex operations to be included in a service while not adding extraneous resource state. Like create, these extrinsic operations map to HTTP POST operations.
+The RAPID profile includes two explicit operations, function and action.  While often overlooked in RESTful interfaces, these operations are consistent with REST and allow complex operations to be included in a service while not adding extraneous resource state. Like create, these explicit operations map to HTTP POST method.
 
-Functions do not create side effects on the resources of a RAPID service.  Actions may create side effects.  The extrinsic operations enable passing parameters and getting results that are not integral with the state of a resource.  In addition to the intrinsic operations, the extrinsic operations allow complex operations to be included in the service while keeping resource designs simple.
+Functions do not create side effects on the resources of a RAPID service.  Actions may have side effects.  The explicit operations enable passing parameters and getting results that are not integral with the state of a resource.  In addition to the intrinsic operations, the explicit operations allow complex operations to be included in the service while keeping resource designs simple.
 
 REST has been unfairly criticized as not allowing return of only wanted data. Lack of this capability results in either in over-fetching data or having to make multiple requests to fetch desired data. There is nothing in the architecture of REST that prohibits specification and retrieval of a subset of available data.  REST itself just doesn't define such patterns. You don't need to abandon the benefits of REST in order to have an API that gives you fine-grained control over how you retrieve and work with resources.
 
@@ -47,7 +47,7 @@ RAPID uses standard GET, PUT, PATCH, POST, and DELETE requests to retrieve and u
 
 ## Retrieving a Resource
 
-RAPID services support retrieving a resource using the GET operation:
+RAPID services support retrieving a resource using the GET method:
  
 |Template| GET {resource-path}  
 | ---------- | :--------------------------------------------------- | 
@@ -73,7 +73,7 @@ RAPID payloads use native JSON types for string, boolean, and double values. Dat
 
 ## Selecting Individual Properties of a Resource
 
-The client can select individual properties of the resource using the select option:
+The client can select individual properties of the resource using the ```select``` query option:
  
 |Template| GET {resource-path}?select={propertyName,…}  
 | ---------- | :--------------------------------------------------- |
@@ -144,11 +144,11 @@ Individual members of a collection can be identified by appending the key to the
 }
 ```
 
-Here the $entity segment in the context property specifies that the result is an individual resource within the employees entityset of the company.
+Here the $entity segment in the context property specifies that the result is an individual resource within the employees collection of the company.
 
 ## Selecting Individual Properties of Resources Within a Collection
 
-The client may use the select query option to specify a subset of properties to be returned for each instance in the collection.
+The client may use the ```select``` query option to specify a subset of properties to be returned for each instance in the collection.
  
 |Template | GET {collection-resource-path}?select={propertyName,…}
 |---------- |:---------------------------------------------------|
