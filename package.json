@@ -1,0 +1,21 @@
+{
+    "name": "odata-rapid",
+    "version": "0.1.0",
+    "description": "## OASIS TC Open Repository: odata-rapid",
+    "main": "index.js",
+    "scripts": {
+        "lintDocs": "prettier ./docs/spec/**.md --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/oasis-open/odata-rapid.git"
+    },
+    "devDependencies": {
+        "prettier": "2.0.5"
+    },
+    "prettier": {
+        "proseWrap": "always",
+        "tabWidth": 4,
+        "printWidth": 80
+    }
+}
