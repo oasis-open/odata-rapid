@@ -1,7 +1,7 @@
 # Rest API Design (RAPID) DSL
 
 Rapid allows to design your entities using a GraphQL compatible Service Definition Language: RSDL.
-Rapid Pro SDL is an expression language for capturing datamodels, queries, and expressions in human-readable format that can be compiled into JSON and XML representations.
+RSDL is an expression language for capturing data models, queries, and expressions in human-readable format that can be compiled into JSON and XML representations.
 
 Developers can write GraphQL like schema that will be later processed by Rapid Pro engine (Cli in prototype) and transformed to JSON CSDL
 
