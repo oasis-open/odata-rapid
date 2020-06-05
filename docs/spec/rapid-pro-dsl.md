@@ -1,4 +1,8 @@
-# Rest API Design (RAPID) DSL
+---
+id: rsdl
+title: Define your models using RSDL
+sidebar_label: Define your models
+---
 
 Rapid allows to design your entities using a GraphQL compatible Service Definition Language: RSDL.
 RSDL is an expression language for capturing data models, queries, and expressions in human-readable format that can be compiled into JSON and XML representations.

@@ -205,7 +205,7 @@ The client can use top and/or skip query options to select a range of resources
 within a collection. They can use the count query option to request the count of
 all resources in the collection.
 
-| Template:   | GET {collection-resource-path}?skip={int}<br>GET {collection-resource-path}?top={int}<br>GET {collection-resource-path}?count=true                  |
+| Template:   | GET {collection-resource-path}?skip={int}GET {collection-resource-path}?top={int}GET {collection-resource-path}?count=true                  |
 | ----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Example** | GET [`http://rapid-pro.org/company/employees?skip=1&top=2&count=true`](https://jetsons.azurewebsites.net/company/employees?skip=1&top=2&count=true) |
 
@@ -392,7 +392,7 @@ semi-colons (;). The order of query options is not significant
 
 | Template    | GET {resource-path}?select={propertyName,…}&expand={navigationProperty(queryOptions),…}                                                                                                                                                     |
 | ----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|             | GET {collection-resource-path}?<br> select={propertyName,…}<br> &top={int}<br> &skip={int}<br> &count=true<br> &filter={filter-expression}<br> &orderby={propertyName [asc \| desc],…}<br> &expand={navigationProperty(queryOptions),…}     |
+|             | GET {collection-resource-path}? select={propertyName,…} &top={int} &skip={int} &count=true &filter={filter-expression} &orderby={propertyName [asc \| desc],…} &expand={navigationProperty(queryOptions),…}     |
 | **Example** | GET [`http://rapid-pro.org/company?select=name&expand=employees(select=firstName;filter=lastName eq 'Jetson')`](<https://jetsons.azurewebsites.net/company?select=name&expand=employees(select=firstName;filter=lastName%20eq%20'Jetson')>) |
 
 **Result:**
