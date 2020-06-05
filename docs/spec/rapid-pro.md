@@ -4,7 +4,7 @@ RAPID is a simple profile for building well designed APIs that can scale to the 
 
 Because the RAPID profile is based on, and compatible with, the industry standard OData protocol, services following RAPID conventions know that, as their needs grow, there are well defined conventions and semantics that allow them to seamlessly and incrementally grow without having to rewrite as their needs evolve.
 
-## What makes a RAPID service?
+## What makes a RAPID service
 
 The RAPID profile defines conventions and best practices for services that:
 
@@ -13,7 +13,7 @@ The RAPID profile defines conventions and best practices for services that:
 - Support common URL patterns and query parameters
 - Support JSON representations that follow well defined conventions
 
-## Why REST?
+## Why REST
 
 REST defines an extremely popular architectural style for designing APIs where URLs represent resources that clients interact with using a simple set of intrinsic read, insert, update, create, and delete operations.  For internet access, these map respectively onto the familiar HTTP GET, PUT, PATCH, POST and DELETE methods.
 
@@ -27,33 +27,27 @@ The RAPID profile expands REST by defining common conventions for specifying exa
 
 Sweet. Who says you can't have it all?
 
-# Resource Description
+## Resource Description
 
 RAPID services describe their resources through a simple and concise JSON representation.  This enables generic clients to understand the resources of the service. For more information on the RAPID resource description language, see [RAPID-PRO Resource Description](./rapid-pro-resource_description.md).
 
 ## Resource metadata
 
-RAPID uses properties prefixed with the "@" symbol to denote metadata about the containing element. 
+RAPID uses properties prefixed with the "@" symbol to denote metadata about the containing element.
 
-# Resource containment hierarchy
-
-A RAPID service has one top level container of resources (the entitycontainer).  The entitycontainer contains all other resources of the service.   Every RAPID resource is contained in exactly one container.  Each container may contain other containers.  Entitysets and Singletons are subcontainers of the entitycontainer.  Entitysets represent a container that contains a collection of zero of more resources.  A singleton is a container of at most one resource.  A singleton or entityset may be declared explicitly in the context of an entitycontainer, or may be declared implicitly in the declaraion of a containment navigationproperty.
-
-In RAPID responses, the @context property identifies the container of the returned resource.  
-
-# RAPID Requests
+## RAPID Requests
 
 RAPID uses standard GET, PUT, PATCH, POST, and DELETE requests to retrieve and update resources.
 
 ## Retrieving a Resource
 
 RAPID services support retrieving a resource using the GET method:
- 
-|Template| GET {resource-path}  
-| ---------- | :--------------------------------------------------- | 
-|**Example**| GET  [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company)  
+  
+|Template| GET {resource-path}
+| ---------- | :--------------------------------------------------- |
+| **Example** | GET  [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company)
 
-RAPID services return individual resources as a json object. 
+RAPID services return individual resources as a json object.
 
 ```json
 {
@@ -65,7 +59,7 @@ RAPID services return individual resources as a json object.
 ```
 
 RAPID responses are self-describing.
-The first line says that the response is described by the "company" singleton defined in the $metadata resource. 
+The first line says that the response is described by the "company" singleton defined in the $metadata resource.
 
 The $metadata resource may be represented as a relative or absolute URI.
 
@@ -74,13 +68,13 @@ RAPID payloads use native JSON types for string, boolean, and double values. Dat
 ## Selecting Individual Properties of a Resource
 
 The client can select individual properties of the resource using the ```select``` query option:
- 
+
 |Template| GET {resource-path}?select={propertyName,…}  
 | ---------- | :--------------------------------------------------- |
-| **Example**| GET  [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?select=name,stockSymbol) 
+| **Example**| GET  [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?select=name,stockSymbol)
 
   **Result:**
- 
+
 ```json
 {
     "@context": "$metadata#company(name,stockSymbol)",
@@ -93,8 +87,8 @@ The first line says that only the name and stockSymbol properties are selected t
 
 ## Retrieving a Collection of Resources
 
-RAPID services return collections of resources as a json array: 
- 
+RAPID services return collections of resources as a json array:
+
 |Template| GET {collection-resource-path}  
 | ---------- | :--------------------------------------------------- |
 |**Example**| GET  [`http://rapid-pro.org/company/employees`](https://jetsons.azurewebsites.net/company/employees)  
@@ -127,7 +121,7 @@ If the result is large, the service may include a next link to tell the client t
 ## Retrieving an Individual Member of a Collection
 
 Individual members of a collection can be identified by appending the key to the url.
- 
+
 |Template| GET {collection-resource-path}/{key}  
 |----------| :---------------------------------------------------|
 |**Example**| GET [`http://rapid-pro.org/company/employees/2`](https://jetsons.azurewebsites.net/company/employees/2)
@@ -149,10 +143,10 @@ Here the $entity segment in the context property specifies that the result is an
 ## Selecting Individual Properties of Resources Within a Collection
 
 The client may use the ```select``` query option to specify a subset of properties to be returned for each instance in the collection.
- 
+
 |Template | GET {collection-resource-path}?select={propertyName,…}
 |---------- |:---------------------------------------------------|
-|**Example**| GET  [`http://rapid-pro.org/company/employees?select=lastName`](https://jetsons.azurewebsites.net/company/employees?select=lastName) 
+|**Example**| GET  [`http://rapid-pro.org/company/employees?select=lastName`](https://jetsons.azurewebsites.net/company/employees?select=lastName)
 
   **Result:**
 
@@ -175,7 +169,7 @@ http://rapid-pro.org/company/employees?select=lastName
 ## Requesting a Range of Results
 
 The client can use top and/or skip query options to select a range of resources within a collection. They can use the count query option to request the count of all resources in the collection.
- 
+
 |Template: | GET {collection-resource-path}?skip={int}<br>GET {collection-resource-path}?top={int}<br>GET {collection-resource-path}?count=true
 |-----------| :---------------------------------------------------|
 |**Example**| GET [`http://rapid-pro.org/company/employees?skip=1&top=2&count=true`](https://jetsons.azurewebsites.net/company/employees?skip=1&top=2&count=true)  
@@ -203,7 +197,7 @@ The client can use top and/or skip query options to select a range of resources 
 }
 ```
 
-The results skip the first record and return the next two. The count property denotes the total number of resources in the collection, and is not affected by the skip or top. 
+The results skip the first record and return the next two. The count property denotes the total number of resources in the collection, and is not affected by the skip or top.
 There is no next link because all 2 of the requested resources are returned.
 
 ## Ordering Results
@@ -249,8 +243,8 @@ If "asc" or "desc" is not specified, the default ordering is ascending.
 
 ## Filtering results
 
-The client can use the filter query option to restrict the results returned from the collection. 
- 
+The client can use the filter query option to restrict the results returned from the collection.
+
 |Template| GET {collection-resource-path}?filter={filter-expression}  
 |---| :---|
 |**Example**| GET  [`http://rapid-pro.org/company/employees?filter=lastName eq 'Jetson'`](https://jetsons.azurewebsites.net/company/employees?filter=lastName%20eq%20'Jetson')  
@@ -284,7 +278,7 @@ There is a full expression language to describe what the client can express in t
 ## Including Related Resources
 
 Related resources can be retrieved as nested resources through the expand query option.
- 
+
 |Template| GET {collection-resource-path}?expand={navigationProperty,…}  
 |----------| :---------------------------------------------------|
 |**Example**| GET [`http://rapid-pro.org/company?expand=employees`](https://jetsons.azurewebsites.net/company?expand=employees)  
@@ -319,7 +313,7 @@ The context property specifies that the employees are expanded within the compan
 Because the next link refers to the nested "employees" property, the nextLink property is prefixed with the name of the nested property.
 
 When expanding related resources, you can express the same options for the related resource that you can for any other resource path.
- 
+
 |Template| GET {collection-resource-path}?expand={navigationProp(queryOptions),…}  
 |----------|---------------------------------------------------|
 |**Example**| GET [`http://rapid-pro.org/company?expand=employees(select=firstName)`](https://jetsons.azurewebsites.net/company?expand=employees(select=firstName))  
@@ -328,7 +322,7 @@ When expanding related resources, you can express the same options for the relat
 
 ```json
 {
-    "@context": 
+    "@context":
        "$metadata#company(employees(firstName))",
     "name": "Spacely's Space Sprockets",
     "incoporated": "2054-10-4",
@@ -348,7 +342,7 @@ When expanding related resources, you can express the same options for the relat
 ## Combining Query Options
 
 Query options can be combined using the ampersand (&). To comply with URL parsing rules, query options within an expand clause are separated using semi-colons (;). The order of query options is not significant
- 
+
 |Template| GET {resource-path}?select={propertyName,…}&expand={navigationProperty(queryOptions),…}  
 |----------|:---------------------------------------------------|
 | |  GET {collection-resource-path}?<br>  select={propertyName,…}<br>  &top={int}<br>  &skip={int}<br>  &count=true<br>  &filter={filter-expression}<br>  &orderby={propertyName [asc \| desc],…}<br>  &expand={navigationProperty(queryOptions),…}  
