@@ -7,7 +7,7 @@ RSDL syntax is very similar to many popular schema formats like GraphQL, bringin
 required to learn it. RSDL is compatible with GraphQL syntax which gives numerous benefits:
 
 -   All existing IDE plugins for GraphQL syntax highlighting will work with Rapid format.
--   Numerous of tools for validating schema complexity, detecting changes can be also used with RapidPro
+-   Numerous of tools for validating schema complexity, detecting changes can be also used with Rapid
 -   Developers can use various tools to generate their models directly from database definitions or even code.
 -   Simplified migration path from GraphQL to Rapid by reusing parts of the same schema.
 
@@ -16,7 +16,7 @@ required to learn it. RSDL is compatible with GraphQL syntax which gives numerou
 ## Workflow
 
 Developers who would like to represent their datamodel will need to create new
-Rapid Pro schema file. For example `MyRapidPro.graphql`.
+Rapid schema file. For example `MyRapidPro.graphql`.
 At minimim schema will require at least one EntityType.
 Entity type is being build by specifying `type` keyword and listing all it's fields names like follows:
 
