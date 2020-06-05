@@ -1,5 +1,5 @@
 module.exports = {
     docs: {
-        "Getting Started": ["getting-started"]
+        "Getting Started": ["gettingstarted", "rsdl"]
     },
 };
