@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'RAPID Profile',
+  title: 'RAPID',
   tagline: 'Fastest way to build your RESTfull API',
   url: 'https://rapid.rocks',
   baseUrl: '/',
@@ -8,7 +8,7 @@ module.exports = {
   projectName: 'odata-rapid', // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'RAPID Profile',
+      title: 'RAPID',
       logo: {
         alt: 'Logo',
         src: 'img/logo.svg',

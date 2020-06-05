@@ -14,7 +14,7 @@ const features = [
     // imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Rapid Profile was designed to provide out of the box API layer on top of your data,
+        Rapid was designed to provide out of the box API layer on top of your data,
         giving you really fast and roboust approach to build your REST based 
       </>
     ),
@@ -33,8 +33,8 @@ const features = [
     //   imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Rapid Pro is an Open Specification build by OASIS members and community.
-        Rapid Pro is strongly influenced by existing standards like OpenAPI, OData and GraphQL
+        Rapid is an Open Specification build by OASIS members and community.
+        Rapid is strongly influenced by existing standards like OpenAPI, OData and GraphQL
       </>
     ),
   },
