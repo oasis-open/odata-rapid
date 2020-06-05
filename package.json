@@ -33,7 +33,7 @@
   },
   "workspaces": [
     "reference/cli",
-    "reference/languages/nodejs/rapidjs",
+    "reference/languages/nodejs/rapidpro",
     "reference/languages/nodejs/example"
   ]
 }
