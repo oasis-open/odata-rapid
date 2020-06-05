@@ -60,6 +60,10 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} OASIS OPEN,`,
     },
   },
+  scripts: [
+    "https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js",
+    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"
+  ],
   presets: [
     [
       '@docusaurus/preset-classic',

@@ -5,7 +5,8 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
-import Rocket from '../components/rocket'
+import Rocket from '@site/static/img/rocket.svg';
+import animateRapidSpaceMan from '../components/rocket/animation'
 
 const features = [
   {
@@ -101,4 +102,7 @@ function Home() {
   );
 }
 
-export default Home;
+setTimeout(animateRapidSpaceMan, 1000)
+
+export default Home; 
+
