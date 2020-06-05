@@ -1,0 +1,10 @@
+{
+  "packages": [
+    "reference/cli",
+    "reference/languages/nodejs/rapidjs",
+    "reference/languages/nodejs/example"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "0.1.0"
+}
