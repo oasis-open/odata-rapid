@@ -14,6 +14,7 @@
     "test": "jest -w 1"
   },
   "devDependencies": {
+    "prettier": "2.0.5",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/eslint-plugin-tslint": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
