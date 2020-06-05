@@ -1,11 +1,11 @@
 /* eslint-disable */
 const baseConfig = require("../../jest.config");
-const packageName = 'rapid-profile';
+const packageName = require("./package.json").name;
 
 module.exports = {
   ...baseConfig,
   rootDir: '../..',
-  preset: 'ts-jest',
+  'preset': 'ts-jest',
   moduleFileExtensions: [
     "ts",
     "js",
@@ -31,5 +31,5 @@ module.exports = {
   projects: [`<rootDir>/packages/${packageName}/jest.config.js`],
   name: packageName,
   displayName: packageName,
-  rootDir: '../..',
+  rootDir: '../..'
 };
