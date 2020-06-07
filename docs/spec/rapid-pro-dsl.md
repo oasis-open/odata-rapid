@@ -64,7 +64,7 @@ Query can aggegate all operations that are not directly associated with the mode
 type Query {
     GetPersonWithMostFriends: Person
     GetNearestAirport(lat: Float, lon: Float): Airport
-    Me: Person
+
 }
 ```
 
