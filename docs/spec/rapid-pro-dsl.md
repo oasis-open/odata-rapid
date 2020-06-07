@@ -23,7 +23,7 @@ Entity type is being build by specifying `type` keyword and listing all it's fie
 
 
 ```graphql
-type Person {
+type Person  @RapidSet {
     UserName: String @RapidID
     FirstName: String
     LastName: String
