@@ -2,8 +2,8 @@
 
 # ---THIS WHOLE DOCUMENT IS A PLACEHOLDER---
 
-RAPID is designed to be a profile that applies a subset of the conventions defined in OData applicable to any RESTful
-API. A RAPID service can easily support generic OData V4 clients by:
+RAPID is designed to be a profile that applies a subset of the conventions defined in OData applicable to any RESTful API. 
+A RAPID service can easily support generic OData V4 clients by:
 
 -   Supporting OData calling conventions
 -   Following OData JSON conventions for OData V4 Clients
