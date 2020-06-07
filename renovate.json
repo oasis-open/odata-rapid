@@ -1,0 +1,16 @@
+{
+  "extends": ["config:base", ":pinAllExceptPeerDependencies"],
+  "groupName": "all",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**"
+  ],
+  "packageRules": [
+    {
+      "packageNames": ["graphql"],
+      "versionStrategy": "widen"
+    }
+  ]
+}
