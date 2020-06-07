@@ -1,6 +1,6 @@
 # Rapid Schema Definition Language (RSDL)
 
-RapidPro offers ability to design your services using the Rapid Service Definition Language (RSDL).
+RapidPro allows to design your services using the Rapid Service Definition Language (RSDL).
 RSDL is an expression language for capturing services, entities, operations and various expressions in human-readable format.
 
 RSDL syntax is very similar to many popular schema formats like GraphQL,
