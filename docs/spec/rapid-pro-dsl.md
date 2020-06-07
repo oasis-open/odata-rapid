@@ -1,10 +1,11 @@
 # Rapid Schema Definition Language (RSDL)
 
-RapidPro offers ability to design your services using RSDL language.
+RapidPro offers ability to design your services using the Rapid Service Definition Language (RSDL).
 RSDL is an expression language for capturing services, entities, operations and various expressions in human-readable format.
 
-RSDL syntax is very similar to many popular schema formats like GraphQL, bringing simplicity and lowering amount of time
-required to learn it. RSDL is compatible with GraphQL syntax which gives numerous benefits:
+RSDL syntax is very similar to many popular schema formats like GraphQL,
+bringing simplicity and lowering amount of time required to learn it. 
+RSDL is compatible with GraphQL syntax which gives numerous benefits:
 
 -   All existing IDE plugins for GraphQL syntax highlighting will work with Rapid format.
 -   Numerous of tools for validating schema complexity, detecting changes can be also used with Rapid
@@ -15,10 +16,11 @@ required to learn it. RSDL is compatible with GraphQL syntax which gives numerou
 
 ## Workflow
 
-Developers who would like to represent their datamodel will need to create new
-Rapid schema file. For example `MyRapidPro.graphql`.
+Developers who would like to represent their datamodel will need to create new Rapid schema file,
+for example `MyRapidPro.graphql`.
 At minimim schema will require at least one EntityType.
 Entity type is being build by specifying `type` keyword and listing all it's fields names like follows:
+
 
 ```graphql
 type Person {
