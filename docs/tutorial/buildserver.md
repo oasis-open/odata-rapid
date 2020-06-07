@@ -1,9 +1,9 @@
 ﻿---
-id: tutorial-node
+id: buildserver
 title: Rest API Design (RAPID) Profile Node.js tutorial
-sidebar_label: Getting Started
+sidebar_label: Getting Started Server
 ---
 
-
+TODO
 
  

@@ -1,9 +1,14 @@
-﻿# Rest API Design (RAPID) Profile Resource Description
+﻿---
+id: resourceformat
+title: Profile Resource Description
+---
+
+# Rest API Design (RAPID) Profile Resource Description
 
 RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service.
 By convention, this description is retrieved by requesting the "\$metadata" resource, located at the root of the service.
 
-| Example | GET [`http://rapid-pro.org/$metadata`](https://jetsons.azurewebsites.net/$metadata)<br>Accept: application/json |
+| Example | GET [`http://rapid-pro.org/$metadata`](https://jetsons.azurewebsites.net/$metadata)<br/>Accept: application/json |
 | ------- | :-------------------------------------------------------------------------------------------------------------- |
 
 

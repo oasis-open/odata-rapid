@@ -19,7 +19,13 @@ module.exports = {
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
-        }
+        },
+        {
+          to: 'docs/tutorial/buildserver',
+          label: 'Tutorial',
+          position: 'left',
+          activeBaseRegex: `docs/tutorial/(buildserver|buildclient)`,
+        },
       ],
     },
     footer: {
@@ -69,14 +75,13 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          // It is recommended to set document id as docs home page (`docs/` path).
-          homePageId: 'gettingstarted',
+          path: '../docs',
+          routeBasePath: 'docs',
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
           editUrl:
-            'https://github.com/oasis-open/odata-rapid/edit/master/website/',
+            'https://github.com/oasis-open/odata-rapid/edit/master/docs/',
+          homePageId: 'gettingstarted'
         },
-        
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },

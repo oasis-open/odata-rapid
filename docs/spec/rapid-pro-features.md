@@ -1,4 +1,9 @@
-﻿# Rest API Design (RAPID) Profile Features
+﻿---
+id: features
+title: Profile Features
+---
+
+# Rest API Design (RAPID) Profile Features
 
 Although RAPID services can be very simple,
 because they follow core patterns they can be extended by implementing optional `Features`, as appropriate,
