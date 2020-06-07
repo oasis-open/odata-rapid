@@ -1,10 +1,10 @@
 /* eslint-disable */
-const baseConfig = require("../../jest.config");
-const packageName = 'rapid-profile';
+const baseConfig = require("../jest.config");
+const packageName = require("./package.json").name;
 
 module.exports = {
   ...baseConfig,
-  rootDir: '../..',
+  rootDir: '..',
   preset: 'ts-jest',
   moduleFileExtensions: [
     "ts",
@@ -15,10 +15,10 @@ module.exports = {
     "node"
   ],
   roots: [
-    `<rootDir>/packages/${packageName}`,
+    `<rootDir>/${packageName}`,
   ],
   collectCoverageFrom: [
-    `<rootDir>/packages/${packageName}/src/**/*`,
+    `<rootDir>/${packageName}/src/**/*`,
   ],
   testRegex: '(/tests/.*)\\.(tsx?)$',
   testURL: 'http://localhost/',
@@ -26,10 +26,9 @@ module.exports = {
       'node_modules',
   ],
   modulePaths: [
-      `<rootDir>/packages/${packageName}/src/`,
+      `<rootDir>/${packageName}/src/`,
   ],
-  projects: [`<rootDir>/packages/${packageName}/jest.config.js`],
+  projects: [`<rootDir>/${packageName}/jest.config.js`],
   name: packageName,
   displayName: packageName,
-  rootDir: '../..',
 };

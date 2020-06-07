@@ -1,5 +1,3 @@
-import { transformOpenApiSpec } from '../components'
-
 type Params = { name?: string }
 
 export const command = 'transform'

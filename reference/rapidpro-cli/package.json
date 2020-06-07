@@ -1,5 +1,5 @@
 {
-    "name": "rapid-profile-cli",
+    "name": "rapidpro-cli",
     "version": "0.1.0",
     "description": "Rapid Profile Reference Implementation",
     "main": "index.js",
@@ -32,7 +32,9 @@
         "tsutils": "3.17.1",
         "typescript": "3.9.3"
     },
-    "dependencies": {},
+    "dependencies": {
+        "yargs": "^15.3.1"
+    },
     "peerDependencies": {
         "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
     }

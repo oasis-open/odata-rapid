@@ -1,8 +1,8 @@
 module.exports = {
   verbose: true,
-  projects: ["<rootDir>/packages/*/jest.config.js"],
+  projects: ["<rootDir>/*/jest.config.js"],
   collectCoverageFrom: [
-    "<rootDir>/packages/*/src/**/*.ts"
+    "<rootDir>/*/src/**/*.ts"
   ],
   moduleDirectories: ["node_modules"],
   preset: "ts-jest"
