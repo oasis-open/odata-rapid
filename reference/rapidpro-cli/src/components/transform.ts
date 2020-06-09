@@ -1,8 +1,8 @@
+import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull } from "graphql"
+import { getUserTypesFromSchema } from "@graphql-tools/utils"
 import { loadSchema } from '../utils/loadSchema'
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
-import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull } from "graphql"
 import { getFieldDirective } from '../utils/schemaTools';
-import { getUserTypesFromSchema } from "graphql-tools"
 
 const CSDLJSON_HEADER = {
     "$Version": "4.0",
@@ -26,35 +26,11 @@ const CSDLJSON_HEADER = {
 const typeTemplate = {
     "$Kind": "EntityType",
     "$Key": [
-        "ID"
     ],
 };
 
 const typeFlags = {
     "$Nullable": true
-}
-
-export const transformRSQL = (name: string) => {
-    const schemaString = loadSchema(name);
-    if (schemaString) {
-        transformToCSDLJSON(schemaString);
-    } else {
-        console.log(`Invalid file specified ${name}`)
-    }
-}
-
-export const transformToCSDLJSON = (schemaString: string) => {
-    const schemaWithDirectives = createSchemaWithSupportedDirectives(schemaString);
-    try {
-        const schema = buildSchema(schemaWithDirectives);
-        const CSDLJSON = createCSDLFromRSDL(schema);
-        console.log(CSDLJSON);
-        // TODO specify output format - file etc.
-    }
-    catch (schemaError) {
-        console.error(`Cannot process your schema: ${schemaError}`);
-        throw schemaError;
-    }
 }
 
 export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
@@ -71,16 +47,40 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
             // Relationships/Navigation detection
             newObject[field.name] = Object.assign({}, typeFlags);
             if (getFieldDirective(field, 'RapidID')) {
-                newObject["$Key"] = [field.name]
+                newObject.$Key.push(field.name)
             }
 
             if (field.type instanceof GraphQLNonNull) {
-                newObject[field.name]["$Nullable"] = false;
+                newObject[field.name].$Nullable = false;
             }
         }
         jsonDefinition.ODataDemo[name] = newObject
     }
-    return JSON.stringify(jsonDefinition, undefined, 2);
 
+    return jsonDefinition;
+}
+
+export const transformToCSDLJSON = (schemaString: string) => {
+    const schemaWithDirectives = createSchemaWithSupportedDirectives(schemaString);
+    try {
+        const schema = buildSchema(schemaWithDirectives);
+        const CSDLJSON = createCSDLFromRSDL(schema);
+        console.log(JSON.stringify(CSDLJSON, undefined, 2));
+        // TODO specify output format - file etc.
+        return CSDLJSON
+    }
+    catch (schemaError) {
+        console.error(`Cannot process your schema: ${schemaError}`);
+        throw schemaError;
+    }
+}
+
+export const transformRSQL = (name: string) => {
+    const schemaString = loadSchema(name);
+    if (schemaString) {
+        transformToCSDLJSON(schemaString);
+    } else {
+        console.log(`Invalid file specified ${name}`)
+    }
 }
 

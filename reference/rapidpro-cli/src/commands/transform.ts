@@ -1,5 +1,5 @@
-import { transformRSQL } from '../components/transform'
 import yargs from 'yargs'
+import { transformRSQL } from '../components/transform'
 
 type Params = { name?: string }
 
