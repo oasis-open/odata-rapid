@@ -1,6 +1,6 @@
 ﻿---
 id: aggregation
-title: Asynchronous Requests
+title: Aggregation Extension
 ---
 # Rest API Design (RAPID) Profile Aggregation Extension
 
