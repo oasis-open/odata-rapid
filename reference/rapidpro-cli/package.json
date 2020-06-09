@@ -4,6 +4,9 @@
     "description": "Rapid Profile Reference Implementation",
     "main": "index.js",
     "types": "types/index.d.ts",
+    "bin": {
+        "rapidpro": "dist/index.js"
+    },
     "typescript": {
         "definition": "types/index.d.ts"
     },
@@ -24,7 +27,7 @@
     "devDependencies": {
         "@types/jest": "25.2.3",
         "@types/node": "12.12.43",
-        "graphql": "14.6.0",
+        "graphql": "^14.6.0",
         "jest": "26.0.1",
         "rimraf": "3.0.2",
         "ts-jest": "25.5.1",
@@ -33,6 +36,7 @@
         "typescript": "3.9.3"
     },
     "dependencies": {
+        "graphql-tools": "^6.0.9",
         "yargs": "^15.3.1"
     },
     "peerDependencies": {

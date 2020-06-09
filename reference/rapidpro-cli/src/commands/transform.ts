@@ -1,11 +1,20 @@
+import { transformRSQL } from '../components/transform'
+import yargs from 'yargs'
+
 type Params = { name?: string }
 
-export const command = 'transform'
+export const command = 'transform <name>'
 
 export const desc = 'Transform RSDL to different format'
 
-export const builder = {}
+// tslint:disable-next-line: typedef
+export const builder = (args: yargs.Argv) => {
+     args.positional('name', {
+          describe: 'RSDL file name',
+          type: 'string',
+     })
+}
 
 export async function handler({ name }: Params) {
-     // tranformRSQL(name)
+     transformRSQL(name)
 }
