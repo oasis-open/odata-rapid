@@ -1,11 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "include": [
     "./src/**/*.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist/",
-    "noImplicitAny": false,
     "declarationDir": "types",
     "lib": [
       "esnext.asynciterable",

@@ -1,4 +1,5 @@
 
+export const rapid = {};
 
 // export * from "./RSDLHandlers"
 // export * from "./capabilities"
