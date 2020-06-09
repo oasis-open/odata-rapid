@@ -13,5 +13,6 @@ export function loadSchema(rsdl: string): string {
     if (existsSync(modelPath)) {
         return readFileSync(modelPath, 'utf8');
     }
+
     return "";
 }

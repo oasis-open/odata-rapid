@@ -11,6 +11,7 @@ export const getTypeDirective = (type: GraphQLNamedType, name: string) => {
             return directive
         }
     }
+
     return undefined;
 }
 
@@ -26,5 +27,6 @@ export const getFieldDirective = (field: GraphQLField<any, any>, name: string) =
             return directive
         }
     }
+
     return undefined;
 }
