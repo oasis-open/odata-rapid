@@ -1,8 +1,9 @@
-import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull } from "graphql"
+import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull, getNullableType, GraphQLScalarType, GraphQLList, GraphQLObjectType, GraphQLEnumType } from "graphql"
 import { getUserTypesFromSchema } from "@graphql-tools/utils"
 import { loadSchema } from '../utils/loadSchema'
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
 import { getFieldDirective } from '../utils/schemaTools';
+import { decorateSchemaWithPrimitiveScalars, mapGraphQLTypesToOData } from '../utils/scalars';
 
 
 const CSDLJSON_HEADER = {
@@ -58,6 +59,27 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
             if (field.type instanceof GraphQLNonNull) {
                 newObject[field.name].$Nullable = false;
             }
+
+            const originalType = getNullableType(field.type);
+            if (originalType instanceof GraphQLScalarType) {
+                const typeName = mapGraphQLTypesToOData(originalType.name);
+                if (typeName !== 'String') {
+                    newObject[field.name].$Type = `Edm.${typeName}`
+                }
+            }
+
+            if (originalType instanceof GraphQLList) {
+                // TODO Navigation (set)
+            }
+
+            if (originalType instanceof GraphQLObjectType) {
+                // TODO Navigation (single)
+            }
+
+            if (originalType instanceof GraphQLEnumType) {
+                // TODO Enums
+            }
+
         }
         const newSet = Object.assign({ "$Type": `RapidModels.${name}` }, containerInstanceFlags)
         const container = jsonDefinition["RapidModels"]["RapidContainer"]
@@ -69,7 +91,8 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
 }
 
 export const transformToCSDLJSON = (schemaString: string) => {
-    const schemaWithDirectives = createSchemaWithSupportedDirectives(schemaString);
+    let schemaWithDirectives = createSchemaWithSupportedDirectives(schemaString);
+    schemaWithDirectives = decorateSchemaWithPrimitiveScalars(schemaWithDirectives)
     try {
         const schema = buildSchema(schemaWithDirectives);
         const CSDLJSON = createCSDLFromRSDL(schema);
