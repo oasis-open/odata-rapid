@@ -28,7 +28,7 @@ Entity type is being build by specifying `type` keyword and listing all it's fie
 
 
 ```graphql
-type Person  @RapidSet {
+type Person {
     UserName: String! @RapidID
     FirstName: String
     LastName: String
@@ -82,3 +82,12 @@ type Mutation {
     UpdatePerson(person: Person): Person
 }
 ```
+
+## Directives reference
+
+List contains all possible directives that can be used to modify behaviour of your 
+models.
+
+| Name    | Description                      | Location | Required | Singleton|
+| ------- | ---------------------------------|----------|----------|:--------|
+| @RapidID | Assings field in the type as ID.| Field    |  true    | true    |
