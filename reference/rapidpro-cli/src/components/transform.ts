@@ -43,7 +43,7 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
     const allTypes = getUserTypesFromSchema(schema);
     const jsonDefinition = Object.assign({}, CSDLJSON_HEADER);
     // TODO hardcoded names
-    const theService = jsonDefinition.ODataDemo.TheService
+    const theService = jsonDefinition["ODataDemo"]["TheService"]
  
     for (const currentType of allTypes) {
         const name = currentType.name;
@@ -64,7 +64,7 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
         }
         const newSet = Object.assign({}, setTemplate)
         // TODO hardcoded names
-        newSet.$Type = `ODataDemo.${name}`
+        newSet["$Type"] = `ODataDemo.${name}`
         theService[name] = newSet
         jsonDefinition.ODataDemo[name] = newObject
     }
@@ -78,7 +78,6 @@ export const transformToCSDLJSON = (schemaString: string) => {
         const schema = buildSchema(schemaWithDirectives);
         const CSDLJSON = createCSDLFromRSDL(schema);
         console.log(JSON.stringify(CSDLJSON, undefined, 2));
-
         // TODO specify output format - file etc.
         return CSDLJSON
     }
