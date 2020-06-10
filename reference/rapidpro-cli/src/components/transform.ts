@@ -5,7 +5,7 @@ import { createSchemaWithSupportedDirectives } from '../utils/directives';
 import { getFieldDirective } from '../utils/schemaTools';
 
 const CSDLJSON_HEADER = {
-    "$Version": "4.0",
+    "$Version": "4.01",
     "$Reference": {
         "https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json": {
             "$Include": [
@@ -19,7 +19,9 @@ const CSDLJSON_HEADER = {
     },
     // TODO rename
     "ODataDemo": {
-
+        TheService: {
+            $Kind: "EntityContainer"
+        }
     }
 };
 
@@ -33,10 +35,16 @@ const typeFlags = {
     "$Nullable": true
 }
 
+const setTemplate = {
+    $Collection: true,
+};
+
 export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
     const allTypes = getUserTypesFromSchema(schema);
     const jsonDefinition = Object.assign({}, CSDLJSON_HEADER);
-
+    // TODO hardcoded names
+    const theService = jsonDefinition.ODataDemo.TheService
+ 
     for (const currentType of allTypes) {
         const name = currentType.name;
         const fields = Object.values(currentType.getFields());
@@ -54,6 +62,10 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
                 newObject[field.name].$Nullable = false;
             }
         }
+        const newSet = Object.assign({}, setTemplate)
+        // TODO hardcoded names
+        newSet.$Type = `ODataDemo.${name}`
+        theService[name] = newSet
         jsonDefinition.ODataDemo[name] = newObject
     }
 
@@ -66,6 +78,7 @@ export const transformToCSDLJSON = (schemaString: string) => {
         const schema = buildSchema(schemaWithDirectives);
         const CSDLJSON = createCSDLFromRSDL(schema);
         console.log(JSON.stringify(CSDLJSON, undefined, 2));
+
         // TODO specify output format - file etc.
         return CSDLJSON
     }
