@@ -225,7 +225,7 @@
                     ],
                     "encoding": true,
                     "jsdoc-format": true,
-                    "match-default-export-name": true,
+                    "match-default-export-name": false,
                     "no-dynamic-delete": true,
                     "no-reference-import": true,
                     "no-unnecessary-callback-wrapper": true,

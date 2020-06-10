@@ -1,22 +1,21 @@
+import http from 'http'
 import dotenv from 'dotenv';
+import cors from 'cors';
+import express from 'express';
+
 // Setup env variables
 dotenv.config()
 
-import cors from 'cors';
-import express from 'express';
-import http from 'http'
-import { config } from './config/config'
-import { createApolloServer } from './graphql';
+import { config } from './config'
 
 async function start() {
   const app = express();
 
   app.use(cors());
-  app.get('/health', (req, res) => res.sendStatus(200));
+  app.get('/health', (req: any, res: any) => res.sendStatus(200));
 
   const httpServer = http.createServer(app)
-  apolloServer.installSubscriptionHandlers(httpServer)
-
+  
   httpServer.listen(config.port, () => {
     console.log(`\n    ***********************************************************
     🎮 Rapid Pro Node.js Demo is running. 
@@ -25,7 +24,7 @@ async function start() {
   })
 }
 
-start().catch((err) => {
+start().catch((err: any) => {
   console.error(err);
   process.exit(1);
 })

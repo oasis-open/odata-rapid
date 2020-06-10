@@ -1,9 +1,12 @@
 {
-    "name": "rapid-profile-cli",
+    "name": "rapidpro-cli",
     "version": "0.1.0",
     "description": "Rapid Profile Reference Implementation",
     "main": "index.js",
     "types": "types/index.d.ts",
+    "bin": {
+        "rapidpro": "dist/index.js"
+    },
     "typescript": {
         "definition": "types/index.d.ts"
     },
@@ -11,8 +14,8 @@
         "clean": "rimraf coverage dist types",
         "build": "tsc",
         "watch": "tsc -w ",
-        "lint": "eslint -t stylish --project \"tsconfig.json\"",
-        "test": "jest"
+        "lint": "eslint './src/**/*.ts' --fix",
+        "test": "ava-ts tests/**/*.ts"
     },
     "engines": {
         "node": ">=10.15.3"
@@ -22,17 +25,19 @@
         "access": "public"
     },
     "devDependencies": {
-        "@types/jest": "25.2.3",
-        "@types/node": "12.12.43",
-        "graphql": "14.6.0",
-        "jest": "26.0.1",
+        "@types/node": "^12.12.47",
+        "ava": "^3.8.2",
+        "ava-ts": "^0.25.2",
+        "graphql": "^14.6.0",
         "rimraf": "3.0.2",
-        "ts-jest": "25.5.1",
         "ts-node": "8.10.2",
         "tsutils": "3.17.1",
         "typescript": "3.9.3"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@graphql-tools/utils": "6.0.9",
+        "yargs": "^15.3.1"
+    },
     "peerDependencies": {
         "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
     }

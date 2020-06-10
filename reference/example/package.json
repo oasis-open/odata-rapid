@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "echo disabled",
+    "lint": "echo disabled"
   },
   "license": "MIT",
   "devDependencies": {

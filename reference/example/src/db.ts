@@ -1,7 +1,5 @@
-import { Config } from './config/config';
-import e = require('express');
-
-const MongoClient = require('mongodb').MongoClient;
+import { MongoClient } from 'mongodb';
+import { Config } from './config';
 
 export async function connect(config: Config) {
     // TODO config
@@ -16,6 +14,7 @@ export async function connect(config: Config) {
     // Use connect method to connect to the server
     const client = await MongoClient.connect(url, { useUnifiedTopology: true });
     const db = client.db(config.db.database);
+
     return db;
 }
 
