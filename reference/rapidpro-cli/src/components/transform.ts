@@ -4,6 +4,7 @@ import { loadSchema } from '../utils/loadSchema'
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
 import { getFieldDirective } from '../utils/schemaTools';
 
+
 const CSDLJSON_HEADER = {
     "$Version": "4.01",
     "$Reference": {
@@ -17,9 +18,8 @@ const CSDLJSON_HEADER = {
             ]
         }
     },
-    // TODO rename
-    "ODataDemo": {
-        TheService: {
+    RapidModels: {
+        RapidContainer: {
             $Kind: "EntityContainer"
         }
     }
@@ -35,16 +35,13 @@ const typeFlags = {
     "$Nullable": true
 }
 
-const setTemplate = {
+const containerInstanceFlags = {
     $Collection: true,
 };
 
 export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
     const allTypes = getUserTypesFromSchema(schema);
     const jsonDefinition = Object.assign({}, CSDLJSON_HEADER);
-    // TODO hardcoded names
-    const theService = jsonDefinition["ODataDemo"]["TheService"]
- 
     for (const currentType of allTypes) {
         const name = currentType.name;
         const fields = Object.values(currentType.getFields());
@@ -62,11 +59,10 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
                 newObject[field.name].$Nullable = false;
             }
         }
-        const newSet = Object.assign({}, setTemplate)
-        // TODO hardcoded names
-        newSet["$Type"] = `ODataDemo.${name}`
-        theService[name] = newSet
-        jsonDefinition.ODataDemo[name] = newObject
+        const newSet = Object.assign({ "$Type": `RapidModels.${name}` }, containerInstanceFlags)
+        const container = jsonDefinition["RapidModels"]["RapidContainer"]
+        container[name] = newSet
+        jsonDefinition.RapidModels[name] = newObject
     }
 
     return jsonDefinition;

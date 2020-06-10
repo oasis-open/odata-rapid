@@ -8,7 +8,7 @@ test('Test minimal set of the RSDL components: RapidID and Required Flags', asyn
   const file = readFileSync(join(__dirname, "./multiplekeys.graphql"), "utf8");
   const json: any = transformToCSDLJSON(file);
 
-  t.deepEqual(json.ODataDemo.Person.$Key, [
+  t.deepEqual(json.RapidModels.Person.$Key, [
     "UserName",
     "FirstName"
   ])
