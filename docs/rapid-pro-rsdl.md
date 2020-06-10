@@ -90,4 +90,4 @@ models.
 
 | Name    | Description                      | Location | Required | Singleton|
 | ------- | ---------------------------------|----------|----------|:--------|
-| @RapidID | Assings field in the type as ID.| Field    |  true    | true    |
+| @RapidID | Marks field in the type as identifying for instances of the type | Field    |  true    | true    |
