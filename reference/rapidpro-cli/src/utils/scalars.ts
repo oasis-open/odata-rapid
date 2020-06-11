@@ -61,8 +61,8 @@ scalar Guid
 
 export const decorateSchemaWithPrimitiveScalars = (schemaString: string) => {
     return `
-    ${supportedScalars}
     ${schemaString}
+    ${supportedScalars}
     `
 }
 

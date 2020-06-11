@@ -6,20 +6,29 @@ import { createSchemaWithSupportedDirectives } from '../utils/directives';
 import { decorateSchemaWithPrimitiveScalars } from '../utils/scalars';
 
 
+
+export const validateRSDLFile = (rsdlString: string) => {
+    const schemaString = loadSchema(rsdlString);
+    validateRSDL(schemaString)
+}
+
 /**
  * Checks if provided RSDL is valid
  * 
  * @param rsdlString string containng DSL file
  */
 export const validateRSDL = (rsdlString: string) => {
-    const schemaString = loadSchema(rsdlString);
-    let schemaWithDirectives = createSchemaWithSupportedDirectives(schemaString);
+    let schemaWithDirectives = createSchemaWithSupportedDirectives(rsdlString);
     schemaWithDirectives = decorateSchemaWithPrimitiveScalars(schemaWithDirectives)
     if (schemaWithDirectives) {
         try {
             // 1) Must be valid schema
-            const schema = buildSchema(schemaWithDirectives);
+            const schema = buildSchema(schemaWithDirectives, {
+                assumeValidSDL: false,
+                assumeValid: false
+            });
             const types = getUserTypesFromSchema(schema);
+            console.log(types)
             for (const type of types) {
                 // 2) Each type must has at least one ID
                 checkIfRapidIDExistOnType(type);
@@ -44,7 +53,8 @@ function checkIfRapidIDExistOnType(type: GraphQLObjectType) {
             rapidIdFound = true;
         }
     }
+    console.log(rapidIdFound)
     if (!rapidIdFound) {
-        throw new Error(`Line: ${type?.astNode?.loc?.start}. ${type.name} is missing required @RapidID directive`);
+        throw new Error(`Line: ${type?.astNode?.loc?.startToken.line}. ${type.name} is missing required @RapidID directive`);
     }
 }

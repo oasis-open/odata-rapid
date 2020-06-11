@@ -1,5 +1,5 @@
 import yargs from 'yargs'
-import { validateRSDL } from '../components/validateRSDL'
+import { validateRSDLFile } from '../components/validateRSDL'
 
 type Params = { name?: string }
 
@@ -16,5 +16,5 @@ export const builder = (args: yargs.Argv) => {
 }
 
 export async function handler({ name }: Params) {
-     validateRSDL(name)
+     validateRSDLFile(name)
 }

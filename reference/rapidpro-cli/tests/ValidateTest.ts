@@ -5,7 +5,7 @@ import { validateRSDL } from "../src/components/validateRSDL"
 
 
 test('Test valid RSDL', async (t) => {
-    const file = readFileSync(join(__dirname, "./multiplekeys.graphql"), "utf8");
+    const file = readFileSync(join(__dirname, "./minimal.graphql"), "utf8");
 
     t.notThrows(() => {
         validateRSDL(file);
@@ -18,8 +18,7 @@ test('Test invalid scalar', async (t) => {
         validateRSDL(`
         type Person {
             ValueInt: Int!
-            Condition: Boolean!
-            StartDate: Unknown
+            Condition: Invalid
         }
         `);
     })
