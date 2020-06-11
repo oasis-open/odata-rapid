@@ -7,19 +7,34 @@
 
 ### Usage
 
-Install CLI
+Install cli
+
 ```bash
 npm install -g rapidpro-cli
 ```
 
 Transform your RSDL file to JSON
 ```bash
-rapidpro transform minimal.graphql
+rapidpro transform yourfile.graphql
 ```
 
-Validate your RSDL
+Validate your RSDL file
 ```bash
-rapidpro validate minimal.graphql
+rapidpro validate yourfile.graphql
+```
+
+### Example RSDL file
+
+```graphql
+type Person {
+    UserName: String! @RapidID
+    FirstName: String
+    LastName: String!
+    Value: Float!
+    ValueInt: Int!
+    Condition: Boolean!
+    StartDate: Date
+}
 ```
 
 
