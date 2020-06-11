@@ -26,7 +26,8 @@ export const validateRSDL = (rsdlString: string) => {
             }
 
         } catch (error) {
-            return console.log("Invalid RSDL schema file", error);
+            console.log("Invalid RSDL schema file", error);
+            throw error;
         }
 
         console.log("Document is valid");
@@ -43,7 +44,7 @@ function checkIfRapidIDExistOnType(type: GraphQLObjectType) {
             rapidIdFound = true;
         }
     }
-    if(!rapidIdFound){
+    if (!rapidIdFound) {
         throw new Error(`Line: ${type?.astNode?.loc?.start}. ${type.name} is missing required @RapidID directive`);
     }
 }
