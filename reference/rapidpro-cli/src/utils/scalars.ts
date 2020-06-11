@@ -67,7 +67,7 @@ export const decorateSchemaWithPrimitiveScalars = (schemaString: string) => {
 }
 
 
-export const mapGraphQLTypesToOData = (typeName: String) => {
+export const mapGraphQLTypesToOData = (typeName: string) => {
     if (typeName === "Int") {
         return "Int32"
     }

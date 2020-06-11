@@ -1,16 +1,10 @@
-import { loadSchema } from '../utils/loadSchema';
 import { buildSchema, GraphQLType, GraphQLObjectType } from 'graphql';
 import { getUserTypesFromSchema } from '@graphql-tools/utils';
+import { loadSchema } from '../utils/loadSchema';
 import { getFieldDirective } from '../utils/schemaTools';
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
 import { decorateSchemaWithPrimitiveScalars } from '../utils/scalars';
-
-
-
-export const validateRSDLFile = (rsdlString: string) => {
-    const schemaString = loadSchema(rsdlString);
-    validateRSDL(schemaString)
-}
+import { checkIfRapidIDExistOnType } from '../validators/checkIfIdExist';
 
 /**
  * Checks if provided RSDL is valid
@@ -43,18 +37,9 @@ export const validateRSDL = (rsdlString: string) => {
     } else {
         console.log("Cannot load RSDL schema file")
     }
-
 }
 
-function checkIfRapidIDExistOnType(type: GraphQLObjectType) {
-    let rapidIdFound = false;
-    for (const field of Object.values(type.getFields())) {
-        if (getFieldDirective(field, "RapidID")) {
-            rapidIdFound = true;
-        }
-    }
-    console.log(rapidIdFound)
-    if (!rapidIdFound) {
-        throw new Error(`Line: ${type?.astNode?.loc?.startToken.line}. ${type.name} is missing required @RapidID directive`);
-    }
+export const validateRSDLFile = (rsdlString: string) => {
+    const schemaString = loadSchema(rsdlString);
+    validateRSDL(schemaString)
 }
