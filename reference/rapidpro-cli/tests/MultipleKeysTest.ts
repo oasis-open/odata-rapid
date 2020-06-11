@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { transformToCSDLJSON } from "../src/components/transform"
 
 
-test('Test minimal set of the RSDL components: RapidID and Required Flags', async (t) => {
+test('Test multiple ID keys', async (t) => {
   const file = readFileSync(join(__dirname, "./multiplekeys.graphql"), "utf8");
   const json: any = transformToCSDLJSON(file);
 
@@ -12,8 +12,6 @@ test('Test minimal set of the RSDL components: RapidID and Required Flags', asyn
     "UserName",
     "FirstName"
   ])
-
-
 });
 
 

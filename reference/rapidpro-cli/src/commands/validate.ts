@@ -1,11 +1,11 @@
 import yargs from 'yargs'
-import { transformRSQL } from '../components/transform'
+import { validateRSDL } from '../components/validateRSDL'
 
 type Params = { name?: string }
 
-export const command = 'transform <name>'
+export const command = 'validate <name>'
 
-export const desc = 'Transform RSDL to OData compatible CSTL JSON format'
+export const desc = 'Validate RSDL file'
 
 // tslint:disable-next-line: typedef
 export const builder = (args: yargs.Argv) => {
@@ -16,5 +16,5 @@ export const builder = (args: yargs.Argv) => {
 }
 
 export async function handler({ name }: Params) {
-     transformRSQL(name)
+     validateRSDL(name)
 }

@@ -1,4 +1,4 @@
-import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull, getNullableType, GraphQLScalarType, GraphQLList, GraphQLObjectType, GraphQLEnumType } from "graphql"
+import { buildSchema, GraphQLSchema, GraphQLNonNull, getNullableType, GraphQLScalarType, GraphQLList, GraphQLObjectType, GraphQLEnumType, validate } from "graphql"
 import { getUserTypesFromSchema } from "@graphql-tools/utils"
 import { loadSchema } from '../utils/loadSchema'
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
