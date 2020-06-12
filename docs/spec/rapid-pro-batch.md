@@ -84,7 +84,7 @@ Requests within an atomicity group either all succeed, or all fail.
 {
     "requests": [
         {
-            "id": "0",
+            "id": "r-0",
             "atomicityGroup": "g-0",
             "method": "patch",
             "url": "company/employees/2",
@@ -93,7 +93,7 @@ Requests within an atomicity group either all succeed, or all fail.
             }
         },
         {
-            "id": "1",
+            "id": "r-1",
             "atomicityGroup": "g-0",
             "method": "patch",
             "url": "company/employees/4",
@@ -111,12 +111,12 @@ Requests within an atomicity group either all succeed, or all fail.
 {
     "responses": [
         {
-            "id": "0",
+            "id": "r-0",
             "atomicityGroup": "g-0",
             "status": 204
         },
         {
-            "id": "1",
+            "id": "r-1",
             "atomicityGroup": "g-0",
             "status": 204
         }
@@ -130,7 +130,7 @@ Requests within an atomicity group either all succeed, or all fail.
 {
     "responses": [
         {
-            "id": "0",
+            "id": "r-0",
             "atomicityGroup": "g-0",
             "status": 400,
             "body": {
@@ -140,7 +140,7 @@ Requests within an atomicity group either all succeed, or all fail.
             }
         },
         {
-            "id": "1",
+            "id": "r-1",
             "atomicityGroup": "g-0",
             "status": 424,
             "body": {
