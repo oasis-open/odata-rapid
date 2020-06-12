@@ -1,4 +1,4 @@
-﻿---
+---
 id: operations
 title: Rest API Design (RAPID) Profile Operations
 sidebar_label: Rapid Operations

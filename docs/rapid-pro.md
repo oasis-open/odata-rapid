@@ -1,9 +1,8 @@
-﻿---
+---
 id: gettingstarted
 title: Rest API Design (RAPID) Profile
 sidebar_label: Getting Started
 ---
-
 
 RAPID is a simple profile for building well-designed APIs that can scale to the level of functionality required for any situation. 
 By following RAPID conventions, services are able to leverage common libraries and tools,

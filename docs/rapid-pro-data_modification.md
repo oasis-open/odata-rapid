@@ -1,4 +1,4 @@
-﻿---
+---
 id: rapid-edit
 title: Rest API Design (RAPID) Profile Data Modification
 sidebar_label: Rapid Data Modification
