@@ -69,7 +69,7 @@ and the response payload consists of an array of individual responses.
 }
 ```
 
-### Error handling
+## Error handling
 
 Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) even if some or all of the individual requests in the batch fail. Batch requests only return `4xx` if the batch request body is malformed, the client is not authenticated or lacks authorization for the `/$batch` resource, or other reasons not related to individual requests in the batch.
 
