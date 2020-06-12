@@ -4,7 +4,6 @@ title: Rest API Design (RAPID) Profile Data Modification
 sidebar_label: Rapid Data Modification
 ---
 
-
 RAPID-PRO defines simple REST operations for Create, Update, and Delete.
 
 # Creating a Resource
