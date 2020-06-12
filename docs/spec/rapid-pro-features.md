@@ -3,12 +3,8 @@ id: features
 title: Profile Features
 ---
 
-
-# Rest API Design (RAPID) Profile Features
-
-Although RAPID services can be very simple,
-because they follow core patterns they can be extended by implementing optional `Features`, as appropriate,
-to support more advanced scenarios as described below.
+RAPID services can be very simple,
+and because they follow core patterns they can be extended with optional features when needed:
 
 -   [Data Modification](./rapid-pro-data_modification.md)
 -   [Actions and Functions](./rapid-pro-operations.md)
