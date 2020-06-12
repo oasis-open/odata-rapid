@@ -78,6 +78,10 @@ Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) ev
 Multiple operations can be grouped into an atomicity group.
 Requests within an atomicity group either all succeed, or all fail.
 
+For services using an RDBMS as their data source, this means that all requests within an atomicity group form a single transaction. If at least one operation fails, all operations are reverted using `ROLLBACK WORK`.
+
+Services not backed by an RDBMS need not provide this feature.
+
 **Body:**
 
 ```json
