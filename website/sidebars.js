@@ -8,16 +8,16 @@ module.exports = {
         {
             type: 'category',
             label: 'Customization',
-            items: ['operations', 'rapid-edit'],
+            items: ['rapid-edit', 'operations'],
         },
         {
             type: 'category',
             label: 'Specification',
             items: [
                 'spec/features',
-                'spec/odata',
                 'spec/resourceformat',
                 'spec/batch',
+                'spec/odata',
             ]
         },
     ],
