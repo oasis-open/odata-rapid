@@ -73,14 +73,70 @@ and the response payload consists of an array of individual responses.
 
 Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) even if some or all of the individual requests in the batch fail. Batch requests only return `4xx` if the batch request body is malformed, the client is not authenticated or lacks authorization for the `/$batch` resource, or other reasons not related to individual requests in the batch.
 
-## Atomicity Groups
+If an individual request fails, processing continues with the next request. Individual tequests can be processed in any order,
+not necessarily in the sequence they appear in the batch request.
+
+**Body:**
+
+```json
+{
+    "requests": [
+        {
+            "id": "p-0",
+            "method": "patch",
+            "url": "company/employees/2",
+            "headers": {
+                "if-match": "MjA2My0wNC0wMVQxMzo1NToyNy4xMjM0NTZa"
+            },
+            "body": {
+                "title": "On garden leave"
+            }
+        },
+        {
+            "id": "p-1",
+            "method": "patch",
+            "url": "company/employees/4",
+            "body": {
+                "title": "Junior Digital Index Operator"
+            }
+        }
+    ]
+}
+```
+
+**Result (some individual requests succeed, some fail):**
+
+```json
+{
+    "responses": [
+        {
+            "id": "p-0",
+            "status": 412,
+            "body": {
+                "error": {
+                    "code": "INVALID_ETAG",
+                    "message": "The ETag provided in the If-Match header was outdated"
+                }
+            }
+        },
+        {
+            "id": "p-1",
+            "status": 204
+        }
+    ]
+}
+```
+
+## Advanced Features
+
+### Atomicity Groups
 
 Multiple operations can be grouped into an atomicity group.
 Requests within an atomicity group either all succeed, or all fail.
 
-For services using an RDBMS as their data source, this means that all requests within an atomicity group form a single transaction. If at least one operation fails, all operations are reverted using `ROLLBACK WORK`.
+For services using an RDBMS as their data source this means that all requests within an atomicity group form a single transaction. If at least one operation fails, all operations are reverted using `ROLLBACK WORK`.
 
-Services not backed by an RDBMS need not provide this feature.
+Services not backed by an RDBMS may find this harder to implement and need not provide this feature. They can simply refuse to process batch requests with atomicity groups with `501 Not Implemented`.
 
 **Body:**
 
@@ -159,7 +215,7 @@ Services not backed by an RDBMS need not provide this feature.
 }
 ```
 
-## Advanced Features
+### Request Dependencies and Asynchronous Batch Requests
 
 Batch requests can be fine-tuned in many ways:
 - Execute individual requests only if preceding requests in the same batch request succeed or fail
