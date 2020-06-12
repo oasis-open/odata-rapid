@@ -1,4 +1,4 @@
-﻿---
+---
 id: batch
 title: Batch Operations
 ---

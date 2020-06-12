@@ -1,4 +1,4 @@
-﻿---
+---
 id: features
 title: Profile Features
 ---

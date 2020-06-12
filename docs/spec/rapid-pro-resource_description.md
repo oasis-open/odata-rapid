@@ -1,4 +1,4 @@
-﻿---
+---
 id: resourceformat
 title: Profile Resource Description
 ---

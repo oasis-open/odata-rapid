@@ -1,4 +1,4 @@
-﻿---
+---
 id: odata
 title: Rest API Design (RAPID) Profile and OData
 sidebar_label: OData relationship

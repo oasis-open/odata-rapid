@@ -1,4 +1,4 @@
-﻿---
+---
 id: async
 title: Asynchronous Requests
 ---
