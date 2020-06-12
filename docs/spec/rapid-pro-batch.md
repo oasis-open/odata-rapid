@@ -135,8 +135,9 @@ Requests within an atomicity group either all succeed, or all fail.
             "status": 400,
             "body": {
                 "error": {
-                "code": "NO_WAY",
-                "message": "Insufficient justification"
+                    "code": "NO_WAY",
+                    "message": "Insufficient justification"
+                }
             }
         },
         {
@@ -145,8 +146,9 @@ Requests within an atomicity group either all succeed, or all fail.
             "status": 424,
             "body": {
                 "error": {
-                "code": "SKIPPED",
-                "message": "Skipped due to failure in same atomicity group"
+                    "code": "SKIPPED",
+                    "message": "Skipped due to failure in same atomicity group"
+                }
             }
         }
     ]
