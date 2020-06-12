@@ -14,8 +14,6 @@ Batch requests are sent to a special resource `/$batch`.
 The request payload consists of an array of individual requests,
 and the response payload consists of an array of individual responses.
 
-Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) even if some or all of the individual requests in the batch fail. Batch requests only return `4xx` if the batch request body is malformed, the client is not authenticated or lacks authorization for the `/$batch` resource, or other reasons not related to individual requests in the batch.
-
 | Template    | POST {service-root}/$batch             |
 | ----------- | :------------------------------------------ |
 | **Example** | POST http://rapid-pro.org/$batch |
@@ -70,6 +68,10 @@ Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) ev
     ]
 }
 ```
+
+### Error handling
+
+Batch requests return `200 OK` (or `202 Accepted` if executed asynchronously) even if some or all of the individual requests in the batch fail. Batch requests only return `4xx` if the batch request body is malformed, the client is not authenticated or lacks authorization for the `/$batch` resource, or other reasons not related to individual requests in the batch.
 
 ## Atomicity Groups
 
