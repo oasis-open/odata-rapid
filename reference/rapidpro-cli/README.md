@@ -3,7 +3,7 @@
 
 ## Requirements: 
 
-- Node.JS 10 or newer
+- Node.js 10 or newer
 
 ### Usage
 
@@ -36,5 +36,4 @@ type Person {
     StartDate: Date
 }
 ```
-
 
