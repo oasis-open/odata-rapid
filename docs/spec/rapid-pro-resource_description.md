@@ -3,6 +3,7 @@ id: resourceformat
 title: Profile Resource Description
 ---
 
+
 # Rest API Design (RAPID) Profile Resource Description
 
 RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service.

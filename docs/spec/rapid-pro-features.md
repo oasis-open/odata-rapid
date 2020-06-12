@@ -3,6 +3,7 @@ id: features
 title: Profile Features
 ---
 
+
 # Rest API Design (RAPID) Profile Features
 
 Although RAPID services can be very simple,

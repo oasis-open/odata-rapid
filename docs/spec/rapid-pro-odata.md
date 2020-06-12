@@ -4,6 +4,7 @@ title: Rest API Design (RAPID) Profile and OData
 sidebar_label: OData relationship
 ---
 
+
 # Rest API Design (RAPID) Profile and OData
 
 # ---THIS WHOLE DOCUMENT IS A PLACEHOLDER---
