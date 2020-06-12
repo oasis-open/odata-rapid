@@ -1,4 +1,4 @@
-﻿---
+---
 id: gettingstarted
 title: Rest API Design (RAPID) Profile
 sidebar_label: Getting Started

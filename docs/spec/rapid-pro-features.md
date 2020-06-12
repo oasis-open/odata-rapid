@@ -1,7 +1,8 @@
-﻿---
+---
 id: features
 title: Profile Features
 ---
+
 
 # Rest API Design (RAPID) Profile Features
 

@@ -1,7 +1,8 @@
-﻿---
+---
 id: resourceformat
 title: Profile Resource Description
 ---
+
 
 # Rest API Design (RAPID) Profile Resource Description
 

@@ -1,8 +1,9 @@
-﻿---
+---
 id: operations
 title: Rest API Design (RAPID) Profile Operations
 sidebar_label: Rapid Operations
 ---
+
 
 Although a pure REST service would perform operations through manipulating the state of resources, 
 we have found manyvservices require the ability to encapsulate complex processing logic into atomic operations. 
