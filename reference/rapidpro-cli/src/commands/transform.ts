@@ -5,7 +5,7 @@ type Params = { name?: string }
 
 export const command = 'transform <name>'
 
-export const desc = 'Transform RSDL to OData compatible CSTL JSON format'
+export const desc = 'Transform RSDL to OData compatible CSDL JSON format'
 
 // tslint:disable-next-line: typedef
 export const builder = (args: yargs.Argv) => {
