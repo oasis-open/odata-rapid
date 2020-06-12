@@ -1,54 +1,52 @@
 ---
 id: odata
-title: Rest API Design (RAPID) Profile and OData
-sidebar_label: OData relationship
+title: RAPID and OData
+sidebar_label: Relation to OData
 ---
 
-
-# Rest API Design (RAPID) Profile and OData
-
-# ---THIS WHOLE DOCUMENT IS A PLACEHOLDER---
-
-RAPID is designed to be a profile that applies a subset of the conventions defined in OData applicable to any RESTful API. 
+RAPID Profile is a subset of the conventions defined in [OData](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html) that can be applied to any RESTful API. 
 A RAPID service can easily support generic OData V4 clients by:
 
--   Supporting OData calling conventions
--   Following OData JSON conventions for OData V4 Clients
+-   Supporting [OData calling conventions](https://docs.oasis-open.org/odata/odata/v4.01/os/part2-url-conventions/odata-v4.01-os-part2-url-conventions.html)
+-   Following [OData JSON conventions](https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html)
 
-RAPID services MAY support any additional conventions defined in the OData specification as appropriate to the service.
+RAPID services MAY support any additional conventions defined in the OData specification.
 RAPID services SHOULD
 
--   Describe supported level of query functionality, if any, through Capabilities annotations
+-   Describe the supported level of query functionality, if any, through [Capabilities annotations](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md)
 
-# Supporting OData Calling Conventions
-
-<todo…>
-
-## Supporting alternate key syntax or OData ids in responses
+## Support OData canonical key syntax
 
 Services SHOULD support the OData parens key syntax as an alternate syntax.
 
+```
 GET http://rapid-pro.org/company/employees(2)
+```
 
-To be interoperable with OData clients, RAPID services that do not support the above OData key convention MUST include
-an "@id" property whose string value is a URL that can be used to retrieve the resource.
+To be interoperable with OData clients, 
+RAPID services that do not support the above OData key convention MUST include an `@id` property whose string value is a URL that can be used to retrieve the resource.
 
-## Support qualified function/action names
+## Support `$` prefix for built-in query options
 
-<TODO…> -Namespace-qualified action/function names
+In addition to the "friendly" query option names `filter`, `orderby`, `select`, ... services SHOULD also support the `$`-prefixed versions `$filter`, `$orderby`, `$select`, ... with the same semantics.
 
--Support "\$" prefix for built-in query options
+## Support qualified action and function names
 
--Namespace-qualified enums
+In addititon to  "short" action and function names services SHOULD also support namespace-qualified action and function names, for example
+```
+POST http://rapid-pro.org/company/employees/1/youreFired
+POST http://rapid-pro.org/company/employees/1/enterprise.youreFired
+```
+where `enterprise` is the schema namespace that defines the `youreFired` action.
 
-## Supporting application/xml for service description?
+## Support XML resource description
 
-<TODO…> reference OData V4 CSDL specification
+To support generic OData V4 clients, RAPID services SHOULD provide their resource description at `/$metadata` (also) in XML format according to [OData V4 CSDL XML](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html).
 
-## Following OData JSON conventions for OData V4 Clients
+## Following OData conventions for OData V4 Clients
 
 A RAPID service determines that a request is from a generic OData V4 client by looking for any of the following:
 
--   An OData-MaxVersion header value of 4.01
--   An OData-Version header value of 4.01
--   A mime type of application/json with an odata.metadata type parameter
+-   An `OData-MaxVersion` header
+-   An `OData-Version` header
+-   An `Accept` or `Content-Type` header with a value of `application/json` suffixed with an [OData-specific format parameter](https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat)
