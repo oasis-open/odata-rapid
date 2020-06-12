@@ -14,7 +14,7 @@
         "clean": "rimraf coverage dist types",
         "build": "tsc",
         "watch": "tsc -w ",
-        "lint": "eslint './src/**/*.ts' --fix",
+        "lint": "eslint './src/**/*.ts'",
         "test": "ava-ts tests/**/*.ts"
     },
     "engines": {

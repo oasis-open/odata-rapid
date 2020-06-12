@@ -18,7 +18,7 @@ directive @RapidID on FIELD_DEFINITION
 
 export const createSchemaWithSupportedDirectives = (schemaString: string) => {
     return `
-    ${supportedDirectives}
     ${schemaString}
+    ${supportedDirectives}
     `
 }

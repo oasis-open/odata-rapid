@@ -61,13 +61,13 @@ scalar Guid
 
 export const decorateSchemaWithPrimitiveScalars = (schemaString: string) => {
     return `
-    ${supportedScalars}
     ${schemaString}
+    ${supportedScalars}
     `
 }
 
 
-export const mapGraphQLTypesToOData = (typeName: String) => {
+export const mapGraphQLTypesToOData = (typeName: string) => {
     if (typeName === "Int") {
         return "Int32"
     }

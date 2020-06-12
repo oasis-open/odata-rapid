@@ -1,4 +1,4 @@
-import { buildSchema, GraphQLSchema, isType, isObjectType, GraphQLNonNull, getNullableType, GraphQLScalarType, GraphQLList, GraphQLObjectType, GraphQLEnumType } from "graphql"
+import { buildSchema, GraphQLSchema, GraphQLNonNull, getNullableType, GraphQLScalarType, GraphQLList, GraphQLObjectType, GraphQLEnumType, validate } from "graphql"
 import { getUserTypesFromSchema } from "@graphql-tools/utils"
 import { loadSchema } from '../utils/loadSchema'
 import { createSchemaWithSupportedDirectives } from '../utils/directives';
@@ -82,7 +82,7 @@ export const createCSDLFromRSDL = (schema: GraphQLSchema) => {
 
         }
         const newSet = Object.assign({ "$Type": `RapidModels.${name}` }, containerInstanceFlags)
-        const container = jsonDefinition["RapidModels"]["RapidContainer"]
+        const container = jsonDefinition.RapidModels.RapidContainer
         container[name] = newSet
         jsonDefinition.RapidModels[name] = newObject
     }
@@ -97,6 +97,7 @@ export const transformToCSDLJSON = (schemaString: string) => {
         const schema = buildSchema(schemaWithDirectives);
         const CSDLJSON = createCSDLFromRSDL(schema);
         console.log(JSON.stringify(CSDLJSON, undefined, 2));
+
         // TODO specify output format - file etc.
         return CSDLJSON
     }
