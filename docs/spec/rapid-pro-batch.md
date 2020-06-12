@@ -3,9 +3,6 @@ id: batch
 title: Batch Operations
 ---
 
-
-# Batch Operations
-
 RAPID allows wrapping multiple requests into a single batch request.
 This can be used for two purposes:
 - Reduce the number of round-trips and reduce latency between requests
