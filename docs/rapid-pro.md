@@ -356,7 +356,7 @@ you can express the same options for the related resource that you can for any o
 }
 ```
 
-### Combining Query Options
+## Combining Query Options
 
 Query options can be combined using the ampersand (`&`). 
 To comply with URL parsing rules, query options within an expand clause are separated using semi-colons (`;`). 

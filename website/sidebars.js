@@ -4,7 +4,7 @@ module.exports = {
             type: 'category',
             label: 'Introduction',
             items: [
-                'gettingstarted', 'rapid-edit', 'operations'
+                'gettingstarted'
             ],
         },
         {
@@ -12,6 +12,8 @@ module.exports = {
             label: 'Optional Features',
             items: [
                 'spec/features',
+                'rapid-edit',
+                'operations',
                 'rsdl',
                 'spec/resourceformat',
                 'spec/batch',
@@ -20,6 +22,9 @@ module.exports = {
         },
     ],
     tutorial: {
-        'Rapid Tutorial': ['tutorial/buildserver', 'tutorial/buildclient'],
+        'Rapid Tutorial': [
+            'tutorial/buildserver',
+            'tutorial/buildclient'
+        ],
     },
 };
