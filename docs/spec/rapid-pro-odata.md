@@ -1,7 +1,6 @@
 ---
 id: odata
 title: RAPID and OData
-sidebar_label: Relation to OData
 ---
 
 RAPID Profile is a subset of the conventions defined in [OData](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html) that can be applied to any RESTful API. 
