@@ -1,6 +1,6 @@
 module.exports = {
   title: 'RAPID',
-  tagline: 'Fastest way to build your RESTfull API',
+  tagline: 'Fastest way to build your RESTful API',
   url: 'https://rapid.rocks',
   baseUrl: '/',
   favicon: 'img/rest.svg',
