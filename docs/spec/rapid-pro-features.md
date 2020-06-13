@@ -13,7 +13,7 @@ and because they follow core patterns they can be extended with optional feature
 -   [Schema Definition](../rapid-pro-rsdl.md)
 -   [Resource Description](./rapid-pro-resource_description.md)
 -   [Batch Operations](./rapid-pro-batch.md)
--   [RAPID and OData](./spec/rapid-pro-odata.md)
+-   [RAPID and OData](./rapid-pro-odata.md)
 
 <!--
 -   [Asynchronous Requests](./rapid-pro-asynchronous_requests.md)
