@@ -12,6 +12,7 @@ module.exports = {
             label: 'Features',
             items: [
                 'spec/features',
+                'rapid-read',
                 'rapid-edit',
                 'operations',
                 'rsdl',

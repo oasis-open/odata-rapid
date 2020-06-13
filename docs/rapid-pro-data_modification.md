@@ -1,7 +1,7 @@
 ---
 id: rapid-edit
-title: Data Modification
-sidebar_label: Data Modification
+title: Modifying Resources
+sidebar_label: Modifying Resources
 ---
 
 RAPID-PRO defines simple REST operations for Create, Update, and Delete.
