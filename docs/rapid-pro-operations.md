@@ -1,7 +1,7 @@
 ---
 id: operations
-title: Rest API Design (RAPID) Profile Operations
-sidebar_label: Rapid Operations
+title: Actions and Functions
+sidebar_label: Actions and Functions
 ---
 
 Although a pure REST service would perform operations through manipulating the state of resources, 
@@ -14,18 +14,9 @@ Operations bound to a resource are invoked by appending a segment containing the
 The name of the operation must not conflict with the name of any properties or other operations bound to that
 resource.
 
-Operations include Functions and Actions.
+Operations include Actions and Functions.
 
-# Functions
-
-Functions are invoked using `GET` and must be non-side affecting. 
-Parameters are passed to functions as query options:
-
-| Template | GET {resource-path}/{functionName}?{@param=value...}                 |
-| -------- | :------------------------------------------------------------------- |
-| Example  | GET http://rapid-pro.org/company/topEmployees?@startDate='2065-6-12' |
-
-# Actions
+## Actions
 
 Actions may have side-affects, are invoked using `POST`, and have parameters specified in the body.
 
@@ -40,3 +31,12 @@ Actions may have side-affects, are invoked using `POST`, and have parameters spe
     "reason": "Embezzlement"
 }
 ```
+
+## Functions
+
+Functions are invoked using `GET` and must be non-side affecting. 
+Parameters are passed to functions as query options:
+
+| Template | GET {resource-path}/{functionName}?{@param=value...}                 |
+| -------- | :------------------------------------------------------------------- |
+| Example  | GET http://rapid-pro.org/company/topEmployees?@startDate='2065-6-12' |

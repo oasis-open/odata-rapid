@@ -39,16 +39,16 @@ and the interoperability of a standard.
 
 Sweet. Who says you can't have it all?
 
-# Resource Description
+## Resource Description
 
 RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service. 
 For more information on the RAPID resource description language, see [RAPID Resource Description](./rapid-pro-resource_description.md).
 
-# RAPID Requests
+## RAPID Requests
 
 RAPID uses standard GET, POST, PATCH, and DELETE requests to retrieve and update resources.
 
-## Retrieving a Resource
+### Retrieving a Resource
 
 RAPID services support retrieving a resource using the GET method:
 
@@ -76,7 +76,7 @@ RAPID uses properties prefixed with the `@` symbol to denote control information
 RAPID payloads use native JSON types for string, boolean, and double values. 
 Dates, Times, and DateTimeOffset values are represented as ISO-8601 strings.
 
-## Selecting Individual Properties of a Resource
+### Selecting Individual Properties of a Resource
 
 The client can select individual properties of the resource using the `select` option:
 
@@ -96,7 +96,7 @@ The client can select individual properties of the resource using the `select` o
 
 The first line says that only the `name` and `stockSymbol` properties are selected to be returned from the `company` resource.
 
-## Retrieving a Collection of Resources
+### Retrieving a Collection of Resources
 
 RAPID services return collections of resources as a JSON array:
 
@@ -131,7 +131,7 @@ If the result is large, the service may include a next link to tell the client t
 The value of the next link is an opaque URL that the client can use to retrieve the next set of resources from the collection. 
 The absence of the next link signals the client that they have retrieved all of the resources in the collection.
 
-## Retrieving an Individual Member of a Collection
+### Retrieving an Individual Member of a Collection
 
 Individual members of a collection can be identified by appending the key to the URL of the collection.
 
@@ -153,7 +153,7 @@ Individual members of a collection can be identified by appending the key to the
 
 Here the context property specifies that the result is an individual resource within the `employees` collection of the `company`.
 
-## Selecting Individual Properties of Collection Members
+### Selecting Individual Properties of Collection Members
 
 Query options are composable;
 the client can select a subset of properties to be returned for each instance in the collection.
@@ -180,7 +180,7 @@ http://rapid-pro.org/company/employees?select=lastName
 }
 ```
 
-## Requesting a Range of Members
+### Requesting a Range of Members
 
 The client can use `top` and/or `skip` query options to select a range of resources within a collection. 
 They can use the `count` query option to request the count of all resources in the collection.
@@ -216,7 +216,7 @@ The result skips the first member and returns the next two.
 The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`. 
 There is no next link because all two of the requested resources are returned.
 
-## Ordering Results
+### Ordering Results
 
 The client can use the `orderby` query option to order the results returned within a collection.
 
@@ -257,7 +257,7 @@ Null values sort before non-null values in ascending order and after non-null va
 
 If `asc` or `desc` is not specified, the default ordering is ascending.
 
-## Filtering Results
+### Filtering Results
 
 The client can use the `filter` query option to filter the results returned from the collection.
 
@@ -292,7 +292,7 @@ In this case, there is no next link since all of the resources matching the filt
 There is a full expression language to describe what the client can express in the filter. 
 For more information, see [RAPID Expression Language](.\rapid-pro-expression_language.md]).
 
-## Including Related Resources
+### Including Related Resources
 
 Related resources can be retrieved as nested resources through the `expand` query option.
 
@@ -384,7 +384,7 @@ The order of query options is not significant.
 }
 ```
 
-# Passing Query Strings in the Body
+## Passing Query Strings in the Body
 
 Don't like long query strings? No problem!
 RAPID allows you to pass the query string in the body, making it easy to write and format as text. 
@@ -402,16 +402,16 @@ and the syntax is the same, making it easy to execute.
                 select=firstName;
                 filter=lastName eq 'Jetson')
 
-# Data Modification
+## Data Modification
 
 For details on modifying data in RAPID, see [Data Modification in RAPID](rapid-pro-data_modification.md)
 
-# Optional Features
+## Optional Features
 
 Although RAPID services can be very simple, because they follow core patterns they can be extended using optional Features,
-as appropriate, to support more advanced scenarios such as those described in [RAPID Features](./rapid-pro-features.md).
+as appropriate, to support more advanced scenarios such as those described in [RAPID Features](./spec/rapid-pro-features.md).
 
-# RAPID and OpenAPI
+## RAPID and OpenAPI
 
 OpenAPI is an extremely popular specification for documenting a REST API. 
 Because the RAPID profile builds upon REST, it is natural and encouraged for RAPID services to support OpenAPI.
@@ -420,7 +420,7 @@ As the RAPID service description defines a superset of what a service might want
 a [suggested translation](http://docs.oasis-open.org/odata/odata-openapi/v1.0/odata-openapi-v1.0.html) 
 is defined for translating a RAPID service description to OpenAPI.
 
-# RAPID and OData
+## RAPID and OData
 
 RAPID is designed to be a profile that applies a subset of the conventions defined in OData applicable to any RESTful API. 
 A RAPID service can easily support generic OData V4 clients by:
@@ -429,5 +429,3 @@ A RAPID service can easily support generic OData V4 clients by:
 -   Following OData JSON conventions for OData V4 Clients
 
 RAPID services MAY support any additional conventions defined in the OData specification as appropriate to the service.
-
-For more information on how RAPID works with OData services, see [RAPID and OData](./rapid-pro-odata.md)
