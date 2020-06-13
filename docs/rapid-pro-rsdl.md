@@ -46,6 +46,44 @@ definition of the UserName field that has `String`
 
 Fields are build by specifying fieldname (for example UserName) followed by `:` and primitive type like `String` etc.
 
+
+## Type representation in URI scheme
+
+By default each type is being represented in the URI scheme using it's name.
+Default representation will let developers obtain list of the results (as opposed to single value)
+For example when defining `Person` type in schema as follows :
+
+> `type Person` => GET `/v4/Rapid/Person`
+
+Executing `GET` should return list of the Persons in the database
+
+### Customization of the URI scheme
+
+Developers can control how each type is exposed under URI scheme by utilizing special 
+types `type Query` and `type Mutation`.
+
+`type Query` is being used to expose read operations.
+For example
+
+```graphql
+type Query {
+    ## Returns array of person objects (/v4/Rapid/Persons)
+    Persons: [Person]
+    ## Returns single of person object (/v4/Rapid/Admin)
+    Admin: Person
+}
+```
+
+By default RapidPro is not exposing operations that can modify resources.
+To enable modifications developers need to specify special `type mutation`
+
+```graphql
+type Mutation {
+    ## Allows to perform write operation to the person object
+    Person: Person
+}
+```
+
 ## Possible primitive types
 
 RSDL provides mutiple primitive types out of the 
@@ -63,13 +101,14 @@ Boolean input
 Boolean
 
 """ 
-Binary data, stream of octets
-"""
-Binary
+32bit Integer Data type
 """ 
-Binary data, stream of octets
+Int32
+
+""" 
+Decimal point variable
 """
-Binary
+Decimal
 
 """ 
 Date and time with a time-zone offset, no leap seconds
@@ -87,14 +126,9 @@ Time without a time-zone offset
 TimeOfDay
 
 """ 
-Decimal point variable
+Binary data, stream of octets
 """
-Decimal
-
-""" 
-32bit Integer Data type
-""" 
-Int32
+Binary
 
 """ 
 64bit Integer Data type
