@@ -9,7 +9,7 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'Optional Features',
+            label: 'Features',
             items: [
                 'spec/features',
                 'rapid-edit',
