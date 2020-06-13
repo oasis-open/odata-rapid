@@ -1,6 +1,6 @@
 ---
 id: features
-title: Overview
+title: Feature Overview
 ---
 
 RAPID services can be very simple,

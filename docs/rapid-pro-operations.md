@@ -16,7 +16,7 @@ resource.
 
 Operations include Actions and Functions.
 
-# Actions
+## Actions
 
 Actions may have side-affects, are invoked using `POST`, and have parameters specified in the body.
 
@@ -32,7 +32,7 @@ Actions may have side-affects, are invoked using `POST`, and have parameters spe
 }
 ```
 
-# Functions
+## Functions
 
 Functions are invoked using `GET` and must be non-side affecting. 
 Parameters are passed to functions as query options:

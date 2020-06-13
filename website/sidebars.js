@@ -9,8 +9,9 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'Features',
+            label: 'Optional Features',
             items: [
+                'spec/features',
                 'rsdl',
                 'spec/resourceformat',
                 'spec/batch',
