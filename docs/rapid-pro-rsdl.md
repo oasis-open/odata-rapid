@@ -18,12 +18,11 @@ RSDL is compatible with GraphQL syntax which gives numerous benefits:
 
 > NOTE: RSDL can be compiled into CSDL JSON and CSDL XML formats using a subset of the features of the OData specification
 
-## Workflow
+## Building your first type
 
 Developers who would like to represent their datamodel will need to create new Rapid schema file,
-for example `MyRapidPro.graphql`.
-At minimim schema will require at least one EntityType.
-Entity type is being build by specifying `type` keyword and listing all it's fields names like follows:
+for example `MyRapidPro.graphql`. At minimim schema will require at least one EntityType.
+Entity type is being build by specifying `type` keyword and listing all it's fields like follows:
 
 
 ```graphql
@@ -36,11 +35,83 @@ type Person {
 }
 ```
 
-Fields are build by specifying fieldname (for example UserName) followed by `:` and type like `String` etc.
+This minimal definition of the Rapid schema contain following elements:
 
-## Possible types
+> `type Person`  - definition of the `Person` type
 
-TODO
+> `UserName: String! @RapidID` -
+definition of the UserName field that has `String`
+ primitive type and `@RapidID` modifier that assigns it to become Entity ID 
+
+
+Fields are build by specifying fieldname (for example UserName) followed by `:` and primitive type like `String` etc.
+
+## Possible primitive types
+
+RSDL provides mutiple primitive types out of the 
+box
+
+```graphql
+""" 
+String input
+"""
+String
+
+""" 
+Boolean input
+"""
+Boolean
+
+""" 
+Binary data, stream of octets
+"""
+Binary
+""" 
+Binary data, stream of octets
+"""
+Binary
+
+""" 
+Date and time with a time-zone offset, no leap seconds
+"""
+DateTimeOffset
+
+""" 
+Date without a time-zone offset
+"""
+Date
+
+""" 
+Time without a time-zone offset
+"""
+TimeOfDay
+
+""" 
+Decimal point variable
+"""
+Decimal
+
+""" 
+32bit Integer Data type
+""" 
+Int32
+
+""" 
+64bit Integer Data type
+"""
+Int64
+
+""" 
+Describes double precision float
+"""
+Double
+
+""" 
+Describes Globally Unique Identifier (also known as UUID)
+16-byte (128-bit) unique identifier
+"""
+Guid
+```
 
 ## Relationships (Navigation components)
 
