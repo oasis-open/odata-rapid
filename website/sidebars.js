@@ -3,25 +3,28 @@ module.exports = {
         {
             type: 'category',
             label: 'Introduction',
-            items: ['gettingstarted', 'rsdl'],
+            items: [
+                'gettingstarted'
+            ],
         },
         {
             type: 'category',
-            label: 'Customization',
-            items: ['operations', 'rapid-edit'],
-        },
-        {
-            type: 'category',
-            label: 'Specification',
+            label: 'Features',
             items: [
                 'spec/features',
-                'spec/odata',
+                'rapid-edit',
+                'operations',
+                'rsdl',
                 'spec/resourceformat',
                 'spec/batch',
+                // 'spec/odata',
             ]
         },
     ],
     tutorial: {
-        'Rapid Tutorial': ['tutorial/buildserver','tutorial/buildclient'],
+        'Rapid Tutorial': [
+            'tutorial/buildserver',
+            'tutorial/buildclient'
+        ],
     },
 };
