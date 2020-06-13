@@ -14,8 +14,7 @@ const features = [
     // imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Rapid was designed to provide out of the box API layer on top of your data,
-        giving you really fast and roboust approach to build your REST based 
+        Rapid provides a fast and robust approach for building your REST-based APIs
       </>
     ),
   },
@@ -24,17 +23,17 @@ const features = [
      //  imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        RAPID allows you to focus on design your Data that will be exposed as standarized
+        Rapid allows you to focus on your API's resource model and rely on well-established conventions for the nitty-gritty details
       </>
     ),
   },
   {
-    title: <>Based on Open Standard</>,
+    title: <>Based on Open Standards</>,
     //   imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Rapid is an Open Specification build by OASIS members and community.
-        Rapid is strongly influenced by existing standards like OpenAPI, OData and GraphQL
+        Rapid is an Open Specification build by OASIS members and the community.
+        Rapid is based on existing standards like OData, OpenAPI, and GraphQL
       </>
     ),
   },
@@ -60,7 +59,7 @@ function Home() {
   const {siteConfig = {}} = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className="container">
