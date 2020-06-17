@@ -21,7 +21,7 @@ RSDL is compatible with GraphQL syntax which gives numerous benefits:
 ## Building your first type
 
 Developers who would like to represent their datamodel will need to create new Rapid schema file,
-for example `MyRapidPro.graphql`. At minimim schema will require at least one EntityType.
+for example `MyRapidPro.graphql`. At minimum schema will require at least one Entity Type.
 Entity type is being build by specifying `type` keyword and listing all it's fields like follows:
 
 
@@ -35,7 +35,7 @@ type Person {
 }
 ```
 
-This minimal definition of the Rapid schema contain following elements:
+This minimal definition of the Rapid schema contains the following elements:
 
 > `type Person`  - definition of the `Person` type
 
@@ -44,7 +44,7 @@ definition of the UserName field that has `String`
  primitive type and `@RapidID` modifier that assigns it to become Entity ID 
 
 
-Fields are build by specifying fieldname (for example UserName) followed by `:` and primitive type like `String` etc.
+Fields are build by specifying field name (for example `UserName`) followed by `:` and a primitive type like `String` etc.
 
 
 ## Type representation in URI scheme
@@ -55,7 +55,7 @@ For example when defining `Person` type in schema as follows :
 
 > `type Person` => GET `/v4/Rapid/Person`
 
-Executing `GET` should return list of the Persons in the database
+Executing `GET` should return the list of the Persons in the database
 
 ### Customization of the URI scheme
 
