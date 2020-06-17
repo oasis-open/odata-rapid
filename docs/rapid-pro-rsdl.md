@@ -96,9 +96,21 @@ String input
 String
 
 """ 
+Int input that represents 32 bits integer
+"""
+Int
+
+""" 
+Float input that represents double precision decimal point value
+"""
+Float
+
+""" 
 Boolean input
 """
 Boolean
+
+""" Advanced types """ 
 
 """ 
 32bit Integer Data type
