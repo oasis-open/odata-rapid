@@ -76,8 +76,9 @@ These are enabled via the special `type Mutation`:
 
 ```graphql
 type Mutation {
-    # Allows to perform write operation to the person object
+    # Allows update operation to the company resource
     company: company @RapidUpdate
+    # Allows create, update, and delete operations to the competitors resource
     competitors: company @RapidCreate @RapidUpdate  @RapidDelete
 }
 ```
