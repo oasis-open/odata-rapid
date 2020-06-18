@@ -1,92 +1,91 @@
 ---
 id: rsdl
-title: Rapid Schema Definition Language (RSDL)
-sidebar_label: Rapid Schema Definition
+title: RAPID Schema Definition Language (RSDL)
+sidebar_label: RAPID Schema Definition
 ---
 
-RapidPro allows to design your services using the Rapid Service Definition Language (RSDL).
+RAPID allows to design your services using the RAPID Service Definition Language (RSDL).
 RSDL is an expression language for capturing services, entities, operations and various expressions in human-readable format.
 
 RSDL syntax is very similar to many popular schema formats like GraphQL,
 bringing simplicity and lowering amount of time required to learn it. 
 RSDL is compatible with GraphQL syntax which gives numerous benefits:
 
--   All existing IDE plugins for GraphQL syntax highlighting will work with Rapid format.
--   Numerous of tools for validating schema complexity, detecting changes can be also used with Rapid
+-   All existing IDE plugins for GraphQL syntax highlighting will work with RAPID format.
+-   Numerous of tools for validating schema complexity, detecting changes can be also used with RAPID
 -   Developers can use various tools to generate their models directly from database definitions or even code.
--   Simplified migration path from GraphQL to Rapid by reusing parts of the same schema.
+-   Simplified migration path from GraphQL to RAPID by reusing parts of the same schema.
 
 > NOTE: RSDL can be compiled into CSDL JSON and CSDL XML formats using a subset of the features of the OData specification
 
 ## Building your first type
 
-Developers who would like to represent their datamodel will need to create new Rapid schema file,
+Developers who would like to represent their datamodel will need to create new RAPID schema file,
 for example `MyRapidPro.graphql`. At minimum schema will require at least one Entity Type.
 Entity type is being build by specifying `type` keyword and listing all it's fields like follows:
 
-
 ```graphql
-type Person {
-    UserName: String! @RapidID
-    FirstName: String
-    LastName: String
-    MiddleName: String
-    Age: BigInt
+type company {
+    stockSymbol: String! @RapidID
+    name: String
+    incorporated: DateTimeOffset!
 }
 ```
 
-This minimal definition of the Rapid schema contains the following elements:
+This minimal definition of the RAPID schema contains the following elements:
 
-> `type Person`  - definition of the `Person` type
+> `type company`  - definition of the `company` type
 
-> `UserName: String! @RapidID` -
-definition of the UserName field that has `String`
- primitive type and `@RapidID` modifier that assigns it to become Entity ID 
+> `stockSymbol: String! @RapidID` -
+definition of the `stockSymbol` field that has `String`
+primitive type and `@RapidID` directive that assigns it to become Entity ID 
+
+Fields are defined by specifying field name (for example `name`) followed by `:` and a primitive type like `String` etc.
 
 
-Fields are build by specifying field name (for example `UserName`) followed by `:` and a primitive type like `String` etc.
+## Building your service
 
-
-## Type representation in URI scheme
-
-By default each type is being represented in the URI scheme using it's name.
-Default representation will let developers obtain list of the results (as opposed to single value)
-For example when defining `Person` type in schema as follows :
-
-> `type Person` => GET `/v4/Rapid/Person`
-
-Executing `GET` should return the list of the Persons in the database
-
-### Customization of the URI scheme
-
-Developers can control how each type is exposed under URI scheme by utilizing special 
-types `type Query` and `type Mutation`.
-
-`type Query` is being used to expose read operations.
-For example
+A RAPID service consists of top-level resources that can be addressed via URLs.
+These are defined via the special type `Query`:
 
 ```graphql
 type Query {
-    ## Returns array of person objects (/v4/Rapid/Persons)
-    Persons: [Person]
-    ## Returns single of person object (/v4/Rapid/Admin)
-    Admin: Person
+    company: company
+    competitors: [company]
 }
 ```
 
-By default RapidPro is not exposing operations that can modify resources.
-To enable modifications developers need to specify special `type mutation`
+Each field of `Query` defines a top-level resource that can be reached via a URI ending in the same name:
+
+> GET `/v4/rapid/company`
+
+will return the company this service is about.
+
+> GET `/v4/rapid/competitors`
+
+will return the list of the competitor companies: `[company]` means that `competitors` is a list resource, and  the list items are of type `company`.
+
+> GET `/v4/rapid/competitors/cgswl`
+
+will return the competitor company identified by the string `cgswl`.
+
+## Enabling resource modification
+
+By default RAPID is not exposing operations that can modify resources.
+These are enabled via the special `type Mutation`:
 
 ```graphql
 type Mutation {
-    ## Allows to perform write operation to the person object
-    Person: Person
+    # Allows update operation to the company resource
+    company: company @RapidUpdate
+    # Allows create, update, and delete operations to the competitors resource
+    competitors: company @RapidCreate @RapidUpdate  @RapidDelete
 }
 ```
 
 ## Possible primitive types
 
-RSDL provides mutiple primitive types out of the 
+RSDL provides multiple primitive types out of the 
 box
 
 ```graphql
@@ -161,7 +160,37 @@ Guid
 
 ## Relationships (Navigation components)
 
-TODO
+Types can have fields that use other structured types:
+
+```graphql
+type company {
+    stockSymbol: String! @RapidID
+    name: String
+    incorporated: DateTimeOffset!
+    employees: [employee]
+}
+
+type employee {
+    id: Int32! @RapidID
+    firstName: String
+    lastName: String
+    title: String
+}
+```
+
+If these related types are not listed in the `Query` type, they can only be accessed indirectly:
+
+> GET `/v4/rapid/company/employees`
+
+will return the list of employees of the company this service is about.
+
+> GET `/v4/rapid/company/employees/2`
+
+will return the employee whose `id` equals `2`.
+
+> GET `/v4/rapid/competitors/cgswl/employees`
+
+will return the list of employees of the competitor `cgswl`.
 
 ## Custom operations
 
