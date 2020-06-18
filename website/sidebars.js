@@ -5,7 +5,7 @@ module.exports = {
             label: 'Introduction',
             items: [
                 'gettingstarted'
-            ],
+            ]
         },
         {
             type: 'category',
@@ -17,15 +17,23 @@ module.exports = {
                 'operations',
                 'rsdl',
                 'spec/resourceformat',
-                'spec/batch',
-                'spec/odata',
-            ]
+                'spec/batch'
+            ]            
         },
+        {
+            type: 'category',
+            label: 'Related Technologies',
+            items: [
+                'related/odata',
+                'related/graphql',
+                'related/openapi'
+            ]
+        }
     ],
     tutorial: {
         'Rapid Tutorial': [
             'tutorial/buildserver',
             'tutorial/buildclient'
-        ],
-    },
+        ]
+    }
 };
