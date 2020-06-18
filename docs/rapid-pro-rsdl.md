@@ -18,12 +18,11 @@ RSDL is compatible with GraphQL syntax which gives numerous benefits:
 
 > NOTE: RSDL can be compiled into CSDL JSON and CSDL XML formats using a subset of the features of the OData specification
 
-## Workflow
+## Building your first type
 
 Developers who would like to represent their datamodel will need to create new Rapid schema file,
-for example `MyRapidPro.graphql`.
-At minimim schema will require at least one EntityType.
-Entity type is being build by specifying `type` keyword and listing all it's fields names like follows:
+for example `MyRapidPro.graphql`. At minimum schema will require at least one Entity Type.
+Entity type is being build by specifying `type` keyword and listing all it's fields like follows:
 
 
 ```graphql
@@ -36,11 +35,129 @@ type Person {
 }
 ```
 
-Fields are build by specifying fieldname (for example UserName) followed by `:` and type like `String` etc.
+This minimal definition of the Rapid schema contains the following elements:
 
-## Possible types
+> `type Person`  - definition of the `Person` type
 
-TODO
+> `UserName: String! @RapidID` -
+definition of the UserName field that has `String`
+ primitive type and `@RapidID` modifier that assigns it to become Entity ID 
+
+
+Fields are build by specifying field name (for example `UserName`) followed by `:` and a primitive type like `String` etc.
+
+
+## Type representation in URI scheme
+
+By default each type is being represented in the URI scheme using it's name.
+Default representation will let developers obtain list of the results (as opposed to single value)
+For example when defining `Person` type in schema as follows :
+
+> `type Person` => GET `/v4/Rapid/Person`
+
+Executing `GET` should return the list of the Persons in the database
+
+### Customization of the URI scheme
+
+Developers can control how each type is exposed under URI scheme by utilizing special 
+types `type Query` and `type Mutation`.
+
+`type Query` is being used to expose read operations.
+For example
+
+```graphql
+type Query {
+    ## Returns array of person objects (/v4/Rapid/Persons)
+    Persons: [Person]
+    ## Returns single of person object (/v4/Rapid/Admin)
+    Admin: Person
+}
+```
+
+By default RapidPro is not exposing operations that can modify resources.
+To enable modifications developers need to specify special `type mutation`
+
+```graphql
+type Mutation {
+    ## Allows to perform write operation to the person object
+    Person: Person
+}
+```
+
+## Possible primitive types
+
+RSDL provides mutiple primitive types out of the 
+box
+
+```graphql
+""" 
+String input
+"""
+String
+
+""" 
+Int input that represents 32 bits integer
+"""
+Int
+
+""" 
+Float input that represents double precision decimal point value
+"""
+Float
+
+""" 
+Boolean input
+"""
+Boolean
+
+""" Advanced types """ 
+
+""" 
+32bit Integer Data type
+""" 
+Int32
+
+""" 
+Decimal point variable
+"""
+Decimal
+
+""" 
+Date and time with a time-zone offset, no leap seconds
+"""
+DateTimeOffset
+
+""" 
+Date without a time-zone offset
+"""
+Date
+
+""" 
+Time without a time-zone offset
+"""
+TimeOfDay
+
+""" 
+Binary data, stream of octets
+"""
+Binary
+
+""" 
+64bit Integer Data type
+"""
+Int64
+
+""" 
+Describes double precision float
+"""
+Double
+
+""" 
+Describes Globally Unique Identifier (also known as UUID)
+16-byte (128-bit) unique identifier
+"""
+Guid
+```
 
 ## Relationships (Navigation components)
 

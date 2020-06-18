@@ -32,11 +32,6 @@ Decimal point variable
 scalar Decimal
 
 """ 
-16bit Integer Data type
-"""
-scalar Int16
-
-""" 
 32bit Integer Data type
 """
 scalar Int32
