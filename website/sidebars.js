@@ -18,7 +18,7 @@ module.exports = {
                 'rsdl',
                 'spec/resourceformat',
                 'spec/batch'
-            ]            
+            ]
         },
         {
             type: 'category',
