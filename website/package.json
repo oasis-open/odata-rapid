@@ -7,7 +7,7 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "lintDocs": "prettier ../docs/spec/**.md --write"
+    "lintDocs": "prettier ../docs/spec/**.md ../docs/related/**.md --write"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.56",
