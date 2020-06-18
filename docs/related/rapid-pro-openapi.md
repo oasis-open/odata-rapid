@@ -1,4 +1,4 @@
-﻿﻿---
+---
 id: openapi
 title: RAPID and OpenAPI
 ---
