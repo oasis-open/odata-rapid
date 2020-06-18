@@ -2,6 +2,8 @@
 
 ## OASIS TC Open Repository: odata-rapid
 
+> NOTE: OData Rapid is under construction 
+
 This GitHub public repository was created at the request of the 
 [OASIS Open Data Protocol (OData) TC](https://www.oasis-open.org/committees/odata/) as an 
 [OASIS TC Open Repository](https://www.oasis-open.org/resources/open-repositories/) to support 
