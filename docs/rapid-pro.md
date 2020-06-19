@@ -121,4 +121,4 @@ A RAPID service can easily support generic OData V4 clients by:
 
 RAPID services MAY support any additional conventions defined in the OData specification as appropriate to the service.
 
-For more information on how RAPID works with OData services, see [RAPID and OData](./spec/rapid-pro-odata.md)
+For more information on how RAPID works with OData services, see [RAPID and OData](./related/rapid-pro-odata.md)
