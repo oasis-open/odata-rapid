@@ -20,12 +20,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {
-          to: 'docs/tutorial/buildserver',
-          label: 'Tutorial',
-          position: 'left',
-          activeBaseRegex: `docs/tutorial/(buildserver|buildclient)`,
-        },
+        // {
+        //   to: 'docs/tutorial/buildserver',
+        //   label: 'Tutorial',
+        //   position: 'left',
+        //   activeBaseRegex: `docs/tutorial/(buildserver|buildclient)`,
+        // },
       ],
     },
     footer: {
