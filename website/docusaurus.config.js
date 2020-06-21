@@ -1,8 +1,8 @@
 module.exports = {
   title: 'RAPID',
   tagline: 'Fastest way to build your RESTful API',
-  url: 'http://oasis-open.github.io',
-  baseUrl: '/odata-rapid/',
+  url: 'https://rapid.rocks',
+  baseUrl: '/',
   favicon: 'img/rest.svg',
   organizationName: 'oasis-open', // Usually your GitHub org/user name.
   projectName: 'odata-rapid', // Usually your repo name.
