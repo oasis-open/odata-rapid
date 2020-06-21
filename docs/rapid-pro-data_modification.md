@@ -4,7 +4,7 @@ title: Modifying Resources
 sidebar_label: Modifying Resources
 ---
 
-RAPID-PRO defines simple REST operations for Create, Update, and Delete.
+RAPID defines simple REST operations for Create, Update, and Delete.
 
 ## Creating a Resource
 
