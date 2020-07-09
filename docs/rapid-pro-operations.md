@@ -39,4 +39,4 @@ Parameters are passed to functions as query options:
 
 | Template | GET {resource-path}/{functionName}?{@param=value...}                 |
 | -------- | :------------------------------------------------------------------- |
-| Example  | GET [http://rapid-pro.org/company/topEmployees?@num=2](https://jetsons.azurewebsites.net/company/employees/topEmployees(num=2)) |
+| Example  | GET [http://rapid-pro.org/company/topEmployees?@num=2](https://jetsons.azurewebsites.net/company/topEmployees(num=2)) |
