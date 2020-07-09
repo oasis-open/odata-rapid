@@ -38,7 +38,7 @@ The client can select individual properties of the resource using the `select` o
 
 | Template    | GET {resource-path}?select={propertyName,…}                                                                                     |
 | ----------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| **Example** | GET [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?select=name,stockSymbol) |
+| **Example** | GET [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?$select=name,stockSymbol) |
 
 **Result:**
 
@@ -58,7 +58,7 @@ Related resources can be retrieved as nested resources through the `expand` quer
 
 | Template    | GET {collection-resource-path}?expand={navigationProperty,…}                                                      |
 | ----------- | :---------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company?expand=employees`](https://jetsons.azurewebsites.net/company?expand=employees) |
+| **Example** | GET [`http://rapid-pro.org/company?expand=employees`](https://jetsons.azurewebsites.net/company?$expand=employees) |
 
 **Result:**
 
@@ -94,7 +94,7 @@ you can express the same options for the related resource that you can for any o
 
 | Template    | GET {collection-resource-path}?expand={navigationProp(queryOptions),…}                                                                                  |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company?expand=employees(select=firstName)`](<https://jetsons.azurewebsites.net/company?expand=employees(select=firstName)>) |
+| **Example** | GET [`http://rapid-pro.org/company?expand=employees(select=firstName)`](<https://jetsons.azurewebsites.net/company?$expand=employees($select=firstName)>) |
 
 **Result:**
 
@@ -180,7 +180,7 @@ the client can select a subset of properties to be returned for each instance in
 
 | Template    | GET {collection-resource-path}?select={propertyName,…}                                                                              |
 | ----------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company/employees?select=lastName`](https://jetsons.azurewebsites.net/company/employees?select=lastName) |
+| **Example** | GET [`http://rapid-pro.org/company/employees?select=lastName`](https://jetsons.azurewebsites.net/company/employees?$select=lastName) |
 
 **Result:**
 
@@ -207,7 +207,7 @@ They can use the `count` query option to request the count of all resources in t
 
 | Template    | GET {collection-resource-path}?skip={int}<br/>GET {collection-resource-path}?top={int}<br/>GET {collection-resource-path}?count=true                  |
 | ----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company/employees?skip=1&top=2&count=true`](https://jetsons.azurewebsites.net/company/employees?skip=1&top=2&count=true) |
+| **Example** | GET [`http://rapid-pro.org/company/employees?skip=1&top=2&count=true`](https://jetsons.azurewebsites.net/company/employees?$skip=1&$top=2&$count=true) |
 
 **Result:**
 
@@ -242,7 +242,7 @@ The client can use the `orderby` query option to order the results returned with
 
 | Template    | GET {collection-resource-path}?orderby={propertyName [asc \| desc],…}                                                                                                 |
 | ----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company/employees?orderby=lastName asc, id desc`](https://jetsons.azurewebsites.net/company/employees?orderby=lastName%20asc,%20id%20desc) |
+| **Example** | GET [`http://rapid-pro.org/company/employees?orderby=lastName asc, id desc`](https://jetsons.azurewebsites.net/company/employees?$orderby=lastName%20asc,%20id%20desc) |
 
 **Result:**
 
@@ -283,7 +283,7 @@ The client can use the `filter` query option to filter the results returned from
 
 | Template    | GET {collection-resource-path}?filter={filter-expression}                                                                                                       |
 | ----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Example** | GET [`http://rapid-pro.org/company/employees?filter=lastName eq 'Jetson'`](https://jetsons.azurewebsites.net/company/employees?filter=lastName%20eq%20'Jetson') |
+| **Example** | GET [`http://rapid-pro.org/company/employees?filter=lastName eq 'Jetson'`](https://jetsons.azurewebsites.net/company/employees?$filter=lastName%20eq%20'Jetson') |
 
 **Result:**
 
@@ -321,7 +321,7 @@ The order of query options is not significant.
 | Template    | GET {resource-path}?select={propertyName,…}&expand={navigationProperty(queryOptions),…}                                                                                                                                                     |
 | ----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 |             | GET {collection-resource-path}?<br/> select={propertyName,…}<br/> &top={int}<br/> &skip={int}<br/> &count=true<br/> &filter={filter-expression}<br/> &orderby={propertyName [asc \| desc],…}<br/> &expand={navigationProperty(queryOptions),…}     |
-| **Example** | GET [`http://rapid-pro.org/company?select=name&expand=employees(select=firstName;filter=lastName eq 'Jetson')`](<https://jetsons.azurewebsites.net/company?select=name&expand=employees(select=firstName;filter=lastName%20eq%20'Jetson')>) |
+| **Example** | GET [`http://rapid-pro.org/company?select=name&expand=employees(select=firstName;filter=lastName eq 'Jetson')`](<https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=firstName;$filter=lastName%20eq%20'Jetson')>) |
 
 **Result:**
 
