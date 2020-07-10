@@ -1,0 +1,25 @@
+type company {
+  stockSymbol: String! @RapidID
+  name: String
+  incorporated: DateTimeOffset!
+  employees: [employee]
+  topEmployees(num: Int32): [employee]
+}
+
+type employee {
+  id: Int32! @RapidID
+  firstName: String
+  lastName: String
+  title: String
+  youreFired(reason: String) @RapidAction
+}
+
+type Query {
+  company: company
+  competitors: [company]
+}
+
+type Mutation {
+  company: company @RapidUpdate
+  competitors: company @RapidCreate @RapidUpdate @RapidDelete
+}
