@@ -1,0 +1,30 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Jetsons.Models">
+            <EntityType Name="company">
+                <Key>
+                    <PropertyRef Name="stockSymbol"/>
+                </Key>
+                <Property Name="stockSymbol" Type="Edm.String" Nullable="false"/>
+                <Property Name="name" Type="Edm.String"/>
+                <Property Name="incorporated" Type="Edm.DateTimeOffset" Nullable="false"/>
+                <NavigationProperty Name="employees" Type="Collection(Jetsons.Models.employee)" ContainsTarget="true"/>
+            </EntityType>
+            <EntityType Name="employee">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="id" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="firstName" Type="Edm.String"/>
+                <Property Name="lastName" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String"/>
+            </EntityType>
+            <Action Name="ResetDataSource"/>
+            <EntityContainer Name="Container">
+                <EntitySet Name="competitors" EntityType="Jetsons.Models.company"/>
+                <Singleton Name="company" Type="Jetsons.Models.company"/>
+                <ActionImport Name="ResetDataSource" Action="Jetsons.Models.ResetDataSource"/>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
