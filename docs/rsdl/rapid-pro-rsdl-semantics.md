@@ -91,7 +91,7 @@ And respectively Type definitions without @key properties are mapped to a comple
       "name": {
         "$Type": "rapid.name"
       }
-    },
+    }
 ```
 
 ```XML
@@ -285,6 +285,7 @@ The return type of a function is mapped similar to a property type with the same
           }
         ],
         "$ReturnType": {
+          "$Collection": true,
           "$Type": "Edm.Int32"
         }
       }
@@ -299,7 +300,7 @@ The return type of a function is mapped similar to a property type with the same
 
     <Function Name="bar" IsBound="true" IsComposable="true">
         <Parameter Name="it" Type="rapid.employee" Nullable="false" />
-        <ReturnType Type="Edm.Int32" Nullable="false" />
+        <ReturnType Type="Collection(Edm.Int32)" Nullable="false" />
     </Function>
 ```
 
