@@ -125,6 +125,9 @@ In the following example lets assume, name is mapped to a complete type and empl
       "$Key": [
         "stockSymbol"
       ],
+      "stockSymbol": {
+        "$Type": "Edm.String"
+      },
       "name": {
         "$Type": "Edm.String"
       },
@@ -149,14 +152,14 @@ In the following example lets assume, name is mapped to a complete type and empl
 
 The type of a property is one of:
 
-- the enumerations or types defined in the model
 - one of the primitive types defined in the 'typeName' syntax rule
 - any of the primitive EDM type listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530338)
+- the types or enums defined in the model
 
-Each of these named types can be marked as
+Each of these named types can be marked
 
 - optional via a question mark `?`
-- multi value via enclosing it in brackets `[` `]`
+- multi-value via enclosing it in brackets `[` `]`
 
 ```RSDL
     type foo
@@ -165,6 +168,28 @@ Each of these named types can be marked as
         test3: integer?
         test1: [integer]
         test4: [integer?]
+    }
+```
+
+```JSON
+  "foo": {
+      "$Kind": "EntityType",
+      "test1": {
+        "$Type": "Edm.Int32"
+      },
+      "test1": {
+        "$Nullable": true,
+        "$Type": "Edm.Int32"
+      },
+      "test3": {
+        "$Collection": true,
+        "$Type": "Edm.Int32"
+      },
+      "test4": {
+        "$Nullable": true,
+        "$Collection": true,
+        "$Type": "Edm.Int32"
+      }
     }
 ```
 
@@ -195,9 +220,25 @@ The binding parameter of the function is inferred from the containing type produ
     }
 ```
 
+```JSON
+   "foo": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "it",
+            "$Type": "rapid.employee"
+          }
+        ]
+      }
+    ]
+```
+
 ```XML
     <Function Name="foo" IsBound="true" IsComposable="true">
-        <Parameter Name="this" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
     </Function>
 ```
 
@@ -215,13 +256,49 @@ The return type of a function is mapped similar to a property type with the same
     }
 ```
 
+```JSON
+    "foo": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "it",
+            "$Type": "rapid.employee"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Int32"
+        }
+      }
+    ],
+    "bar": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "it",
+            "$Type": "rapid.employee"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Int32"
+        }
+      }
+    ]
+```
+
 ```XML
-    <Function Name="promote" IsBound="true" IsComposable="true">
-        <Parameter Name="this" Type="rapid.employee" Nullable="false" />
+    <Function Name="foo" IsBound="true" IsComposable="true">
+        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
     </Function>
-        <Function Name="promote" IsBound="true" IsComposable="true">
-        <Parameter Name="this" Type="rapid.employee" Nullable="false" />
+
+    <Function Name="bar" IsBound="true" IsComposable="true">
+        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
     </Function>
 ```
@@ -231,17 +308,42 @@ The return type of a function is mapped similar to a property type with the same
 Parameters are similar to properties in that they have a name and reference a type.
 
 ```RSDL
-type employee
-{
-    @key id: integer
+    type employee
+    {
+        @key id: integer
+        foo(a: integer, b: [integer?])
+    }
+```
 
-    foo(a: integer, b: [integer?])
-}
+```JSON
+    "foo": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "it",
+            "$Type": "rapid.employee"
+          },
+          {
+            "$Name": "a",
+            "$Type": "Edm.Int32"
+          },
+          {
+            "$Name": "b",
+            "$Collection": true,
+            "$Type": "Edm.Int32",
+            "$Nullable": true
+          }
+        ]
+      }
+    ]
 ```
 
 ```XML
     <Function Name="foo" IsBound="true" IsComposable="true">
-        <Parameter Name="this" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
         <Parameter Type="Edm.Int32" Nullable="false" />
         <Parameter Type="Collection(Edm.Int32)" Nullable="true" />
     </Function>
@@ -255,6 +357,14 @@ A [enumDefinition](./rapid-pro-rsdl-abnf.md#enumDefinition) is mapped to an CSDL
 
 ```RSDL
 enum employmentType { salaried hourly }
+```
+
+```JSON
+    "employmentType": {
+      "$Kind": "EnumType",
+      "salaried": 0,
+      "hourly": 1
+    }
 ```
 
 ```XML
