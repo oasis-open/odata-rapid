@@ -47,7 +47,8 @@ parameter           = identifier ":" typeReference
 
 typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName            = integer / string / boolean / double / decimal / "Edm" "." identifier
+typeName            = builtInType / "Edm" "." identifier / identifier
+builtInType         = integer / string / boolean / double / decimal
 
 ```
 

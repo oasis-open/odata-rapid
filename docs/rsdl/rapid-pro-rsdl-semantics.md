@@ -9,11 +9,23 @@ Please refer to [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) for the syntacti
 
 A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "rapid", that has an entity container named "default".
 
+```JSON
+{
+    "$Version": "4.01",
+    "$EntityContainer": "rapid.default",
+    "rapid": {
+        "default": {
+            "$Kind": "EntityContainer"
+        }
+    }
+}
+```
+
 ```XML
-    <Schema Namespace="rapid" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-        <EntityContainer Name="default">
-        </EntityContainer>
-    </Schema>
+<Schema Namespace="rapid" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <EntityContainer Name="default">
+    </EntityContainer>
+</Schema>
 ```
 
 The model's
@@ -38,6 +50,18 @@ And respectively Type definitions without @key properties are mapped to a comple
     }
 ```
 
+```JSON
+    "name": {
+      "$Kind": "ComplexType",
+      "firstName": {
+        "$Type": "Edm.String"
+      },
+      "lastName": {
+        "$Type": "Edm.String",
+      }
+    }
+```
+
 ```XML
     <ComplexType Name="name">
         <Property Name="firstName" Type="Edm.String" Nullable="false" />
@@ -53,6 +77,21 @@ And respectively Type definitions without @key properties are mapped to a comple
         @key id: integer
         name : name
     }
+```
+
+```JSON
+    "employee": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "id"
+      ],
+      "id": {
+        "$Type": "Edm.Int32"
+      },
+      "name": {
+        "$Type": "rapid.name"
+      }
+    },
 ```
 
 ```XML
@@ -77,6 +116,22 @@ In the following example lets assume, name is mapped to a complete type and empl
         @key stockSymbol: string
         name: name
         employees: [employee]
+    }
+```
+
+```JSON
+    "company": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "stockSymbol"
+      ],
+      "name": {
+        "$Type": "Edm.String"
+      },
+      "ceo": {
+        "$Kind": "NavigationProperty",
+        "$Type": "rapid.employee"
+      }
     }
 ```
 
