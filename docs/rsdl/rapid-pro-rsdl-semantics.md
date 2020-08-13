@@ -377,6 +377,71 @@ enum employmentType { salaried hourly }
 
 ## Service definition
 
+As mentioned above, every RAPID service model create a CSDL entity container named "default"
+```RSDL
+service {
+}
+```
+
+```JSON
+    
+```
+
+```XML
+   <EntityContainer Name="default">
+```
+
+### multi-value service element
+
+A service definition element of a multi-value type gets mapped to a CSDL entity set.
+
+```RSDL
+service
+{
+  employees: [employee]
+}
+```
+
+```XML
+  <EntitySet Name="employees" EntityType="rapid.employee" />
+```
+
+If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL), the appropriate navigation property bindings get created.
+In below example, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value). The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
+
+RAPID does not allow to have multiple entity sets for the same type, so that the binding is always uniquely defined.
+
+```RSDL
+service
+{
+    competitors: [company]
+}
+```
+
+```XML
+  <EntitySet Name="competitors" EntityType="rapid.company">
+    <NavigationPropertyBinding Path="ceo" Target="employees" />
+    <NavigationPropertyBinding Path="employees" Target="employees" />
+  </EntitySet>
+```
+
+
+
+### single-value service element
+
+A service definition element of a single-value type gets mapped to a CSDL singleton.
+
+```RSDL
+service
+{
+  company: company
+}
+```
+
+```XML
+   <Singleton Name="company" Type="rapid.company" />
+```
+
 ## Appendix
 
 ### References
