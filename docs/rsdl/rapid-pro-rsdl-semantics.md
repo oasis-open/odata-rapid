@@ -168,8 +168,8 @@ Each of these named types can be marked
     type foo
     {
         test1: integer
-        test3: integer?
-        test1: [integer]
+        test2: integer?
+        test3: [integer]
         test4: [integer?]
     }
 ```
@@ -180,7 +180,7 @@ Each of these named types can be marked
       "test1": {
         "$Type": "Edm.Int32"
       },
-      "test1": {
+      "test2": {
         "$Nullable": true,
         "$Type": "Edm.Int32"
       },
@@ -199,7 +199,7 @@ Each of these named types can be marked
 ```XML
     <EntityType Name="foo">
         <Property Name="test1" Type="Edm.Int32" Nullable="false" />
-        <Property Name="test1" Type="Edm.Int32" Nullable="true" />
+        <Property Name="test2" Type="Edm.Int32" Nullable="true" />
         <Property Name="test3" Type="Collection(Edm.Int32)" Nullable="false"/>
         <Property Name="test4" Type="Collection(Edm.Int32)" Nullable="true"/>
     </EntityType>
