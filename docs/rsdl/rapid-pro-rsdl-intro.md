@@ -14,7 +14,7 @@ The core description of the "shape" of the API is given by a RSDL document.
 
 Below is a first example of an RSDL file that describes an API of a service that provides data on companies and their employees
 
-```RSDL
+```
 type company
 {
     @key stockSymbol: string

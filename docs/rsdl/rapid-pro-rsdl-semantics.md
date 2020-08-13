@@ -45,7 +45,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 
 ### Type definitions without @key properties
 
-```RSDL
+```
     type name
     {
         firstName : string
@@ -74,7 +74,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 
 ### Type definitions with @key properties
 
-```RSDL
+```
     type employee
     {
         @key id: integer
@@ -113,7 +113,7 @@ The properties of a type definition are mapped to either a Property or a Navigat
 
 In the following example lets assume, name is mapped to a complete type and employee is mapped to a entity type.
 
-```RSDL
+```
     type company
     {
         @key stockSymbol: string
@@ -164,7 +164,7 @@ Each of these named types can be marked
 - optional via a question mark `?`
 - multi-value via enclosing it in brackets `[` `]`
 
-```RSDL
+```
     type foo
     {
         test1: integer
@@ -214,7 +214,7 @@ The syntactical production rule called "function" is mapped to a bound action or
 
 The binding parameter of the function is inferred from the containing type production rule and named "this"
 
-```RSDL
+```
     type employee
     {
         @key id: integer
@@ -249,7 +249,7 @@ The binding parameter of the function is inferred from the containing type produ
 
 The return type of a function is mapped similar to a property type with the same semantic for `[` `]` and `?`.
 
-```RSDL
+```
     type employee
     {
         @key id: integer
@@ -311,7 +311,7 @@ The return type of a function is mapped similar to a property type with the same
 
 Parameters are similar to properties in that they have a name and reference a type.
 
-```RSDL
+```
     type employee
     {
         @key id: integer
@@ -359,7 +359,7 @@ Parameters are similar to properties in that they have a name and reference a ty
 
 A [enumDefinition](./rapid-pro-rsdl-abnf.md#enumDefinition) is mapped to an CSDL EnumType. The enumeration members values are automatically assigned.
 
-```RSDL
+```
 enum employmentType { salaried hourly }
 ```
 
@@ -381,7 +381,7 @@ enum employmentType { salaried hourly }
 ## Service definition
 
 As mentioned above, every RAPID service model create a CSDL entity container named "default"
-```RSDL
+```
 service {
 }
 ```
@@ -398,7 +398,7 @@ service {
 
 A service definition element of a multi-value type gets mapped to a CSDL entity set.
 
-```RSDL
+```
 service
 {
   employees: [employee]
@@ -414,7 +414,7 @@ In below example, the `company` type has a `ceo` and an `employees` property of 
 
 RAPID does not allow to have multiple entity sets for the same type, so that the binding is always uniquely defined.
 
-```RSDL
+```
 service
 {
     competitors: [company]
@@ -434,7 +434,7 @@ service
 
 A service definition element of a single-value type gets mapped to a CSDL singleton.
 
-```RSDL
+```
 service
 {
   company: company
