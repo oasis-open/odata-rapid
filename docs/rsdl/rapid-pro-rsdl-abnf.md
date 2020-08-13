@@ -1,6 +1,8 @@
 # RAPID Pro syntax
 
-July 2020
+<p style="font-size: xxx-large">DRAFT</p>
+Initial Draft. July 2020
+
 
 ## Overview
 

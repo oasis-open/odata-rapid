@@ -1,5 +1,8 @@
 # RAPID Pro schema definition language
 
+<p style="font-size: xxx-large">DRAFT</p>
+Initial Draft. July 2020
+
 The semantic of RSDL (RAPID Pro schema definition language) can be described by mapping
 syntactical constructs described in [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) to equivalent [CSDL](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) constructs.
 
