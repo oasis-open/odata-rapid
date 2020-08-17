@@ -5,8 +5,9 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
-import Rocket from '@site/static/img/rocket.svg';
-import animateRapidSpaceMan from '../components/rocket/animation'
+// Temporary bug in docusaurus
+// import Rocket from '@site/static/img/rocket.svg';
+// import animateRapidSpaceMan from '../components/rocket/animation'
 
 const features = [
   {
@@ -79,7 +80,7 @@ function Home() {
               </div>
             </div>
             <div className={classnames('col col--5')}>
-              <Rocket></Rocket>
+              {/* <Rocket></Rocket> */}
             </div>
           </div>
         </div>
@@ -101,7 +102,7 @@ function Home() {
   );
 }
 
-setTimeout(animateRapidSpaceMan, 1000)
+// setTimeout(animateRapidSpaceMan, 1000)
 
-export default Home; 
+export default Home;
 
