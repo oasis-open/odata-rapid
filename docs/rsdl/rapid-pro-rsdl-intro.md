@@ -5,8 +5,7 @@ title: RAPID SDL intro
 
 # Introduction to RAPID Pro schema definition language (RSDL)
 
-<p style="font-size: xxx-large">DRAFT</p>
-
+> DRAFT
 
 RAPID Pro schema definition language (RSDL) is language to describe Web APIs.
 RSDL is based on a [profile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the

@@ -5,7 +5,7 @@ title: RAPID SDL ABNF
 
 # RAPID Pro syntax
 
-<p style="font-size: xxx-large">DRAFT</p>
+> DRAFT
 Initial Draft. July 2020
 
 

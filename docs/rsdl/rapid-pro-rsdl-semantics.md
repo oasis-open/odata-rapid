@@ -5,7 +5,7 @@ title: RAPID SDL Semantics
 
 # RAPID Pro schema definition language
 
-<p style="font-size: xxx-large">DRAFT</p>
+> DRAFT
 Initial Draft. July 2020
 
 The semantic of RSDL (RAPID Pro schema definition language) can be described by mapping
