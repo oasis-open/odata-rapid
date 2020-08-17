@@ -2,6 +2,16 @@
 
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
+### Linting and fixing documentation issues 
+
+To run linting and build locally before contributing any change to the website
+
+```
+cd website
+yarn lintDocs
+yarn build
+```
+
 ### Installation
 
 ```

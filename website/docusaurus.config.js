@@ -13,7 +13,7 @@ module.exports = {
         alt: 'Logo',
         src: 'img/logo.svg',
       },
-      items: [
+      links: [
         {
           to: 'docs/',
           activeBasePath: 'docs',

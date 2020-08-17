@@ -15,9 +15,9 @@ module.exports = {
                 'rapid-read',
                 'rapid-edit',
                 'operations',
-                'rsdl-intro',
-                'rsdl-semantics',
-                'rsdl-abnf',
+                'rsdl/rsdl-intro',
+                'rsdl/rsdl-semantics',
+                'rsdl/rsdl-abnf',
                 'spec/resourceformat',
                 'spec/batch'
             ]
