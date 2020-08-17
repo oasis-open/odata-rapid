@@ -310,7 +310,7 @@ The client can use the `filter` query option to filter the results returned from
 In this case, there is no next link since all of the resources matching the filter predicate were returned inline.
 
 There is a full expression language to describe what the client can express in the filter. 
-For more information, see [RAPID Expression Language](.\rapid-pro-expression_language.md]).
+For more information, see [RAPID Expression Language](./spec/rapid-pro-expression_language.md)
 
 ## Combining Query Options
 
