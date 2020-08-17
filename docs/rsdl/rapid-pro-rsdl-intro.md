@@ -1,3 +1,8 @@
+---
+id: rsdl-intro
+title: RAPID SDL intro
+---
+
 # Introduction to RAPID Pro schema definition language (RSDL)
 
 <p style="font-size: xxx-large">DRAFT</p>

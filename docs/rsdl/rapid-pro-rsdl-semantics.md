@@ -1,3 +1,8 @@
+---
+id: rsdl-semantics
+title: RAPID SDL Semantics
+---
+
 # RAPID Pro schema definition language
 
 <p style="font-size: xxx-large">DRAFT</p>
