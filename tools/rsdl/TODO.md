@@ -2,12 +2,12 @@
 
 ## minimal feature set
 
-from [issue 29](https://github.com/standardapi/odata-rapid-pro/issues/29)
+<!-- from [issue 29](https://github.com/standardapi/odata-rapid-pro/issues/29) -->
 
 | Category   | L2           | L3                                    | L4                  | L5        | Done     |
 | ---------- | ------------ | ------------------------------------- | ------------------- | --------- | -------- |
-| CSDL       | JSON         | 4.01 Conformance                      |                     |           | Done     |
-| CSDL       | XML          | 4.01 Conformance                      |                     |           |          |
+| CSDL       | JSON         | 4.01 Conformance                      |                     |           | &#x2713; |
+| CSDL       | XML          | 4.01 Conformance                      |                     |           | &#x2713; |
 | CSDL       | Entity Model | Nominal Types                         |                     |           | &#x2713; |
 | CSDL       | Entity Model | Structured Types                      |                     |           | &#x2713; |
 | CSDL       | Entity Model | Primitive Types                       |                     |           | &#x2713; |
