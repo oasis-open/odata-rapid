@@ -9,7 +9,7 @@ type company
     ceo: employee
 
     test1: [integer]    
-    test1: double
+    test2: double
     test3: double?
     test4: [Edm.Double?]
     // test5: [Edm.Double]?  // invalid, the question mark is on the element type
