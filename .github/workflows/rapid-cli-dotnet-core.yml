@@ -18,13 +18,13 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore .\tools\rsdl\dotnet\rapid\rapid.csproj
+      run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
     - name: Build
-      run: dotnet build .\tools\rsdl\dotnet\rapid\rapid.csproj --configuration Release --no-restore
+      run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration Release --no-restore
 #     - name: Test
 #       run: dotnet test --no-restore --verbosity normal
     - name: publish-win
-      run: dotnet publish .\tools\rsdl\dotnet\rapid\rapid.csproj --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
+      run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
     - name: publish-osx
-      run: dotnet publish .\tools\rsdl\dotnet\rapid\rapid.csproj --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
+      run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
 
