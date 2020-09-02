@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rsdl.parser", "rsdl.parser\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rsdl.models", "rsdl.models\rsdl.models.csproj", "{C0610D63-8335-4B7B-B162-0017C45350D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo", "demo\demo.csproj", "{B61D1E7B-4BB2-4A0B-9FF3-FA237760355C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rapid", "rapid\rapid.csproj", "{B61D1E7B-4BB2-4A0B-9FF3-FA237760355C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rsdl.models.transformation", "rsdl.models.transformation\rsdl.models.transformation.csproj", "{E467284F-4D0B-4645-B76F-9F4AF0F15903}"
 EndProject
