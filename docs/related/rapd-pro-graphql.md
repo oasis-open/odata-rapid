@@ -13,9 +13,6 @@ In RAPID, the schema of a service can be described through a [request](..\spec\r
 
 GraphQL defines a simple syntax for defining the shape of a service.
 
-RAPID introduces a [GraphQL-compatible syntax](..\rapid-pro-rsdl.md) for defining the shape of a service,
-extended with annotations to describe things like queryability.
-
 ## Query Syntax
 
 In a GraphQL query, the developer describes the properties to be retrieved, and depth traversed, through a JSON-like structure.
