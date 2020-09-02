@@ -1,0 +1,30 @@
+name: rapid cli .NET Core
+
+on:
+  push:
+    branches: [ master, custom-DSL-parser ]
+  pull_request:
+    branches: [ master, custom-DSL-parser ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: publish-win
+      run: dotnet publish --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
+    - name: publish-osx
+      run: dotnet publish --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
+
