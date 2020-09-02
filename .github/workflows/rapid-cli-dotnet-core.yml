@@ -23,6 +23,10 @@ jobs:
       #     - name: Test
       #       run: dotnet test --no-restore --verbosity normal
       - name: publish-win
-        run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
+        run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --no-restore --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
       - name: publish-osx
-        run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
+        run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --no-restore --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
+      - uses: actions/upload-artifact@v2
+        with:
+          path: /tools/rsdl/dotnet/rapid/bin/release/netcoreapp3.1/*/publish/
+          if-no-files-found: error
