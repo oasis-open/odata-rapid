@@ -1,0 +1,62 @@
+enum employmentType { salaried hourly }
+
+type company
+{
+    @key stockSymbol: string
+    name: string
+    incorporated: dateTime
+    employees: [employee]
+    ceo: employee
+
+    test1: [integer]    
+    test2: double
+    test3: double?
+    test4: [Edm.Double?]
+    // test5: [Edm.Double]?  // invalid, the question mark is on the element type
+}
+
+type employee
+{
+    @key id: integer 
+    key: boolean
+    name : name    
+    title: string
+    employmentType: employmentType
+
+    // a CSDL function
+    promote() : integer     
+    
+    // a CSDL function overload
+    promote(levels: integer, note:string) : integer 
+
+    // a CSDL action with a required parameter that can be null
+    @action fire(date: dateTime?) 
+    
+    // a CSDL action with an optional parameter
+    // @action fire(date?: dateTime)    
+}
+
+type name
+{
+    firstName : string
+    middleInitial: string?
+    lastName: string
+    title: string?
+}
+
+// function resetDataSource() 
+
+
+service
+{
+    // unbound, "global" function
+    // resetDataSource
+
+    // entitySet http://host/competitors
+    competitors: [company]
+
+    // singelton http://host/company
+    company: company
+
+    employees: [employee]
+}

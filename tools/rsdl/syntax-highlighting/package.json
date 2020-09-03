@@ -1,0 +1,25 @@
+{
+    "name": "rsdl",
+    "displayName": "rsdl",
+    "description": "RAPID Pro Schema Definition Language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.47.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "rsdl",
+            "aliases": ["rsdl", "rsdl"],
+            "extensions": [".rsdl"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "rsdl",
+            "scopeName": "source.rsdl",
+            "path": "./syntaxes/rsdl.tmLanguage.json"
+        }]
+    }
+}

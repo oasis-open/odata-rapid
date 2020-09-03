@@ -2,29 +2,37 @@ name: rapid cli .NET Core
 
 on:
   push:
-    branches: [ master, custom-DSL-parser ]
+
+    branches: [master]
   pull_request:
-    branches: [ master, custom-DSL-parser ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
-    - name: Install dependencies
-      run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
-    - name: Build
-      run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration Release --no-restore
-#     - name: Test
-#       run: dotnet test --no-restore --verbosity normal
-    - name: publish-win
-      run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime win10-x64 -p:PublishSingleFile=true
-    - name: publish-osx
-      run: dotnet publish ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --self-contained true --runtime osx.10.11-x64 -p:PublishSingleFile=true
+      - uses: actions/checkout@v2
 
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+
+      - name: Install dependencies
+        run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
+
+      - name: Build
+        run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj --version-suffix "prerelease"
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./tools/rsdl/dotnet/rapid/nupkg
+          if-no-files-found: error
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./tools/rsdl/dotnet/rapid/nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org

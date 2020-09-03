@@ -1,0 +1,22 @@
+type company
+{
+    @key stockSymbol: string
+    name: string
+
+    employees: [employee] 
+    ceo: employee?
+}
+
+type employee
+{
+    @key id: integer 
+    name: string
+}
+
+service
+{
+    companies: [company]
+    employees: [employee]
+    // vips: [employee]
+    // largecaps: [company]
+}

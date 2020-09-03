@@ -1,0 +1,50 @@
+
+type company
+{
+    @key stockSymbol: string
+    name: string
+    incorporated: dateTime
+    employees: [employee]
+
+    test: [integer]
+    ceo: employee
+}
+
+type employee
+{
+    @key id: integer 
+    key: boolean
+    name : name    
+    title: string
+
+    // // a CSDL action  with an optional parameter
+    // @action fire(date?: dateTimeOffset) 
+        
+    // // a CSDL action with an required parameter that can be null
+    // @action fire(date: dateTimeOffset?) 
+    
+    // promote() : integer     // a CSDL function
+}
+
+type name
+{
+    firstName : string
+    middleInitial: string?
+    lastName: string
+    title: string?
+}
+
+// function resetDataSource() 
+
+
+service
+{
+    // unbound, "global" action
+    // resetDataSource
+
+    // entitySet http://host/competitors
+    competitors: [company]
+
+    // singelton http://host/company
+    company: company
+}

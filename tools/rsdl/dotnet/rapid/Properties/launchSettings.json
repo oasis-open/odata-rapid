@@ -1,0 +1,8 @@
+{
+    "profiles": {
+        "rapid": {
+            "commandName": "Project",
+            "commandLineArgs": "--input jetsons_small.rsdl --output ../../../model.csdl --format all"
+        }
+    }
+}

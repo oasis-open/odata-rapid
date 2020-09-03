@@ -1,0 +1,94 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "rsdl",
+    "scopeName": "source.rsdl",
+    "patterns": [
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#line-comment"
+        },
+        {
+            "include": "#common-types"
+        }, {
+            "include": "#annotation"
+        }
+    ],
+    "repository": {
+        "comment": "https://www.sublimetext.com/docs/3/scope_naming.html",
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "constant.language.type.rsdl",
+                    "match": "\\b(type)\\b"
+                }, {
+                    "name": "constant.language.function.rsdl",
+                    "match": "\\b(function)\\b"
+                }, {
+                    "name": "constant.language.service.rsdl",
+                    "match": "\\b(service)\\b"
+                }, {
+                    "name": "constant.language.service.rsdl",
+                    "match": "\\b(enum)\\b"
+                }
+            ]
+        },
+        "line-comment": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.rsdl",
+                    "match": "//.*$\n?"
+                }
+            ]
+        },
+        "annotation": {
+            "patterns": [
+                {
+                    "name": "string.unquoted.preprocessor.message.rsdl",
+                    "match": "@\\b([a-zA-Z]+)(\\([^\\)]*\\))?"
+                }
+            ]
+        },
+        "common-types": {
+            "patterns": [
+                {
+                    "name": "storage.type.rsdl",
+                    "match": "\\b(integer|string|boolean|double|dateTime)\\b"
+                }, {
+                    "name": "storage.type.rsdl",
+                    "match": "Edm\\.\\b([a-zA-z]+)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.rsdl",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.rsdl",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "brace-declaration": {
+            "name": "declaration.braces.rsdl",
+            "begin": "{",
+            "end": "}",
+            "beginCaptures": {
+                "0": {
+                    "name": "punctuation.brace.open"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.brace.close"
+                }
+            }
+        }
+    }
+}
