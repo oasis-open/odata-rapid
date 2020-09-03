@@ -2,9 +2,10 @@ name: rapid cli .NET Core
 
 on:
   push:
-    branches: [master, custom-DSL-parser]
+
+    branches: [master]
   pull_request:
-    branches: [master, custom-DSL-parser]
+    branches: [master]
 
 jobs:
   build:
