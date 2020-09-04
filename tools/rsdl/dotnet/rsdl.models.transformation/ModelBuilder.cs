@@ -1,4 +1,7 @@
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using rsdl.parser.model;
 using System;
 using System.Collections.Generic;
@@ -68,14 +71,14 @@ namespace rsdl.parser
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            // if the type exists on the edm model, exit imediatly
+            // if the type exists on the edm model, exit immediately
             var decl = edmModel.FindDeclaredType($"{namespaceName}.{definition.Name}");
             if (decl is EdmStructuredType es)
             {
-                return es; 
+                return es;
             }
 
-            // add the type immediatly so that it can be found when resolving property types
+            // add the type immediately so that it can be found when resolving property types
             var edmType = definition.Keys.Any() ?
                 (EdmStructuredType)edmModel.AddEntityType(namespaceName, definition.Name) :
                 (EdmStructuredType)edmModel.AddComplexType(namespaceName, definition.Name);
@@ -85,7 +88,7 @@ namespace rsdl.parser
             {
                 AddProperty(edmType, prop);
             }
-            
+
             // add keys
             if (edmType is EdmEntityType entityType)
             {
@@ -99,7 +102,7 @@ namespace rsdl.parser
             // add functions
             foreach (var func in definition.Functions)
             {
-                if(!(edmType is EdmEntityType ))
+                if (!(edmType is EdmEntityType))
                 {
                     throw new InvalidOperationException($"function on complex type at {func.Position}");
                 }
@@ -143,33 +146,41 @@ namespace rsdl.parser
 
         private void AddFunction(RdmStructuredType rdmType, RdmFunction func)
         {
-            var isFunction = ! func.Annotations.Any(a => a is ActionAnnotation);
+            var isFunction = !func.Annotations.Any(a => a is ActionAnnotation);
             var edmTypeRef = func.ReturnType != null ? MakeTypeReference(func.ReturnType) : null;
             // TODO: check that a function has a return type
-            var operation =  isFunction ?
+            var edmOperation = isFunction ?
                 (EdmOperation)new EdmFunction(namespaceName, func.Name, edmTypeRef, true, null, true) :
-                (EdmOperation)new EdmAction(namespaceName, func.Name, edmTypeRef, true, null);            
-            edmModel.AddElement(operation);
+                (EdmOperation)new EdmAction(namespaceName, func.Name, edmTypeRef, true, null);
+            edmModel.AddElement(edmOperation);
 
             // TODO: add binding parameter
             var self = MakeTypeReference(new RdmTypeReference(rdmType.Name));
-            operation.AddParameter(new EdmOperationParameter(operation, "this", self));
+            edmOperation.AddParameter(new EdmOperationParameter(edmOperation, "this", self));
 
             foreach (var param in func.Parameters)
             {
                 var paramType = MakeTypeReference(param.PropType);
-                operation.AddParameter(new EdmOperationParameter(operation, param.Name, paramType));
+                var edmParameter = new EdmOperationParameter(edmOperation, param.Name, paramType);
+                edmOperation.AddParameter(edmParameter);
+                if (param.IsOptional)
+                {
+                    // https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md#OptionalParameter
+                    var annotation = new EdmVocabularyAnnotation(edmParameter, CoreVocabularyModel.OptionalParameterTerm, new EdmBooleanConstant(true));
+                    annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                    edmModel.AddVocabularyAnnotation(annotation);
+                }
             }
         }
 
         private void AddService(RdmService service)
         {
             var containerName = "default";
-            var container = (EdmEntityContainer) edmModel.EntityContainer ?? edmModel.AddEntityContainer(namespaceName, containerName);
+            var container = (EdmEntityContainer)edmModel.EntityContainer ?? edmModel.AddEntityContainer(namespaceName, containerName);
 
             foreach (var item in service.Items)
             {
-                switch(item)
+                switch (item)
                 {
                     case RdmServiceCollection collection:
                         AddEntitySet(container, item, collection);
@@ -186,7 +197,7 @@ namespace rsdl.parser
             foreach (var tuple in
                 from type in edmModel.SchemaElements.OfType<IEdmStructuredType>()
                 from property in type.DeclaredProperties.OfType<IEdmNavigationProperty>()
-                select (type,property))
+                select (type, property))
             {
                 var (type, property) = tuple;
                 var sources = FindEntitySetOfType(container, type).ToList();
@@ -214,7 +225,7 @@ namespace rsdl.parser
         {
             return container.Elements.OfType<EdmEntitySet>().Where(eset =>
                 eset.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
-         }
+        }
 
         private EdmEntitySet AddEntitySet(EdmEntityContainer container, IRdmServiceElement item, RdmServiceCollection collection)
         {
@@ -268,7 +279,7 @@ namespace rsdl.parser
 
         /// <summary>
         /// Returns the IEdmType in <see cref="edmModel"/> for the given RDM type reference.
-        /// Creates a new EdmType (via <see cref="AddStructuredType"/>) in case 
+        /// Creates a new EdmType (via <see cref="AddStructuredType"/>) in case
         /// it isn't added to <see cref="edmModel"/> yet.
         /// </summary>
         /// <param name="typeRef"></param>
@@ -307,7 +318,7 @@ namespace rsdl.parser
                 edmType = edmModel.FindType(edmTypeName);
                 return edmType;
             }
-            else if(typeRef.Name.StartsWith("Edm."))
+            else if (typeRef.Name.StartsWith("Edm."))
             {
                 edmType = edmModel.FindType(typeRef.Name);
                 return edmType;

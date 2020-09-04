@@ -8,7 +8,7 @@ type company
     employees: [employee]
     ceo: employee
 
-    test1: [integer]    
+    test1: [integer]
     test2: double
     test3: double?
     test4: [Edm.Double?]
@@ -17,23 +17,26 @@ type company
 
 type employee
 {
-    @key id: integer 
+    @key id: integer
     key: boolean
-    name : name    
+    name : name
     title: string
     employmentType: employmentType
 
     // a CSDL function
-    promote() : integer     
-    
+    promote() : integer
+
     // a CSDL function overload
-    promote(levels: integer, note:string) : integer 
+    promote(levels: integer, note:string) : integer
 
     // a CSDL action with a required parameter that can be null
-    @action fire(date: dateTime?) 
-    
+    @action fire(date: dateTime?)
+
+    // a CSDL function with optional parameter
+    note(text: string, severity?: integer) : integer
+
     // a CSDL action with an optional parameter
-    // @action fire(date?: dateTime)    
+    // @action fire(date?: dateTime)
 }
 
 type name
@@ -44,7 +47,7 @@ type name
     title: string?
 }
 
-// function resetDataSource() 
+// function resetDataSource()
 
 
 service

@@ -12,12 +12,13 @@ using System.Linq;
 using System.Collections;
 using Microsoft.OData.Edm;
 using System.Threading;
+using System.Xml;
 
 namespace rsdl.parser
 {
     class Program
     {
-       
+
         static void Main(string[] args)
         {
             var switchMappings = new Dictionary<string, string>()
@@ -81,7 +82,7 @@ namespace rsdl.parser
                 }
             }
         }
-              
+
 
         private static void WriteCsdl(IEdmModel model, string inputPath, CsdlFormat format = CsdlFormat.XML)
         {

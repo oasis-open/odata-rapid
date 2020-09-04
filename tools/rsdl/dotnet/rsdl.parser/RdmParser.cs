@@ -61,7 +61,7 @@ namespace rsdl.parser
         static readonly TokenListParser<RdmToken, model.RdmProperty> Property =
             from ka in KeyAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from co in Token.EqualTo(RdmToken.Colon) 
+            from co in Token.EqualTo(RdmToken.Colon)
             from ty in TypeReference
             select new model.RdmProperty
             {
@@ -71,11 +71,27 @@ namespace rsdl.parser
                 Position = nm.GetPosition()
             };
 
+        static readonly TokenListParser<RdmToken, model.RdmParameter> Parameter =
+            from ka in KeyAnnotation.OptionalOrDefault()
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
+            from co in Token.EqualTo(RdmToken.Colon)
+            from ty in TypeReference
+            select new model.RdmParameter
+            {
+                Name = nm.ToStringValue(),
+                PropType = ty,
+                IsOptional = op.HasValue,
+                Annotations = NonNull(ka).ToArray(),
+                Position = nm.GetPosition()
+            };
+
+
         static readonly TokenListParser<RdmToken, model.RdmFunction> Function =
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
                 // parameters
-            from ps in Property.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))
+            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))
                 .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
                 // optional return type
             from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault()
@@ -117,10 +133,10 @@ namespace rsdl.parser
                  Members = ps.Select(t => t.ToStringValue()).ToList()
              };
 
-        #region service 
+        #region service
 
         // entityset = identifier ':' '[' identifier ']'
-        // singelton = identifier ':' identifier 
+        // singelton = identifier ':' identifier
         static readonly TokenListParser<RdmToken, model.IRdmServiceElement> ServiceElement =
               from nm in Token.EqualTo(RdmToken.Identifier)
               from dp in Token.EqualTo(RdmToken.Colon)
@@ -142,7 +158,7 @@ namespace rsdl.parser
         #endregion
 
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
-            Combinators.OneOf<RdmToken,model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
+            Combinators.OneOf<RdmToken, model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
                 TypeDefinition,
                 Service,
                 EnumDefinition);
@@ -154,7 +170,7 @@ namespace rsdl.parser
 
         //// --------------------------------
 
-      
+
 
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
