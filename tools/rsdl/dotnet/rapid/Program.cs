@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json;
 using Superpower;
 using System;
 using System.IO;
@@ -6,13 +5,7 @@ using Microsoft.OData.Edm.Csdl;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Serialization;
-using System.Reflection;
-using System.Linq;
-using System.Collections;
 using Microsoft.OData.Edm;
-using System.Threading;
-using System.Xml;
 
 namespace rsdl.parser
 {

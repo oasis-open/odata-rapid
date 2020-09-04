@@ -1,4 +1,4 @@
-﻿using rsdl.parser.model;
+using rsdl.parser.model;
 using Superpower;
 using Superpower.Model;
 using Superpower.Parsers;
