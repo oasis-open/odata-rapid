@@ -1,33 +1,50 @@
-using Superpower;
 using System;
 using System.IO;
-using Microsoft.OData.Edm.Csdl;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm;
+using CommandLine;
 
 namespace rsdl.parser
 {
     class Program
     {
-
-        static void Main(string[] args)
+        public class Options
         {
-            var switchMappings = new Dictionary<string, string>()
+            [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
+            public bool Verbose { get; set; }
+
+            [Option('f', "format", Required = false, HelpText = "Specify the format of the generated CSDL.", Default = CsdlFormat.All)]
+            public CsdlFormat Format { get; set; }
+
+            [Value(0, MetaName = "inputPath", HelpText = "Input file-name including path")]
+            public string InputPath { get; set; }
+        }
+
+        static int Main(string[] args)
+        {
+            var parser = new Parser(config =>
             {
-                { "--input", "input" },
-                { "--format", "format" },
-            };
-            var builder = new ConfigurationBuilder().AddCommandLine(args, switchMappings);
-            var config = builder.Build();
+                config.EnableDashDash = true;
+                config.HelpWriter = Console.Out;
+            });
 
-            var input = config["input"];
-            var format = string.IsNullOrWhiteSpace(config["format"]) ? CsdlFormat.All : Enum.Parse<CsdlFormat>(config["format"], true);
+            return parser.ParseArguments<Options>(args)
+                .MapResult(
+                    options => Run(options),
+                    errors => Error(errors));
+        }
 
-            Console.WriteLine($"converting input: '{input}' to CSDL ('{format}') ");
+        private static int Error(IEnumerable<Error> errors)
+        {
+            return 1;
+        }
 
-            Convert(input, format);
+        private static int Run(Options options)
+        {
+            Convert(options.InputPath, options.Format, options.Verbose);
+            return 0;
         }
 
         /// <summary>
@@ -35,54 +52,50 @@ namespace rsdl.parser
         /// </summary>
         /// <param name="inputPath">file name to parse</param>
         /// <param name="format">indicates wether it should be written as XML or JSON CSDL</param>
-        static void Convert(string inputPath, CsdlFormat format)
+        static void Convert(string inputPath, CsdlFormat format, bool verbose = false)
         {
-            var expression = File.ReadAllText(inputPath);
+            var content = File.ReadAllText(inputPath);
 
-            // 1. tokenize
-            var sw = Stopwatch.StartNew();
-            var tokenizer = RdmTokenizer.Tokenizer;
-            var tokenList = tokenizer.Tokenize(expression);
-            sw.Stop();
-            Console.WriteLine("tokenization {0}", sw.Elapsed);
-            // show tokens
-            //foreach (var token in tokenList)
-            //{
-            //    Console.WriteLine(token);
-            //}
+            // Parse RDM model
+            var model = RdmParser.Parse(content, out var diagnostics);
+            if (verbose)
+            {
+                Console.Error.WriteLine("tokenization: {0}", diagnostics.TokenizationTime);
+                Console.Error.WriteLine("parsing:      {0}", diagnostics.ParsingTime);
+            }
 
-            // 2. parse
-            sw.Start();
-            var parser = RdmParser.DataModel;
-            var model = parser.Parse(tokenList);
-            Console.WriteLine("parsing      {0}", sw.Elapsed);
-            //Console.WriteLine(JsonConvert.SerializeObject(model, Formatting.Indented, settings));
-
-            // 3. transform to CSDL
+            // Transform to CSDL
             try
             {
+                var sw = Stopwatch.StartNew();
                 var transformer = new ModelTransformer();
                 var csdlModel = transformer.Transform(model);
-                Console.WriteLine("transforming {0}", sw.Elapsed);
 
-                WriteCsdl(csdlModel, inputPath, format);
+                if (verbose)
+                {
+                    Console.Error.WriteLine("transforming: {0}", sw.Elapsed);
+                }
+                WriteCsdl(csdlModel, inputPath, format, verbose);
             }
             catch (TransformationException ex)
             {
                 using (new ConsoleColorSelector(ConsoleColor.Red))
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.Error.WriteLine($"Error: {ex.Message}");
                 }
             }
         }
 
 
-        private static void WriteCsdl(IEdmModel model, string inputPath, CsdlFormat format = CsdlFormat.XML)
+        private static void WriteCsdl(IEdmModel model, string inputPath, CsdlFormat format = CsdlFormat.XML, bool verbose = false)
         {
             if (format.HasFlag(CsdlFormat.XML))
             {
                 var path = Path.ChangeExtension(inputPath, ".csdl.xml");
-                Console.WriteLine("writing {0}", path);
+                if (verbose)
+                {
+                    Console.Error.WriteLine("writing {0}", path);
+                }
                 using (var file = File.CreateText(path))
                 using (var writer = System.Xml.XmlWriter.Create(file, new System.Xml.XmlWriterSettings { Indent = true }))
                 {
@@ -92,7 +105,10 @@ namespace rsdl.parser
             if (format.HasFlag(CsdlFormat.JSON))
             {
                 var path = Path.ChangeExtension(inputPath, ".csdl.json");
-                Console.WriteLine("writing {0}", path);
+                if (verbose)
+                {
+                    Console.WriteLine("writing {0}", path);
+                }
                 using (var file = File.Create(path))
                 using (var jsonWriter = new System.Text.Json.Utf8JsonWriter(file, new System.Text.Json.JsonWriterOptions { Indented = true }))
                 {
