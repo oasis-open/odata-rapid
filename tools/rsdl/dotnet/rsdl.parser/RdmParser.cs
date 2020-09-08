@@ -1,8 +1,9 @@
 ﻿using rsdl.parser.model;
 using Superpower;
-using Superpower.Model;
 using Superpower.Parsers;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace rsdl.parser
@@ -13,6 +14,32 @@ namespace rsdl.parser
     /// </summary>
     public class RdmParser
     {
+        public class ParserDiagnostics
+        {
+            public TimeSpan TokenizationTime { get; internal set; }
+            public TimeSpan ParsingTime { get; internal set; }
+        }
+
+        public static RdmDataModel Parse(string content, out ParserDiagnostics diagnostis)
+        {
+            diagnostis = new ParserDiagnostics();
+
+            // 1. tokenize
+            var sw = Stopwatch.StartNew();
+            var tokenizer = RdmTokenizer.Tokenizer;
+            var tokenList = tokenizer.Tokenize(content);
+            sw.Stop();
+            diagnostis.TokenizationTime = sw.Elapsed;
+
+            // 2. parse
+            sw.Start();
+            var parser = RdmParser.DataModel;
+            var model = parser.Parse(tokenList);
+            diagnostis.ParsingTime = sw.Elapsed;
+
+            return model;
+        }
+
         private static readonly object unit = new object();
 
         static TokenListParser<RdmToken, object> Keyword(string name) =>
@@ -61,7 +88,7 @@ namespace rsdl.parser
         static readonly TokenListParser<RdmToken, model.RdmProperty> Property =
             from ka in KeyAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from co in Token.EqualTo(RdmToken.Colon) 
+            from co in Token.EqualTo(RdmToken.Colon)
             from ty in TypeReference
             select new model.RdmProperty
             {
@@ -117,10 +144,10 @@ namespace rsdl.parser
                  Members = ps.Select(t => t.ToStringValue()).ToList()
              };
 
-        #region service 
+        #region service
 
         // entityset = identifier ':' '[' identifier ']'
-        // singelton = identifier ':' identifier 
+        // singelton = identifier ':' identifier
         static readonly TokenListParser<RdmToken, model.IRdmServiceElement> ServiceElement =
               from nm in Token.EqualTo(RdmToken.Identifier)
               from dp in Token.EqualTo(RdmToken.Colon)
@@ -142,7 +169,7 @@ namespace rsdl.parser
         #endregion
 
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
-            Combinators.OneOf<RdmToken,model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
+            ParserCombinators.OneOf<RdmToken, model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
                 TypeDefinition,
                 Service,
                 EnumDefinition);
@@ -152,50 +179,7 @@ namespace rsdl.parser
            from es in SchemaElement.Many()
            select new model.RdmDataModel { Items = es };
 
-        //// --------------------------------
-
-      
-
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
-    }
-
-    internal static class Combinators
-    {
-        public static TokenListParser<TKind, U> OneOf<TKind, U, T1, T2>(
-          TokenListParser<TKind, T1> p1,
-          TokenListParser<TKind, T2> p2)
-          where T1 : U
-          where T2 : U
-        {
-            return (
-                p1.Cast<TKind, T1, U>()
-            ).Or(
-                p2.Cast<TKind, T2, U>()
-            );
-        }
-
-        public static TokenListParser<TKind, U> OneOf<TKind, U, T1, T2, T3>(
-            TokenListParser<TKind, T1> p1,
-            TokenListParser<TKind, T2> p2,
-            TokenListParser<TKind, T3> p3)
-            where T1 : U
-            where T2 : U
-            where T3 : U
-        {
-            return (
-                p1.Cast<TKind, T1, U>()
-            ).Or(
-                p2.Cast<TKind, T2, U>()
-            ).Or(
-                p3.Cast<TKind, T3, U>()
-            );
-        }
-
-        public static TokenListParser<TKind, T> Between<TKind, T>(this TokenListParser<TKind, T> parser, TKind left, TKind right)
-            => parser.Between(Token.EqualTo(left), Token.EqualTo(right));
-
-        public static model.Position GetPosition<TKind>(this Token<TKind> token) =>
-            new model.Position(token.Position.Line, token.Position.Column);
     }
 }
