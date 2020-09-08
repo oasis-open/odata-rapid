@@ -24,6 +24,12 @@ jobs:
       - name: Build
         run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration Release --no-restore
 
+      - name: Setup format tool
+        run: dotnet tool install -g dotnet-format
+
+      - name: Check formatting
+        run: dotnet format ./tools/rsdl/dotnet --check
+
       - name: Pack
         run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj --version-suffix "prerelease"
 
