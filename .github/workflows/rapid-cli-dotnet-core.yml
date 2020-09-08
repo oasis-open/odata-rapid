@@ -2,9 +2,9 @@ name: rapid cli .NET Core
 
 on:
   push:
-    branches: [master]
+    branches: [master, optional-function-parameters]
   pull_request:
-    branches: [master]
+    branches: [master, optional-function-parameters]
 
 jobs:
   build:
