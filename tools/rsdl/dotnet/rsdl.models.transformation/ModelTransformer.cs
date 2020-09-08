@@ -1,4 +1,4 @@
-﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Edm;
 using rsdl.parser.model;
 
 namespace rsdl.parser

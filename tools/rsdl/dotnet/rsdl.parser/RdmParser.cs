@@ -1,4 +1,4 @@
-﻿using rsdl.parser.model;
+using rsdl.parser.model;
 using Superpower;
 using Superpower.Parsers;
 using System;
@@ -98,11 +98,27 @@ namespace rsdl.parser
                 Position = nm.GetPosition()
             };
 
+        static readonly TokenListParser<RdmToken, model.RdmParameter> Parameter =
+            from ka in KeyAnnotation.OptionalOrDefault()
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
+            from co in Token.EqualTo(RdmToken.Colon)
+            from ty in TypeReference
+            select new model.RdmParameter
+            {
+                Name = nm.ToStringValue(),
+                PropType = ty,
+                IsOptional = op.HasValue,
+                Annotations = NonNull(ka).ToArray(),
+                Position = nm.GetPosition()
+            };
+
+
         static readonly TokenListParser<RdmToken, model.RdmFunction> Function =
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
                 // parameters
-            from ps in Property.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))
+            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))
                 .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
                 // optional return type
             from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault()
@@ -178,7 +194,6 @@ namespace rsdl.parser
         public static readonly TokenListParser<RdmToken, model.RdmDataModel> DataModel =
            from es in SchemaElement.Many()
            select new model.RdmDataModel { Items = es };
-
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }
