@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -43,7 +43,22 @@ namespace rsdl.parser
 
         private static int Run(Options options)
         {
-            Convert(options.InputPath, options.Format, options.Verbose);
+            try
+            {
+                Convert(options.InputPath, options.Format, options.Verbose);
+            }
+            catch (ConversionException ex)
+            {
+                using (new ConsoleColorSelector(ConsoleColor.Red))
+                {
+                    Console.Error.WriteLine(ex.Message);
+                }
+                if (options.Verbose)
+                {
+                    Console.Error.WriteLine(ex.InnerException);
+                }
+                return ex.ReturnCode;
+            }
             return 0;
         }
 
@@ -54,15 +69,8 @@ namespace rsdl.parser
         /// <param name="format">indicates wether it should be written as XML or JSON CSDL</param>
         static void Convert(string inputPath, CsdlFormat format, bool verbose = false)
         {
-            var content = File.ReadAllText(inputPath);
-
-            // Parse RDM model
-            var model = RdmParser.Parse(content, out var diagnostics);
-            if (verbose)
-            {
-                Console.Error.WriteLine("tokenization: {0}", diagnostics.TokenizationTime);
-                Console.Error.WriteLine("parsing:      {0}", diagnostics.ParsingTime);
-            }
+            var content = ReadText(inputPath);
+            var model = ParseText(verbose, content);
 
             // Transform to CSDL
             try
@@ -79,13 +87,45 @@ namespace rsdl.parser
             }
             catch (TransformationException ex)
             {
-                using (new ConsoleColorSelector(ConsoleColor.Red))
-                {
-                    Console.Error.WriteLine($"Error: {ex.Message}");
-                }
+                throw new ConversionException(2, "error transforming rsdl", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ConversionException(2, "error transforming rsdl", ex);
             }
         }
 
+        private static string ReadText(string inputPath)
+        {
+            try
+            {
+                return File.ReadAllText(inputPath);
+            }
+            catch (Exception ex)
+            {
+                throw new ConversionException(1, $"can't read file {inputPath}", ex);
+            }
+        }
+
+        private static model.RdmDataModel ParseText(bool verbose, string content)
+        {
+            try
+            {
+                // Parse RDM model
+                var model = RdmParser.Parse(content, out var diagnostics);
+                if (verbose)
+                {
+                    Console.Error.WriteLine("tokenization: {0}", diagnostics.TokenizationTime);
+                    Console.Error.WriteLine("parsing:      {0}", diagnostics.ParsingTime);
+                }
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw new ConversionException(1, $"can't parse .rsdl file", ex);
+            }
+        }
 
         private static void WriteCsdl(IEdmModel model, string inputPath, CsdlFormat format = CsdlFormat.XML, bool verbose = false)
         {
