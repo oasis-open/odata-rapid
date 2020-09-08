@@ -114,7 +114,7 @@ namespace rsdl.parser
 
         private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
         {
-            var edmTypeRef = MakeTypeReference(prop.PropType);
+            var edmTypeRef = GetTypeReference(prop.PropType);
 
             // collection navigation property
             if (edmTypeRef is IEdmCollectionTypeReference collRef &&
@@ -147,28 +147,27 @@ namespace rsdl.parser
         private void AddFunction(RdmStructuredType rdmType, RdmFunction func)
         {
             var isFunction = !func.Annotations.Any(a => a is ActionAnnotation);
-            var edmTypeRef = func.ReturnType != null ? MakeTypeReference(func.ReturnType) : null;
+            var edmTypeRef = func.ReturnType != null ? GetTypeReference(func.ReturnType) : null;
             // TODO: check that a function has a return type
             var edmOperation = isFunction ?
                 (EdmOperation)new EdmFunction(namespaceName, func.Name, edmTypeRef, true, null, true) :
                 (EdmOperation)new EdmAction(namespaceName, func.Name, edmTypeRef, true, null);
             edmModel.AddElement(edmOperation);
 
-            // TODO: add binding parameter
-            var self = MakeTypeReference(new RdmTypeReference(rdmType.Name));
+            // add binding parameter
+            var self = GetTypeReference(new RdmTypeReference(rdmType.Name));
             edmOperation.AddParameter(new EdmOperationParameter(edmOperation, "this", self));
 
             foreach (var param in func.Parameters)
             {
-                var paramType = MakeTypeReference(param.PropType);
-                var edmParameter = new EdmOperationParameter(edmOperation, param.Name, paramType);
-                edmOperation.AddParameter(edmParameter);
+                var paramType = GetTypeReference(param.PropType);
                 if (param.IsOptional)
                 {
-                    // https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md#OptionalParameter
-                    var annotation = new EdmVocabularyAnnotation(edmParameter, CoreVocabularyModel.OptionalParameterTerm, new EdmBooleanConstant(true));
-                    annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-                    edmModel.AddVocabularyAnnotation(annotation);
+                    edmOperation.AddParameter(param.Name, paramType);
+                }
+                else
+                {
+                    edmOperation.AddOptionalParameter(param.Name, paramType);
                 }
             }
         }
@@ -247,7 +246,7 @@ namespace rsdl.parser
 
         #region type references
 
-        private IEdmTypeReference MakeTypeReference(RdmTypeReference typeRef)
+        private IEdmTypeReference GetTypeReference(RdmTypeReference typeRef)
         {
             // find the corresponding edm type
             IEdmType edmType = ResolveType(typeRef);
