@@ -99,7 +99,6 @@ namespace rsdl.parser
             };
 
         static readonly TokenListParser<RdmToken, model.RdmParameter> Parameter =
-            from ka in KeyAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
             from co in Token.EqualTo(RdmToken.Colon)
@@ -109,7 +108,6 @@ namespace rsdl.parser
                 Name = nm.ToStringValue(),
                 PropType = ty,
                 IsOptional = op.HasValue,
-                Annotations = NonNull(ka).ToArray(),
                 Position = nm.GetPosition()
             };
 
@@ -117,11 +115,9 @@ namespace rsdl.parser
         static readonly TokenListParser<RdmToken, model.RdmFunction> Function =
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
-                // parameters
-            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))
+            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
                 .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
-                // optional return type
-            from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault()
+            from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type            
             select new model.RdmFunction
             {
                 Name = nm.ToStringValue(),

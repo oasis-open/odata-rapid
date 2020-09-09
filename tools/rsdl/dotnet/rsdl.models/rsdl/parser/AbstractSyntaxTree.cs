@@ -97,11 +97,7 @@ namespace rsdl.parser.model
 
         public RdmTypeReference PropType { get; set; }
 
-        public IEnumerable<IAnnotation> Annotations { get; set; }
-
         public Position Position { get; set; }
-
-        public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
     }
 
     public class RdmFunction
