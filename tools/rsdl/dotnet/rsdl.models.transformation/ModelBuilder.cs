@@ -147,16 +147,7 @@ namespace rsdl.parser
         private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
         {
             var isFunction = !operation.Annotations.Any(a => a is ActionAnnotation);
-            if (operation.ReturnType == null)
-            {
-                throw new TransformationException($"function \"{operation.Name}\" at {operation.Position} must have a return type");
-            }
-
-            var edmTypeRef = operation.ReturnType != null ? GetTypeReference(operation.ReturnType) : null;
-            // TODO: check that a function has a return type
-            var edmOperation = isFunction ?
-                (EdmOperation)new EdmFunction(namespaceName, operation.Name, edmTypeRef, true, null, true) :
-                (EdmOperation)new EdmAction(namespaceName, operation.Name, edmTypeRef, true, null);
+            EdmOperation edmOperation = MakeOperation(operation, isFunction);
             edmModel.AddElement(edmOperation);
 
             // add binding parameter
@@ -174,6 +165,24 @@ namespace rsdl.parser
                 {
                     edmOperation.AddOptionalParameter(param.Name, paramType);
                 }
+            }
+        }
+
+        private EdmOperation MakeOperation(RdmOperation operation, bool isFunction)
+        {
+            if (isFunction)
+            {
+                if (operation.ReturnType == null)
+                {
+                    throw new TransformationException($"function \"{operation.Name}\" at {operation.Position} must have a return type");
+                }
+                var edmTypeRef = GetTypeReference(operation.ReturnType);
+                return (EdmOperation)new EdmFunction(namespaceName, operation.Name, edmTypeRef, true, null, true);
+            }
+            else
+            {
+                var edmTypeRef = operation.ReturnType != null ? GetTypeReference(operation.ReturnType) : null;
+                return new EdmAction(namespaceName, operation.Name, edmTypeRef, true, null);
             }
         }
 
