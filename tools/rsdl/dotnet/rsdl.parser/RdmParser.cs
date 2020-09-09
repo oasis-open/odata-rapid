@@ -112,13 +112,13 @@ namespace rsdl.parser
             };
 
 
-        static readonly TokenListParser<RdmToken, model.RdmFunction> Function =
+        static readonly TokenListParser<RdmToken, model.RdmOperation> Function =
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
                 .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
-            from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type            
-            select new model.RdmFunction
+            from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type
+            select new model.RdmOperation
             {
                 Name = nm.ToStringValue(),
                 ReturnType = rt,
@@ -129,7 +129,7 @@ namespace rsdl.parser
 
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
-                Function.Cast<RdmToken, RdmFunction, object>()
+                Function.Cast<RdmToken, RdmOperation, object>()
             ).Try().Or(
                 Property.Cast<RdmToken, RdmProperty, object>()
             );
@@ -142,7 +142,7 @@ namespace rsdl.parser
             {
                 Name = nm.ToStringValue(),
                 Properties = ps.OfType<model.RdmProperty>().ToList(),
-                Functions = ps.OfType<model.RdmFunction>().ToList(),
+                Functions = ps.OfType<model.RdmOperation>().ToList(),
             };
 
 

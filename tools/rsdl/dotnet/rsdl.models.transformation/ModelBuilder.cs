@@ -144,21 +144,26 @@ namespace rsdl.parser
             }
         }
 
-        private void AddFunction(RdmStructuredType rdmType, RdmFunction func)
+        private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
         {
-            var isFunction = !func.Annotations.Any(a => a is ActionAnnotation);
-            var edmTypeRef = func.ReturnType != null ? GetTypeReference(func.ReturnType) : null;
+            var isFunction = !operation.Annotations.Any(a => a is ActionAnnotation);
+            if (operation.ReturnType == null)
+            {
+                throw new TransformationException($"function \"{operation.Name}\" at {operation.Position} must have a return type");
+            }
+
+            var edmTypeRef = operation.ReturnType != null ? GetTypeReference(operation.ReturnType) : null;
             // TODO: check that a function has a return type
             var edmOperation = isFunction ?
-                (EdmOperation)new EdmFunction(namespaceName, func.Name, edmTypeRef, true, null, true) :
-                (EdmOperation)new EdmAction(namespaceName, func.Name, edmTypeRef, true, null);
+                (EdmOperation)new EdmFunction(namespaceName, operation.Name, edmTypeRef, true, null, true) :
+                (EdmOperation)new EdmAction(namespaceName, operation.Name, edmTypeRef, true, null);
             edmModel.AddElement(edmOperation);
 
             // add binding parameter
             var self = GetTypeReference(new RdmTypeReference(rdmType.Name));
             edmOperation.AddParameter(new EdmOperationParameter(edmOperation, "this", self));
 
-            foreach (var param in func.Parameters)
+            foreach (var param in operation.Parameters)
             {
                 var paramType = GetTypeReference(param.PropType);
                 if (param.IsOptional)
