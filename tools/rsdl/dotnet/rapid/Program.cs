@@ -15,10 +15,10 @@ namespace rsdl.parser
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
             public bool Verbose { get; set; }
 
-            [Option('f', "format", Required = false, HelpText = "Specify the format of the generated CSDL.", Default = CsdlFormat.All)]
+            [Option('f', "format", Required = false, HelpText = "Specify the format of the generated CSDL. One of JSON, XML or both.", Default = CsdlFormat.All)]
             public CsdlFormat Format { get; set; }
 
-            [Value(0, MetaName = "inputPath", HelpText = "Input file-name including path")]
+            [Value(0, MetaName = "rsdl file", HelpText = "Input file including path")]
             public string InputPath { get; set; }
         }
 
@@ -28,12 +28,12 @@ namespace rsdl.parser
             {
                 config.EnableDashDash = true;
                 config.HelpWriter = Console.Out;
+                config.CaseInsensitiveEnumValues = true;
             });
 
-            return parser.ParseArguments<Options>(args)
-                .MapResult(
-                    options => Run(options),
-                    errors => Error(errors));
+            return parser
+                .ParseArguments<Options>(args)
+                .MapResult(Run, Error);
         }
 
         private static int Error(IEnumerable<Error> errors)
@@ -52,10 +52,10 @@ namespace rsdl.parser
                 using (new ConsoleColorSelector(ConsoleColor.Red))
                 {
                     Console.Error.WriteLine(ex.Message);
-                }
-                if (options.Verbose)
-                {
-                    Console.Error.WriteLine(ex.InnerException);
+                    if (ex.InnerException != null)
+                    {
+                        Console.Error.WriteLine(ex.InnerException.Message);
+                    }
                 }
                 return ex.ReturnCode;
             }
