@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +41,7 @@ namespace rsdl.parser.model
     }
 
     /// <summary>
-    /// current implementation: RdmServiceCollection, RdmServiceSingelton, 
+    /// current implementation: RdmServiceCollection, RdmServiceSingelton,
     /// </summary>
     public interface IRdmServiceElement
     {
@@ -89,12 +89,26 @@ namespace rsdl.parser.model
         public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
     }
 
+    public class RdmParameter
+    {
+        public string Name { get; set; }
+
+        public bool IsOptional { get; set; }
+
+        public RdmTypeReference PropType { get; set; }
+
+        public IEnumerable<IAnnotation> Annotations { get; set; }
+
+        public Position Position { get; set; }
+
+        public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
+    }
+
     public class RdmFunction
     {
         public string Name { get; set; }
         public RdmTypeReference ReturnType { get; set; }
-        //TODO: replace RdmProperty with a new type RdmParameter
-        public ICollection<RdmProperty> Parameters { get; set; }
+        public ICollection<RdmParameter> Parameters { get; set; }
         public IEnumerable<IAnnotation> Annotations { get; set; }
         public Position Position { get; set; }
 

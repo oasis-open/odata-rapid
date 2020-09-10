@@ -1,4 +1,4 @@
-﻿using Superpower;
+using Superpower;
 using Superpower.Display;
 using Superpower.Model;
 using Superpower.Parsers;
