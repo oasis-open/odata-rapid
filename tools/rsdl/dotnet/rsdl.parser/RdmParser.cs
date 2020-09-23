@@ -99,6 +99,7 @@ namespace rsdl.parser
             };
 
         static readonly TokenListParser<RdmToken, model.RdmParameter> Parameter =
+
             from nm in Token.EqualTo(RdmToken.Identifier)
             from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
             from co in Token.EqualTo(RdmToken.Colon)
@@ -110,7 +111,6 @@ namespace rsdl.parser
                 IsOptional = op.HasValue,
                 Position = nm.GetPosition()
             };
-
 
         static readonly TokenListParser<RdmToken, model.RdmOperation> Function =
             from aa in ActionAnnotation.OptionalOrDefault()

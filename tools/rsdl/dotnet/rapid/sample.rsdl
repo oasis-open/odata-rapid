@@ -12,7 +12,7 @@ type company
     test2: double
     test3: double?
     test4: [Edm.Double?]
-    // test5: [Edm.Double]?  // invalid, the question mark is on the element type
+    // test5: [Edm.Double]?  // invalid, the question mark must be on the element type.
 }
 
 type employee
@@ -23,20 +23,20 @@ type employee
     title: string
     employmentType: employmentType
 
-    // a CSDL function
+    // a RSDL function that will be translate to a CSDL function
     promote() : integer
 
-    // a CSDL function overload
+    // a RSDL function with parameters
     promote(levels: integer, note:string) : integer
 
-    // a CSDL action with a required parameter that can be null
+    // a RSDL function with an optional parameter
+    addNote(text: string, severity?: integer) : integer
+
+    // a RSDL function that will be translate to a CSDL action with a required parameter that can be null
     @action fire(date: dateTime?)
 
-    // a CSDL function with optional parameter
-    note(text: string, severity?: integer) : integer
-
-    // a CSDL action with an optional parameter
-    // @action fire(date?: dateTime)
+    // a RSDL function that will be translate to a CSDL action with an optional parameter
+    @action fire(date?: dateTime)
 }
 
 type name
@@ -47,9 +47,6 @@ type name
     title: string?
 }
 
-// function resetDataSource()
-
-
 service
 {
     // unbound, "global" function
@@ -58,7 +55,7 @@ service
     // entitySet http://host/competitors
     competitors: [company]
 
-    // singelton http://host/company
+    // singleton http://host/company
     company: company
 
     employees: [employee]
