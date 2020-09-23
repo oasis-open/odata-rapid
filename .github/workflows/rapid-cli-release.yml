@@ -20,14 +20,14 @@ jobs:
         run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
 
       - name: Create NuGet Package
-        run: dotnet pack -c Release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/oasis-open/odata-rapid/releases/tag/${{ github.event.release.tag_name }}"
+        run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj -c Release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/oasis-open/odata-rapid/releases/tag/${{ github.event.release.tag_name }}"
         working-directory: ./src
 
       - name: Archive NuGet Package
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: Code.Library
-          path: ./tools/rsdl/dotnet/rapid/nupkg/rapid.${{ github.event.release.tag_name }}.nupkg
+          path: ./tools/rsdl/dotnet/rapid/nupkg
+          if-no-files-found: error
 
       - name: Publish Nuget Package
         run: dotnet nuget push ./tools/rsdl/dotnet/rapid/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://nuget.org --no-symbols true
