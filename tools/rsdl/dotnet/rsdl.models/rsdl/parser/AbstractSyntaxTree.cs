@@ -25,7 +25,7 @@ namespace rsdl.parser.model
         public IEnumerable<RdmProperty> Keys =>
             Properties.Where(p => p.Annotations.OfType<KeyAnnotation>().Any());
 
-        public ICollection<RdmFunction> Functions { get; set; }
+        public ICollection<RdmOperation> Functions { get; set; }
     }
 
     public class RdmEnum : IRdmSchemaElement
@@ -97,14 +97,10 @@ namespace rsdl.parser.model
 
         public RdmTypeReference PropType { get; set; }
 
-        public IEnumerable<IAnnotation> Annotations { get; set; }
-
         public Position Position { get; set; }
-
-        public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
     }
 
-    public class RdmFunction
+    public class RdmOperation
     {
         public string Name { get; set; }
         public RdmTypeReference ReturnType { get; set; }
@@ -135,6 +131,6 @@ namespace rsdl.parser.model
         public int Line { get; }
         public int Column { get; }
 
-        public override string ToString() => $"Ln:{Line} Ch: {Column}";
+        public override string ToString() => $"Ln: {Line}, Ch: {Column}";
     }
 }

@@ -23,7 +23,6 @@ type employee
     title: string
     employmentType: employmentType
 
-
     // a RSDL function that will be translate to a CSDL function
     promote() : integer
 
@@ -37,9 +36,7 @@ type employee
     @action fire(date: dateTime?)
 
     // a RSDL function that will be translate to a CSDL action with an optional parameter
-    // @action fire(date?: dateTime)
-
-
+    @action fire(date?: dateTime)
 }
 
 type name
