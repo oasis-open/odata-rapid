@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+
+    <!-- <AssemblyVersion> gets generated from VersionSuffix -->
+    <VersionPrefix Condition="'$(VersionPrefix)' == ''">0.8.0</VersionPrefix>
+    <Revision>$([System.DateTime]::UtcNow.ToString("yyMMddhhmmss"))</Revision>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">beta-$(Revision)</VersionSuffix>
+
+    <Company>OASIS OData Technical Committee</Company>
+    <Authors>Christof Sprenger</Authors>
+    <Copyright>Copyright © 2020</Copyright>
+    <RepositoryUrl>https://github.com/oasis-open/odata-rapid</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.BuildDateAttribute">
+      <_Parameter1>$([System.DateTime]::UtcNow.ToString("s"))</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>

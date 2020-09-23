@@ -14,4 +14,7 @@
     <ProjectReference Include="..\rsdl.models\rsdl.models.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <Description>RAPID schema definition language parser</Description>
+  </PropertyGroup>
 </Project>
