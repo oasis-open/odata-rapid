@@ -4,16 +4,27 @@
 
   <PropertyGroup>
 
-    <!-- <AssemblyVersion> gets generated from VersionSuffix -->
+    <!-- <AssemblyVersion> gets generated from VersionPrefix and VersionSuffix -->
     <VersionPrefix Condition="'$(VersionPrefix)' == ''">0.8.0</VersionPrefix>
     <Revision>$([System.DateTime]::UtcNow.ToString("yyMMddhhmmss"))</Revision>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">beta-$(Revision)</VersionSuffix>
 
     <Company>OASIS OData Technical Committee</Company>
     <Authors>Christof Sprenger</Authors>
-    <Copyright>Copyright © 2020</Copyright>
-    <RepositoryUrl>https://github.com/oasis-open/odata-rapid</RepositoryUrl>
+    <Copyright>Copyright © OASIS OData Technical Committee 2020</Copyright>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/oasis-open/odata-rapid</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.BuildDateAttribute">
