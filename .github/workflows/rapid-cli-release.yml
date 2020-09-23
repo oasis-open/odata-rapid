@@ -1,4 +1,4 @@
-name: rapid cli .NET Core CI build
+name: rapid cli .NET Core release
 
 on:
   release:
