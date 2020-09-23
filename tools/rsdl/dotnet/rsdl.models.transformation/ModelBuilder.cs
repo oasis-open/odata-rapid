@@ -159,17 +159,18 @@ namespace rsdl.parser
                 var paramType = GetTypeReference(param.PropType);
                 if (param.IsOptional)
                 {
-                    edmOperation.AddParameter(param.Name, paramType);
+                    edmOperation.AddOptionalParameter(param.Name, paramType);
                 }
                 else
                 {
-                    edmOperation.AddOptionalParameter(param.Name, paramType);
+                    edmOperation.AddParameter(param.Name, paramType);
                 }
             }
         }
 
         private EdmOperation MakeOperation(RdmOperation operation, bool isFunction)
         {
+
             if (isFunction)
             {
                 if (operation.ReturnType == null)

@@ -100,7 +100,6 @@ namespace rsdl.parser.model
         public Position Position { get; set; }
     }
 
-
     public class RdmOperation
     {
         public string Name { get; set; }
