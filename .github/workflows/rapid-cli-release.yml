@@ -14,16 +14,19 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.301
+          dotnet-version: 3.1.402
 
-      - name: Install dependencies
+      - name: Restore
         run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
 
-      - name: Create NuGet Package
-        run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj -c Release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/oasis-open/odata-rapid/releases/tag/${{ github.event.release.tag_name }}"
+      - name: Build
+        run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release --no-restore
+
+      - name: Pack
+        run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/oasis-open/odata-rapid/releases/tag/${{ github.event.release.tag_name }}"
         working-directory: ./src
 
-      - name: Archive NuGet Package
+      - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
           path: ./tools/rsdl/dotnet/rapid/nupkg
