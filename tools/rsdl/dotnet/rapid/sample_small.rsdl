@@ -3,17 +3,17 @@ type company
     @key stockSymbol: string
     name: string
 
-    employees: [employee] 
+    employees: [employee]
     ceo: employee?
 }
 
 type employee
 {
-    @key id: integer 
+    @key id: integer
     name: string
 }
 
-service
+service jetsons
 {
     companies: [company]
     employees: [employee]

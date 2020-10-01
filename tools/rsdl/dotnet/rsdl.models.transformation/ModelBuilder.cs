@@ -189,7 +189,7 @@ namespace rsdl.parser
 
         private void AddService(RdmService service)
         {
-            var containerName = "default";
+            var containerName = service.Name;
             var container = (EdmEntityContainer)edmModel.EntityContainer ?? edmModel.AddEntityContainer(namespaceName, containerName);
 
             foreach (var item in service.Items)

@@ -47,7 +47,7 @@ type name
     title: string?
 }
 
-service
+service jetsons
 {
     // unbound, "global" function
     // resetDataSource

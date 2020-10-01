@@ -176,8 +176,9 @@ namespace rsdl.parser
 
         static readonly TokenListParser<RdmToken, model.RdmService> Service =
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
+            from nm in Token.EqualTo(RdmToken.Identifier)
             from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new model.RdmService { Items = es };
+            select new model.RdmService { Name = nm.ToStringValue(), Items = es };
         #endregion
 
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =

@@ -37,6 +37,8 @@ namespace rsdl.parser.model
 
     public class RdmService : IRdmSchemaElement
     {
+        public string Name { get; set; }
+
         public IEnumerable<IRdmServiceElement> Items { get; set; }
     }
 
