@@ -3,22 +3,110 @@ id: rsdl-intro
 title: RAPID SDL intro
 ---
 
-# Introduction to RAPID Pro schema definition language (RSDL)
+# Introduction to RAPID Schema Definition Language (RSDL)
 
-> DRAFT
+RAPID Schema Definition Language (RSDL) is language to describe Web APIs.
 
-RAPID Pro schema definition language (RSDL) is language to describe Web APIs.
-RSDL is based on a [profile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
-[OData](https://en.wikipedia.org/wiki/Open_Data_Protocol) specification with the goal to provide an easy way
-to create a Web API that is compatible with OData and can evolve into a more elaborate version.
+RSDL is based on the [RAPID PROfile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
+[OData](https://en.wikipedia.org/wiki/Open_Data_Protocol) specification. RAPID provides an easy way
+to envision, create, and consume a Web API that is compatible with the OData Standard and can evolve over time to support more advanced scenarios.
 
 ## Introductory Example
 
-The core description of the "shape" of the API is given by a RSDL document.
+RAPID APIs are defined by a schema, which can easily be described through RSDL.
 
-Below is a first example of an RSDL file that describes an API of a service that provides data on companies and their employees
+### Defining a Type
+Let's say that we wanted our API to deal with information about a company. We could describe the properties of a company as follows:
 
-```
+~~~rsdl
+type company
+{
+    stockSymbol: string
+    name: string
+    incorporated: dateTime
+}
+~~~
+
+Our company has three properties; a stockSymbol, a name, and the date of incorporation.
+
+Properties in RAPID can be string, integer, boolean, double, decimal, or dateTime primitive types. They can also be an [enum type](#defining-an-enums), a [declared type](#defining-a-nested-property), or a collection of any of the above.
+
+### Defining a Service
+Now we can create a service named "jetsons" that returns information about our company:
+
+~~~rsdl
+jetsons {
+    company: company
+}
+~~~
+
+This allows us to make simple requests against our company:
+
+| Request                                                                                              | Comment                                                          |
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| GET [http://rapid-pro.org/company?select=stockSymbol,name](https://jetsons.azurewebsites.net/company?$select=stockSymbol,name)                             | get the stock symbol and name of the company    |
+| PATCH http://rapid-pro.org/company <br/> {     "name":"Spacely's Space Sprockets" } | update the company name                  |
+|
+
+### Defining a Nested Property
+
+Now let's say that we wanted to add employees to our company.
+
+First, we would define the employee type:
+
+~~~rsdl
+type employee
+{
+    @key id: integer
+    firstName : string
+    lastName : string
+    title: string
+}
+~~~
+
+The id property is identified as a key property, meaning that instances of employees within a collection can be referenced by their id.
+
+Now we can add employees to our company:
+
+~~~rsdl
+type company
+{
+    stockSymbol: string
+    name: string
+    incorporated: dateTime
+    employees: [employee]
+}
+~~~
+
+The employees property is a collection of our employee type. Because it is a collection, the type is enclosed in square brackets [].
+
+Now we can get employees for our company:
+
+| Request                                                                                              | Comment                                                          |
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| GET [http://rapid-pro.org/company/employees?select=lastName,title](https://jetsons.azurewebsites.net/company/employees?$select=lastName,title)                            | list the last name and title for all employees for the company     |
+| GET [http://rapid-pro.org/company/employees/1?select=lastName,title](https://jetsons.azurewebsites.net/company/employees/1?$select=lastName,title)               | get the last name and title of the employee with id=1                |
+| GET [http://rapid-pro.org/company?select=name&expand=employees(select=lastName)](https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=lastName))    | get the company name and the last names of all of its employees  |
+| POST http://rapid-pro.org/company/employees <br/> { "firstName": "Cosmo","lastName": "Spacely","title": "CEO" }   | add a new employee                                         |
+| DELETE http://rapid-pro.org/company/employees/1 | delete the employee with id=1                               |
+
+### Defining a Top-Level Collection
+Our service exposes a single top-level company instance.
+
+We could also add a top-level collection.
+
+For example, we could reuse the same company type to create a collection of companies that are competitors.
+
+~~~rsdl
+jetsons {
+    company: company
+    competitors: [company]
+}
+~~~
+
+Because company is now part of a collection, if we want to reference individual companies within the collection we would define a key.  In this case, we use stockSymbol as the key:
+
+~~~rsdl
 type company
 {
     @key stockSymbol: string
@@ -26,57 +114,127 @@ type company
     incorporated: dateTime
     employees: [employee]
 }
+~~~
 
-type employee
-{
-    @key id: integer
-    name : string
-    title: string
-    employmentType: employmentType
-}
-
-enum employmentType { salaried hourly }
-
-service {
-    companies: [company]
-    employees: [employee]
-}
-```
-
-With this relatively small API definition, the service can already serve many different requests to create, update, and delete companies and employees and query for them in multiple ways.
-Below is a (incomplete) list of URLs that can be used with the service. Let's assume the web service is hosted on http://example.com
+Now we can request individual companies within the competitors collection:
 
 | Request                                                                                              | Comment                                                          |
 | :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
-| GET http://example.com/companies                                                                     | List all companies                                               |
-| GET http://example.com/companies/msft                                                                | get the company identified by stock symbol msft                  |
-| GET http://example.com/companies/msft/employees                                                      | get the employees of the company identified by stock symbol msft |
-| GET http://example.com/employees/123567                                                              | get the employee with employee id 123567                         |
-| POST http://example.com/companies/msft <br/> { "name": "futterkiste", "incorporated": "2010-01-01" } | create a new company identified by stock symbol                  |
-| ...                                                                                                  |                                                                  |
+| POST http://rapid-pro.org/competitors <br/> {     "stockSymbol":"cgswl", "name":"Cogswell's Cosmic COGs" "incorporated":"2054-10-04T00:00:00Z" } | create a new competitor                              |
+| GET [http://rapid-pro.org/competitors?select=name](https://jetsons.azurewebsites.net/competitors?$select=name)                           | list the names of all of the competitors                                         |
+| GET [http://rapid-pro.org/competitors/cgswl?select=name](https://jetsons.azurewebsites.net/competitors/cgswl?$select=name)                                       | get the name of the competitor with the stock symbol cgswl                                               |
+| GET [http://rapid-pro.org/competitors/cgswl/employees?select=lastName](https://jetsons.azurewebsites.net/competitors/cgswl/employees?$select=lastName)                                       | get the last name of employees for the competitor with the stock symbol cgswl                                               |
+| DELETE http://rapid-pro.org/competitors/cgswl                                         | delete the competitor with the stock symbol cgswl                                               |
+|
 
-## Defining enums in RSDL
+### Defining an Enum
 
-## Defining types in RSDL
+Enumerations allow us to define a string-valued property with a fixed set of values.
 
-### filtering collections of objects
+Let's say that we wanted to define an employmentType enumeration, with possible values "salaried" and "hourly". We could do so as follows:
 
-### Expanding properties
+~~~json
+enum employmentType { salaried hourly }
+~~~
 
-## Defining top level collections of objects
+Now we could use that employmentType enum in our employees example:
 
-## Defining top level single objects
+~~~rsdl
+type employee
+{
+    @key id: integer
+    firstName: string
+    lastName: string
+    title: string
+    employeeType: employmentType
+}
+~~~
 
-## Querying a graph of objects
+### Defining Structural Properties
 
-### Types with keys vs types without
+Our employee has first name and last name properties.  We could define a "fullName" type to group those properties together:
 
-### Navigation from one object to another
+~~~rsdl
+type fullName
+{
+    firstName: string
+    lastName: string
+}
+~~~
 
-## Changing data
+and then use that type in our employee:
 
-### create
+~~~rsdl
+type employee
+{
+    @key id: integer
+    name: fullName
+    title: string
+}
+~~~
 
-### update
+### Defining methods
+RAPID supports functions and actions.
 
-### delete
+A function takes zero or more input parameters, and returns a value.  Functions must not have side-affects.
+
+We can define a "topEmployees" function on our company:
+
+~~~rsdl
+type company
+{
+    @key stockSymbol: string
+    name: string
+    incorporated: dateTime
+    employees: [employee]
+    topEmployees(num: integer) : [employee]
+}
+~~~
+
+topEmployees takes a single integer parameter "num" and returns a collection of employees.
+
+Functions are invoked using a GET request. Function parameters are passed in the URL.
+
+| Request                                                                                              | Comment                                                          |
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| GET [http://rapid-pro.org/company/topEmployees?num=10](https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10))  | get the company's top 10 employees                             |
+|
+An action takes zero or more input parameters and may or may not return a value.  Actions may have side-affects.
+
+We can define a "youreFired" action on our company that takes a string parameter "reason":
+
+~~~rsdl
+type company
+{
+    @key stockSymbol: string
+    name: string
+    incorporated: dateTime
+    employees: [employee]
+    topEmployees(num: integer): [employee]
+    @action yourFired(reason: string)
+}
+~~~
+
+yourFired has the @action attribute to show that it is an action and may have side-affects. It does not return a value.
+
+Because actions may have side-affects, they are invoked using POST. Their parameters are passed in the body of the request.
+
+| Request                                                                                              | Comment                                                          |
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| POST http://rapid-pro.org/company/employees/1/yourFired <br/> { "reason": "Embezzlement" }  | invoke the yourFired action on employee with id = 1       |
+|
+
+Actions and functions may also be defined on the service.
+
+~~~rsdl
+jetsons {
+    company: company
+    competitors: [company]
+    currentStockPrice(stockSymbol: string): decimal
+}
+~~~
+
+| Request                                                                                              | Comment                                                          |
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| GET [http://rapid-pro.org/currentStockPrice?stockSymbol=cgswl](https://jetsons.azurewebsites.net/currentStockPrice(stockSymbol=cgswl)) | get the current stock price for cgswl                              |
+|
