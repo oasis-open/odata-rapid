@@ -346,17 +346,10 @@ namespace rsdl.parser
             ["string"] = "Edm.String",
             ["boolean"] = "Edm.Boolean",
             ["dateTime"] = "Edm.DateTimeOffset",
+            ["date"] = "Edm.Date",
             ["double"] = "Edm.Double"
         };
 
-        private static readonly Dictionary<string, IEdmType> _primitives = new Dictionary<string, IEdmType>
-        {
-            ["integer"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32),
-            ["string"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String),
-            ["boolean"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean),
-            ["dateTime"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset),
-            ["double"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double)
-        };
         #endregion
     }
 }

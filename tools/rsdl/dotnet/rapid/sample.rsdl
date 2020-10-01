@@ -4,7 +4,7 @@ type company
 {
     @key stockSymbol: string
     name: string
-    incorporated: dateTime
+    incorporated: date
     employees: [employee]
     ceo: employee
 
