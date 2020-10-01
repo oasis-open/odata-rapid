@@ -13,6 +13,8 @@ Initial Draft. July 2020
 
 This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234).
 
+Note: whitespace is not (yet) reflected in the grammar.
+
 ## Syntax rules
 
 - [Model](#model)
@@ -26,47 +28,43 @@ This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc52
 ```ABNF
 model               = 1*modelElement
 
-modelElement        = typeDefinition /
-                      serviceDefinition /
-                      enumDefinition
+modelElement        = typeDefinition
+                    / serviceDefinition
+                    / enumDefinition
 ```
 
 ### Type definition
 
 ```ABNF
-
-
 typeDefinition      = "type" "{" typeMember "}"
 
 typeMember          = property / function ; property or bound function
 
-property            = \*propertyAnnotation identifier ":" typeReference
+property            = *propertyAnnotation identifier ":" typeReference
 
-propertyAnnotation  = "@" "key"
+propertyAnnotation  = "@key"
 
 function            = functionAnnotation identifier
                       "(" [ parameter *("," parameter) ] ")"
-                      [":" typeReference]
+                      [ ":" typeReference ]
 
-functionAnnotation  = "@" ("action" / "function" )
+functionAnnotation  = ( "@action" / "@function" )
 
 parameter           = identifier ":" typeReference
 
 typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
 typeName            = builtInType / "Edm" "." identifier / identifier
-builtInType         = integer / string / boolean / double / decimal
 
+builtInType         = integer / string / boolean / double / decimal
 ```
 
 ### Enum definition
 
 ```ABNF
-
-enumDefinition      = "enum" "{" enumMember "}"
+enumDefinition      = "enum" "{" 1*enumMember "}"
 
 enumMember          = identifier
-
 ```
 
 ### Service definition
@@ -79,16 +77,15 @@ serviceMember       = entitySet / singleton
 entitySet           = identifier ":" "[" identifier "]"
 
 singleton           = identifier ":" identifier
-
 ```
 
 ### Core syntax elements
 
 ```ABNF
-identifier = identInitial \*identSubsequent
-identInitial = ALPHA / "_"
-identSubsequent = ALPHA / "_" / DIGIT
+identifier      = identInitial *identSubsequent
+identInitial    = ALPHA / "_"
+identSubsequent = identInitial / DIGIT
+
 ALPHA = %x41-5A / %x61-7A
 DIGIT = %x30-39
-
 ```
