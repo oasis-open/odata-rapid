@@ -19,24 +19,24 @@ RAPID APIs are defined by a schema, which can easily be described through RSDL.
 Let's say that we wanted our API to deal with information about a company. We could describe the properties of a company as follows:
 
 ~~~rsdl
-type company
+type Company
 {
-    stockSymbol: string
-    name: string
-    incorporated: dateTime
+    stockSymbol: String
+    name: String
+    incorporated: Date
 }
 ~~~
 
 Our company has three properties; a stockSymbol, a name, and the date of incorporation.
 
-Properties in RAPID can be string, integer, boolean, double, decimal, or dateTime primitive types. They can also be an [enum type](#defining-an-enums), a [declared type](#defining-a-nested-property), or a collection of any of the above.
+Properties in RAPID can be String, Integer, Boolean, Double, Decimal, Date, or DateTime primitive types. They can also be an [enum type](#defining-an-enums), a [declared type](#defining-a-structured-property), or a collection of any of the above.
 
 ### Defining a Service
-Now we can create a service named "jetsons" that returns information about our company:
+Now we can create a service that returns information about our company:
 
 ~~~rsdl
-jetsons {
-    company: company
+service {
+    company: Company
 }
 ~~~
 
@@ -48,33 +48,33 @@ This allows us to make simple requests against our company:
 | PATCH http://rapid-pro.org/company <br/> {     "name":"Spacely's Space Sprockets" } | update the company name                  |
 |
 
-### Defining a Nested Property
+### Defining a Structured Property
 
 Now let's say that we wanted to add employees to our company.
 
 First, we would define the employee type:
 
 ~~~rsdl
-type employee
+type Employee
 {
-    @key id: integer
-    firstName : string
-    lastName : string
-    title: string
+    @key id: Integer
+    firstName : String
+    lastName : String
+    title: String
 }
 ~~~
 
-The id property is identified as a key property, meaning that instances of employees within a collection can be referenced by their id.
+The id property is identified as a key, meaning that instances of employees within a collection can be referenced by their id.
 
 Now we can add employees to our company:
 
 ~~~rsdl
-type company
+type Company
 {
-    stockSymbol: string
-    name: string
-    incorporated: dateTime
-    employees: [employee]
+    stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
 }
 ~~~
 
@@ -98,21 +98,21 @@ We could also add a top-level collection.
 For example, we could reuse the same company type to create a collection of companies that are competitors.
 
 ~~~rsdl
-jetsons {
-    company: company
-    competitors: [company]
+service {
+    company: Company
+    competitors: [Company]
 }
 ~~~
 
 Because company is now part of a collection, if we want to reference individual companies within the collection we would define a key.  In this case, we use stockSymbol as the key:
 
 ~~~rsdl
-type company
+type Company
 {
-    @key stockSymbol: string
-    name: string
-    incorporated: dateTime
-    employees: [employee]
+    @key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
 }
 ~~~
 
@@ -133,20 +133,24 @@ Enumerations allow us to define a string-valued property with a fixed set of val
 
 Let's say that we wanted to define an employmentType enumeration, with possible values "salaried" and "hourly". We could do so as follows:
 
-~~~json
-enum employmentType { salaried hourly }
+~~~rsdl
+enum EmploymentType
+{
+    salaried
+    hourly
+}
 ~~~
 
 Now we could use that employmentType enum in our employees example:
 
 ~~~rsdl
-type employee
+type Employee
 {
-    @key id: integer
-    firstName: string
-    lastName: string
-    title: string
-    employeeType: employmentType
+    @key id: Integer
+    firstName: String
+    lastName: String
+    title: String
+    employeeType: EmploymentType
 }
 ~~~
 
@@ -155,21 +159,21 @@ type employee
 Our employee has first name and last name properties.  We could define a "fullName" type to group those properties together:
 
 ~~~rsdl
-type fullName
+type FullName
 {
-    firstName: string
-    lastName: string
+    firstName: String
+    lastName: String
 }
 ~~~
 
 and then use that type in our employee:
 
 ~~~rsdl
-type employee
+type Employee
 {
-    @key id: integer
-    name: fullName
-    title: string
+    @key id: Integer
+    name: FullName
+    title: String
 }
 ~~~
 
@@ -181,13 +185,13 @@ A function takes zero or more input parameters, and returns a value.  Functions 
 We can define a "topEmployees" function on our company:
 
 ~~~rsdl
-type company
+type Company
 {
-    @key stockSymbol: string
-    name: string
-    incorporated: dateTime
-    employees: [employee]
-    topEmployees(num: integer) : [employee]
+    @key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
+    topEmployees(num: Integer) : [Employee]
 }
 ~~~
 
@@ -204,33 +208,33 @@ An action takes zero or more input parameters and may or may not return a value.
 We can define a "youreFired" action on our company that takes a string parameter "reason":
 
 ~~~rsdl
-type company
+type Company
 {
-    @key stockSymbol: string
-    name: string
-    incorporated: dateTime
-    employees: [employee]
-    topEmployees(num: integer): [employee]
-    @action yourFired(reason: string)
+    @key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
+    topEmployees(num: Integer): [Employee]
+    @action youreFired(reason: String)
 }
 ~~~
 
-yourFired has the @action attribute to show that it is an action and may have side-affects. It does not return a value.
+youreFired has the @action attribute to show that it is an action and may have side-affects. It does not return a value.
 
 Because actions may have side-affects, they are invoked using POST. Their parameters are passed in the body of the request.
 
 | Request                                                                                              | Comment                                                          |
 | :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
-| POST http://rapid-pro.org/company/employees/1/yourFired <br/> { "reason": "Embezzlement" }  | invoke the yourFired action on employee with id = 1       |
+| POST http://rapid-pro.org/company/employees/1/youreFired <br/> { "reason": "Embezzlement" }  | invoke the youreFired action on employee with id = 1       |
 |
 
 Actions and functions may also be defined on the service.
 
 ~~~rsdl
-jetsons {
-    company: company
-    competitors: [company]
-    currentStockPrice(stockSymbol: string): decimal
+service {
+    company: Company
+    competitors: [Company]
+    currentStockPrice(stockSymbol: String): Decimal
 }
 ~~~
 
