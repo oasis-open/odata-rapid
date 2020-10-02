@@ -180,6 +180,15 @@ namespace rsdl.parser
             select new model.RdmService { Items = es };
         #endregion
 
+        static readonly TokenListParser<RdmToken, string> QuotedString = Token
+            .EqualTo(RdmToken.QuotedString)
+            .Apply(TextParsers.ExtractQuotedString);
+
+        static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
+                   from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
+                   from nm in QuotedString
+                   select new RdmNamespaceDeclaration { NamespaceName = nm };
+
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
             ParserCombinators.OneOf<RdmToken, model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
                 TypeDefinition,
@@ -188,8 +197,9 @@ namespace rsdl.parser
 
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, model.RdmDataModel> DataModel =
+           from ns in NamespaceDeclaration.OptionalOrDefault()
            from es in SchemaElement.Many()
-           select new model.RdmDataModel { Items = es };
+           select new model.RdmDataModel { Namespace = ns, Items = es };
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }
