@@ -74,11 +74,15 @@ enumMember          = identifier
 ```ABNF
 service             = "service" "{" 1*serviceMember "}"
 
-serviceMember       = entitySet / singleton
+serviceMember       = entitySet / singleton / serviceOperation
 
 entitySet           = identifier ":" "[" qualifiedName "]"
 
 singleton           = identifier ":" qualifiedName
+
+serviceOperation    = [ actionAnnotation ] identifier
+                      "(" [ parameter *("," parameter) ] ")"
+                      [ ":" typeReference ]
 ```
 
 ### Core Syntax Elements
