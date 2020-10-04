@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Description>RAPID schema definition language to CSDL transformation</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,10 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\rsdl.models\rsdl.models.csproj" />
+    <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
   </ItemGroup>
-
-
-  <PropertyGroup>
-    <Description>RAPID schema definition language to CSDL transformation</Description>
-  </PropertyGroup>
 </Project>
