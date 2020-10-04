@@ -1,4 +1,4 @@
-namespace "jetsons"
+namespace jetsons
 
 enum employmentType { salaried hourly }
 
