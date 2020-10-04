@@ -6,84 +6,87 @@ title: RAPID SDL ABNF
 # RAPID Pro syntax
 
 > DRAFT
-Initial Draft. July 2020
-
+> October 2020
 
 ## Overview
 
 This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234).
 
-Note: whitespace is not (yet) reflected in the grammar.
+Note: to increase readability of the grammer
+
+- whitespace is not reflected
+- double-quoted literals are case-_sensitive_
 
 ## Syntax rules
 
 - [Model](#model)
-- [Type definition](#type-definition)
-- [Enum definition](#enum-definition)
-- [Service definition](#service-definition)
-- [Core syntax elements](#core-syntax-elements)
+- [Structured Type](#structured-type)
+- [Enumeration Type](#enumeration-type)
+- [Service](#service)
+- [Core Syntax Elements](#core-syntax-elements)
 
 ### Model
 
 ```ABNF
-model               = 1*modelElement
+model               = [ namespace ] *modelElement
 
-modelElement        = typeDefinition
-                    / serviceDefinition
-                    / enumDefinition
+namespace           = "namespace" qualifiedName
+
+modelElement        = structuredType / enumType / service
 ```
 
-### Type definition
+### Structured Type
 
 ```ABNF
-typeDefinition      = "type" "{" typeMember "}"
+structuredType      = "type" identifier "{" *typeMember "}"
 
-typeMember          = property / function ; property or bound function
+typeMember          = property / operation ; property or bound action or bound function
 
 property            = *propertyAnnotation identifier ":" typeReference
 
 propertyAnnotation  = "@key"
 
-function            = functionAnnotation identifier
+typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
+
+typeName            = builtInType / "Edm" "." identifier / qualifiedName
+
+builtInType         = "boolean" / "date" / "datetime" / "decimal" / "double" / "integer" / "string"
+
+operation           = [ actionAnnotation ] identifier
                       "(" [ parameter *("," parameter) ] ")"
                       [ ":" typeReference ]
 
-functionAnnotation  = ( "@action" / "@function" )
+actionAnnotation    = "@function"
 
 parameter           = identifier ":" typeReference
-
-typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
-
-typeName            = builtInType / "Edm" "." identifier / identifier
-
-builtInType         = integer / string / boolean / double / decimal
 ```
 
-### Enum definition
+### Enumeration Type
 
 ```ABNF
-enumDefinition      = "enum" "{" 1*enumMember "}"
+enumType            = "enum" identifier "{" 1*enumMember "}"
 
 enumMember          = identifier
 ```
 
-### Service definition
+### Service
 
 ```ABNF
-serviceDefinition   = "service" "{" serviceMember "}"
+service             = "service" "{" 1*serviceMember "}"
 
 serviceMember       = entitySet / singleton
 
-entitySet           = identifier ":" "[" identifier "]"
+entitySet           = identifier ":" "[" qualifiedName "]"
 
-singleton           = identifier ":" identifier
+singleton           = identifier ":" qualifiedName
 ```
 
-### Core syntax elements
+### Core Syntax Elements
 
 ```ABNF
+qualifiedName   = identifier *( "." identifier )
 identifier      = identInitial *identSubsequent
-identInitial    = ALPHA / "_"
+identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
 identSubsequent = identInitial / DIGIT
 
 ALPHA = %x41-5A / %x61-7A
