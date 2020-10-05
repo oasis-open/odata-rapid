@@ -40,7 +40,7 @@ modelElement        = structuredType / enumType / service
 ```ABNF
 structuredType      = "type" identifier "{" *typeMember "}"
 
-typeMember          = property / operation ; property or bound action or bound function
+structuredTypeMember          = property / operation ; property, bound action, or bound function
 
 property            = *propertyAnnotation identifier ":" typeReference
 
