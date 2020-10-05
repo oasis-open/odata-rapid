@@ -56,7 +56,7 @@ operation           = [ actionAnnotation ] identifier
                       "(" [ parameter *("," parameter) ] ")"
                       [ ":" typeReference ]
 
-actionAnnotation    = "@function"
+actionAnnotation    = "@action"
 
 parameter           = identifier ":" typeReference
 ```
