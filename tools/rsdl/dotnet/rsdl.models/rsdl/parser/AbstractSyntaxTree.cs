@@ -6,8 +6,15 @@ namespace rsdl.parser.model
 {
     public class RdmDataModel
     {
+        public RdmNamespaceDeclaration Namespace { get; set; }
         public IEnumerable<IRdmSchemaElement> Items { get; set; }
     }
+
+    public class RdmNamespaceDeclaration
+    {
+        public string NamespaceName { get; set; }
+    }
+
 
     /// <summary>
     /// current implementation: RdmStructuredType, RdmService

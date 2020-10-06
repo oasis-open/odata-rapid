@@ -1,19 +1,17 @@
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using rsdl.parser.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace rsdl.parser
 {
     internal class ModelBuilder
     {
-        private readonly string namespaceName = "rapid";
+        private const string defaultNamespaceName = "Model";
+
+        private readonly string namespaceName;
 
         private readonly RdmDataModel rdmModel;
 
@@ -21,6 +19,7 @@ namespace rsdl.parser
 
         public ModelBuilder(RdmDataModel schema)
         {
+            this.namespaceName = schema.Namespace?.NamespaceName ?? defaultNamespaceName;
             this.rdmModel = schema;
         }
 
