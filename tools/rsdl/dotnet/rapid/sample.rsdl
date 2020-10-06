@@ -1,4 +1,4 @@
-namespace "jetsons"
+namespace odata.tc.jetsons
 
 enum employmentType { salaried hourly }
 

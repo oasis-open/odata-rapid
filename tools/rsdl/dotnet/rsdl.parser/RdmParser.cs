@@ -59,6 +59,11 @@ namespace rsdl.parser
             .EqualTo(RdmToken.Identifier)
             .Select(t => t.ToStringValue());
 
+        static readonly TokenListParser<RdmToken, string> QualifiedIdentifier =
+            from head in Identifier
+            from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Identifier select i).Many()
+            select string.Join(".", tail.Prepend(head));
+
         static readonly TokenListParser<RdmToken, string> EdmPrefix =
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
             from dot in Token.EqualTo(RdmToken.FullStop)
@@ -186,7 +191,7 @@ namespace rsdl.parser
 
         static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
                    from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
-                   from nm in QuotedString
+                   from nm in QualifiedIdentifier
                    select new RdmNamespaceDeclaration { NamespaceName = nm };
 
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
