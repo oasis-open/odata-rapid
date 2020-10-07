@@ -20,6 +20,7 @@
     <ProjectReference Include="..\rsdl.models.transformation\rsdl.models.transformation.csproj" />
     <ProjectReference Include="..\rsdl.models\rsdl.models.csproj" />
     <ProjectReference Include="..\rsdl.parser\rsdl.parser.csproj" />
+    <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

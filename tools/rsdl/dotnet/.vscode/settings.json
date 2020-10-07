@@ -1,0 +1,7 @@
+{
+    "cSpell.words": [
+        "eset", "svel", "xunit"
+    ],
+    "dotnet-test-explorer.testProjectPath": "**/*tests.@(csproj|vbproj|fsproj)"
+
+}

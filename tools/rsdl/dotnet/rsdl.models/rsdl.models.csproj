@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-  </PropertyGroup>
-
-
-  <PropertyGroup>
     <Description>RAPID schema definition language abstract syntax tree</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
+  </ItemGroup>
 </Project>

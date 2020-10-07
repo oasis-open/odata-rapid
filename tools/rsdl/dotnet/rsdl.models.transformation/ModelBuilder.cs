@@ -99,7 +99,7 @@ namespace rsdl.parser
             // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530382
 
             // add functions
-            foreach (var func in definition.Functions)
+            foreach (var func in definition.Operations)
             {
                 if (!(edmType is EdmEntityType))
                 {
@@ -113,7 +113,7 @@ namespace rsdl.parser
 
         private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
         {
-            var edmTypeRef = GetTypeReference(prop.PropType);
+            var edmTypeRef = GetTypeReference(prop.Type);
 
             // collection navigation property
             if (edmTypeRef is IEdmCollectionTypeReference collRef &&
@@ -155,7 +155,7 @@ namespace rsdl.parser
 
             foreach (var param in operation.Parameters)
             {
-                var paramType = GetTypeReference(param.PropType);
+                var paramType = GetTypeReference(param.Type);
                 if (param.IsOptional)
                 {
                     edmOperation.AddOptionalParameter(param.Name, paramType);
