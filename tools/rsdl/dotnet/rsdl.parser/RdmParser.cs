@@ -70,6 +70,11 @@ namespace rsdl.parser
             .EqualTo(RdmToken.Identifier)
             .Select(t => t.ToStringValue());
 
+        static readonly TokenListParser<RdmToken, string> QualifiedIdentifier =
+            from head in Identifier
+            from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Identifier select i).Many()
+            select string.Join(".", tail.Prepend(head));
+
         static readonly TokenListParser<RdmToken, string> EdmPrefix =
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
             from dot in Token.EqualTo(RdmToken.FullStop)
@@ -189,6 +194,15 @@ namespace rsdl.parser
             select new model.RdmService(es);
         #endregion
 
+        static readonly TokenListParser<RdmToken, string> QuotedString = Token
+            .EqualTo(RdmToken.QuotedString)
+            .Apply(TextParsers.ExtractQuotedString);
+
+        static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
+                   from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
+                   from nm in QualifiedIdentifier
+                   select new RdmNamespaceDeclaration(nm);
+
         static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
             ParserCombinators.OneOf<RdmToken, model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
                 TypeDefinition,
@@ -197,8 +211,9 @@ namespace rsdl.parser
 
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, model.RdmDataModel> DataModel =
+           from ns in NamespaceDeclaration.OptionalOrDefault()
            from es in SchemaElement.Many()
-           select new model.RdmDataModel(es);
+           select new model.RdmDataModel(ns, es);
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }

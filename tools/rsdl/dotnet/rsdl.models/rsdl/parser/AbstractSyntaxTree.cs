@@ -6,9 +6,20 @@ namespace rsdl.parser.model
 {
     public class RdmDataModel : IEquatable<RdmDataModel>
     {
-        public RdmDataModel(IReadOnlyCollection<IRdmSchemaElement> items) => Items = items;
+        public RdmDataModel(IReadOnlyCollection<IRdmSchemaElement> items) :
+            this(null, items)
+        {
+        }
 
-        public IReadOnlyCollection<IRdmSchemaElement> Items { get; set; }
+        public RdmDataModel(RdmNamespaceDeclaration @namespace, IReadOnlyCollection<IRdmSchemaElement> items)
+        {
+            Items = items;
+            Namespace = @namespace;
+        }
+
+        public RdmNamespaceDeclaration Namespace { get; }
+
+        public IReadOnlyCollection<IRdmSchemaElement> Items { get; }
 
         public bool Equals(RdmDataModel other)
         {
@@ -25,6 +36,17 @@ namespace rsdl.parser.model
             return HashCode.Combine(Items);
         }
     }
+
+    public class RdmNamespaceDeclaration
+    {
+        public RdmNamespaceDeclaration(string namespaceName)
+        {
+            NamespaceName = namespaceName;
+        }
+
+        public string NamespaceName { get; }
+    }
+
 
     /// <summary>
     /// current implementation: RdmStructuredType, RdmService

@@ -34,7 +34,7 @@ namespace rsdl.parser.tests
 
         [Theory]
         [MemberData(nameof(Data))]
-        public void IsEqual(object a, object b)
+        public void StructurallyEqualObjectsAreEqual(object a, object b)
         {
             Assert.Equal(a, b);
         }

@@ -1,3 +1,5 @@
+namespace odata.tc.jetsons
+
 enum employmentType { salaried hourly }
 
 type company
