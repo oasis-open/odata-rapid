@@ -28,9 +28,11 @@ Note: to increase readability of the grammer
 ### Model
 
 ```ABNF
-model               = [ namespace ] *modelElement
+model               = [ namespace ] *include *modelElement
 
 namespace           = "namespace" qualifiedName
+
+include      = %s"include" qualifiedName [ %s"as" identifier ] %s"from" DQUOTE 1*CHAR DQUOTE
 
 modelElement        = structuredType / enumType / service
 ```
@@ -89,10 +91,18 @@ serviceOperation    = [ actionAnnotation ] identifier
 
 ```ABNF
 qualifiedName   = identifier *( "." identifier )
+
 identifier      = identInitial *identSubsequent
 identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
 identSubsequent = identInitial / DIGIT
 
-ALPHA = %x41-5A / %x61-7A
-DIGIT = %x30-39
+ALPHA  = %x41-5A / %x61-7A
+DIGIT  = %x30-39
+
+CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
+       / ESCAPE ESCAPE
+       / ESCAPE DQUOTE
+
+DQUOTE = %x22              ; "
+ESCAPE = %x5C              ; \
 ```
