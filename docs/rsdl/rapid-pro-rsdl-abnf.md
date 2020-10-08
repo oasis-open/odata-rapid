@@ -10,12 +10,9 @@ title: RAPID SDL ABNF
 
 ## Overview
 
-This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234).
+This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234), with the addition for case-sensitive strigs defined by [RFC7405](https://tools.ietf.org/html/rfc7405)
 
-Note: to increase readability of the grammer
-
-- whitespace is not reflected
-- double-quoted literals are case-_sensitive_
+Note: to increase readability of the grammer, whitespace is not reflected
 
 ## Syntax rules
 
@@ -30,7 +27,7 @@ Note: to increase readability of the grammer
 ```ABNF
 model               = [ namespace ] *modelElement
 
-namespace           = "namespace" qualifiedName
+namespace           = %s"namespace" qualifiedName
 
 modelElement        = structuredType / enumType / service
 ```
@@ -38,25 +35,25 @@ modelElement        = structuredType / enumType / service
 ### Structured Type
 
 ```ABNF
-structuredType      = "type" identifier "{" *typeMember "}"
+structuredType      = %s"type" identifier "{" *typeMember "}"
 
 structuredTypeMember          = property / operation ; property, bound action, or bound function
 
 property            = *propertyAnnotation identifier ":" typeReference
 
-propertyAnnotation  = "@key"
+propertyAnnotation  = %s"@key"
 
 typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName            = builtInType / "Edm" "." identifier / qualifiedName
+typeName            = builtInType / %s"Edm" "." identifier / qualifiedName
 
-builtInType         = "boolean" / "date" / "datetime" / "decimal" / "double" / "integer" / "string"
+builtInType         = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
 
 operation           = [ actionAnnotation ] identifier
                       "(" [ parameter *("," parameter) ] ")"
                       [ ":" typeReference ]
 
-actionAnnotation    = "@action"
+actionAnnotation    = %s"@action"
 
 parameter           = identifier ":" typeReference
 ```
@@ -64,7 +61,7 @@ parameter           = identifier ":" typeReference
 ### Enumeration Type
 
 ```ABNF
-enumType            = "enum" identifier "{" 1*enumMember "}"
+enumType            = %s"enum" identifier "{" 1*enumMember "}"
 
 enumMember          = identifier
 ```
@@ -72,7 +69,7 @@ enumMember          = identifier
 ### Service
 
 ```ABNF
-service             = "service" "{" 1*serviceMember "}"
+service             = %s"service" "{" 1*serviceMember "}"
 
 serviceMember       = entitySet / singleton / serviceOperation
 
