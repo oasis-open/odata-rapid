@@ -188,7 +188,7 @@ namespace rapid.rsdl
 
         private void AddService(RdmService service)
         {
-            var containerName = "default";
+            var containerName = "Service";
             var container = (EdmEntityContainer)edmModel.EntityContainer ?? edmModel.AddEntityContainer(namespaceName, containerName);
 
             foreach (var item in service.Items)
