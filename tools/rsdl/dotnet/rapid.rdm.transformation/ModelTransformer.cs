@@ -1,7 +1,7 @@
 using Microsoft.OData.Edm;
-using rsdl.parser.model;
+using rapid.rdm;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     public class ModelTransformer
     {

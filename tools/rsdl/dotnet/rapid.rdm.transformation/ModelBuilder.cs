@@ -1,11 +1,11 @@
-using Microsoft.OData.Edm;
-using rsdl.parser.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.OData.Edm;
+using rapid.rdm;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     internal class ModelBuilder
     {

@@ -1,7 +1,7 @@
 using Superpower.Display;
 using Superpower.Parsers;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     public enum RdmToken
     {

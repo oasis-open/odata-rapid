@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     [Serializable]
     internal class ConversionException : Exception

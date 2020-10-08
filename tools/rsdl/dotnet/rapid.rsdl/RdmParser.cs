@@ -1,12 +1,12 @@
-using rsdl.parser.model;
 using Superpower;
 using Superpower.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using rapid.rdm;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
 
     /// <summary>
@@ -85,28 +85,28 @@ namespace rsdl.parser
             from name in Token.EqualTo(RdmToken.Identifier)
             select prefix == null ? name.ToStringValue() : prefix + "." + name.ToStringValue();
 
-        static readonly TokenListParser<RdmToken, model.RdmTypeReference> TypeReference =
+        static readonly TokenListParser<RdmToken, rdm.RdmTypeReference> TypeReference =
             (
                 from type in (
                     from name in TypeName
                     from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
                     select (name, opt)
                 ).Between(RdmToken.LeftBracket, RdmToken.RightBracket)
-                select new model.RdmTypeReference(type.name, type.opt != null, true)
+                select new rdm.RdmTypeReference(type.name, type.opt != null, true)
             ).Or(
                 from name in TypeName
                 from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
-                select new model.RdmTypeReference(name, opt != null, false)
+                select new rdm.RdmTypeReference(name, opt != null, false)
             ).Named(
                 "type reference"
             );
 
-        static readonly TokenListParser<RdmToken, model.RdmProperty> Property =
+        static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
             from ka in KeyAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from co in Token.EqualTo(RdmToken.Colon)
             from ty in TypeReference
-            select new model.RdmProperty
+            select new rdm.RdmProperty
             (
                 nm.ToStringValue(),
                 ty,
@@ -114,13 +114,13 @@ namespace rsdl.parser
                 nm.GetPosition()
             );
 
-        static readonly TokenListParser<RdmToken, model.RdmParameter> Parameter =
+        static readonly TokenListParser<RdmToken, rdm.RdmParameter> Parameter =
 
             from nm in Token.EqualTo(RdmToken.Identifier)
             from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
             from co in Token.EqualTo(RdmToken.Colon)
             from ty in TypeReference
-            select new model.RdmParameter(
+            select new rdm.RdmParameter(
                 nm.ToStringValue(),
                 ty,
                 op.HasValue,
@@ -128,13 +128,13 @@ namespace rsdl.parser
                 nm.GetPosition()
             );
 
-        static readonly TokenListParser<RdmToken, model.RdmOperation> Function =
+        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Function =
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
                 .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
             from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type
-            select new model.RdmOperation
+            select new rdm.RdmOperation
             (
                 nm.ToStringValue(),
                 rt,
@@ -150,22 +150,22 @@ namespace rsdl.parser
                 Property.Cast<RdmToken, RdmProperty, object>()
             );
 
-        static readonly TokenListParser<RdmToken, model.RdmStructuredType> TypeDefinition =
+        static readonly TokenListParser<RdmToken, rdm.RdmStructuredType> TypeDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new model.RdmStructuredType(
+            select new rdm.RdmStructuredType(
                 nm.ToStringValue(),
-                ps.OfType<model.RdmProperty>().ToList(),
-                ps.OfType<model.RdmOperation>().ToList()
+                ps.OfType<rdm.RdmProperty>().ToList(),
+                ps.OfType<rdm.RdmOperation>().ToList()
             );
 
 
-        static readonly TokenListParser<RdmToken, model.RdmEnum> EnumDefinition =
+        static readonly TokenListParser<RdmToken, rdm.RdmEnum> EnumDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "enum")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new model.RdmEnum(
+            select new rdm.RdmEnum(
                 nm.ToStringValue(),
                 ps.Select(t => t.ToStringValue()).ToList()
             );
@@ -174,7 +174,7 @@ namespace rsdl.parser
 
         // entityset = identifier ':' '[' identifier ']'
         // singelton = identifier ':' identifier
-        static readonly TokenListParser<RdmToken, model.IRdmServiceElement> ServiceElement =
+        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
               from nm in Token.EqualTo(RdmToken.Identifier)
               from dp in Token.EqualTo(RdmToken.Colon)
               from ty in (
@@ -185,13 +185,13 @@ namespace rsdl.parser
                     select (id, multivalue: false)
                 )
               select ty.multivalue
-                ? (model.IRdmServiceElement)new model.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()))
-                : (model.IRdmServiceElement)new model.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()));
+                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()))
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()));
 
-        static readonly TokenListParser<RdmToken, model.RdmService> Service =
+        static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
             from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new model.RdmService(es);
+            select new rdm.RdmService(es);
         #endregion
 
         static readonly TokenListParser<RdmToken, string> QuotedString = Token
@@ -203,17 +203,17 @@ namespace rsdl.parser
                    from nm in QualifiedIdentifier
                    select new RdmNamespaceDeclaration(nm);
 
-        static readonly TokenListParser<RdmToken, model.IRdmSchemaElement> SchemaElement =
-            ParserCombinators.OneOf<RdmToken, model.IRdmSchemaElement, model.RdmStructuredType, model.RdmService, model.RdmEnum>(
+        static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =
+            ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnum>(
                 TypeDefinition,
                 Service,
                 EnumDefinition);
 
         // TODO: check for EOF
-        public static readonly TokenListParser<RdmToken, model.RdmDataModel> DataModel =
+        public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
            from ns in NamespaceDeclaration.OptionalOrDefault()
            from es in SchemaElement.Many()
-           select new model.RdmDataModel(ns, es);
+           select new rdm.RdmDataModel(ns, es);
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }

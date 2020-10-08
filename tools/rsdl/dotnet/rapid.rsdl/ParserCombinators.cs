@@ -2,7 +2,7 @@ using Superpower;
 using Superpower.Model;
 using Superpower.Parsers;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     internal static class ParserCombinators
     {
@@ -39,7 +39,7 @@ namespace rsdl.parser
         public static TokenListParser<TKind, T> Between<TKind, T>(this TokenListParser<TKind, T> parser, TKind left, TKind right)
             => parser.Between(Token.EqualTo(left), Token.EqualTo(right));
 
-        public static model.Position GetPosition<TKind>(this Token<TKind> token) =>
-            new model.Position(token.Position.Line, token.Position.Column);
+        public static rdm.Position GetPosition<TKind>(this Token<TKind> token) =>
+            new rdm.Position(token.Position.Line, token.Position.Column);
     }
 }

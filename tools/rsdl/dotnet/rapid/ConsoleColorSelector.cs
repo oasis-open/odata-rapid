@@ -1,6 +1,6 @@
 using System;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     public class ConsoleColorSelector : IDisposable
     {

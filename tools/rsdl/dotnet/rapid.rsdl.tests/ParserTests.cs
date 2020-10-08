@@ -1,9 +1,8 @@
-using Newtonsoft.Json;
-using rsdl.parser.model;
 using System;
+using rapid.rdm;
 using Xunit;
 
-namespace rsdl.parser.tests
+namespace rapid.rsdl.tests
 {
     public class ParserTests
     {

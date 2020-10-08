@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\rsdl.parser\rsdl.parser.csproj" />
+    <ProjectReference Include="..\rapid.rsdl\rapid.rsdl.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using Superpower.Model;
 using Superpower.Parsers;
 using System.Collections.Generic;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
 
     public class RdmTokenizer : Tokenizer<RdmToken>
