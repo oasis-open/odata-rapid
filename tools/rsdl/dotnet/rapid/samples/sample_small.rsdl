@@ -1,22 +1,22 @@
-type company
+type Company
 {
-    @key stockSymbol: string
-    name: string
+    @key stockSymbol: String
+    name: String
 
-    employees: [employee] 
-    ceo: employee?
+    employees: [Employee]
+    ceo: Employee?
 }
 
-type employee
+type Employee
 {
-    @key id: integer 
-    name: string
+    @key id: Integer
+    name: String
 }
 
 service
 {
-    companies: [company]
-    employees: [employee]
-    // vips: [employee]
-    // largecaps: [company]
+    companies: [Company]
+    employees: [Employee]
+    // vips: [Employee]
+    // largecaps: [Company]
 }
