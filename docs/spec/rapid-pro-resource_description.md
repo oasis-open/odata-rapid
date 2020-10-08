@@ -47,7 +47,7 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
         "$Type": "jetsons.company"
       }
     },
-    "$EntityContainer": "jetsons.jetsons"
+    "$EntityContainer": "jetsons.Service"
   }
 }
 ```
