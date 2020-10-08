@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm;
 using CommandLine;
+using rapid.csdl;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     class Program
     {
@@ -69,7 +70,7 @@ namespace rsdl.parser
         /// Converts a RAPID pro schema definition language file (.rsdl) to a CSDL file
         /// </summary>
         /// <param name="inputPath">file name to parse</param>
-        /// <param name="format">indicates wether it should be written as XML or JSON CSDL</param>
+        /// <param name="format">indicates whether it should be written as XML or JSON CSDL</param>
         static void Convert(string inputPath, CsdlFormat format, bool verbose = false)
         {
             var content = ReadText(inputPath);
@@ -110,7 +111,7 @@ namespace rsdl.parser
             }
         }
 
-        private static model.RdmDataModel ParseText(bool verbose, string content)
+        private static rdm.RdmDataModel ParseText(bool verbose, string content)
         {
             try
             {

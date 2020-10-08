@@ -1,7 +1,7 @@
 using Superpower;
 using Superpower.Parsers;
 
-namespace rsdl.parser
+namespace rapid.rsdl
 {
     internal static class TextParsers
     {

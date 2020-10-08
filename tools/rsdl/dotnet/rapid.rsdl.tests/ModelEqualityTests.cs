@@ -1,10 +1,10 @@
-using rsdl.parser.model;
+﻿using rapid.rdm;
 using System.Collections.Generic;
 using Xunit;
 
-namespace rsdl.parser.tests
+namespace rapid.rsdl.tests
 {
-    public class SyntaxTreeEqualityTests
+    public class ModelEqualityTests
     {
 
         public static IEnumerable<object[]> Data => new List<object[]>

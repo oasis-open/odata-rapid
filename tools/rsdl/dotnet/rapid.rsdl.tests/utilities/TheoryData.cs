@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace rsdl.parser.tests
+namespace rapid.rsdl.tests
 {
 
     public abstract class TheoryData : IEnumerable<object[]>
