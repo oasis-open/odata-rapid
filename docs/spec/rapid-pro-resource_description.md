@@ -37,7 +37,7 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
       "lastName": { "$Type": "Edm.String" },
       "title": { "$Type": "Edm.String" }
     },
-    "serviceRoot": {
+    "Service": {
       "$Kind": "EntityContainer",
       "company": {
         "$Type": "jetsons.company"
