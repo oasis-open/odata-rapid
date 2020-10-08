@@ -74,5 +74,5 @@ Resources can also include properties not advertised in metadata.
 These "dynamic" properties can be referenced in query options and included in result payloads,
 just like normal declared properties.
 
-The last line defines the `jetsons` entity container as the root of the service. Its members are top-level resources exposed by the service;
+The last line defines the `Service` entity container as the root of the service. Its members are top-level resources exposed by the service;
 `company` is a single instance of the `company` type, and `competitors` is a collection of companies.
