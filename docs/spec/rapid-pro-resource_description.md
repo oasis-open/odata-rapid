@@ -15,7 +15,7 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
 ```json
 {
   "$Version": "4.01",
-  "enterprise": {
+  "jetsons": {
     "company": {
       "$Kind": "EntityType",
       "$Key": ["stockSymbol"],
@@ -25,7 +25,7 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
       "employees": {
         "$Kind": "NavigationProperty",
         "$Collection": true,
-        "$Type": "enterprise.employees",
+        "$Type": "jetsons.employees",
         "$ContainsTarget": true
       }
     },
@@ -37,24 +37,24 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
       "lastName": { "$Type": "Edm.String" },
       "title": { "$Type": "Edm.String" }
     },
-    "serviceRoot": {
+    "Service": {
       "$Kind": "EntityContainer",
       "company": {
-        "$Type": "enterprise.company"
+        "$Type": "jetsons.company"
       },
       "competitors": {
         "$Collection": true,
-        "$Type": "enterprise.company"
+        "$Type": "jetsons.company"
       }
     },
-    "$EntityContainer": "enterprise.serviceRoot"
+    "$EntityContainer": "jetsons.Service"
   }
 }
 ```
 
-Types are defined within a namespace. The namespace defined for this service is `enterprise`.
+Types are defined within a namespace. The namespace defined for this service is `jetsons`.
 
-Within the `enterprise` namespace two types are defined: `company` and `employee`.
+Within the `jetsons` namespace two types are defined: `company` and `employee`.
 
 Properties representing meta information about the model, such as key, type, kind, collection, contains target,
 and entity container, are prefixed with a dollar sign (`$`).
@@ -74,6 +74,5 @@ Resources can also include properties not advertised in metadata.
 These "dynamic" properties can be referenced in query options and included in result payloads,
 just like normal declared properties.
 
-The last line defines the `serviceRoot` entity container as the root of the service.
-Its members are top-level resources exposed by the service;
+The last line defines the `Service` entity container as the root of the service. Its members are top-level resources exposed by the service;
 `company` is a single instance of the `company` type, and `competitors` is a collection of companies.
