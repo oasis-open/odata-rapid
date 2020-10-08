@@ -5,24 +5,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using rapid.rdm;
+using System.Runtime.Serialization;
 
 namespace rapid.rsdl
 {
-
     /// <summary>
     /// Rapid data model parser
     /// </summary>
     public class RdmParser
     {
-        public class ParserDiagnostics
+        public class Diagnostics
         {
             public TimeSpan TokenizationTime { get; internal set; }
             public TimeSpan ParsingTime { get; internal set; }
+            public TimeSpan ValidationTime { get; internal set; }
         }
 
-        public static RdmDataModel Parse(string content, out ParserDiagnostics diagnostis)
+        public static RdmDataModel Parse(string content, out Diagnostics diagnostis)
         {
-            diagnostis = new ParserDiagnostics();
+            diagnostis = new Diagnostics();
 
             // 1. tokenize
             var sw = Stopwatch.StartNew();
@@ -37,6 +38,16 @@ namespace rapid.rsdl
             var model = parser.Parse(tokenList);
             diagnostis.ParsingTime = sw.Elapsed;
 
+            // 3. semantic validation
+            sw.Start();
+            var validator = new RdmValidator();
+            if (!validator.Validate(model, out var errors))
+            {
+                // TODO: better error reporting
+                throw new ParseException("validation failed" + string.Join("\n", errors));
+            }
+            diagnostis.ValidationTime = sw.Elapsed;
+
             return model;
         }
 
@@ -48,6 +59,13 @@ namespace rapid.rsdl
             var parser = RdmParser.DataModel;
             var model = parser.Parse(tokenList);
 
+            var validator = new RdmValidator();
+            if (!validator.Validate(model, out var errors))
+            {
+                // TODO: better error reporting
+                throw new ValidationException("validation failed", errors);
+            }
+
             return model;
         }
 
@@ -55,6 +73,10 @@ namespace rapid.rsdl
 
         static TokenListParser<RdmToken, object> Keyword(string name) =>
                 Token.EqualToValue(RdmToken.Identifier, name).Value(unit);
+
+        static readonly TokenListParser<RdmToken, string> QuotedString = Token
+            .EqualTo(RdmToken.QuotedString)
+            .Apply(TextParsers.ExtractQuotedString);
 
         static readonly TokenListParser<RdmToken, IAnnotation> KeyAnnotation =
             from dp in Token.EqualTo(RdmToken.AtSign)
@@ -80,21 +102,17 @@ namespace rapid.rsdl
             from dot in Token.EqualTo(RdmToken.FullStop)
             select pre.ToStringValue();
 
-        static readonly TokenListParser<RdmToken, string> TypeName =
-            from prefix in EdmPrefix.OptionalOrDefault()
-            from name in Token.EqualTo(RdmToken.Identifier)
-            select prefix == null ? name.ToStringValue() : prefix + "." + name.ToStringValue();
 
         static readonly TokenListParser<RdmToken, rdm.RdmTypeReference> TypeReference =
             (
                 from type in (
-                    from name in TypeName
+                    from name in QualifiedIdentifier
                     from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
                     select (name, opt)
                 ).Between(RdmToken.LeftBracket, RdmToken.RightBracket)
                 select new rdm.RdmTypeReference(type.name, type.opt != null, true)
             ).Or(
-                from name in TypeName
+                from name in QualifiedIdentifier
                 from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
                 select new rdm.RdmTypeReference(name, opt != null, false)
             ).Named(
@@ -194,27 +212,38 @@ namespace rapid.rsdl
             select new rdm.RdmService(es);
         #endregion
 
-        static readonly TokenListParser<RdmToken, string> QuotedString = Token
-            .EqualTo(RdmToken.QuotedString)
-            .Apply(TextParsers.ExtractQuotedString);
-
-        static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
-                   from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
-                   from nm in QualifiedIdentifier
-                   select new RdmNamespaceDeclaration(nm);
-
         static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =
             ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnum>(
                 TypeDefinition,
                 Service,
                 EnumDefinition);
 
+        static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
+                   from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
+                   from nm in QualifiedIdentifier
+                   select new RdmNamespaceDeclaration(nm);
+
+        static readonly TokenListParser<RdmToken, RdmNamespaceReference> NamespaceReference =
+                   from kw in Token.EqualToValue(RdmToken.Identifier, "include")
+                   from nm in QualifiedIdentifier
+                   from al in (
+                       from k2 in Token.EqualToValue(RdmToken.Identifier, "as")
+                       from al in Identifier
+                       select al
+                   ).OptionalOrDefault()
+                   from k3 in Token.EqualToValue(RdmToken.Identifier, "from")
+                   from ur in QuotedString
+                   select new RdmNamespaceReference(nm, al, ur);
+
+
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
-           from ns in NamespaceDeclaration.OptionalOrDefault()
-           from es in SchemaElement.Many()
-           select new rdm.RdmDataModel(ns, es);
+           from nd in NamespaceDeclaration.OptionalOrDefault()
+           from nr in NamespaceReference.Many()
+           from se in SchemaElement.Many()
+           select new rdm.RdmDataModel(nd, se, nr);
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }
+
 }

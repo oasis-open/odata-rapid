@@ -29,3 +29,23 @@ with a binary image that any machine and run via the `rapid` or `rapid.exe` comm
 
 See [docs](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish) and [publish a single exe](
 https://dotnetcoretutorials.com/2019/06/20/publishing-a-single-exe-file-in-net-core-3-0/) for more details
+
+## internals
+
+Dlls/assembly dependencies:
+
+```txt
+           rapid
+            / \
+           /   \
+          V     V
+  rapid.rsdl   rapid.rdm.transformation
+        /      /     /
+       /      /     /
+      V      V     /
+     rapid.rdm    /
+      \          /
+       \        /
+        V      V
+       rapid.common
+```
