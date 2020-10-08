@@ -35,7 +35,7 @@ Properties in RAPID can be String, Integer, Boolean, Double, Decimal, Date, or D
 Now we can create a service that returns information about our company:
 
 ~~~rsdl
-service {
+Service {
     company: Company
 }
 ~~~
@@ -98,7 +98,7 @@ We could also add a top-level collection.
 For example, we could reuse the same company type to create a collection of companies that are competitors.
 
 ~~~rsdl
-service {
+Service {
     company: Company
     competitors: [Company]
 }
@@ -154,7 +154,7 @@ type Employee
 }
 ~~~
 
-### Defining Structural Properties
+### Defining Structural Properties without Identity
 
 Our employee has first name and last name properties.  We could define a "fullName" type to group those properties together:
 
@@ -231,7 +231,7 @@ Because actions may have side-affects, they are invoked using POST. Their parame
 Actions and functions may also be defined on the service.
 
 ~~~rsdl
-service {
+Service {
     company: Company
     competitors: [Company]
     currentStockPrice(stockSymbol: String): Decimal
