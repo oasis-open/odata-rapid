@@ -15,12 +15,12 @@ Please refer to [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) for the syntacti
 
 ## Model
 
-A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "rapid", that has an entity container named "default".
+A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
 
 ```JSON
 {
     "$Version": "4.01",
-    "$EntityContainer": "rapid.default",
+    "$EntityContainer": "Model.Service",
     "rapid": {
         "default": {
             "$Kind": "EntityContainer"
@@ -30,8 +30,8 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "rapi
 ```
 
 ```XML
-<Schema Namespace="rapid" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-    <EntityContainer Name="default">
+<Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <EntityContainer Name="Service">
     </EntityContainer>
 </Schema>
 ```
@@ -51,7 +51,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 ### Type definitions without @key properties
 
 ```
-    type name
+    type Name
     {
         firstName : string
         lastName: string
@@ -59,7 +59,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 ```
 
 ```JSON
-    "name": {
+    "Name": {
       "$Kind": "ComplexType",
       "firstName": {
         "$Type": "Edm.String"
@@ -71,7 +71,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 ```
 
 ```XML
-    <ComplexType Name="name">
+    <ComplexType Name="Name">
         <Property Name="firstName" Type="Edm.String" Nullable="false" />
         <Property Name="lastName" Type="Edm.String" Nullable="false" />
     </ComplexType>
@@ -80,7 +80,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 ### Type definitions with @key properties
 
 ```
-    type employee
+    type Employee
     {
         @key id: integer
         name : name
@@ -88,7 +88,7 @@ And respectively Type definitions without @key properties are mapped to a comple
 ```
 
 ```JSON
-    "employee": {
+    "Employee": {
       "$Kind": "EntityType",
       "$Key": [
         "id"
@@ -97,18 +97,18 @@ And respectively Type definitions without @key properties are mapped to a comple
         "$Type": "Edm.Int32"
       },
       "name": {
-        "$Type": "rapid.name"
+        "$Type": "Model.Name"
       }
     }
 ```
 
 ```XML
-    <EntityType Name="employee">
+    <EntityType Name="Employee">
         <Key>
           <PropertyRef Name="id" />
         </Key>
         <Property Name="id" Type="Edm.Int32" Nullable="false" />
-        <Property Name="name" Type="rapid.name" Nullable="false" />
+        <Property Name="name" Type="Model.Name" Nullable="false" />
     </EntityType>
 ```
 
@@ -119,7 +119,7 @@ The properties of a type definition are mapped to either a Property or a Navigat
 In the following example lets assume, name is mapped to a complete type and employee is mapped to a entity type.
 
 ```
-    type company
+    type Company
     {
         @key stockSymbol: string
         name: name
@@ -128,7 +128,7 @@ In the following example lets assume, name is mapped to a complete type and empl
 ```
 
 ```JSON
-    "company": {
+    "Company": {
       "$Kind": "EntityType",
       "$Key": [
         "stockSymbol"
@@ -141,18 +141,18 @@ In the following example lets assume, name is mapped to a complete type and empl
       },
       "ceo": {
         "$Kind": "NavigationProperty",
-        "$Type": "rapid.employee"
+        "$Type": "Model.Employee"
       }
     }
 ```
 
 ```XML
-    <EntityType Name="company">
+    <EntityType Name="Company">
         <Key>
           <PropertyRef Name="stockSymbol" />
         </Key>
         <Property Name="name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="ceo" Type="rapid.employee" Nullable="false" />
+        <NavigationProperty Name="ceo" Type="Model.Employee" Nullable="false" />
     </EntityType>
 ```
 
@@ -170,7 +170,7 @@ Each of these named types can be marked
 - multi-value via enclosing it in brackets `[` `]`
 
 ```
-    type foo
+    type Foo
     {
         test1: integer
         test2: integer?
@@ -180,7 +180,7 @@ Each of these named types can be marked
 ```
 
 ```JSON
-  "foo": {
+  "Foo": {
       "$Kind": "EntityType",
       "test1": {
         "$Type": "Edm.Int32"
@@ -202,7 +202,7 @@ Each of these named types can be marked
 ```
 
 ```XML
-    <EntityType Name="foo">
+    <EntityType Name="Foo">
         <Property Name="test1" Type="Edm.Int32" Nullable="false" />
         <Property Name="test2" Type="Edm.Int32" Nullable="true" />
         <Property Name="test3" Type="Collection(Edm.Int32)" Nullable="false"/>
@@ -220,7 +220,7 @@ The syntactical production rule called "function" is mapped to a bound action or
 The binding parameter of the function is inferred from the containing type production rule and named "this"
 
 ```
-    type employee
+    type Employee
     {
         @key id: integer
 
@@ -237,7 +237,7 @@ The binding parameter of the function is inferred from the containing type produ
         "$Parameter": [
           {
             "$Name": "it",
-            "$Type": "rapid.employee"
+            "$Type": "Model.Employee"
           }
         ]
       }
@@ -246,7 +246,7 @@ The binding parameter of the function is inferred from the containing type produ
 
 ```XML
     <Function Name="foo" IsBound="true" IsComposable="true">
-        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="Model.Employee" Nullable="false" />
     </Function>
 ```
 
@@ -255,7 +255,7 @@ The binding parameter of the function is inferred from the containing type produ
 The return type of a function is mapped similar to a property type with the same semantic for `[` `]` and `?`.
 
 ```
-    type employee
+    type Employee
     {
         @key id: integer
 
@@ -273,7 +273,7 @@ The return type of a function is mapped similar to a property type with the same
         "$Parameter": [
           {
             "$Name": "it",
-            "$Type": "rapid.employee"
+            "$Type": "Model.Employee"
           }
         ],
         "$ReturnType": {
@@ -289,7 +289,7 @@ The return type of a function is mapped similar to a property type with the same
         "$Parameter": [
           {
             "$Name": "it",
-            "$Type": "rapid.employee"
+            "$Type": "Model.Employee"
           }
         ],
         "$ReturnType": {
@@ -302,12 +302,12 @@ The return type of a function is mapped similar to a property type with the same
 
 ```XML
     <Function Name="foo" IsBound="true" IsComposable="true">
-        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="Model.Employee" Nullable="false" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
     </Function>
 
     <Function Name="bar" IsBound="true" IsComposable="true">
-        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="Model.Employee" Nullable="false" />
         <ReturnType Type="Collection(Edm.Int32)" Nullable="false" />
     </Function>
 ```
@@ -317,7 +317,7 @@ The return type of a function is mapped similar to a property type with the same
 Parameters are similar to properties in that they have a name and reference a type.
 
 ```
-    type employee
+    type Employee
     {
         @key id: integer
         foo(a: integer, b: [integer?])
@@ -333,7 +333,7 @@ Parameters are similar to properties in that they have a name and reference a ty
         "$Parameter": [
           {
             "$Name": "it",
-            "$Type": "rapid.employee"
+            "$Type": "Model.Employee"
           },
           {
             "$Name": "a",
@@ -352,7 +352,7 @@ Parameters are similar to properties in that they have a name and reference a ty
 
 ```XML
     <Function Name="foo" IsBound="true" IsComposable="true">
-        <Parameter Name="it" Type="rapid.employee" Nullable="false" />
+        <Parameter Name="it" Type="Model.Employee" Nullable="false" />
         <Parameter Type="Edm.Int32" Nullable="false" />
         <Parameter Type="Collection(Edm.Int32)" Nullable="true" />
     </Function>
@@ -385,9 +385,9 @@ enum employmentType { salaried hourly }
 
 ## Service definition
 
-As mentioned above, every RAPID service model create a CSDL entity container named "default"
+As mentioned above, every RAPID service model create a CSDL entity container named "Service"
 ```
-service {
+Service {
 }
 ```
 
@@ -396,7 +396,7 @@ service {
 ```
 
 ```XML
-   <EntityContainer Name="default">
+   <EntityContainer Name="Service">
 ```
 
 ### multi-value service element
@@ -404,14 +404,14 @@ service {
 A service definition element of a multi-value type gets mapped to a CSDL entity set.
 
 ```
-service
+Service
 {
-  employees: [employee]
+  employees: [Employee]
 }
 ```
 
 ```XML
-  <EntitySet Name="employees" EntityType="rapid.employee" />
+  <EntitySet Name="employees" EntityType="Model.Employee" />
 ```
 
 If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL), the appropriate navigation property bindings get created.
@@ -420,14 +420,14 @@ In below example, the `company` type has a `ceo` and an `employees` property of 
 RAPID does not allow to have multiple entity sets for the same type, so that the binding is always uniquely defined.
 
 ```
-service
+Service
 {
-    competitors: [company]
+    competitors: [Company]
 }
 ```
 
 ```XML
-  <EntitySet Name="competitors" EntityType="rapid.company">
+  <EntitySet Name="competitors" EntityType="Model.Company">
     <NavigationPropertyBinding Path="ceo" Target="employees" />
     <NavigationPropertyBinding Path="employees" Target="employees" />
   </EntitySet>
@@ -440,14 +440,14 @@ service
 A service definition element of a single-value type gets mapped to a CSDL singleton.
 
 ```
-service
+Service
 {
-  company: company
+  company: Company
 }
 ```
 
 ```XML
-   <Singleton Name="company" Type="rapid.company" />
+   <Singleton Name="company" Type="Model.Company" />
 ```
 
 ## Appendix
