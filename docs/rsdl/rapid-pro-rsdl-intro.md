@@ -154,7 +154,7 @@ type Employee
 }
 ~~~
 
-### Defining Structural Properties without Identity
+### Defining a Structured Property without Identity
 
 Our employee has first name and last name properties.  We could define a "fullName" type to group those properties together:
 
