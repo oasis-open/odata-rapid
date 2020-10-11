@@ -231,7 +231,7 @@ Because actions may have side-affects, they are invoked using POST. Their parame
 Actions and functions may also be defined on the service.
 
 ~~~rsdl
-Service {
+service {
     company: Company
     competitors: [Company]
     currentStockPrice(stockSymbol: String): Decimal
