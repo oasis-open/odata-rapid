@@ -98,7 +98,7 @@ We could also add a top-level collection.
 For example, we could reuse the same company type to create a collection of companies that are competitors.
 
 ~~~rsdl
-Service {
+service {
     company: Company
     competitors: [Company]
 }
