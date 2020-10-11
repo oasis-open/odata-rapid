@@ -35,7 +35,7 @@ Properties in RAPID can be String, Integer, Boolean, Double, Decimal, Date, or D
 Now we can create a service that returns information about our company:
 
 ~~~rsdl
-Service {
+service {
     company: Company
 }
 ~~~
