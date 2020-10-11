@@ -380,12 +380,14 @@ enum employmentType { salaried hourly }
 As mentioned above, every RAPID service model creates a CSDL entity container named "Service"
 
 ```
-Service {
+service {
 }
 ```
 
 ```JSON
-
+"Service": {
+  "$Kind": "EntityContainer"
+}
 ```
 
 ```XML
