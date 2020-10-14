@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    public class RdmStructuredType : IRdmSchemaElement, IEquatable<RdmStructuredType>
+    public class RdmStructuredType : IRdmSchemaElement, IRdmType, IEquatable<RdmStructuredType>
     {
         public RdmStructuredType(string name,
             IReadOnlyCollection<RdmProperty> properties,

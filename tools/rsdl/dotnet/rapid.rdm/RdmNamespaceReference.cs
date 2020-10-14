@@ -8,14 +8,14 @@ namespace rapid.rdm
         {
             NamespaceName = namespaceName;
             Alias = alias;
-            Url = url;
+            Path = url;
         }
 
         public string NamespaceName { get; }
 
         public string Alias { get; }
 
-        public string Url { get; }
+        public string Path { get; }
 
         //  IEquatable<RdmNamespaceReference>.Equals
         public bool Equals(RdmNamespaceReference other)
@@ -23,7 +23,7 @@ namespace rapid.rdm
             return
                 string.Equals(this.NamespaceName, other.NamespaceName) &&
                 string.Equals(this.Alias, other.Alias) &&
-                string.Equals(this.Url, other.Url);
+                string.Equals(this.Path, other.Path);
         }
 
         public override bool Equals(object other)
@@ -33,7 +33,7 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NamespaceName, Alias, Url);
+            return HashCode.Combine(NamespaceName, Alias, Path);
         }
     }
 }
