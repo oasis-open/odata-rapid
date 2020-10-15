@@ -341,12 +341,12 @@ namespace rapid.rsdl
 
         private static readonly Dictionary<string, string> _primitiveTypeNameMapping = new Dictionary<string, string>
         {
-            ["integer"] = "Edm.Int32",
-            ["string"] = "Edm.String",
-            ["boolean"] = "Edm.Boolean",
-            ["dateTime"] = "Edm.DateTimeOffset",
-            ["date"] = "Edm.Date",
-            ["double"] = "Edm.Double"
+            ["Integer"] = "Edm.Int32",
+            ["String"] = "Edm.String",
+            ["Boolean"] = "Edm.Boolean",
+            ["DateTime"] = "Edm.DateTimeOffset",
+            ["Date"] = "Edm.Date",
+            ["Double"] = "Edm.Double"
         };
 
         #endregion

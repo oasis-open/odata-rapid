@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using rapid.rdm;
 using System.Runtime.Serialization;
+using System.IO;
 
 namespace rapid.rsdl
 {
@@ -14,57 +15,23 @@ namespace rapid.rsdl
     /// </summary>
     public class RdmParser
     {
-        public class Diagnostics
-        {
-            public TimeSpan TokenizationTime { get; internal set; }
-            public TimeSpan ParsingTime { get; internal set; }
-            public TimeSpan ValidationTime { get; internal set; }
-        }
 
-        public static RdmDataModel Parse(string content, out Diagnostics diagnostis)
+        public static RdmDataModel Parse(string content, TextWriter diagnostics = null)
         {
-            diagnostis = new Diagnostics();
+            diagnostics ??= TextWriter.Null;
 
             // 1. tokenize
             var sw = Stopwatch.StartNew();
             var tokenizer = RdmTokenizer.Tokenizer;
             var tokenList = tokenizer.Tokenize(content);
             sw.Stop();
-            diagnostis.TokenizationTime = sw.Elapsed;
+            diagnostics.WriteLine("tokenization: {0}", sw.Elapsed);
 
             // 2. parse
             sw.Start();
             var parser = RdmParser.DataModel;
             var model = parser.Parse(tokenList);
-            diagnostis.ParsingTime = sw.Elapsed;
-
-            // 3. semantic validation
-            sw.Start();
-            var validator = new RdmValidator();
-            if (!validator.Validate(model, out var errors))
-            {
-                // TODO: better error reporting
-                throw new ParseException("validation failed" + string.Join("\n", errors));
-            }
-            diagnostis.ValidationTime = sw.Elapsed;
-
-            return model;
-        }
-
-        public static RdmDataModel Parse(string content)
-        {
-            var tokenizer = RdmTokenizer.Tokenizer;
-            var tokenList = tokenizer.Tokenize(content);
-
-            var parser = RdmParser.DataModel;
-            var model = parser.Parse(tokenList);
-
-            var validator = new RdmValidator();
-            if (!validator.Validate(model, out var errors))
-            {
-                // TODO: better error reporting
-                throw new ValidationException("validation failed", errors);
-            }
+            diagnostics.WriteLine("parsing: {0}", sw.Elapsed);
 
             return model;
         }

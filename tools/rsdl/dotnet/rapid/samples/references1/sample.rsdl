@@ -1,0 +1,17 @@
+namespace odata.tc.jetsons
+
+include odata.tc.common as common from "common.rsdl"
+
+
+type Employee
+{
+    @key id: String
+    name : String
+    
+    employmentType: common.EmploymentType
+}
+
+service
+{
+    employees: [Employee]
+}

@@ -40,7 +40,10 @@ namespace rapid.rsdl
         {
             var typeLookup = LoadAllTypes(model);
 
-
+            foreach (var x in typeLookup)
+            {
+                System.Console.WriteLine(x.Name);
+            }
             // foreach (var type in model.Items.OfType<RdmStructuredType>())
             // {
             //     foreach (var prop in type.Properties)
@@ -59,12 +62,18 @@ namespace rapid.rsdl
             //         }
             //     }
             // }
-            return default;
+            return Enumerable.Empty<ModelValidationError>();
         }
 
         private IEnumerable<IRdmType> LoadAllTypes(RdmDataModel model)
         {
             var models = LoadDependentModels(model);
+            foreach (var x in models.Keys)
+            {
+                System.Console.WriteLine(x);
+            }
+            System.Console.WriteLine();
+
             return models.SelectMany(model => model.Value.Items.OfType<IRdmType>());
         }
 
@@ -76,15 +85,14 @@ namespace rapid.rsdl
             while (queue.Count > 0)
             {
                 var item = queue.Dequeue();
-                // if model has not been added yet.
-                if (!models.ContainsKey(item.Namespace.NamespaceName))
+
+                // load and enqueue all referenced models
+                foreach (var @ref in item.References)
                 {
-                    // add it
-                    models.Add(item.Namespace.NamespaceName, item);
-                    // load and enqueue all referenced models
-                    foreach (var @ref in item.References)
+                    var m = LoadModel(@ref.NamespaceName, @ref.Path);
+                    // try to ann model, and if not added before enqueue it
+                    if (models.TryAdd(item.Namespace.NamespaceName, m))
                     {
-                        var m = LoadModel(@ref.NamespaceName, @ref.Path);
                         queue.Enqueue(m);
                     }
                 }

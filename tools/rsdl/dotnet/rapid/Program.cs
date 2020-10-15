@@ -76,6 +76,13 @@ namespace rapid.rsdl
             var content = ReadText(inputPath);
             var model = ParseText(verbose, content);
 
+            var validator = new RdmValidator();
+            if (!validator.Validate(model, out var errors))
+            {
+                // TODO: better error reporting
+                throw new ConversionException(3, "validation failed" + string.Join("\n", errors));
+            }
+
             // Transform to CSDL
             try
             {
@@ -115,13 +122,9 @@ namespace rapid.rsdl
         {
             try
             {
+                using var diagnostics = verbose ? new StreamWriter(Console.OpenStandardError()) : StreamWriter.Null;
                 // Parse RDM model
-                var model = RdmParser.Parse(content, out var diagnostics);
-                if (verbose)
-                {
-                    Console.Error.WriteLine("tokenization: {0}", diagnostics.TokenizationTime);
-                    Console.Error.WriteLine("parsing:      {0}", diagnostics.ParsingTime);
-                }
+                var model = RdmParser.Parse(content, diagnostics);
 
                 return model;
             }
