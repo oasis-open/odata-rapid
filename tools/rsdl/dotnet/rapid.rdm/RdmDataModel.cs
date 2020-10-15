@@ -24,18 +24,13 @@ namespace rapid.rdm
 
     public class RdmDataModel : IEquatable<RdmDataModel>
     {
-        public RdmDataModel(IReadOnlyCollection<IRdmSchemaElement> items) :
-            this(null, items)
-        {
-        }
-
         public RdmDataModel(
             RdmNamespaceDeclaration @namespace,
             IReadOnlyCollection<IRdmSchemaElement> items,
             IReadOnlyCollection<RdmNamespaceReference> references = null)
         {
-            Items = items;
-            Namespace = @namespace;
+            Namespace = @namespace ?? RdmNamespaceDeclaration.Default;
+            Items = items ?? throw new ArgumentNullException(nameof(items));
             References = references ?? Array.Empty<RdmNamespaceReference>();
         }
 

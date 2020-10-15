@@ -6,11 +6,14 @@ namespace rapid.rsdl.tests
 {
     public class ParserTests
     {
+
+        private readonly RdmParser parser = new RdmParser();
+
         [Fact]
         public void TypePropertiesGetParsed()
         {
             var content = "type Company { name: String incorporated: Date}";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content);
 
             var expected = new RdmDataModel(null, new[] {
                 new RdmStructuredType("Company", new [] {
@@ -25,7 +28,7 @@ namespace rapid.rsdl.tests
         public void NameSpaceDeclarationGetParsed()
         {
             var content = "namespace foo.bar type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content);
 
             var expected = new RdmDataModel(new RdmNamespaceDeclaration("foo.bar"),
                 new[] {
@@ -43,7 +46,7 @@ namespace rapid.rsdl.tests
 namespace foo.bar
 include other.namespace as other from ""other.rsdl""
 type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content);
 
             var expected = new RdmDataModel(
                 new RdmNamespaceDeclaration("foo.bar"),
@@ -66,7 +69,7 @@ type Company { }";
 namespace foo.bar
 include other.namespace from ""other.rsdl""
 type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content);
 
             var expected = new RdmDataModel(
                 new RdmNamespaceDeclaration("foo.bar"),
@@ -88,7 +91,7 @@ type Company { }";
             var content = @"
 include other.namespace as other from ""other.rsdl""
 type Company { something: other.Something }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content);
 
             var expected = new RdmDataModel(
                 null,

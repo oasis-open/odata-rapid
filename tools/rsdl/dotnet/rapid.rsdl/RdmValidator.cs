@@ -6,43 +6,31 @@ using rapid.rdm;
 
 namespace rapid.rsdl
 {
-
-    public class ModelValidationError
-    {
-        public ModelValidationError(string message)
-        {
-            Message = message;
-        }
-
-        public string Message { get; }
-    }
-
     public interface IRdmValidator
     {
-        bool Validate(RdmDataModel model, out IEnumerable<ModelValidationError> errors);
+        bool Validate(RdmDataModel model);
     }
 
     public class RdmValidator : IRdmValidator
     {
-        public bool Validate(RdmDataModel model, out IEnumerable<ModelValidationError> errors)
+        private readonly ILogger logger;
+        private readonly RdmParser parser;
+        public readonly string baseDirectory;
+
+        public RdmValidator(string baseDirectory, ILogger logger)
         {
-            var temp = GetErrors(model).ToList();
-            if (temp.Any())
-            {
-                errors = temp;
-                return false;
-            }
-            errors = default;
-            return true;
+            this.logger = logger;
+            this.parser = new RdmParser(logger);
+            this.baseDirectory = baseDirectory;
         }
 
-        private IEnumerable<ModelValidationError> GetErrors(RdmDataModel model)
+        public bool Validate(RdmDataModel model)
         {
             var typeLookup = LoadAllTypes(model);
 
             foreach (var x in typeLookup)
             {
-                System.Console.WriteLine(x.Name);
+                logger.LogInfo("validate type {0}", x.Name);
             }
             // foreach (var type in model.Items.OfType<RdmStructuredType>())
             // {
@@ -62,7 +50,7 @@ namespace rapid.rsdl
             //         }
             //     }
             // }
-            return Enumerable.Empty<ModelValidationError>();
+            return true;
         }
 
         private IEnumerable<IRdmType> LoadAllTypes(RdmDataModel model)
@@ -70,14 +58,13 @@ namespace rapid.rsdl
             var models = LoadDependentModels(model);
             foreach (var x in models.Keys)
             {
-                System.Console.WriteLine(x);
+                logger.LogInfo("loaded type {0}", x);
             }
-            System.Console.WriteLine();
 
             return models.SelectMany(model => model.Value.Items.OfType<IRdmType>());
         }
 
-        private static IDictionary<string, RdmDataModel> LoadDependentModels(RdmDataModel model)
+        private IDictionary<string, RdmDataModel> LoadDependentModels(RdmDataModel model)
         {
             // this is essentially a breadth first search in the (potentially cyclic) model dependency graph
             var models = new Dictionary<string, RdmDataModel> { [model.Namespace.NamespaceName] = model };
@@ -93,6 +80,7 @@ namespace rapid.rsdl
                     // try to ann model, and if not added before enqueue it
                     if (models.TryAdd(item.Namespace.NamespaceName, m))
                     {
+                        models.Add(@ref.Alias, m);
                         queue.Enqueue(m);
                     }
                 }
@@ -100,13 +88,14 @@ namespace rapid.rsdl
             return models;
         }
 
-        private static RdmDataModel LoadModel(string namespaceName, string path)
+        private RdmDataModel LoadModel(string namespaceName, string path)
         {
-            var model = RdmParser.Parse(System.IO.File.ReadAllText(path));
+            var model = parser.Parse(path);
             if (!namespaceName.Equals(model.Namespace))
             {
-                throw new ValidationException($"can not include file {path} with namespace {model.Namespace.NamespaceName} as {namespaceName}");
+                logger.LogError($"failed to include '{model.Namespace.NamespaceName}' declared as '{namespaceName}' in file '{path}'");
             }
+            logger.LogInfo("loaded file {0}", path);
             return model;
         }
 
@@ -119,35 +108,5 @@ namespace rapid.rsdl
             ["Date"] = "Edm.Date",
             ["Double"] = "Edm.Double"
         };
-    }
-
-
-    [Serializable]
-    internal class ValidationException : Exception
-    {
-        private string v;
-        private IEnumerable<ModelValidationError> errors;
-
-        public ValidationException()
-        {
-        }
-
-        public ValidationException(string message) : base(message)
-        {
-        }
-
-        public ValidationException(string v, IEnumerable<ModelValidationError> errors)
-        {
-            this.v = v;
-            this.errors = errors;
-        }
-
-        public ValidationException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected ValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

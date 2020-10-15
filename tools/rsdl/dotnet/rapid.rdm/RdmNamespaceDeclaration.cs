@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace rapid.rdm
 {
@@ -9,6 +10,10 @@ namespace rapid.rdm
             NamespaceName = namespaceName;
         }
 
+        private const string defaultNamespaceName = "Model";
+
+        public static RdmNamespaceDeclaration Default = new RdmNamespaceDeclaration(defaultNamespaceName);
+        
         public string NamespaceName { get; }
 
         public static bool Equals(RdmNamespaceDeclaration one, RdmNamespaceDeclaration two)

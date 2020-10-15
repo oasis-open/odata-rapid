@@ -9,7 +9,6 @@ namespace rapid.rsdl
 {
     internal class ModelBuilder
     {
-        private const string defaultNamespaceName = "Model";
 
         private readonly string namespaceName;
 
@@ -19,7 +18,7 @@ namespace rapid.rsdl
 
         public ModelBuilder(RdmDataModel schema)
         {
-            this.namespaceName = schema.Namespace?.NamespaceName ?? defaultNamespaceName;
+            this.namespaceName = schema.Namespace.NamespaceName;
             this.rdmModel = schema;
         }
 

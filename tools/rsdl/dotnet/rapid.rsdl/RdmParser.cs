@@ -1,12 +1,10 @@
-using Superpower;
-using Superpower.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using rapid.rdm;
-using System.Runtime.Serialization;
-using System.IO;
+using Superpower;
+using Superpower.Parsers;
 
 namespace rapid.rsdl
 {
@@ -15,27 +13,35 @@ namespace rapid.rsdl
     /// </summary>
     public class RdmParser
     {
+        private readonly ILogger logger;
 
-        public static RdmDataModel Parse(string content, TextWriter diagnostics = null)
+        public RdmParser(ILogger logger = null)
         {
-            diagnostics ??= TextWriter.Null;
+            this.logger = logger ?? NullLogger.Instance;
+        }
 
+        public RdmDataModel Parse(string content)
+        {
             // 1. tokenize
             var sw = Stopwatch.StartNew();
             var tokenizer = RdmTokenizer.Tokenizer;
             var tokenList = tokenizer.Tokenize(content);
             sw.Stop();
-            diagnostics.WriteLine("tokenization: {0}", sw.Elapsed);
+            logger.LogInfo("tokenization time: {0}", sw.Elapsed);
 
             // 2. parse
             sw.Start();
-            var parser = RdmParser.DataModel;
+            var parser = Parsers.DataModel;
             var model = parser.Parse(tokenList);
-            diagnostics.WriteLine("parsing: {0}", sw.Elapsed);
+            logger.LogInfo("parsing time: {0}", sw.Elapsed);
 
             return model;
         }
 
+    }
+
+    internal static class Parsers
+    {
         private static readonly object unit = new object();
 
         static TokenListParser<RdmToken, object> Keyword(string name) =>
