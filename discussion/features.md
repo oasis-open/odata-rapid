@@ -57,6 +57,7 @@
 | Requesting Entity References | :x:, too fancy |
 | Resolving an Entity-Id | :x:, too fancy |
 | (bound) functions | only implicit parameter aliases, only literal parameter values, no expressions |
+| Delta Responses | :x:, too fancy |
 | `/$crossjoin` | :x:, too fancy |
 | `/$all` | :x:, too fancy |
 | [Filter capabilities](https://github.com/oasis-open/odata-rapid/issues/30) | ??? |
@@ -66,10 +67,12 @@
 
 | OData Feature | RAPID Equivalent |
 |--|--|
+| Basic POST(create), PATCH, DELETE | yes |
+| PUT | :x:, only PATCH |
+| Deep Insert | yes |
+| Deep Update/Upsert | only with full replace, no `@delta` |
+| PATCH to entity set | with simplified tombstones (`@removed` plus key properties) |
 | Batch | only JSON Batch |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| `/$filter(...)`, `/$each` | :x:, too fancy |
+| (bound) actions | yes |
+| Asynchronous Requests | :x:, too fancy |
