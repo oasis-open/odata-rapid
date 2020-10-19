@@ -40,19 +40,33 @@
 
 | (OData) Feature | RAPID Equivalent |
 |--|--|
-| [Query Fragments and Persisted Queries](https://github.com/oasis-open/odata-rapid/issues/145) |  |
-|  |  |
-| [Filter capabilities](https://github.com/oasis-open/odata-rapid/issues/30) |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| $metadata | yes, only CSDL JSON or RSDL |
+| key-as-segment | yes |
+| paren-keys | :x: (can be added atop the profile) |
+| alternate keys | :x:, requires paren-keys |
+| `/$count` | :x:, too fancy, use `$count=true` |
+| `/$value` | :x:, too fancy |
+| `$levels`, `$expand=*`, `$select=*` | :x:, be explicit |
+| `$apply` | :x:, too fancy |
+| `$compute` | :x:, too fancy |
+| `$filter` | only subset, see ??? |
+| `$search` | only subset (no parens, OR, NOT, only implicit AND) |
+| `$orderby` | only subset (no expressions, no computed fields) |
+| `$top`, `$skip`, `$count` | yes |
+| Requesting Related Entities | yes, path syntax |
+| Requesting Entity References | :x:, too fancy |
+| Resolving an Entity-Id | :x:, too fancy |
+| (bound) functions | only implicit parameter aliases, only literal parameter values, no expressions |
+| `/$crossjoin` | :x:, too fancy |
+| `/$all` | :x:, too fancy |
+| [Filter capabilities](https://github.com/oasis-open/odata-rapid/issues/30) | ??? |
+| [Query Fragments and Persisted Queries](https://github.com/oasis-open/odata-rapid/issues/145) | ??? |
 
 ## Modification
 
 | OData Feature | RAPID Equivalent |
 |--|--|
-|  |  |
+| Batch | only JSON Batch |
 |  |  |
 |  |  |
 |  |  |
