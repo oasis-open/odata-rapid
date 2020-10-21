@@ -20,20 +20,20 @@ namespace rapid.rsdl
             this.logger = logger ?? NullLogger.Instance;
         }
 
-        public RdmDataModel Parse(string content)
+        public RdmDataModel Parse(string content, string name)
         {
             // 1. tokenize
             var sw = Stopwatch.StartNew();
             var tokenizer = RdmTokenizer.Tokenizer;
             var tokenList = tokenizer.Tokenize(content);
             sw.Stop();
-            logger.LogInfo("tokenization time: {0}", sw.Elapsed);
+            logger.LogInfo("tokenized {0} in {1}", name, sw.Elapsed);
 
             // 2. parse
             sw.Start();
             var parser = Parsers.DataModel;
             var model = parser.Parse(tokenList);
-            logger.LogInfo("parsing time: {0}", sw.Elapsed);
+            logger.LogInfo("parsed    {0} in {1}", name, sw.Elapsed);
 
             return model;
         }
@@ -47,9 +47,9 @@ namespace rapid.rsdl
         static TokenListParser<RdmToken, object> Keyword(string name) =>
                 Token.EqualToValue(RdmToken.Identifier, name).Value(unit);
 
-        static readonly TokenListParser<RdmToken, string> QuotedString = Token
-            .EqualTo(RdmToken.QuotedString)
-            .Apply(TextParsers.ExtractQuotedString);
+        // static readonly TokenListParser<RdmToken, string> QuotedString = Token
+        //     .EqualTo(RdmToken.QuotedString)
+        //     .Apply(TextParsers.DoubleQuotedString);
 
         static readonly TokenListParser<RdmToken, IAnnotation> KeyAnnotation =
             from dp in Token.EqualTo(RdmToken.AtSign)
@@ -61,14 +61,12 @@ namespace rapid.rsdl
            from nm in Keyword("action")
            select (IAnnotation)new ActionAnnotation();
 
-        static readonly TokenListParser<RdmToken, string> Identifier = Token
-            .EqualTo(RdmToken.Identifier)
-            .Select(t => t.ToStringValue());
-
-        static readonly TokenListParser<RdmToken, string> QualifiedIdentifier =
-            from head in Identifier
-            from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Identifier select i).Many()
-            select string.Join(".", tail.Prepend(head));
+        static readonly TokenListParser<RdmToken, CompositeIdentifier> QualifiedIdentifier =
+            from head in Token.EqualTo(RdmToken.Identifier)
+            from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Token.EqualTo(RdmToken.Identifier) select i).Many()
+            select new CompositeIdentifier(
+                string.Join(".", tail.Prepend(head).Select(i => i.ToStringValue())),
+                head.GetPosition());
 
         static readonly TokenListParser<RdmToken, string> EdmPrefix =
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
@@ -83,11 +81,11 @@ namespace rapid.rsdl
                     from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
                     select (name, opt)
                 ).Between(RdmToken.LeftBracket, RdmToken.RightBracket)
-                select new rdm.RdmTypeReference(type.name, type.opt != null, true)
+                select new rdm.RdmTypeReference(type.name.Name, type.opt != null, true, type.name.Position)
             ).Or(
                 from name in QualifiedIdentifier
                 from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
-                select new rdm.RdmTypeReference(name, opt != null, false)
+                select new rdm.RdmTypeReference(name.Name, opt != null, false, name.Position)
             ).Named(
                 "type reference"
             );
@@ -194,19 +192,14 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
                    from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
                    from nm in QualifiedIdentifier
-                   select new RdmNamespaceDeclaration(nm);
+                   select new RdmNamespaceDeclaration(nm.Name, kw.GetPosition());
 
         static readonly TokenListParser<RdmToken, RdmNamespaceReference> NamespaceReference =
-                   from kw in Token.EqualToValue(RdmToken.Identifier, "include")
-                   from nm in QualifiedIdentifier
-                   from al in (
-                       from k2 in Token.EqualToValue(RdmToken.Identifier, "as")
-                       from al in Identifier
-                       select al
-                   ).OptionalOrDefault()
-                   from k3 in Token.EqualToValue(RdmToken.Identifier, "from")
-                   from ur in QuotedString
-                   select new RdmNamespaceReference(nm, al, ur);
+            from k1 in Token.EqualToValue(RdmToken.Identifier, "include")
+            from pa in Token.EqualTo(RdmToken.QuotedString)
+            from k2 in Token.EqualToValue(RdmToken.Identifier, "as")
+            from al in Token.EqualTo(RdmToken.Identifier)
+            select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue(), k1.GetPosition());
 
 
         // TODO: check for EOF
@@ -219,4 +212,34 @@ namespace rapid.rsdl
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }
 
+
+    public class CompositeIdentifier : IEquatable<CompositeIdentifier>
+    {
+        public CompositeIdentifier(string name, Position position = default)
+        {
+            Name = name;
+            Position = position;
+        }
+
+        public string Name { get; }
+
+        public Position Position { get; }
+
+        public bool Equals(CompositeIdentifier other)
+        {
+            // Position is intentionally not compared.
+            return
+                string.Equals(this.Name, other.Name);
+        }
+
+        public override bool Equals(object other)
+        {
+            return other is CompositeIdentifier p && this.Equals(p);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name);
+        }
+    }
 }

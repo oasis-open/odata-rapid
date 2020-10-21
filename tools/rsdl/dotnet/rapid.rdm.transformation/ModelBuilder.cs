@@ -23,7 +23,7 @@ namespace rapid.rsdl
         }
 
         /// <summary>
-        /// Create a EDM model for the given RDM Model
+        /// Create an EDM model for the given RDM Model
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
         /// <returns></returns>
@@ -335,7 +335,7 @@ namespace rapid.rsdl
                 edmType = edmModel.FindType(typeRef.Name);
                 return edmType;
             }
-            throw new TransformationException($"unable to resolve type {typeRef.Name}");
+            throw new TransformationException($"unable to resolve type {typeRef.Name} {typeRef.Position");
         }
 
         private static readonly Dictionary<string, string> _primitiveTypeNameMapping = new Dictionary<string, string>

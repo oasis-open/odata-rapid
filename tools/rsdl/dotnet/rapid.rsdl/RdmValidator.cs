@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using rapid.rdm;
@@ -26,77 +27,109 @@ namespace rapid.rsdl
 
         public bool Validate(RdmDataModel model)
         {
-            var typeLookup = LoadAllTypes(model);
+            var env = CreateEnvironment(model);
 
-            foreach (var x in typeLookup)
-            {
-                logger.LogInfo("validate type {0}", x.Name);
-            }
-            // foreach (var type in model.Items.OfType<RdmStructuredType>())
+            // foreach (var x in typeLookup)
             // {
-            //     foreach (var prop in type.Properties)
-            //     {
-            //         var propertyType = prop.Type;
-            //         if (BuiltInTypes.ContainsKey(propertyType.Name))
-            //         {
-            //             continue;
-            //         }
-            //         var @namespace = prop.Type.NamespaceName;
-
-            //         // TODO: replace with checking all types in imported namespaces
-            //         if (!model.References.Any(@ref => string.Equals(@ref.NamespaceName, @namespace) || string.Equals(@ref.Alias, @namespace)))
-            //         {
-            //             yield return new ModelValidationError($"type {prop.Type}, namespace can not be found");
-            //         }
-            //     }
+            //     logger.LogInfo("validate type {0}", x.Name);
             // }
-            return true;
-        }
+            var ok = true;
 
-        private IEnumerable<IRdmType> LoadAllTypes(RdmDataModel model)
-        {
-            var models = LoadDependentModels(model);
-            foreach (var x in models.Keys)
+            // verify type references
+            foreach (var type in env.Types)
             {
-                logger.LogInfo("loaded type {0}", x);
-            }
-
-            return models.SelectMany(model => model.Value.Items.OfType<IRdmType>());
-        }
-
-        private IDictionary<string, RdmDataModel> LoadDependentModels(RdmDataModel model)
-        {
-            // this is essentially a breadth first search in the (potentially cyclic) model dependency graph
-            var models = new Dictionary<string, RdmDataModel> { [model.Namespace.NamespaceName] = model };
-            var queue = new Queue<RdmDataModel> { model };
-            while (queue.Count > 0)
-            {
-                var item = queue.Dequeue();
-
-                // load and enqueue all referenced models
-                foreach (var @ref in item.References)
+                if (type is RdmStructuredType structured)
                 {
-                    var m = LoadModel(@ref.NamespaceName, @ref.Path);
-                    // try to ann model, and if not added before enqueue it
-                    if (models.TryAdd(item.Namespace.NamespaceName, m))
+                    foreach (var prop in structured.Properties)
                     {
-                        models.Add(@ref.Alias, m);
-                        queue.Enqueue(m);
+                        var propertyType = prop.Type;
+                        if (!env.TryResolve(propertyType.Name, out var _))
+                        {
+                            logger.LogInfo("unknown type {0} of property {1} type {2}", propertyType.Name, prop.Name, type.Name);
+                            ok = false;
+                        }
+
+                        // if (BuiltInTypes.ContainsKey(propertyType.Name))
+                        // {
+                        //     continue;
+                        // }
+                        // var @namespace = propertyType.NamespaceName;
+
+                        // // TODO: replace with checking all types in imported namespaces
+                        // if (!model.References.Any(@ref => string.Equals(@ref.NamespaceName, @namespace) || string.Equals(@ref.Alias, @namespace)))
+                        // {
+                        //     logger.LogInfo("validate type {0}", x.Name);
+                        //     ok = false;
+                        // }
                     }
                 }
             }
-            return models;
+            return ok;
         }
 
-        private RdmDataModel LoadModel(string namespaceName, string path)
+        private Environment CreateEnvironment(RdmDataModel model)
         {
-            var model = parser.Parse(path);
-            if (!namespaceName.Equals(model.Namespace))
+
+            var env = new Environment(model,
+                model.References.Select(@ref => (@ref.Alias, LoadModel(@ref.Path))));
+
+            return env;
+        }
+
+        private RdmDataModel LoadModel(string path)
+        {
+            if (!Path.IsPathRooted(path))
             {
-                logger.LogError($"failed to include '{model.Namespace.NamespaceName}' declared as '{namespaceName}' in file '{path}'");
+                path = Path.Combine(baseDirectory, path);
             }
-            logger.LogInfo("loaded file {0}", path);
+            var model = parser.Parse(File.ReadAllText(path), Path.GetFileName(path));
+            logger.LogInfo("loaded model file {0} containing namespace {1}", path, model.Namespace.NamespaceName);
             return model;
+        }
+    }
+
+    /// <summary>
+    /// The (run time) Environment records the relationships between names and types accessible in a model
+    /// </summary>
+    internal class Environment
+    {
+        private readonly IDictionary<string, IRdmType> typeByFqn;
+        private readonly IDictionary<string, IRdmType> typeByAlias;
+
+        public Environment(RdmDataModel model, IEnumerable<(string alias, RdmDataModel model)> imports)
+        {
+            typeByFqn = new Dictionary<string, IRdmType>();
+            typeByAlias = new Dictionary<string, IRdmType>();
+            foreach (var import in imports)
+            {
+                foreach (var type in import.model.Items.OfType<IRdmType>())
+                {
+                    typeByFqn.Add(import.model.Namespace.NamespaceName + "." + type.Name, type);
+                    typeByAlias.Add(import.alias + "." + type.Name, type);
+                }
+            }
+        }
+
+        public bool TryResolve(string name, out IRdmType type)
+        {
+            if (typeByAlias.TryGetValue(name, out type))
+            {
+                return true;
+            }
+            else if (typeByAlias.TryGetValue(name, out type))
+            {
+                return true;
+            }
+            type = default;
+            return false;
+        }
+
+        public IEnumerable<IRdmType> Types
+        {
+            get
+            {
+                return typeByFqn.Values;
+            }
         }
 
         private static Dictionary<string, string> BuiltInTypes = new Dictionary<string, string>

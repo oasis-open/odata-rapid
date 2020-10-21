@@ -22,7 +22,7 @@ namespace rapid
 
         private static string MessageFormatter(FormattedLogValues state, Exception error)
         {
-            return state.ToString() + (error != null ? ("\n" + error.Message) : string.Empty);
+            return state.ToString() + (error != null ? ("\n\t" + error.Message) : string.Empty);
         }
 
         private static readonly Func<FormattedLogValues, Exception, string> _messageFormatter = MessageFormatter;

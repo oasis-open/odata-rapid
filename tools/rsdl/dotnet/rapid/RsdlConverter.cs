@@ -51,7 +51,7 @@ namespace rapid.rsdl
             }
             catch (TransformationException ex)
             {
-                logger.LogError(ex, "error transforming rsdl");
+                logger.LogError(ex, "error transforming rsdl file {0}", Path.GetFileName(path));
                 return false;
             }
             return true;
@@ -63,13 +63,13 @@ namespace rapid.rsdl
             {
                 var content = File.ReadAllText(inputPath);
                 var parser = new RdmParser(logger);
-                var model = parser.Parse(content);
+                var model = parser.Parse(content, Path.GetFileName(inputPath));
 
                 return model;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "error parsing rsdl");
+                logger.LogError(ex, $"error parsing rsdl file {inputPath}");
                 return default;
             }
         }

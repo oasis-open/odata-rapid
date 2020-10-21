@@ -26,8 +26,8 @@ namespace rapid.rdm
     {
         public RdmDataModel(
             RdmNamespaceDeclaration @namespace,
-            IReadOnlyCollection<IRdmSchemaElement> items,
-            IReadOnlyCollection<RdmNamespaceReference> references = null)
+            IReadOnlyList<IRdmSchemaElement> items,
+            IReadOnlyList<RdmNamespaceReference> references = null)
         {
             Namespace = @namespace ?? RdmNamespaceDeclaration.Default;
             Items = items ?? throw new ArgumentNullException(nameof(items));
@@ -36,13 +36,16 @@ namespace rapid.rdm
 
         public RdmNamespaceDeclaration Namespace { get; }
 
-        public IReadOnlyCollection<IRdmSchemaElement> Items { get; }
+        public IReadOnlyList<IRdmSchemaElement> Items { get; }
 
-        public IReadOnlyCollection<RdmNamespaceReference> References { get; }
+        public IReadOnlyList<RdmNamespaceReference> References { get; }
+
 
         public bool Equals(RdmDataModel other)
         {
-            return Enumerable.SequenceEqual(this.Items, other.Items);
+            return Namespace.Equals(other.Namespace)
+                && Enumerable.SequenceEqual(this.Items, other.Items)
+                && Enumerable.SequenceEqual(this.References, other.References);
         }
 
         public override bool Equals(object other)
