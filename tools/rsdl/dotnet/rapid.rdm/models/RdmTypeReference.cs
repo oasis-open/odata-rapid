@@ -20,7 +20,8 @@ namespace rapid.rdm
 
         public Position Position { get; }
 
-        public string NamespaceName => Name.BeforeLast(".");
+        public string Prefix => Name.BeforeLast(".");
+        public string Suffix => Name.AfterLast(".");
 
         // IEquatable<RdmTypeReference>.Equals
         public bool Equals(RdmTypeReference other)

@@ -18,5 +18,11 @@ namespace rapid.rdm
             var ix = str.LastIndexOf(".");
             return ix >= 0 ? str.Substring(0, ix) : string.Empty;
         }
+
+        public static string AfterLast(this string str, string separator)
+        {
+            var ix = str.LastIndexOf(".");
+            return ix >= 0 ? str.Substring(ix + 1) : str;
+        }
     }
 }

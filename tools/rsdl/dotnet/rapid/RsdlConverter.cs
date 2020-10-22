@@ -4,6 +4,8 @@ using System.Diagnostics;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm;
 using rapid.csdl;
+using rapid.rdm;
+using System.Linq;
 
 namespace rapid.rsdl
 {
@@ -12,12 +14,12 @@ namespace rapid.rsdl
     /// </summary>
     internal class RsdlConverter
     {
-        public RsdlConverter(ConsoleLogger logger)
+        public RsdlConverter(ILogger logger)
         {
             this.logger = logger;
         }
 
-        public readonly ConsoleLogger logger;
+        public readonly ILogger logger;
 
         /// <summary>
         /// Converts a RAPID pro schema definition language file (.rsdl) to a CSDL file
@@ -26,25 +28,26 @@ namespace rapid.rsdl
         /// <param name="format">indicates whether it should be written as XML or JSON CSDL</param>
         public bool Convert(string path, CsdlFormat format)
         {
-            var model = ParseFile(path);
+            var parser = new RdmParser(logger);
+
+            var model = ParseFile(parser, path);
             if (model == null)
             {
                 return false;
             }
 
-            var validator = new RdmValidator(Path.GetDirectoryName(path), logger);
-            if (!validator.Validate(model))
-            {
-                return false;
-            }
-
-            // Transform to CSDL
             try
             {
+                // load referenced models and
+                var referencedModels = model.References.ToDictionary(
+                    reference => reference.Alias,
+                    reference => LoadModel(reference.Path, parser, Path.GetDirectoryName(path)));
+                var env = new TypeMapping(model, referencedModels, logger);
+
+                //  transform to CSDL
                 var sw = Stopwatch.StartNew();
                 var transformer = new ModelTransformer(logger);
-                var csdlModel = transformer.Transform(model);
-
+                var csdlModel = transformer.Transform(model, env);
                 logger.LogInfo("transformation time: {0}", sw.Elapsed);
 
                 WriteCsdl(csdlModel, path, format);
@@ -57,19 +60,29 @@ namespace rapid.rsdl
             return true;
         }
 
-        private rdm.RdmDataModel ParseFile(string inputPath)
+        private RdmDataModel LoadModel(string path, RdmParser parser, string baseDirectory)
+        {
+            if (!Path.IsPathRooted(path))
+            {
+                path = Path.Combine(baseDirectory, path);
+            }
+            var model = parser.Parse(File.ReadAllText(path), Path.GetFileName(path));
+            logger.LogInfo("loaded referenced model file {0} containing namespace {1}", path, model.Namespace.NamespaceName);
+            return model;
+        }
+
+        private rdm.RdmDataModel ParseFile(RdmParser parser, string path)
         {
             try
             {
-                var content = File.ReadAllText(inputPath);
-                var parser = new RdmParser(logger);
-                var model = parser.Parse(content, Path.GetFileName(inputPath));
+                var content = File.ReadAllText(path);
+                var model = parser.Parse(content, Path.GetFileName(path));
 
                 return model;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"error parsing rsdl file {inputPath}");
+                logger.LogError(ex, $"error parsing rsdl file {path}");
                 return default;
             }
         }

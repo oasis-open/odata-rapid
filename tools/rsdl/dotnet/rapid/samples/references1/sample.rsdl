@@ -8,7 +8,7 @@ type Employee
     @key id: String
     name : String
 
-    employmentType: odata.tc.common.EmploymentType
+    employmentType: common.EmploymentType
 }
 
 service
