@@ -29,7 +29,7 @@ model        = [ namespace ] *include *modelElement
 
 namespace    = %s"namespace" qualifiedName
 
-include      = %s"include" qualifiedName [ %s"as" identifier ] %s"from" DQUOTE 1*CHAR DQUOTE
+include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
 
 modelElement = structuredType / enumType / service
 ```
