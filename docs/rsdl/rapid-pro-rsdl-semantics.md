@@ -158,7 +158,7 @@ type Company {
 
 The type of a property is one of:
 
-- one of the built-in types defined in the [`builtInType`](.rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
+- one of the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
 - any of the primitive EDM type listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
 - the structured or enumeration types defined in the model
 
