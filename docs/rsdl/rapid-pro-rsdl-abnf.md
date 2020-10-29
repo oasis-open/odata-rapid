@@ -10,12 +10,9 @@ title: RAPID SDL ABNF
 
 ## Overview
 
-This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234).
+This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234), with the addition for case-sensitive strigs defined by [RFC7405](https://tools.ietf.org/html/rfc7405)
 
-Note: to increase readability of the grammer
-
-- whitespace is not reflected
-- double-quoted literals are case-_sensitive_
+Note: to increase readability of the grammer, whitespace is not reflected
 
 ## Syntax rules
 
@@ -28,71 +25,81 @@ Note: to increase readability of the grammer
 ### Model
 
 ```ABNF
-model               = [ namespace ] *modelElement
+model        = [ namespace ] *include *modelElement
 
-namespace           = "namespace" qualifiedName
+namespace    = %s"namespace" qualifiedName
 
-modelElement        = structuredType / enumType / service
+include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
+
+modelElement = structuredType / enumType / service
 ```
 
 ### Structured Type
 
 ```ABNF
-structuredType      = "type" identifier "{" *typeMember "}"
+structuredType       = %s"type" identifier "{" *typeMember "}"
 
-structuredTypeMember          = property / operation ; property, bound action, or bound function
+structuredTypeMember = property / operation ; property, bound action, or bound function
 
-property            = *propertyAnnotation identifier ":" typeReference
+property             = *propertyAnnotation identifier ":" typeReference
 
-propertyAnnotation  = "@key"
+propertyAnnotation   = %s"@key"
 
-typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
+typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName            = builtInType / "Edm" "." identifier / qualifiedName
+typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
-builtInType         = "boolean" / "date" / "datetime" / "decimal" / "double" / "integer" / "string"
+builtInType          = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
 
-operation           = [ actionAnnotation ] identifier
-                      "(" [ parameter *("," parameter) ] ")"
-                      [ ":" typeReference ]
+operation            = [ actionAnnotation ] identifier
+                       "(" [ parameter *("," parameter) ] ")"
+                       [ ":" typeReference ]
 
-actionAnnotation    = "@action"
+actionAnnotation     = %s"@action"
 
-parameter           = identifier ":" typeReference
+parameter            = identifier ":" typeReference
 ```
 
 ### Enumeration Type
 
 ```ABNF
-enumType            = "enum" identifier "{" 1*enumMember "}"
+enumType   = %s"enum" identifier "{" 1*enumMember "}"
 
-enumMember          = identifier
+enumMember = identifier
 ```
 
 ### Service
 
 ```ABNF
-service             = "service" "{" 1*serviceMember "}"
+service          = %s"service" "{" 1*serviceMember "}"
 
-serviceMember       = entitySet / singleton / serviceOperation
+serviceMember    = entitySet / singleton / serviceOperation
 
-entitySet           = identifier ":" "[" qualifiedName "]"
+entitySet        = identifier ":" "[" qualifiedName "]"
 
-singleton           = identifier ":" qualifiedName
+singleton        = identifier ":" qualifiedName
 
-serviceOperation    = [ actionAnnotation ] identifier
-                      "(" [ parameter *("," parameter) ] ")"
-                      [ ":" typeReference ]
+serviceOperation = [ actionAnnotation ] identifier
+                   "(" [ parameter *("," parameter) ] ")"
+                   [ ":" typeReference ]
 ```
 
 ### Core Syntax Elements
 
 ```ABNF
 qualifiedName   = identifier *( "." identifier )
+
 identifier      = identInitial *identSubsequent
 identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
 identSubsequent = identInitial / DIGIT
 
-ALPHA = %x41-5A / %x61-7A
-DIGIT = %x30-39
+ALPHA  = %x41-5A / %x61-7A
+DIGIT  = %x30-39
+
+CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
+       / ESCAPE ESCAPE
+       / ESCAPE DQUOTE
+
+DQUOTE = %x22              ; "
+ESCAPE = %x5C              ; \
 ```
