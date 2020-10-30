@@ -25,7 +25,7 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
       "employees": {
         "$Kind": "NavigationProperty",
         "$Collection": true,
-        "$Type": "jetsons.employees",
+        "$Type": "jetsons.employee",
         "$ContainsTarget": true
       }
     },
