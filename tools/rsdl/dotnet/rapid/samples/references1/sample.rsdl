@@ -1,6 +1,6 @@
 namespace odata.tc.jetsons
 
-include "common.rsdl" as common
+include "common" as common
 
 
 type Employee

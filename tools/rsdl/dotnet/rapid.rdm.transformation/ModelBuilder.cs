@@ -26,15 +26,12 @@ namespace rapid.rsdl
         /// Create an EDM model for the given RDM Model
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
-        /// <returns></returns>
+        /// <returns>The constructed EDM model</returns>
         public IEdmModel Build()
         {
             edmModel = new EdmModel(true);
 
-            foreach (var referenced in env.Models)
-            {
-                edmModel.AddReferencedModel(referenced);
-            }
+            edmModel.SetEdmReferences(CreateReferences());
 
             foreach (var item in rdmModel.Items)
             {
@@ -43,6 +40,21 @@ namespace rapid.rsdl
 
             // return edmModel and set it to null after returning it.
             return Interlocked.Exchange(ref edmModel, null);
+        }
+
+        private IEnumerable<EdmReference> CreateReferences()
+        {
+            EdmReference MakeReference(string alias, string @namespace, IEdmModel model)
+            {
+                var reference = new EdmReference(new Uri("http://unknown.com"));
+                reference.AddInclude(new EdmInclude(alias, @namespace));
+                return reference;
+            }
+
+            // https://devblogs.microsoft.com/odata/tutorial-sample-refering-when-constructing-edm-model/
+            return
+                from referenced in env.References
+                select MakeReference(referenced.alias, referenced.@namespace, referenced.model);
         }
 
         private void AddSchemaElements(IRdmSchemaElement item)

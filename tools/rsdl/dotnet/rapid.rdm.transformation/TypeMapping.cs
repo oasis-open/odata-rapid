@@ -16,8 +16,6 @@ namespace rapid.rsdl
         // dictionary of schema alias to dictionary of (namespace,  EDM model)
         private readonly IDictionary<string, (string @namespace, IEdmModel model)> lookup;
 
-        public IEnumerable<IEdmModel> Models => lookup.Values.Select(p => p.model);
-
         public TypeMapping(RdmDataModel model, IDictionary<string, RdmDataModel> references, ILogger logger)
         {
             this.model = model;
@@ -29,14 +27,12 @@ namespace rapid.rsdl
                     CreateExternalModel(references[r.Alias])));
         }
 
-        internal string GetNamespace(string alias)
-        {
-            if (lookup.TryGetValue(alias, out var it))
-            {
-                return it.@namespace;
-            }
-            return default;
-        }
+        /// <summary>
+        /// List of all referenced models including their alias and namespace
+        /// </summary>
+        public IEnumerable<(string alias, string @namespace, IEdmModel model)> References =>
+            lookup.Select(kvp => (kvp.Key, kvp.Value.@namespace, kvp.Value.model));
+
 
         /// <summary>
         /// Returns an IEdmTypeReference for the given RDM type reference.
@@ -45,25 +41,31 @@ namespace rapid.rsdl
         /// <returns></returns>
         public IEdmTypeReference ResolveTypeReference(RdmTypeReference typeRef)
         {
+            // is a well known primitive type name
             if (_primitiveTypeNameMapping.TryGetValue(typeRef.Name, out var primitive))
             {
-                return MakeReference(primitive, typeRef.IsNullable);
+                return MakeTypeReference(primitive, typeRef.IsNullable);
             }
-            if (typeRef.Name.StartsWith("Edm."))
+            // is unqualified, therefore refering to the current model.
+            else if (string.IsNullOrEmpty(typeRef.Prefix))
             {
-                return MakeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.IsNullable);
+                return MakeTypeReference(new EdmEntityType(model.Namespace.NamespaceName, typeRef.Suffix), typeRef.IsNullable);
             }
-
-            if (string.IsNullOrEmpty(typeRef.Prefix))
-            {
-                return MakeReference(new EdmEntityType(model.Namespace.NamespaceName, typeRef.Suffix), typeRef.IsNullable);
-            }
-
-            if (lookup.TryGetValue(typeRef.Prefix, out var entry))
+            // is it known in the included models?
+            else if (lookup.TryGetValue(typeRef.Prefix, out var entry))
             {
                 var model = entry.model;
                 var type = model.FindType(entry.@namespace + "." + typeRef.Suffix);
-                return MakeReference(type, typeRef.IsNullable);
+                if (type == null)
+                {
+                    throw new KeyNotFoundException($"can not resolve type reference {typeRef.Name}");
+                }
+                return MakeTypeReference(type, typeRef.IsNullable);
+            }
+            // starting with "Edm."
+            else if (typeRef.Name.StartsWith("Edm."))
+            {
+                return MakeTypeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.IsNullable);
             }
             // var type = lookup[typeRef.Prefix].types[typeRef.Suffix];
             throw new KeyNotFoundException($"type reference {typeRef.Name} not found");
@@ -110,7 +112,7 @@ namespace rapid.rsdl
             }
         }
 
-        private static IEdmTypeReference MakeReference(IEdmType type, bool nullable)
+        private static IEdmTypeReference MakeTypeReference(IEdmType type, bool nullable)
         {
             switch (type)
             {
@@ -127,7 +129,7 @@ namespace rapid.rsdl
                     return new EdmEnumTypeReference(enumeration, nullable);
 
                 default:
-                    throw new NotSupportedException("unknown implementation of IRdmType");
+                    throw new NotSupportedException("MakeTypeReference: unknown implementation of IEdmType");
             }
         }
 
@@ -141,6 +143,5 @@ namespace rapid.rsdl
             ["Double"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double),
             ["Decimal"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal),
         };
-
     }
 }
