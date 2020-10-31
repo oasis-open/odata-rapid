@@ -32,7 +32,7 @@ namespace rapid.rsdl
                 }
                 else if (next.Value == '\"')
                 {
-                    var str = TextParsers.ExtractQuotedString(next.Location);
+                    var str = QuotedString.CStyle(next.Location);
                     if (!str.HasValue)
                         yield return Result.CastEmpty<string, RdmToken>(str);
 

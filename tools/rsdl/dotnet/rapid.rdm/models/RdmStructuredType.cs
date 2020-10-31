@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    public class RdmStructuredType : IRdmSchemaElement, IEquatable<RdmStructuredType>
+    public class RdmStructuredType : IRdmSchemaElement, IRdmType, IEquatable<RdmStructuredType>
     {
         public RdmStructuredType(string name,
-            IReadOnlyCollection<RdmProperty> properties,
-            IReadOnlyCollection<RdmOperation> operations = null)
+            IReadOnlyList<RdmProperty> properties,
+            IReadOnlyList<RdmOperation> operations = null)
         {
             Name = name;
             Properties = properties;
@@ -17,9 +17,9 @@ namespace rapid.rdm
 
         public string Name { get; }
 
-        public IReadOnlyCollection<RdmProperty> Properties { get; }
+        public IReadOnlyList<RdmProperty> Properties { get; }
 
-        public IReadOnlyCollection<RdmOperation> Operations { get; }
+        public IReadOnlyList<RdmOperation> Operations { get; }
 
         public IEnumerable<RdmProperty> Keys =>
             Properties.Where(p => p.Annotations.OfType<KeyAnnotation>().Any());

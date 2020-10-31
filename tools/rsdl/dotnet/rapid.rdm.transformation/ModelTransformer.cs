@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.OData.Edm;
 using rapid.rdm;
 
@@ -5,10 +8,17 @@ namespace rapid.rsdl
 {
     public class ModelTransformer
     {
-        public IEdmModel Transform(RdmDataModel schema)
+        private readonly ILogger logger;
+
+        public ModelTransformer(ILogger logger)
         {
-            var builder = new ModelBuilder(schema);
-            return builder.Create();
+            this.logger = logger;
+        }
+
+        public IEdmModel Transform(RdmDataModel model, TypeMapping dependencies)
+        {
+            var builder = new ModelBuilder(model, dependencies);
+            return builder.Build();
         }
     }
 }

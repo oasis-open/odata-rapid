@@ -1,15 +1,24 @@
 using System;
+using System.Collections.Generic;
 
 namespace rapid.rdm
 {
     public class RdmNamespaceDeclaration : IEquatable<RdmNamespaceDeclaration>
     {
-        public RdmNamespaceDeclaration(string namespaceName)
+        public RdmNamespaceDeclaration(string namespaceName, Position position = default)
         {
             NamespaceName = namespaceName;
+            Position = position;
         }
 
+        private const string defaultNamespaceName = "Model";
+
+        public static RdmNamespaceDeclaration Default = new RdmNamespaceDeclaration(defaultNamespaceName);
+
         public string NamespaceName { get; }
+
+        public Position Position { get; }
+
 
         public static bool Equals(RdmNamespaceDeclaration one, RdmNamespaceDeclaration two)
         {

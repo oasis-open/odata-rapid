@@ -1,6 +1,10 @@
 {
     "cSpell.words": [
-        "eset", "svel", "xunit"
+        "eset",
+        "jetsons",
+        "odata",
+        "svel",
+        "xunit"
     ],
     "dotnet-test-explorer.testProjectPath": "**/*tests.@(csproj|vbproj|fsproj)"
 

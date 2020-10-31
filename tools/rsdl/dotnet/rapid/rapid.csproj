@@ -23,10 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="samples/*.rsdl">
+    <Content Include="samples/*.rsdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
-
-
 </Project>

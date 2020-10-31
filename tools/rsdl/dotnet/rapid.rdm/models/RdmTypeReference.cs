@@ -4,11 +4,12 @@ namespace rapid.rdm
 {
     public class RdmTypeReference : IEquatable<RdmTypeReference>
     {
-        public RdmTypeReference(string name, bool isNullable = false, bool isMultivalued = false)
+        public RdmTypeReference(string name, bool isNullable = false, bool isMultivalued = false, Position position = default)
         {
             Name = name;
             IsNullable = isNullable;
             IsMultivalued = isMultivalued;
+            Position = position;
         }
 
         public bool IsNullable { get; }
@@ -17,7 +18,10 @@ namespace rapid.rdm
 
         public string Name { get; }
 
-        public string NamespaceName => Name.BeforeLast(".");
+        public Position Position { get; }
+
+        public string Prefix => Name.BeforeLast(".");
+        public string Suffix => Name.AfterLast(".");
 
         // IEquatable<RdmTypeReference>.Equals
         public bool Equals(RdmTypeReference other)

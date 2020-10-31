@@ -1,0 +1,17 @@
+namespace odata.tc.jetsons
+
+include "common" as common
+
+
+type Employee
+{
+    @key id: String
+    name : String
+
+    employmentType: common.EmploymentType
+}
+
+service
+{
+    employees: [Employee]
+}

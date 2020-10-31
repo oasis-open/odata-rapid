@@ -6,18 +6,23 @@ namespace rapid.rsdl.tests
 {
     public class ParserTests
     {
+        private readonly RdmParser parser = new RdmParser();
+
         [Fact]
         public void TypePropertiesGetParsed()
         {
             var content = "type Company { name: String incorporated: Date}";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(null, new[] {
                 new RdmStructuredType("Company", new [] {
-                        new RdmProperty ("name", new RdmTypeReference("String"), null, new Position(1,16)),
-                        new RdmProperty ("incorporated", new RdmTypeReference("Date"), null, new Position(1,29))
+                        new RdmProperty ("name", new RdmTypeReference("String"), null),
+                        new RdmProperty ("incorporated", new RdmTypeReference("Date"), null)
                 })
             });
+
+            // Assert.Equal(((RdmStructuredType)expected.Items[0]).Properties[0], ((RdmStructuredType)actual.Items[0]).Properties[0]);
+            // Assert.Equal(expected.Items[0], actual.Items[0]);
             Assert.Equal(expected, actual);
         }
 
@@ -25,7 +30,7 @@ namespace rapid.rsdl.tests
         public void NameSpaceDeclarationGetParsed()
         {
             var content = "namespace foo.bar type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(new RdmNamespaceDeclaration("foo.bar"),
                 new[] {
@@ -41,9 +46,9 @@ namespace rapid.rsdl.tests
         {
             var content = @"
 namespace foo.bar
-include other.namespace as other from ""other.rsdl""
+include ""other.rsdl"" as other
 type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
                 new RdmNamespaceDeclaration("foo.bar"),
@@ -51,7 +56,7 @@ type Company { }";
                     new RdmStructuredType("Company", new RdmProperty[] {})
                 },
                 new[] {
-                    new RdmNamespaceReference("other.namespace", "other", "other.rsdl")
+                    new RdmNamespaceReference("other.rsdl", "other")
                 }
             );
 
@@ -64,9 +69,9 @@ type Company { }";
         {
             var content = @"
 namespace foo.bar
-include other.namespace from ""other.rsdl""
+include ""other.rsdl"" as other
 type Company { }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
                 new RdmNamespaceDeclaration("foo.bar"),
@@ -74,7 +79,7 @@ type Company { }";
                     new RdmStructuredType("Company", new RdmProperty[] {})
                 },
                 new[] {
-                    new RdmNamespaceReference("other.namespace", null, "other.rsdl")
+                    new RdmNamespaceReference("other.rsdl", "other")
                 }
             );
 
@@ -86,9 +91,9 @@ type Company { }";
         public void QualifiedTypeNamesGetParsed()
         {
             var content = @"
-include other.namespace as other from ""other.rsdl""
+include ""other.rsdl"" as other
 type Company { something: other.Something }";
-            var actual = RdmParser.Parse(content);
+            var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
                 null,
@@ -96,7 +101,7 @@ type Company { something: other.Something }";
                     new RdmStructuredType("Company", new [] { new RdmProperty("something", new RdmTypeReference("other.Something"))})
                 },
                 new[] {
-                    new RdmNamespaceReference("other.namespace", "other", "other.rsdl")
+                    new RdmNamespaceReference("other.rsdl", "other")
                 }
             );
 

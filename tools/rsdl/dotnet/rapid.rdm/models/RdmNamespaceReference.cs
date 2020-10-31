@@ -4,26 +4,24 @@ namespace rapid.rdm
 {
     public class RdmNamespaceReference : IEquatable<RdmNamespaceReference>
     {
-        public RdmNamespaceReference(string namespaceName, string alias, string url)
+        public RdmNamespaceReference(string path, string alias, Position position = default)
         {
-            NamespaceName = namespaceName;
             Alias = alias;
-            Url = url;
+            Path = path;
+            Position = position;
         }
-
-        public string NamespaceName { get; }
 
         public string Alias { get; }
 
-        public string Url { get; }
+        public string Path { get; }
 
-        //  IEquatable<RdmNamespaceReference>.Equals
+        public Position Position { get; }
+
         public bool Equals(RdmNamespaceReference other)
         {
             return
-                string.Equals(this.NamespaceName, other.NamespaceName) &&
                 string.Equals(this.Alias, other.Alias) &&
-                string.Equals(this.Url, other.Url);
+                string.Equals(this.Path, other.Path);
         }
 
         public override bool Equals(object other)
@@ -33,7 +31,7 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NamespaceName, Alias, Url);
+            return HashCode.Combine(Alias, Path);
         }
     }
 }

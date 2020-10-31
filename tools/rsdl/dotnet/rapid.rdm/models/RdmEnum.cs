@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    public class RdmEnum : IRdmSchemaElement, IEquatable<RdmEnum>
+    public class RdmEnum : IRdmSchemaElement, IRdmType, IEquatable<RdmEnum>
     {
         public RdmEnum(string name, IReadOnlyList<string> members)
         {
