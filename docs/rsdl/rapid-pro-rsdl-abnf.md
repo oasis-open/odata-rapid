@@ -6,86 +6,100 @@ title: RAPID SDL ABNF
 # RAPID Pro syntax
 
 > DRAFT
-Initial Draft. July 2020
-
+> October 2020
 
 ## Overview
 
-This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234).
+This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234), with the addition for case-sensitive strigs defined by [RFC7405](https://tools.ietf.org/html/rfc7405)
 
-Note: whitespace is not (yet) reflected in the grammar.
+Note: to increase readability of the grammer, whitespace is not reflected
 
 ## Syntax rules
 
 - [Model](#model)
-- [Type definition](#type-definition)
-- [Enum definition](#enum-definition)
-- [Service definition](#service-definition)
-- [Core syntax elements](#core-syntax-elements)
+- [Structured Type](#structured-type)
+- [Enumeration Type](#enumeration-type)
+- [Service](#service)
+- [Core Syntax Elements](#core-syntax-elements)
 
 ### Model
 
 ```ABNF
-model               = 1*modelElement
+model        = [ namespace ] *include *modelElement
 
-modelElement        = typeDefinition
-                    / serviceDefinition
-                    / enumDefinition
+namespace    = %s"namespace" qualifiedName
+
+include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
+
+modelElement = structuredType / enumType / service
 ```
 
-### Type definition
+### Structured Type
 
 ```ABNF
-typeDefinition      = "type" "{" typeMember "}"
+structuredType       = %s"type" identifier "{" *typeMember "}"
 
-typeMember          = property / function ; property or bound function
+structuredTypeMember = property / operation ; property, bound action, or bound function
 
-property            = *propertyAnnotation identifier ":" typeReference
+property             = *propertyAnnotation identifier ":" typeReference
 
-propertyAnnotation  = "@key"
+propertyAnnotation   = %s"@key"
 
-function            = functionAnnotation identifier
-                      "(" [ parameter *("," parameter) ] ")"
-                      [ ":" typeReference ]
+typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-functionAnnotation  = ( "@action" / "@function" )
+typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
-parameter           = identifier ":" typeReference
+builtInType          = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
 
-typeReference       = typeName [ "?" ] / "[" typeName [ "?" ] "]"
+operation            = [ actionAnnotation ] identifier
+                       "(" [ parameter *("," parameter) ] ")"
+                       [ ":" typeReference ]
 
-typeName            = builtInType / "Edm" "." identifier / identifier
+actionAnnotation     = %s"@action"
 
-builtInType         = integer / string / boolean / double / decimal
+parameter            = identifier ":" typeReference
 ```
 
-### Enum definition
+### Enumeration Type
 
 ```ABNF
-enumDefinition      = "enum" "{" 1*enumMember "}"
+enumType   = %s"enum" identifier "{" 1*enumMember "}"
 
-enumMember          = identifier
+enumMember = identifier
 ```
 
-### Service definition
+### Service
 
 ```ABNF
-serviceDefinition   = "service" "{" serviceMember "}"
+service          = %s"service" "{" 1*serviceMember "}"
 
-serviceMember       = entitySet / singleton
+serviceMember    = entitySet / singleton / serviceOperation
 
-entitySet           = identifier ":" "[" identifier "]"
+entitySet        = identifier ":" "[" qualifiedName "]"
 
-singleton           = identifier ":" identifier
+singleton        = identifier ":" qualifiedName
+
+serviceOperation = [ actionAnnotation ] identifier
+                   "(" [ parameter *("," parameter) ] ")"
+                   [ ":" typeReference ]
 ```
 
-### Core syntax elements
+### Core Syntax Elements
 
 ```ABNF
+qualifiedName   = identifier *( "." identifier )
+
 identifier      = identInitial *identSubsequent
-identInitial    = ALPHA / "_"
+identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
 identSubsequent = identInitial / DIGIT
 
-ALPHA = %x41-5A / %x61-7A
-DIGIT = %x30-39
+ALPHA  = %x41-5A / %x61-7A
+DIGIT  = %x30-39
+
+CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
+       / ESCAPE ESCAPE
+       / ESCAPE DQUOTE
+
+DQUOTE = %x22              ; "
+ESCAPE = %x5C              ; \
 ```
