@@ -89,15 +89,16 @@ namespace rapid.rsdl
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            // if the type exists on the edm model, exit immediately
+            // if the type already exists on the edm model, exit immediately
             var decl = edmModel.FindDeclaredType($"{rdmModel.Namespace.NamespaceName}.{definition.Name}");
             if (decl is EdmStructuredType es)
             {
                 return es;
             }
 
-            // add the type immediately so that it can be found when resolving property types
-            var edmType = definition.Keys.Any() ?
+            // add the type immediately so that it can be found when resolving property types recursively
+            var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
+            var edmType = isEntityType ?
                 (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
                 (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
 
@@ -128,6 +129,15 @@ namespace rapid.rsdl
             }
 
             return edmType;
+        }
+
+        private bool HasSingletonOfType(RdmStructuredType definition)
+        {
+            var singletons = from service in rdmModel.Items.OfType<RdmService>()
+                             from item in service.Items.OfType<RdmServiceSingelton>()
+                             select item;
+            var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
+            return matches.Any();
         }
 
         private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
@@ -281,12 +291,16 @@ namespace rapid.rsdl
         private EdmSingleton AddSingelton(EdmEntityContainer container, IRdmServiceElement item, RdmServiceSingelton singleton)
         {
             var type = env.ResolveTypeReference(singleton.Type);
-            // TODO: ensure resolved type is actually an entity
-            var singelton = container.AddSingleton(item.Name, (IEdmEntityType)type);
 
-            return singelton;
+            switch (type.Definition)
+            {
+                case IEdmEntityType entityType:
+                    var singelton = container.AddSingleton(item.Name, entityType);
+                    return singelton;
+
+                default:
+                    throw new TransformationException($"Invalid type '{type}' for single valued service property {item.Name}.");
+            }
         }
-
-
     }
 }

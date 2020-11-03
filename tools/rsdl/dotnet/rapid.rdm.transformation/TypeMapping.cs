@@ -16,6 +16,11 @@ namespace rapid.rsdl
         // dictionary of schema alias to dictionary of (namespace,  EDM model)
         private readonly IDictionary<string, (string @namespace, IEdmModel model)> lookup;
 
+        public TypeMapping(RdmDataModel model, ILogger logger)
+           : this(model, new Dictionary<string, RdmDataModel>(), logger)
+        {
+        }
+
         public TypeMapping(RdmDataModel model, IDictionary<string, RdmDataModel> references, ILogger logger)
         {
             this.model = model;
