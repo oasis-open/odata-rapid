@@ -1,5 +1,7 @@
 # RAPID Features
 
+Discussion results from virtual offsite on 2020-11-12.
+
 ## Model
 
 | OData Feature | RAPID Equivalent |
@@ -61,8 +63,8 @@
 | Delta Responses | :x:, too fancy |
 | `/$crossjoin` | :x:, too fancy |
 | `/$all` | :x:, too fancy |
-| [Filter capabilities](https://github.com/oasis-open/odata-rapid/issues/30) | ??? |
-| [Query Fragments and Persisted Queries](https://github.com/oasis-open/odata-rapid/issues/145) | ??? |
+| Filter capabilities | https://github.com/oasis-open/odata-rapid/issues/30 |
+| Query Fragments and Persisted Queries | https://github.com/oasis-open/odata-rapid/issues/145 |
 
 ## Modification
 
