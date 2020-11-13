@@ -37,7 +37,7 @@ Discussion results from virtual offsite on 2020-11-12.
 | Extending an Entity Container | :x:, too fancy |
 | Navigation Property Bindings | only implicit, maybe RAPID can use CSDL for the multiple entity-sets per type cases or return `@context` in case of doubt |
 | Terms | :x:, maybe later, for now just use annotations from existing vocabularies |
-| Annotations | :question: first figure out representation, then decide. Use `@Validation.AllowedValues` as the litmus test. Ralf's preference: JSON5-ish CSDL JSON representation `{ foo:"bar" baz:true }` |
+| Annotations | :question: first figure out representation, then decide, use `@Validation.AllowedValues` as the litmus test, https://github.com/oasis-open/odata-rapid/issues/164 |
 
 ## Query
 
