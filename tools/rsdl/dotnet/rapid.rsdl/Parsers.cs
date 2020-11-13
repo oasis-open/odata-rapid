@@ -120,10 +120,13 @@ namespace rapid.rsdl
             from kw in Token.EqualToValue(RdmToken.Identifier, "enum")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new rdm.RdmEnum(
-                nm.ToStringValue(),
-                ps.Select(t => t.ToStringValue()).ToList()
-            );
+            select new rdm.RdmEnum(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), false);
+
+        static readonly TokenListParser<RdmToken, rdm.RdmEnum> FlagsDefinition =
+            from kw in Token.EqualToValue(RdmToken.Identifier, "flags")
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
+            select new rdm.RdmEnum(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), true);
 
         #region service
 
@@ -150,10 +153,11 @@ namespace rapid.rsdl
         #endregion
 
         static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =
-            ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnum>(
+            ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnum, rdm.RdmEnum>(
                 TypeDefinition,
                 Service,
-                EnumDefinition);
+                EnumDefinition,
+                FlagsDefinition);
 
         static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
                    from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")

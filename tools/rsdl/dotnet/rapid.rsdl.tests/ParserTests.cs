@@ -108,5 +108,37 @@ type Company { something: other.Something }";
             Assert.Equal(expected.References, actual.References);
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void FlagsGetParsed()
+        {
+            var content = @"flags Colors { red green blue }";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmEnum("Colors", new [] { "red", "green", "blue"}, true)
+                }
+            );
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void EnumGetParsed()
+        {
+            var content = @"enum Colors { red green blue }";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmEnum("Colors", new [] { "red", "green", "blue"}, false)
+                }
+            );
+
+            Assert.Equal(expected, actual);
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace rapid.rsdl
 
         private EdmEnumType AddEnumType(RdmEnum definition)
         {
-            var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name);
+            var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name, definition.IsFlags);
             edmModel.AddElement(edmType);
             for (int i = 0; i < definition.Members.Count; i++)
             {
