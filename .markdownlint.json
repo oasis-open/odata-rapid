@@ -1,0 +1,5 @@
+{
+  "MD033": {"allowed_elements":["Tabs", "TabItem"]},
+  "MD013": {"line_length":180, "stern": true},
+  "MD012": false
+}
