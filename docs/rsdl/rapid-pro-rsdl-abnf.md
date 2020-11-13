@@ -63,7 +63,7 @@ parameter            = identifier ":" typeReference
 ### Enumeration Type
 
 ```ABNF
-enumType   = %s"enum" identifier "{" 1*enumMember "}"
+enumType   = ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
 
 enumMember = identifier
 ```
