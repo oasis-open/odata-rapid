@@ -84,7 +84,6 @@ namespace rapid.rsdl
             {
                 var elem = definition.Members[i];
                 var value = flags ? (1 << i) : i;
-                System.Console.WriteLine(value);
                 edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(value)));
             }
             return edmType;
