@@ -34,9 +34,7 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
   "$Version": "4.01",
   "$EntityContainer": "Model.Service",
   "Model": {
-    "Service": {
-      "$Kind": "EntityContainer"
-    }
+    "Service": { "$Kind": "EntityContainer" }
   }
 }
 ```
@@ -89,15 +87,10 @@ type Name {
 
 
 ```json
-
 "Name": {
   "$Kind": "ComplexType",
-  "firstName": {
-    "$Type": "Edm.String"
-  },
-  "lastName": {
-    "$Type": "Edm.String",
-  }
+  "firstName": { "$Type": "Edm.String" },
+  "lastName": { "$Type": "Edm.String" }
 }
 ```
 
@@ -139,15 +132,9 @@ type Employee {
 ```json
 "Employee": {
   "$Kind": "EntityType",
-  "$Key": [
-    "id"
-  ],
-  "id": {
-    "$Type": "Edm.Int32"
-  },
-  "name": {
-    "$Type": "Model.Name"
-  }
+  "$Key": [ "id" ],
+  "id": { "$Type": "Edm.Int32" },
+  "name": { "$Type": "Model.Name" }
 }
 ```
 
@@ -197,15 +184,9 @@ type Company {
 ```json
 "Company": {
   "$Kind": "EntityType",
-  "$Key": [
-    "stockSymbol"
-  ],
-  "stockSymbol": {
-    "$Type": "Edm.String"
-  },
-  "name": {
-    "$Type": "Edm.String"
-  },
+  "$Key": [ "stockSymbol" ],
+  "stockSymbol": { "$Type": "Edm.String" },
+  "name": { "$Type": "Edm.String" },
   "employees": {
     "$Kind": "NavigationProperty",
     "$Type": "Model.Employee",
@@ -268,22 +249,10 @@ type Foo {
 ```json
 "Foo": {
   "$Kind": "EntityType",
-  "test1": {
-    "$Type": "Edm.Int32"
-  },
-  "test2": {
-    "$Nullable": true,
-    "$Type": "Edm.Int32"
-  },
-  "test3": {
-    "$Collection": true,
-    "$Type": "Edm.Int32"
-  },
-  "test4": {
-    "$Collection": true,
-    "$Nullable": true,
-    "$Type": "Edm.Int32"
-  }
+  "test1": {  "$Type": "Edm.Int32" },
+  "test2": { "$Nullable": true, "$Type": "Edm.Int32" },
+  "test3": { "$Collection": true, "$Type": "Edm.Int32" },
+  "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" }
 }
 ```
 
@@ -337,12 +306,7 @@ type Employee {
     "$Kind": "Function",
     "$IsBound": true,
     "$IsComposable": true,
-    "$Parameter": [
-      {
-        "$Name": "it",
-        "$Type": "Model.Employee"
-      }
-    ]
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ]
   }
 ]
 ```
@@ -390,15 +354,8 @@ type Employee {
     "$Kind": "Function",
     "$IsBound": true,
     "$IsComposable": true,
-    "$Parameter": [
-      {
-        "$Name": "it",
-        "$Type": "Model.Employee"
-      }
-    ],
-    "$ReturnType": {
-      "$Type": "Edm.Int32"
-    }
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ],
+    "$ReturnType": { "$Type": "Edm.Int32" }
   }
 ],
 "bar": [
@@ -406,16 +363,8 @@ type Employee {
     "$Kind": "Function",
     "$IsBound": true,
     "$IsComposable": true,
-    "$Parameter": [
-      {
-        "$Name": "it",
-        "$Type": "Model.Employee"
-      }
-    ],
-    "$ReturnType": {
-      "$Collection": true,
-      "$Type": "Edm.Int32"
-    }
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ],
+    "$ReturnType": { "$Collection": true, "$Type": "Edm.Int32" }
   }
 ]
 ```
@@ -469,20 +418,9 @@ type Employee {
       "$IsBound": true,
       "$IsComposable": true,
       "$Parameter": [
-        {
-          "$Name": "it",
-          "$Type": "Model.Employee"
-        },
-        {
-          "$Name": "a",
-          "$Type": "Edm.Int32"
-        },
-        {
-          "$Name": "b",
-          "$Collection": true,
-          "$Type": "Edm.Int32",
-          "$Nullable": true
-        }
+        { "$Name": "it", "$Type": "Model.Employee" },
+        { "$Name": "a", "$Type": "Edm.Int32" },
+        { "$Name": "b", "$Collection": true, "$Type": "Edm.Int32", "$Nullable": true }
       ]
     }
   ]
@@ -608,9 +546,9 @@ service {
 
 
 ```json
-"employees": {
-  "$Collection": true,
-  "$Type": "Model.Employee"
+"Service": {
+  "$Kind": "EntityContainer",
+  "employees": { "$Collection": true, "$Type": "Model.Employee" }
 }
 ```
 
@@ -619,7 +557,9 @@ service {
 
 
 ```xml
-<EntitySet Name="employees" EntityType="Model.Employee" />
+<EntityContainer Name="Service">
+  <EntitySet Name="employees" EntityType="Model.Employee" />
+</EntityContainer>
 ```
 
 </TabItem>
@@ -630,8 +570,6 @@ If the type is used as a type on a multi-value and as the type of a property of 
 the appropriate navigation property bindings get created.
 In below example, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
 The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
-
-RAPID does not allow to have multiple entity sets for the same type, so that the binding is always uniquely defined.
 
 ```
 service {
@@ -651,9 +589,16 @@ service {
 
 
 ```json
-"competitors": {
-  "$Collection": true,
-  "$Type": "Model.Company"
+"Service": {
+  "$Kind": "EntityContainer",
+  "competitors": {
+    "$Collection": true,
+    "$Type": "Model.Company",
+    "$NavigationPropertyBinding": {
+      "ceo": "employees",
+      "employees": "employees"
+    }
+  }
 }
 ```
 
@@ -662,10 +607,12 @@ service {
 
 
 ```xml
-<EntitySet Name="competitors" EntityType="Model.Company">
-  <NavigationPropertyBinding Path="ceo" Target="employees" />
-  <NavigationPropertyBinding Path="employees" Target="employees" />
-</EntitySet>
+<EntityContainer Name="Service">
+  <EntitySet Name="competitors" EntityType="Model.Company">
+    <NavigationPropertyBinding Path="ceo" Target="employees" />
+    <NavigationPropertyBinding Path="employees" Target="employees" />
+  </EntitySet>
+</EntityContainer>
 ```
 
 </TabItem>
@@ -694,9 +641,9 @@ service {
 
 
 ```json
-"company": {
-  "$Collection": false,
-  "$Type": "Model.Company"
+"Service": {
+  "$Kind": "EntityContainer",
+  "company": { "$Type": "Model.Company" }
 }
 ```
 
@@ -705,7 +652,9 @@ service {
 
 
 ```xml
-<Singleton Name="company" Type="Model.Company" />
+<EntityContainer Name="Service">
+  <Singleton Name="company" Type="Model.Company" />
+</EntityContainer>
 ```
 
 </TabItem>
