@@ -102,6 +102,8 @@ namespace rapid.rsdl
                 (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
                 (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
 
+            // TODO: log info Console.WriteLine($"added {edmType.FullTypeName()} as {(isEntityType ? "entity" : "complex")}");
+
             // add properties
             foreach (var prop in definition.Properties)
             {
@@ -111,7 +113,21 @@ namespace rapid.rsdl
             // add keys
             if (edmType is EdmEntityType entityType)
             {
-                var keys = definition.Keys.Select(key => (IEdmStructuralProperty)edmType.FindProperty(key.Name));
+                var invalidKeys = definition.Keys
+                    .Select(key => edmType.FindProperty(key.Name))
+                    .Where(prop => prop is IEdmNavigationProperty);
+                if (invalidKeys.Any())
+                {
+                    foreach (var key in invalidKeys)
+                    {
+                        // TODO: logger.LogError
+                        System.Console.WriteLine($"invalid key type `{key.Type.FullName()}` of property `{key.Name}` on type `{entityType.Name}`");
+                    }
+                }
+
+                var keys = definition.Keys
+                    .Select(key => edmType.FindProperty(key.Name))
+                    .OfType<IEdmStructuralProperty>();
                 entityType.AddKeys(keys);
             }
 
@@ -161,7 +177,7 @@ namespace rapid.rsdl
                 var edmProp = new EdmNavigationPropertyInfo { Name = prop.Name, Target = svelType, TargetMultiplicity = multiplicity };
                 edmType.AddUnidirectionalNavigation(edmProp);
             }
-            // single value or collection  property
+            // single value or collection property
             else if (edmTypeRef is IEdmTypeReference typeRef)
             {
                 edmType.AddStructuralProperty(prop.Name, typeRef);
@@ -242,32 +258,53 @@ namespace rapid.rsdl
                 from property in type.DeclaredProperties.OfType<IEdmNavigationProperty>()
                 select (type, property))
             {
-                var (type, property) = tuple;
-                var sources = FindEntitySetOfType(container, type).ToList();
-                if (sources.Count != 1)
-                {
-                    var prefix = sources.Count == 0 ? "No entity set" : "Multiple entity sets";
-                    throw new TransformationException($"Invalid navigation property '{type}.{property.Name}'. {prefix} defined for type {type}.");
-                }
-
-                var propertyType = (property.Type.Definition is IEdmCollectionType coll ? coll.ElementType : property.Type).Definition;
-                var targets = FindEntitySetOfType(container, propertyType).ToList();
-                if (targets.Count != 1)
-                {
-                    var prefix = targets.Count == 0 ? "No entity set" : "Multiple entity sets";
-                    throw new TransformationException($"Invalid navigation property '{type}.{property.Name}'. {prefix} defined for property's type '{type}.{property.Name}'.");
-                }
-
-                var source = sources.Single();
-                var target = targets.Single();
-                source.AddNavigationTarget(property, target);
+                AddNavigationTarget(container, tuple.type, tuple.property);
             }
         }
 
-        private IEnumerable<EdmEntitySet> FindEntitySetOfType(EdmEntityContainer container, IEdmType type)
+        static void AddNavigationTarget(EdmEntityContainer container, IEdmStructuredType declaringType, IEdmNavigationProperty property)
         {
-            return container.Elements.OfType<EdmEntitySet>().Where(eset =>
-                eset.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
+            // find all entity sets of the properties declaring type and property type
+            // and check they are unique
+            var message = $"Invalid navigation property `{property.Name}` on type `{declaringType}` of type `{property.Type}`";
+
+            // check declaring type
+            var sources = FindEntitySetOfType(container, declaringType).ToList();
+            if (sources.Count != 1)
+            {
+                var multiplicity = sources.Count == 0 ? "No entity set" : "Multiple entity sets";
+                throw new TransformationException($"{message}. {multiplicity} defined for declaring type {declaringType}.");
+            }
+
+            // check property's type (element type for collections or the actual type otherwise)
+            var propertyType = (property.Type.Definition is IEdmCollectionType coll ? coll.ElementType : property.Type).Definition;
+            var targets = FindEntitySetOfType(container, propertyType).ToList();
+            if (targets.Count != 1)
+            {
+                var multiplicity = targets.Count == 0 ? "No entity set" : "Multiple entity sets";
+                throw new TransformationException($"{message}. {multiplicity} defined for property type `{propertyType}`.");
+            }
+
+            // now that we know there is only one each, we can add the Navigation Target
+            var source = sources.Single();
+            var target = targets.Single();
+            source.AddNavigationTarget(property, target);
+        }
+
+        private static IEnumerable<EdmEntitySet> FindEntitySetOfType(EdmEntityContainer container, IEdmType type)
+        {
+            return container.Elements
+                .OfType<EdmEntitySet>()
+                .Where(eset => ElementIsOfType(eset, type));
+
+            static bool ElementIsOfType(EdmEntitySet eset, IEdmType type)
+            {
+                var elementType = eset.Type is IEdmCollectionType coll ? coll.ElementType.Definition : default;
+                // TODO: huge structural problem in current approach since
+                // at this point there seem to be two instances of the type, one with keys, one without
+                // return elementType.Equals(type);
+                return elementType.FullTypeName().Equals(type.FullTypeName());
+            }
         }
 
         private EdmEntitySet AddEntitySet(EdmEntityContainer container, IRdmServiceElement item, RdmServiceCollection collection)
