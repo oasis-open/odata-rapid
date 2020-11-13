@@ -79,10 +79,13 @@ namespace rapid.rsdl
         {
             var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name, definition.IsFlags);
             edmModel.AddElement(edmType);
+            var flags = definition.IsFlags;
             for (int i = 0; i < definition.Members.Count; i++)
             {
                 var elem = definition.Members[i];
-                edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(i)));
+                var value = flags ? (1 << i) : i;
+                System.Console.WriteLine(value);
+                edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(value)));
             }
             return edmType;
         }

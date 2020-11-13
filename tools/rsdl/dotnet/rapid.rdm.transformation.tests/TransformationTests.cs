@@ -59,8 +59,10 @@ namespace rapid.rsdl.tests
         {
             // arrange
             var text = @"flags Color { red green blue }";
+
             // act
             IEdmModel edm = CreateEdmModelFromString(text);
+
             // assert
             var actual = edm.SchemaElements
                 .Where(e => e.Name == "Color")
@@ -68,6 +70,10 @@ namespace rapid.rsdl.tests
                 .First();
             Assert.Equal(EdmTypeKind.Enum, actual.TypeKind);
             Assert.True(actual.IsFlags);
+            foreach (var member in actual.Members)
+            {
+                Assert.True(1 == System.Numerics.BitOperations.PopCount((uint)member.Value.Value), $"member {member.Name} is not a single bit (value = {member.Value.Value:x}");
+            }
         }
 
         [Fact]
