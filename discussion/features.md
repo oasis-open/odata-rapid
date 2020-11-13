@@ -13,8 +13,8 @@ Discussion results from virtual offsite on 2020-11-12.
 | Entity Types | `type ...` |
 | Complex Types | `type ...` |
 | Key-less entity types for singletons and to-one containment | `type ...`, no field annotated as `@key` |
-| Inheritance | `type Foo: Bar {...}` or similar |
-| Abstract Structured Types | `@abstract type ...` |
+| Inheritance | :heavy_plus_sign: `type Foo: Bar {...}` or similar, https://github.com/oasis-open/odata-rapid/issues/159 |
+| Abstract Structured Types | :heavy_plus_sign: `@abstract type ...`, https://github.com/oasis-open/odata-rapid/issues/160 |
 | Open Structured Types | implicitly always open, no directive needed |
 | Media Entity Types | :x:, use `Edm.Stream` |
 | Default values for properties (and parameters?) | :x: |
@@ -22,11 +22,11 @@ Discussion results from virtual offsite on 2020-11-12.
 | Partner Navigation ("backlink") | :x:, too fancy |
 | OnDelete | :x:, too fancy |
 | Enumeration Types | `enum ...` |
-| Flags Enum Type | `flags { yellow striped }`, position in definition assigns bit in internal representation |
+| Flags Enum Type | :heavy_plus_sign: `flags { yellow striped }`, position in definition assigns bit in internal representation, https://github.com/oasis-open/odata-rapid/issues/158 |
 | Enum Member Value | :x:, also no names for combined values |
 | Primitive Types (Binary, Decimal, Duration, Geo*, Guid, Integer variants, Stream, TimeOfDay, Abstract Types) | via qualified name `Edm.Xxx` |
-| more "built-in" shortcuts for primitive types? | not Guid, not abstract types, not Geo*, no integer variants |
-| Primitive Type Facets | optional paren suffix: `Decimal(precision,scale)`, `String(maxlength)`, meaning of "no suffix" is up to the service |
+| more "built-in" shortcuts for primitive types? |  :heavy_plus_sign: not Guid, not abstract types, not Geo*, no integer variants, https://github.com/oasis-open/odata-rapid/issues/161 |
+| Primitive Type Facets |  :heavy_plus_sign: optional paren suffix: `Decimal(precision,scale)`, `String(maxlength)`, meaning of "no suffix" is up to the service, https://github.com/oasis-open/odata-rapid/issues/162 |
 | Unicode facet for strings | :x:, always Unicode |
 | SRID facet for Geo* | :x:, too fancy, use defaults |
 | Type Definitions | :x:, maybe later, e.g. `scalar Foo: String(42)` |
@@ -37,13 +37,13 @@ Discussion results from virtual offsite on 2020-11-12.
 | Extending an Entity Container | :x:, too fancy |
 | Navigation Property Bindings | only implicit, maybe RAPID can use CSDL for the multiple entity-sets per type cases or return `@context` in case of doubt |
 | Terms | :x:, maybe later, for now just use annotations from existing vocabularies |
-| Annotations | first figure out representation, then decide. Use `@Validation.AllowedValues` as the litmus test. Ralf's preference: JSON5-ish CSDL JSON representation `{ foo:"bar" baz:true }` |
+| Annotations | :question: first figure out representation, then decide. Use `@Validation.AllowedValues` as the litmus test. Ralf's preference: JSON5-ish CSDL JSON representation `{ foo:"bar" baz:true }` |
 
 ## Query
 
 | (OData) Feature | RAPID Equivalent |
 |--|--|
-| $metadata | yes, only CSDL JSON or RSDL |
+| $metadata | yes, only CSDL JSON or RSDL, https://github.com/oasis-open/odata-rapid/issues/155 |
 | key-as-segment | yes |
 | paren-keys | :x: (can be added atop the profile) |
 | alternate keys | :x:, requires paren-keys |
