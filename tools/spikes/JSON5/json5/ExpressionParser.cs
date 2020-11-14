@@ -1,27 +1,37 @@
+using System;
 using System.Linq;
 using Superpower;
+using Superpower.Model;
 using Superpower.Parsers;
 
 namespace json5
 {
     static class ExpressionParser
     {
+        private static TextParser<Expression> NumberToExpression = (TextSpan input) =>
+        {
+            {
+                var r1 = Numerics.IntegerInt64(input);
+                if (r1.HasValue && r1.Remainder.IsAtEnd)
+                {
+                    return Result.Value(json5.Expression.Integer(r1.Value, input.Position), r1.Location, r1.Remainder);
+                }
+            }
+            {
+                var r2 = Numerics.DecimalDouble(input);
+                if (r2.HasValue && r2.Remainder.IsAtEnd)
+                {
+                    return Result.Value(json5.Expression.Float(r2.Value, input.Position), r2.Location, r2.Remainder);
+                }
+            }
+            return Result.Empty<Expression>(input);
+        };
+
+        static readonly TokenListParser<ExpressionToken, Expression> Number =
+            Token.EqualTo(ExpressionToken.Number).Apply(NumberToExpression);
 
         private static (U Value, Superpower.Model.Position Position) Apply<T, U>(this TextParser<U> parser, Superpower.Model.Token<T> token) =>
             (parser(token.Span).Value, token.Position);
-
-        static readonly TokenListParser<ExpressionToken, Expression> Natural =
-            from token in Token.EqualTo(ExpressionToken.Natural)
-            let pair = Numerics.IntegerInt32.Apply(token)
-            select json5.Expression.Integer(pair.Value, pair.Position);
-
-        static readonly TokenListParser<ExpressionToken, Expression> Double =
-            from token in Token.EqualTo(ExpressionToken.Decimal)
-            let pair = Numerics.DecimalDouble.Apply(token)
-            select json5.Expression.Double(pair.Value, pair.Position);
-
-        static readonly TokenListParser<ExpressionToken, Expression> Number =
-            (Natural).Or(Double);
 
         static readonly TokenListParser<ExpressionToken, Expression> String =
             from token in Token.EqualTo(ExpressionToken.String)

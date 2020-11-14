@@ -14,7 +14,7 @@ namespace json5
         [Token(Example = "")] ClosingBracket,
         [Token(Example = "")] Comma,
         [Token(Example = ":")] Colon,
-        [Token(Description = "number")] Natural,
+        [Token(Description = "number")] Number,
         [Token(Description = "identifier")] Identifier,
         [Token(Description = "string")] String,
         [Token(Description = "number")] Decimal
@@ -34,8 +34,7 @@ namespace json5
                 .Match(Character.EqualTo(']'), ExpressionToken.ClosingBracket)
                 .Match(Character.EqualTo(','), ExpressionToken.Comma)
                 .Match(Character.EqualTo(':'), ExpressionToken.Colon)
-                .Match(Numerics.Decimal, ExpressionToken.Decimal)
-                .Match(Numerics.Natural, ExpressionToken.Natural)
+                .Match(Numerics.Decimal, ExpressionToken.Number)
                 .Match(Identifier.CStyle, ExpressionToken.Identifier)
                 .Match(JsonString, ExpressionToken.String)
                 .Build();

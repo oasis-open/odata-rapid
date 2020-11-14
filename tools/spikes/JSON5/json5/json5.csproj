@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="superpower" Version="2.3.0" />
-    <Content Include="**\*.txt" Exclude="bin\**\*.txt;obj\**\*.txt" CopyToOutputDirectory="Always"/>
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="**\*.txt" Exclude="bin\**\*.txt;obj\**\*.txt" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>
