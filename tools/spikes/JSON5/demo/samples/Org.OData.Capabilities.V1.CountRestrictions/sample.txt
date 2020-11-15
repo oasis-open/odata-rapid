@@ -1,0 +1,6 @@
+
+{
+    Countable: true
+    NonCountableProperties: ["a", "b"]
+    NonCountableNavigationProperties: ["a", "b"]
+}

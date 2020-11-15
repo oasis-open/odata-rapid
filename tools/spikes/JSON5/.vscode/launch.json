@@ -5,14 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "demo",
+      "name": ".NET Core Launch (console)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/json5/bin/Debug/netcoreapp3.1/json5.dll",
+      "program": "${workspaceFolder}/demo/bin/Debug/netcoreapp3.1/demo.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/json5",
+      "cwd": "${workspaceFolder}/demo",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false

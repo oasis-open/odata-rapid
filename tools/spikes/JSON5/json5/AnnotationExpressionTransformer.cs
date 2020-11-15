@@ -5,38 +5,91 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace json5
 {
-    internal class AnnotationExpressionTransformer
+
+    public class AnnotationExpressionTransformer
     {
-        public AnnotationExpressionTransformer()
+        private ILogger logger;
+
+        public AnnotationExpressionTransformer(ILogger logger)
         {
+            this.logger = logger;
         }
 
-        public IEdmExpression Transform(Expression expression)
+        public IEdmExpression Transform(AnnotationExpression expression, IEdmTypeReference typeref, int n = 0)
         {
+            string indent = "    ".Repeat(n);
+            logger.LogInfo("{2}transform `{0}` `{1}`",
+                expression.ToString(false), typeref?.FullName(), indent);
+
             object value = expression.Value;
             switch (expression.Kind)
             {
-                case ExpressionKind.Null:
+                case AnnotationExpressionKind.Null:
                     return EdmNullExpression.Instance;
-                case ExpressionKind.Integer:
+
+                case AnnotationExpressionKind.Integer:
                     return new EdmIntegerConstant((long)value);
-                case ExpressionKind.Float:
+
+                case AnnotationExpressionKind.Float:
                     return new EdmFloatingConstant((double)value);
-                    throw new NotSupportedException($"Expression kind {expression.Kind}");
-                case ExpressionKind.String:
+
+                case AnnotationExpressionKind.String:
                     return new EdmStringConstant((string)value);
-                case ExpressionKind.Boolean:
+
+                case AnnotationExpressionKind.Boolean:
                     return new EdmBooleanConstant((bool)value);
-                    ;
-                case ExpressionKind.Object:
-                    return new EdmRecordExpression(
-                        from prop in expression.Properties
-                        select new EdmPropertyConstructor(prop.Name, Transform(prop.Value))
-                    );
-                case ExpressionKind.Array:
-                    return new EdmCollectionExpression(expression.Items.Select(Transform));
+
+                case AnnotationExpressionKind.Object:
+
+                    // Fix ODL behavior that the typeref is not a IEdmComplexTypeReference
+                    // even though the definition is an IEdmComplexType
+                    if (typeref.Definition is IEdmComplexType complex)
+                    {
+                        typeref = new EdmComplexTypeReference(complex, false);
+                    }
+
+                    if (typeref is IEdmComplexTypeReference complexTypeRef)
+                    {
+                        foreach (var m in ((IEdmComplexType)complexTypeRef.Definition)
+                            .Properties()
+                            .Where(edm => !expression.Properties.Any(p => p.Name.Equals(edm.Name))))
+                        {
+                            logger.LogError("    {0}missing property {1}", indent, m.Name);
+                        }
+
+                        var properties = (
+                            from prop in expression.Properties
+                            let edmProp = FindOrWarn(complexTypeRef, prop)
+                            where edmProp != null
+                            select new EdmPropertyConstructor(prop.Name, Transform(prop.Value, edmProp.Type, n + 1))
+                        ).ToList();
+                        return new EdmRecordExpression(complexTypeRef, properties);
+                    }
+                    throw new Exception("");
+
+
+                case AnnotationExpressionKind.Array:
+                    if (typeref is IEdmCollectionTypeReference collectionTypeRef)
+                    {
+                        var itemTypeRef = collectionTypeRef.ElementType();
+                        var items = (
+                            expression.Items.Select(item => Transform(item, itemTypeRef, n + 1))
+                        ).ToList();
+                        return new EdmCollectionExpression(collectionTypeRef, items);
+                    }
+                    throw new Exception("");
                 default:
                     throw new NotSupportedException($"Expression kind {expression.Kind}");
+            }
+
+            IEdmProperty FindOrWarn(IEdmComplexTypeReference complexTypeRef, ExpressionProperty prop)
+            {
+                var p = @complexTypeRef.FindProperty(prop.Name);
+                if (p == null)
+                {
+                    logger.LogWarn("    {0}extraneous property {1} ignored", indent, prop.Name);
+                }
+                return p;
             }
         }
     }

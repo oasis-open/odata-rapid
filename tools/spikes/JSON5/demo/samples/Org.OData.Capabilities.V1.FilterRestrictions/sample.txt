@@ -1,0 +1,18 @@
+
+{
+    Filterable: true
+    RequiresFilter: true
+    RequiredProperties: ["a", "b"]
+    MaxLevels: 3
+    Bogus: 100
+    FilterExpressionRestrictions: [
+        {
+            Property: "a",
+            AllowedExpressions: "SingleValue"
+        },
+        {
+            Property: "b",
+            AllowedExpressions: "SingleRange"
+        },
+    ]
+}

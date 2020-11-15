@@ -4,7 +4,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Superpower;
 
 namespace json5
 {
@@ -12,13 +11,26 @@ namespace json5
     {
         static void Main(string[] args)
         {
-            // var text = File.ReadAllText("sample.txt");
-            // var text = "{a: [1, 1.2, 123456789012, true, null, 'a'], b: 2}";
-            var text = "[{value: 'red'}, {value: 'green'}, {value: 'blue'}, ]";
+            var logger = new ConsoleLogger();
+            foreach (var dir in Directory.EnumerateDirectories("samples"))
+            {
+                var input = Path.Combine(dir, "sample.txt");
+                if (File.Exists(input))
+                {
+                    Run(input, logger);
+                    Console.WriteLine();
+                }
+            }
+
+        }
+
+        private static void Run(string path, ILogger logger)
+        {
+            Console.WriteLine(path);
 
             // 1.
             var tokenizer = ExpressionTokenizer.Tokenizer;
-            var tokenList = tokenizer.Tokenize(text);
+            var tokenList = tokenizer.Tokenize(File.ReadAllText(path));
 
             // foreach (var token in tokenList)
             // {
@@ -27,28 +39,38 @@ namespace json5
             // Console.WriteLine();
 
             // 2.
-            var parser = ExpressionParser.Expression; // parser built with combinators
+            var parser = new ExpressionParser();
             var expression = parser.Parse(tokenList);
 
-            Console.WriteLine(expression);
-            Console.WriteLine();
+            // Console.WriteLine(expression);
+            // Console.WriteLine();
 
             // 3.
-            var transformer = new AnnotationExpressionTransformer();
-            var edmExpression = transformer.Transform(expression);
+            var termName = Path.GetFileName(Path.GetDirectoryName(path));
+            var term =
+                ValidationVocabularyModel.Instance.FindTerm(termName) ??
+                CapabilitiesVocabularyModel.Instance.FindTerm(termName);
+            if (term == null)
+            {
+                logger.LogError("Can't find {0}", termName);
+                return;
+            }
+            var transformer = new AnnotationExpressionTransformer(logger);
+            var edmExpression = transformer.Transform(expression, term.Type);
 
             // 4. attach to model
             var ns = "example.com";
             var model = new EdmModel();
-            var term = ValidationVocabularyModel.Instance.FindTerm("Org.OData.Validation.V1.AllowedValues");
             var type = model.AddComplexType(ns, "complex01");
 
             model.AddVocabularyAnnotation(type, term, edmExpression);
 
-            // 5. show
-            model.WriteTo(Console.OpenStandardOutput(), true);
-            model.WriteTo(File.Create("sample.csdl.xml"), true);
-            model.WriteTo(File.Create("sample.csdl.json"), false);
+            // 5. save
+            // model.WriteTo(Console.OpenStandardOutput(), true);
+            File.Delete(Path.ChangeExtension(path, ".csdl.xml"));
+            File.Delete(Path.ChangeExtension(path, ".csdl.json"));
+            model.WriteTo(File.Create(Path.ChangeExtension(path, ".csdl.xml")), true);
+            model.WriteTo(File.Create(Path.ChangeExtension(path, ".csdl.json")), false);
         }
     }
 
