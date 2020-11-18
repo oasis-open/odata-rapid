@@ -1,7 +1,6 @@
 using CommandLine;
-using rapid.csdl;
 
-namespace rapid.rsdl
+namespace rapid
 {
     partial class Program
     {

@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using System.Diagnostics;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm;
-using rapid.csdl;
-using rapid.rdm;
 using System.Linq;
+using rapid.rsdl;
+using rapid.rdm;
 
-namespace rapid.rsdl
+namespace rapid
 {
     /// <summary>
     /// Parse a RSDL file into a RDM model, validate and convert the model into CSDL
@@ -28,36 +27,35 @@ namespace rapid.rsdl
         /// <param name="format">indicates whether it should be written as XML or JSON CSDL</param>
         public bool Convert(string path, CsdlFormat format)
         {
+            // create parser and model transformer.
             var parser = new RdmParser(logger);
+            var transformer = new ModelTransformer(logger);
 
+            // the model transformer has no ability to parse itself, so do the parsing upfront and
+            // pass in the models (main and dependencies)
+
+            // load main model file
             var model = ParseFile(parser, path);
             if (model == null)
             {
                 return false;
             }
 
-            try
+            // load referenced models
+            var referencedModels = model.References.ToDictionary(
+                reference => reference.Alias,
+                reference => LoadModel(reference.Path, parser, Path.GetDirectoryName(path)));
+
+            // transform into CSDL
+            if (transformer.TryTransform(model, referencedModels, out var csdlModel))
             {
-                // load referenced models and
-                var referencedModels = model.References.ToDictionary(
-                    reference => reference.Alias,
-                    reference => LoadModel(reference.Path, parser, Path.GetDirectoryName(path)));
-                var env = new TypeMapping(model, referencedModels, logger);
-
-                //  transform to CSDL
-                var sw = Stopwatch.StartNew();
-                var transformer = new ModelTransformer(logger);
-                var csdlModel = transformer.Transform(model, env);
-                logger.LogInfo("transformation time: {0}", sw.Elapsed);
-
                 WriteCsdl(csdlModel, path, format);
+                return true;
             }
-            catch (TransformationException ex)
+            else
             {
-                logger.LogError(ex, "error transforming rsdl file {0}", Path.GetFileName(path));
                 return false;
             }
-            return true;
         }
 
         private RdmDataModel LoadModel(string path, RdmParser parser, string baseDirectory)
@@ -66,6 +64,11 @@ namespace rapid.rsdl
             {
                 path = Path.Combine(baseDirectory, path);
             }
+            if (Path.GetExtension(path) == "")
+            {
+                path = path + ".rsdl";
+            };
+
             var model = parser.Parse(File.ReadAllText(path), Path.GetFileName(path));
             logger.LogInfo("loaded referenced model file {0} containing namespace {1}", path, model.Namespace.NamespaceName);
             return model;

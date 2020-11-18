@@ -1,24 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using rapid.rdm;
 
-namespace rapid.rsdl
+namespace rapid.rdm
 {
     internal class ModelBuilder
     {
-        private readonly RdmDataModel rdmModel;
 
-        private readonly TypeMapping env;
+        private readonly TypeEnvironment env;
+
+        private readonly ILogger logger;
 
         private EdmModel edmModel;
+        private RdmDataModel rdmModel;
 
-        public ModelBuilder(RdmDataModel schema, TypeMapping env)
+        public ModelBuilder(ILogger logger, TypeEnvironment env)
         {
-            this.rdmModel = schema;
+            this.logger = logger;
             this.env = env;
         }
 
@@ -27,19 +26,25 @@ namespace rapid.rsdl
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
         /// <returns>The constructed EDM model</returns>
-        public IEdmModel Build()
+        public IEdmModel Build(RdmDataModel rdmModel, EdmModel edmModel)
         {
-            edmModel = new EdmModel(true);
-
-            edmModel.SetEdmReferences(CreateReferences());
-
-            foreach (var item in rdmModel.Items)
+            try
             {
-                AddSchemaElements(item);
+                this.rdmModel = rdmModel;
+                this.edmModel = edmModel;
+
+                edmModel.SetEdmReferences(CreateReferences());
+                foreach (var item in rdmModel.Items)
+                {
+                    AddSchemaElements(item);
+                }
+            }
+            finally
+            {
+                rdmModel = null;
             }
 
-            // return edmModel and set it to null after returning it.
-            return Interlocked.Exchange(ref edmModel, null);
+            return edmModel;
         }
 
         private IEnumerable<EdmReference> CreateReferences()

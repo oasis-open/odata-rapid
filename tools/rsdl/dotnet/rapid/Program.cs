@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using CommandLine;
 
-namespace rapid.rsdl
+namespace rapid
 {
     partial class Program
     {
