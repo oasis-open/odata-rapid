@@ -94,18 +94,7 @@ namespace rapid.rdm
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            // if the type already exists on the edm model, exit immediately
-            var decl = edmModel.FindDeclaredType($"{rdmModel.Namespace.NamespaceName}.{definition.Name}");
-            if (decl is EdmStructuredType es)
-            {
-                return es;
-            }
-
-            // add the type immediately so that it can be found when resolving property types recursively
-            var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
-            var edmType = isEntityType ?
-                (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
-                (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+            var edmType = GetOrCreate(definition);
 
             // add properties
             foreach (var prop in definition.Properties)
@@ -120,9 +109,7 @@ namespace rapid.rdm
                 entityType.AddKeys(keys);
             }
 
-            // TODO: functions
             // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530382
-
             // add functions
             foreach (var func in definition.Operations)
             {
@@ -134,7 +121,24 @@ namespace rapid.rdm
             }
 
             return edmType;
+
+            EdmStructuredType GetOrCreate(RdmStructuredType definition)
+            {
+                // if the structured type  already exists on the edm model, return it.
+                var decl = edmModel.FindDeclaredType($"{rdmModel.Namespace.NamespaceName}.{definition.Name}");
+                if (decl is EdmStructuredType edmType)
+                {
+                    return edmType;
+                }
+                // add the type.
+                var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
+                edmType = isEntityType ?
+                   (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
+                   (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+                return edmType;
+            }
         }
+
 
         private bool HasSingletonOfType(RdmStructuredType definition)
         {

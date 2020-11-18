@@ -90,7 +90,8 @@ namespace rapid.rdm
                 var type = model.FindType(entry.@namespace + "." + typeRef.Suffix);
                 if (type == null)
                 {
-                    throw new KeyNotFoundException($"can not resolve type reference {typeRef.Name}");
+                    // TODO: internal error should not occur.
+                    throw new TransformationException($"Can not resolve type reference {typeRef.Name}");
                 }
                 return MakeTypeReference(type, typeRef.IsNullable);
             }
@@ -101,7 +102,10 @@ namespace rapid.rdm
             }
             else
             {
-                throw new KeyNotFoundException($"type reference {typeRef.Name} not found");
+                var pascal = typeRef.Name.ToPascalCase();
+
+                var hint = pascal != typeRef.Name && _primitiveTypes.ContainsKey(pascal) ? $" There is a primitive type called {pascal} spelled similarly." : string.Empty;
+                throw new TransformationException($"Type reference {typeRef.Name} not found ({typeRef.Position}).{hint}");
             }
         }
 
