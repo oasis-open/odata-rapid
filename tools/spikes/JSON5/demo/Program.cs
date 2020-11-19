@@ -11,8 +11,23 @@ namespace json5
     {
         static void Main(string[] args)
         {
+
+            if (args.Length > 0 && args[0].Equals("--clean", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Clean("samples");
+            }
+            else
+            {
+                Transform("samples");
+            }
+        }
+
+
+        private static void Transform(string root)
+        {
+
             var logger = new ConsoleLogger();
-            foreach (var dir in Directory.EnumerateDirectories("samples"))
+            foreach (var dir in Directory.EnumerateDirectories(root))
             {
                 var input = Path.Combine(dir, "sample.txt");
                 if (File.Exists(input))
@@ -21,7 +36,21 @@ namespace json5
                     Console.WriteLine();
                 }
             }
+        }
 
+        private static void Clean(string root)
+        {
+            foreach (var dir in Directory.EnumerateDirectories(root))
+            {
+                foreach (var file in Directory.EnumerateFiles(dir, "*.csdl.xml"))
+                {
+                    File.Delete(file);
+                }
+                foreach (var file in Directory.EnumerateFiles(dir, "*.csdl.json"))
+                {
+                    File.Delete(file);
+                }
+            }
         }
 
         private static void Run(string path, ILogger logger)
