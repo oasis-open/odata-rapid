@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
@@ -77,6 +78,7 @@ namespace json5
             // 3.
             var termName = Path.GetFileName(Path.GetDirectoryName(path));
             var term =
+                CoreVocabularyModel.Instance.FindTerm(termName) ??
                 ValidationVocabularyModel.Instance.FindTerm(termName) ??
                 CapabilitiesVocabularyModel.Instance.FindTerm(termName);
             if (term == null)
@@ -86,6 +88,15 @@ namespace json5
             }
             var transformer = new AnnotationExpressionTransformer(logger);
             var edmExpression = transformer.Transform(expression, term.Type);
+
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.odata.edm.validation.expressiontypechecker.trycast?view=odata-edm-7.0#Microsoft_OData_Edm_Validation_ExpressionTypeChecker_TryCast_Microsoft_OData_Edm_IEdmExpression_Microsoft_OData_Edm_IEdmTypeReference_Microsoft_OData_Edm_IEdmType_System_Boolean_System_Collections_Generic_IEnumerable_Microsoft_OData_Edm_Validation_EdmError___
+            if (!edmExpression.TryCast(term.Type, out var errors))
+            {
+                foreach (var error in errors)
+                {
+                    logger.LogError("validation {0}", error);
+                }
+            }
 
             // 4. attach to model
             var ns = "example.com";

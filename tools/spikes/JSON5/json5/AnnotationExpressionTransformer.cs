@@ -59,14 +59,13 @@ namespace json5
 
                         var properties = (
                             from prop in expression.Properties
-                            let edmProp = FindOrWarn(complexTypeRef, prop)
-                            where edmProp != null
-                            select new EdmPropertyConstructor(prop.Name, Transform(prop.Value, edmProp.Type, n + 1))
+                            let edmPropType = FindPropertyType(complexTypeRef, prop)
+                            where edmPropType != null
+                            select new EdmPropertyConstructor(prop.Name, Transform(prop.Value, edmPropType, n + 1))
                         ).ToList();
                         return new EdmRecordExpression(complexTypeRef, properties);
                     }
-                    throw new Exception("");
-
+                    throw new NotSupportedException($"typeref {typeref} not an IEdmComplexTypeReference");
 
                 case AnnotationExpressionKind.Array:
                     if (typeref is IEdmCollectionTypeReference collectionTypeRef)
@@ -77,19 +76,21 @@ namespace json5
                         ).ToList();
                         return new EdmCollectionExpression(collectionTypeRef, items);
                     }
-                    throw new Exception("");
+                    throw new NotSupportedException($"typeref {typeref} not an IEdmCollectionTypeReference");
+
                 default:
                     throw new NotSupportedException($"Expression kind {expression.Kind}");
             }
 
-            IEdmProperty FindOrWarn(IEdmComplexTypeReference complexTypeRef, ExpressionProperty prop)
+            IEdmTypeReference FindPropertyType(IEdmComplexTypeReference complexTypeRef, ExpressionProperty prop)
             {
                 var p = @complexTypeRef.FindProperty(prop.Name);
                 if (p == null)
                 {
                     logger.LogWarn("    {0}extraneous property {1} ignored", indent, prop.Name);
+                    return EdmCoreModel.Instance.GetUntyped();
                 }
-                return p;
+                return p.Type;
             }
         }
     }
