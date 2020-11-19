@@ -19,8 +19,8 @@ namespace rapid.rdm.tests
             var main = parser.Parse(mainText, "main");
             var incl = parser.Parse(inclText, "incl");
 
-            var env = new TypeEnvironment(main, NullLogger.Instance);
-            env.AddReferences(new Dictionary<string, RdmDataModel> { ["common"] = incl });
+            var env = new TypeEnvironment(NullLogger.Instance);
+            env.AddReferences(main, new Dictionary<string, RdmDataModel> { ["common"] = incl });
 
             // act
             var actual = env.ResolveTypeReference(new RdmTypeReference("common.EmploymentType", false));
