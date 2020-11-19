@@ -4,7 +4,7 @@ enum EmploymentType { salaried hourly }
 
 type Company
 {
-    @key stockSymbol: string
+    @key stockSymbol: String
     name: String
     incorporated: Date
     employees: [Employee]

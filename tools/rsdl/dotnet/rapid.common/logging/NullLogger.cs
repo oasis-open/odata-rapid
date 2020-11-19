@@ -6,7 +6,7 @@ namespace rapid
     {
         public static NullLogger Instance = new NullLogger();
 
-        public LogLevel LogLevel => LogLevel.None;
+        public LogLevel LogLevel => LogLevel.All;
 
         public void Log<TState>(LogLevel level, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {

@@ -17,11 +17,12 @@ namespace rapid.rdm.tests
             // arrange model with a keyless structured type used as a single valued service property type
             var text = @"type Complex1 { a: String } service { theComplex1: Complex1 }";
             var model = parser.Parse(text, "main");
-            var transformer = new ModelTransformer(NullLogger.Instance);
+            var transformer = new ModelTransformer(new ConsoleLogger(LogLevel.All));
 
             // act
             var edm = transformer.Transform(model, null);
 
+// "Invalid type '[Model.Complex1 Nullable=False]' for single valued service property theComplex1."
             // assert
             var actual = edm.SchemaElements
                 .Where(e => e.Name == "Complex1")

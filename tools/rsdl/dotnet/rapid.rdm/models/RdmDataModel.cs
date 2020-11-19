@@ -11,6 +11,7 @@ namespace rapid.rdm
     /// </summary>
     public interface IRdmSchemaElement
     {
+        string Name { get; }
     }
 
     /// <summary>
@@ -19,7 +20,6 @@ namespace rapid.rdm
     /// </summary>
     public interface IRdmType : IRdmSchemaElement
     {
-        string Name { get; }
     }
 
     public class RdmDataModel : IEquatable<RdmDataModel>

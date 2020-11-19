@@ -14,14 +14,18 @@ namespace rapid.rdm
 
     public class RdmService : IRdmSchemaElement, IEquatable<RdmService>
     {
-        public RdmService()
-        {
-        }
+        //     public RdmService()
+        //     {
+        //         Name = "Service";
+        //     }
 
         public RdmService(IEnumerable<IRdmServiceElement> items)
         {
+            Name = "Service";
             Items = items;
         }
+
+        public string Name { get; }
 
         public IEnumerable<IRdmServiceElement> Items { get; }
 

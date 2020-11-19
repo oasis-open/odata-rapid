@@ -29,7 +29,7 @@ namespace rapid.rdm.tests
             // note that the enumeration has zero members
             var expected = new EdmEnumTypeReference(new EdmEnumType("com.example.common", "EmploymentType"), false);
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected.FullName(), actual.FullName());
         }
     }
 }

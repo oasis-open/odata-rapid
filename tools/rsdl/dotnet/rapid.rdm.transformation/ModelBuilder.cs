@@ -22,7 +22,7 @@ namespace rapid.rdm
         }
 
         /// <summary>
-        /// Create an EDM model for the given RDM Model
+        /// Build out the EDM model for the given RDM Model
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
         /// <returns>The constructed EDM model</returns>
@@ -34,9 +34,21 @@ namespace rapid.rdm
                 this.edmModel = edmModel;
 
                 edmModel.SetEdmReferences(CreateReferences());
+
+                // create: add each of the schema elements and register them in the environment
                 foreach (var item in rdmModel.Items)
                 {
-                    AddSchemaElements(item);
+                    var edmElement = CreateSchemaElement(item);
+                    if (edmElement is IEdmType edmType)
+                    {
+                        env.Register(item.Name, edmType);
+                    }
+                }
+
+                // add the members, properties, ... or the schema elements
+                foreach (var item in rdmModel.Items)
+                {
+                    var edmElement = BuildSchemaElement(item);
                 }
             }
             finally
@@ -62,28 +74,46 @@ namespace rapid.rdm
                 select MakeReference(referenced.alias, referenced.@namespace, referenced.model);
         }
 
-        private void AddSchemaElements(IRdmSchemaElement item)
+        private IEdmElement CreateSchemaElement(IRdmSchemaElement item)
         {
             switch (item)
             {
                 case RdmStructuredType structured:
-                    AddStructuredType(structured);
-                    break;
-                case RdmEnum @enum:
-                    AddEnumType(@enum);
-                    break;
+                    return AddStructuredType(structured);
+                case RdmEnumType @enum:
+                    return AddEnumType(@enum);
                 case RdmService service:
-                    AddService(service);
-                    break;
+                    return AddService(service);
                 default:
                     throw new NotSupportedException("unknown implementation of IRdmSchemaElement");
             }
         }
 
-        private EdmEnumType AddEnumType(RdmEnum definition)
+        private IEdmElement BuildSchemaElement(IRdmSchemaElement item)
+        {
+            switch (item)
+            {
+                case RdmStructuredType structured:
+                    return BuildStructuredType(structured);
+                case RdmEnumType @enum:
+                    return BuildEnumType(@enum);
+                case RdmService service:
+                    return BuildService(service);
+                default:
+                    throw new NotSupportedException("unknown implementation of IRdmSchemaElement");
+            }
+        }
+
+        private EdmEnumType AddEnumType(RdmEnumType definition)
         {
             var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name);
             edmModel.AddElement(edmType);
+            return edmType;
+        }
+
+        private EdmEnumType BuildEnumType(RdmEnumType definition)
+        {
+            var edmType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.Name) as EdmEnumType;
             for (int i = 0; i < definition.Members.Count; i++)
             {
                 var elem = definition.Members[i];
@@ -94,7 +124,16 @@ namespace rapid.rdm
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            var edmType = GetOrCreate(definition);
+            var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
+            var edmType = isEntityType ?
+               (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
+               (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+            return edmType;
+        }
+
+        private EdmStructuredType BuildStructuredType(RdmStructuredType definition)
+        {
+            var edmType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.Name) as EdmStructuredType;
 
             // add properties
             foreach (var prop in definition.Properties)
@@ -121,32 +160,6 @@ namespace rapid.rdm
             }
 
             return edmType;
-
-            EdmStructuredType GetOrCreate(RdmStructuredType definition)
-            {
-                // if the structured type  already exists on the edm model, return it.
-                var decl = edmModel.FindDeclaredType($"{rdmModel.Namespace.NamespaceName}.{definition.Name}");
-                if (decl is EdmStructuredType edmType)
-                {
-                    return edmType;
-                }
-                // add the type.
-                var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
-                edmType = isEntityType ?
-                   (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
-                   (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
-                return edmType;
-            }
-        }
-
-
-        private bool HasSingletonOfType(RdmStructuredType definition)
-        {
-            var singletons = from service in rdmModel.Items.OfType<RdmService>()
-                             from item in service.Items.OfType<RdmServiceSingelton>()
-                             select item;
-            var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
-            return matches.Any();
         }
 
         private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
@@ -224,11 +237,15 @@ namespace rapid.rdm
             }
         }
 
-        private void AddService(RdmService service)
+        private EdmEntityContainer AddService(RdmService service)
         {
-            var containerName = "Service";
-            var container = (EdmEntityContainer)edmModel.EntityContainer ??
-                edmModel.AddEntityContainer(rdmModel.Namespace.NamespaceName, containerName);
+            var container = edmModel.AddEntityContainer(rdmModel.Namespace.NamespaceName, service.Name);
+            return container;
+        }
+
+        private EdmEntityContainer BuildService(RdmService service)
+        {
+            var container = edmModel.FindEntityContainer(rdmModel.Namespace.NamespaceName + "." + service.Name) as EdmEntityContainer;
 
             foreach (var item in service.Items)
             {
@@ -271,6 +288,17 @@ namespace rapid.rdm
                 var target = targets.Single();
                 source.AddNavigationTarget(property, target);
             }
+
+            return container;
+        }
+
+        private bool HasSingletonOfType(RdmStructuredType definition)
+        {
+            var singletons = from service in rdmModel.Items.OfType<RdmService>()
+                             from item in service.Items.OfType<RdmServiceSingelton>()
+                             select item;
+            var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
+            return matches.Any();
         }
 
         private IEnumerable<EdmEntitySet> FindEntitySetOfType(EdmEntityContainer container, IEdmType type)

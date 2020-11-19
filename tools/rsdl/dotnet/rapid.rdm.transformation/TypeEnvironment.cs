@@ -8,8 +8,6 @@ namespace rapid.rdm
 {
     public class TypeEnvironment
     {
-        private readonly RdmDataModel model;
-
         private readonly ILogger logger;
 
         private readonly Dictionary<string, IEdmType> @internal;
@@ -17,15 +15,14 @@ namespace rapid.rdm
         // dictionary of schema alias to dictionary of (namespace,  EDM model)
         private readonly IDictionary<string, (string @namespace, IEdmModel model)> external;
 
-        public TypeEnvironment(RdmDataModel model, ILogger logger)
+        public TypeEnvironment(ILogger logger)
         {
             this.logger = logger;
-            this.model = model;
             this.@internal = new Dictionary<string, IEdmType>();
             this.external = new Dictionary<string, (string @namespace, IEdmModel model)>();
         }
 
-        public void AddReferences(IDictionary<string, RdmDataModel> referencedModels)
+        public void AddReferences(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
         {
             foreach (var reference in model.References)
             {
@@ -40,23 +37,29 @@ namespace rapid.rdm
             }
         }
 
-        /// <summary>
-        /// creates an EDM model with just the stubs for each RDM type and
-        /// adds them to the environment for type resolution
-        /// </summary>
-        /// <returns></returns>
-        internal EdmModel CreateStubEdmModel()
+        internal void Register(string name, IEdmType edmElement)
         {
-            var result = new EdmModel();
-            var ns = model.Namespace.NamespaceName;
-            foreach (var type in model.Items.OfType<IRdmType>())
-            {
-                var t = CreateTypeSkeleton(ns, type);
-                result.AddElement(t);
-                this.@internal.Add(type.Name, t);
-            }
-            return result;
+            logger.LogInfo("registering {0}", name);
+            @internal.Add(name, edmElement);
         }
+
+        // /// <summary>
+        // /// creates an EDM model with just the stubs for each RDM type and
+        // /// adds them to the environment for type resolution
+        // /// </summary>
+        // /// <returns></returns>
+        // internal EdmModel CreateStubEdmModel()
+        // {
+        //     var result = new EdmModel();
+        //     var ns = model.Namespace.NamespaceName;
+        //     foreach (var type in model.Items.OfType<IRdmType>())
+        //     {
+        //         var t = CreateTypeSkeleton(ns, type);
+        //         result.AddElement(t);
+        //         this.@internal.Add(type.Name, t);
+        //     }
+        //     return result;
+        // }
 
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace rapid.rdm
                         return new EdmComplexType(@namespace, structuredType.Name);
                     }
 
-                case RdmEnum enumeration:
+                case RdmEnumType enumeration:
                     return new EdmEnumType(@namespace, enumeration.Name);
 
                 default:
