@@ -3,4 +3,10 @@ namespace odata.tc.jetsons
 
 enum Color { red green blue }
 
-flags Flags { red green blue yellow purple }
+flags PhoneService {
+   LandLine
+   Cell
+   Fax
+   Internet
+   Other
+}

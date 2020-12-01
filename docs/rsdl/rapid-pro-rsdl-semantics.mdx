@@ -486,6 +486,52 @@ enum employmentType { salaried hourly }
 </Tabs>
 
 
+## Flag Types
+
+A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`
+The members values are automatically assigned to powers of 2.
+
+```json
+flags PhoneService { LandLine Cell Fax Internet Other }
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+
+```json
+  "PhoneService": {
+    "$Kind": "EnumType",
+    "$IsFlags": true,
+    "LandLine": 1,
+    "Cell": 2,
+    "Fax": 4,
+    "Internet": 8,
+    "Other": 16
+  }
+```
+
+</TabItem>
+<TabItem value="xml">
+
+
+```xml
+  <EnumType Name="PhoneService" IsFlags="true">
+    <Member Name="LandLine" Value="1" />
+    <Member Name="Cell" Value="2" />
+    <Member Name="Fax" Value="4" />
+    <Member Name="Internet" Value="8" />
+    <Member Name="Other" Value="16" />
+  </EnumType>
+```
+
 ## Service
 
 As mentioned above, every RAPID service model creates a CSDL entity container named "Service"
