@@ -126,9 +126,25 @@ type Company { something: other.Something }";
         }
 
         [Fact]
-        public void EnumGetParsed()
+        public void EnumGetsParsed()
         {
             var content = @"enum Colors { red green blue }";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, false)
+                }
+            );
+
+            Assert.Equal(expected, actual);
+        }
+
+         [Fact]
+        public void PropertyAnnotationGetsParsed()
+        {
+            var content = @"type Foo { @Description:""description"" @key id: String }";
             var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
