@@ -28,7 +28,6 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
 }>
   <TabItem value="json">
 
-
 ```json
 {
   "$Version": "4.01",
@@ -42,7 +41,6 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
   </TabItem>
   <TabItem value="xml">
 
-
 ```xml
 <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
   <EntityContainer Name="Service">
@@ -52,7 +50,6 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
 
   </TabItem>
 </Tabs>
-
 
 The model's
 [service](./rapid-pro-rsdl-abnf.md#service),
@@ -85,7 +82,6 @@ type Name {
 }>
 <TabItem value="json">
 
-
 ```json
 "Name": {
   "$Kind": "ComplexType",
@@ -97,7 +93,6 @@ type Name {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <ComplexType Name="Name">
   <Property Name="firstName" Type="Edm.String" Nullable="false" />
@@ -107,7 +102,6 @@ type Name {
 
 </TabItem>
 </Tabs>
-
 
 ### Structured Types with `@key` Properties
 
@@ -128,7 +122,6 @@ type Employee {
 }>
 <TabItem value="json">
 
-
 ```json
 "Employee": {
   "$Kind": "EntityType",
@@ -140,7 +133,6 @@ type Employee {
 
 </TabItem>
 <TabItem value="xml">
-
 
 ```xml
 <EntityType Name="Employee">
@@ -154,7 +146,6 @@ type Employee {
 
 </TabItem>
 </Tabs>
-
 
 ### Properties
 
@@ -180,7 +171,6 @@ type Company {
 }>
 <TabItem value="json">
 
-
 ```json
 "Company": {
   "$Kind": "EntityType",
@@ -198,7 +188,6 @@ type Company {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityType Name="Company">
   <Key>
@@ -211,7 +200,6 @@ type Company {
 
   </TabItem>
 </Tabs>
-
 
 #### Property Types
 
@@ -245,7 +233,6 @@ type Foo {
 }>
 <TabItem value="json">
 
-
 ```json
 "Foo": {
   "$Kind": "EntityType",
@@ -259,7 +246,6 @@ type Foo {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityType Name="Foo">
   <Property Name="test1" Type="Edm.Int32" Nullable="false" />
@@ -271,7 +257,6 @@ type Foo {
 
 </TabItem>
 </Tabs>
-
 
 ### Functions and Actions
 
@@ -299,7 +284,6 @@ type Employee {
 }>
 <TabItem value="json">
 
-
 ```json
 "foo": [
   {
@@ -314,7 +298,6 @@ type Employee {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <Function Name="foo" IsBound="true" IsComposable="true">
   <Parameter Name="it" Type="Model.Employee" Nullable="false" />
@@ -323,7 +306,6 @@ type Employee {
 
 </TabItem>
 </Tabs>
-
 
 #### Function Return Type
 
@@ -346,7 +328,6 @@ type Employee {
   ]
 }>
 <TabItem value="json">
-
 
 ```json
 "foo": [
@@ -372,7 +353,6 @@ type Employee {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <Function Name="foo" IsBound="true" IsComposable="true">
   <Parameter Name="it" Type="Model.Employee" Nullable="false" />
@@ -387,7 +367,6 @@ type Employee {
 
 </TabItem>
 </Tabs>
-
 
 #### Functions Parameters
 
@@ -410,7 +389,6 @@ type Employee {
 }>
 <TabItem value="json">
 
-
 ```json
   "foo": [
     {
@@ -429,7 +407,6 @@ type Employee {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <Function Name="foo" IsBound="true" IsComposable="true">
   <Parameter Name="it" Type="Model.Employee" Nullable="false" />
@@ -440,7 +417,6 @@ type Employee {
 
 </TabItem>
 </Tabs>
-
 
 > TODO: decide on optional parameters, how they are different from nullable required parameters, and if that is a feature required now or too much for RAPID
 
@@ -462,7 +438,6 @@ enum employmentType { salaried hourly }
 }>
 <TabItem value="json">
 
-
 ```json
 "employmentType": {
   "$Kind": "EnumType",
@@ -474,7 +449,6 @@ enum employmentType { salaried hourly }
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EnumType Name="employmentType">
   <Member Name="salaried" Value="0" />
@@ -484,7 +458,6 @@ enum employmentType { salaried hourly }
 
 </TabItem>
 </Tabs>
-
 
 ## Flag Types
 
@@ -505,7 +478,6 @@ flags PhoneService { LandLine Cell Fax Internet Other }
 }>
 <TabItem value="json">
 
-
 ```json
   "PhoneService": {
     "$Kind": "EnumType",
@@ -521,7 +493,6 @@ flags PhoneService { LandLine Cell Fax Internet Other }
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
   <EnumType Name="PhoneService" IsFlags="true">
     <Member Name="LandLine" Value="1" />
@@ -531,6 +502,9 @@ flags PhoneService { LandLine Cell Fax Internet Other }
     <Member Name="Other" Value="16" />
   </EnumType>
 ```
+
+</TabItem>
+</Tabs>
 
 ## Service
 
@@ -551,7 +525,6 @@ service {
 }>
 <TabItem value="json">
 
-
 ```json
 "Service": {
   "$Kind": "EntityContainer"
@@ -561,14 +534,12 @@ service {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityContainer Name="Service">
 ```
 
 </TabItem>
 </Tabs>
-
 
 ### Multi-Valued Service Member
 
@@ -590,7 +561,6 @@ service {
 }>
 <TabItem value="json">
 
-
 ```json
 "Service": {
   "$Kind": "EntityContainer",
@@ -601,7 +571,6 @@ service {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="employees" EntityType="Model.Employee" />
@@ -610,7 +579,6 @@ service {
 
 </TabItem>
 </Tabs>
-
 
 If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL),
 the appropriate navigation property bindings get created.
@@ -633,7 +601,6 @@ service {
 }>
 <TabItem value="json">
 
-
 ```json
 "Service": {
   "$Kind": "EntityContainer",
@@ -651,7 +618,6 @@ service {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="competitors" EntityType="Model.Company">
@@ -663,7 +629,6 @@ service {
 
 </TabItem>
 </Tabs>
-
 
 ### Single-valued Service Member
 
@@ -685,7 +650,6 @@ service {
 }>
 <TabItem value="json">
 
-
 ```json
 "Service": {
   "$Kind": "EntityContainer",
@@ -696,7 +660,6 @@ service {
 </TabItem>
 <TabItem value="xml">
 
-
 ```xml
 <EntityContainer Name="Service">
   <Singleton Name="company" Type="Model.Company" />
@@ -705,7 +668,6 @@ service {
 
 </TabItem>
 </Tabs>
-
 
 ## Appendix
 
