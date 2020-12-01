@@ -1,4 +1,4 @@
-# This workflow will do a build and test run for the .NET projects in tools/rsdl/dotnet
+# This workflow will do a build and test run for the .NET projects in tools/rsdl/rapid-cli
 name: RAPID CLI tool .NET Core CI build
 
 on:
@@ -13,7 +13,7 @@ on:
 
 env:
   BuildConfig: Release
-  Solution: ./tools/rsdl/rapid-cli/rapid.sln
+  Solution: ./tools/rsdl/rapid-cli/rapid-cli.sln
 
 jobs:
   build:
