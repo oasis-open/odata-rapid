@@ -60,7 +60,7 @@ actionAnnotation     = %s"@action"
 parameter            = identifier ":" typeReference
 ```
 
-### Enumeration Types
+### Enumeration Type
 
 ```ABNF
 enumType   = ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
