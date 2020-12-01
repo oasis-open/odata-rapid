@@ -1,45 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using rapid.rdm;
 
-namespace rapid.rsdl
+namespace rapid.rdm
 {
     internal class ModelBuilder
     {
-        private readonly RdmDataModel rdmModel;
 
-        private readonly TypeMapping env;
+        private readonly TypeEnvironment env;
+
+        private readonly ILogger logger;
 
         private EdmModel edmModel;
+        private RdmDataModel rdmModel;
 
-        public ModelBuilder(RdmDataModel schema, TypeMapping env)
+        public ModelBuilder(ILogger logger, TypeEnvironment env)
         {
-            this.rdmModel = schema;
+            this.logger = logger;
             this.env = env;
         }
 
         /// <summary>
-        /// Create an EDM model for the given RDM Model
+        /// Build out the EDM model for the given RDM Model
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
         /// <returns>The constructed EDM model</returns>
-        public IEdmModel Build()
+        public IEdmModel Build(RdmDataModel rdmModel, EdmModel edmModel)
         {
-            edmModel = new EdmModel(true);
-
-            edmModel.SetEdmReferences(CreateReferences());
-
-            foreach (var item in rdmModel.Items)
+            try
             {
-                AddSchemaElements(item);
+                this.rdmModel = rdmModel;
+                this.edmModel = edmModel;
+
+                edmModel.SetEdmReferences(CreateReferences());
+
+                // create: add each of the schema elements and register them in the environment
+                foreach (var item in rdmModel.Items)
+                {
+                    var edmElement = CreateSchemaElement(item);
+                    if (edmElement is IEdmType edmType)
+                    {
+                        env.Register(item.Name, edmType);
+                    }
+                }
+
+                // add the members, properties, ... or the schema elements
+                foreach (var item in rdmModel.Items)
+                {
+                    var edmElement = BuildSchemaElement(item);
+                }
+            }
+            finally
+            {
+                rdmModel = null;
             }
 
-            // return edmModel and set it to null after returning it.
-            return Interlocked.Exchange(ref edmModel, null);
+            return edmModel;
         }
 
         private IEnumerable<EdmReference> CreateReferences()
@@ -57,28 +74,48 @@ namespace rapid.rsdl
                 select MakeReference(referenced.alias, referenced.@namespace, referenced.model);
         }
 
-        private void AddSchemaElements(IRdmSchemaElement item)
+        private IEdmElement CreateSchemaElement(IRdmSchemaElement item)
         {
             switch (item)
             {
                 case RdmStructuredType structured:
-                    AddStructuredType(structured);
-                    break;
-                case RdmEnum @enum:
-                    AddEnumType(@enum);
-                    break;
+                    return AddStructuredType(structured);
+                case RdmEnumType @enum:
+                    return AddEnumType(@enum);
                 case RdmService service:
-                    AddService(service);
-                    break;
+                    return AddService(service);
                 default:
                     throw new NotSupportedException("unknown implementation of IRdmSchemaElement");
             }
         }
 
-        private EdmEnumType AddEnumType(RdmEnum definition)
+        private IEdmElement BuildSchemaElement(IRdmSchemaElement item)
+        {
+            switch (item)
+            {
+                case RdmStructuredType structured:
+                    return BuildStructuredType(structured);
+                case RdmEnumType @enum:
+                    return BuildEnumType(@enum);
+                case RdmService service:
+                    return BuildService(service);
+                default:
+                    throw new NotSupportedException("unknown implementation of IRdmSchemaElement");
+            }
+        }
+
+        private EdmEnumType AddEnumType(RdmEnumType definition)
         {
             var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name, definition.IsFlags);
             edmModel.AddElement(edmType);
+
+            return edmType;
+        }
+
+        private EdmEnumType BuildEnumType(RdmEnumType definition)
+        {
+            var edmType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.Name) as EdmEnumType;
+
             var flags = definition.IsFlags;
             for (int i = 0; i < definition.Members.Count; i++)
             {
@@ -91,18 +128,16 @@ namespace rapid.rsdl
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            // if the type already exists on the edm model, exit immediately
-            var decl = edmModel.FindDeclaredType($"{rdmModel.Namespace.NamespaceName}.{definition.Name}");
-            if (decl is EdmStructuredType es)
-            {
-                return es;
-            }
-
-            // add the type immediately so that it can be found when resolving property types recursively
             var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
             var edmType = isEntityType ?
-                (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
-                (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+               (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
+               (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+            return edmType;
+        }
+
+        private EdmStructuredType BuildStructuredType(RdmStructuredType definition)
+        {
+            var edmType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.Name) as EdmStructuredType;
 
             // add properties
             foreach (var prop in definition.Properties)
@@ -117,9 +152,7 @@ namespace rapid.rsdl
                 entityType.AddKeys(keys);
             }
 
-            // TODO: functions
             // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530382
-
             // add functions
             foreach (var func in definition.Operations)
             {
@@ -131,15 +164,6 @@ namespace rapid.rsdl
             }
 
             return edmType;
-        }
-
-        private bool HasSingletonOfType(RdmStructuredType definition)
-        {
-            var singletons = from service in rdmModel.Items.OfType<RdmService>()
-                             from item in service.Items.OfType<RdmServiceSingelton>()
-                             select item;
-            var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
-            return matches.Any();
         }
 
         private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
@@ -217,11 +241,15 @@ namespace rapid.rsdl
             }
         }
 
-        private void AddService(RdmService service)
+        private EdmEntityContainer AddService(RdmService service)
         {
-            var containerName = "Service";
-            var container = (EdmEntityContainer)edmModel.EntityContainer ??
-                edmModel.AddEntityContainer(rdmModel.Namespace.NamespaceName, containerName);
+            var container = edmModel.AddEntityContainer(rdmModel.Namespace.NamespaceName, service.Name);
+            return container;
+        }
+
+        private EdmEntityContainer BuildService(RdmService service)
+        {
+            var container = edmModel.FindEntityContainer(rdmModel.Namespace.NamespaceName + "." + service.Name) as EdmEntityContainer;
 
             foreach (var item in service.Items)
             {
@@ -264,12 +292,23 @@ namespace rapid.rsdl
                 var target = targets.Single();
                 source.AddNavigationTarget(property, target);
             }
+
+            return container;
+        }
+
+        private bool HasSingletonOfType(RdmStructuredType definition)
+        {
+            var singletons = from service in rdmModel.Items.OfType<RdmService>()
+                             from item in service.Items.OfType<RdmServiceSingelton>()
+                             select item;
+            var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
+            return matches.Any();
         }
 
         private IEnumerable<EdmEntitySet> FindEntitySetOfType(EdmEntityContainer container, IEdmType type)
         {
-            return container.Elements.OfType<EdmEntitySet>().Where(eset =>
-                eset.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
+            return container.Elements.OfType<EdmEntitySet>().Where(entitySet =>
+                entitySet.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
         }
 
         private EdmEntitySet AddEntitySet(EdmEntityContainer container, IRdmServiceElement item, RdmServiceCollection collection)
@@ -282,8 +321,8 @@ namespace rapid.rsdl
                 var type = entityTypeReference.Definition;
                 if (type is IEdmEntityType entityType)
                 {
-                    var eset = container.AddEntitySet(item.Name, entityType);
-                    return eset;
+                    var entitySet = container.AddEntitySet(item.Name, entityType);
+                    return entitySet;
                 }
             }
 

@@ -31,8 +31,8 @@ namespace rapid.rsdl.tests
                 new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"))}),
                 new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"))}) },
             new object[] {
-                new RdmEnum("b", new [] {"a", "b", "c"}, true),
-                new RdmEnum("b", new [] {"a", "b", "c"}, true) }
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true),
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
         };
 
         [Theory]
@@ -45,8 +45,8 @@ namespace rapid.rsdl.tests
         public static IEnumerable<object[]> NegativeTestData => new List<object[]>
         {
             new object[] {
-                new RdmEnum("b", new [] {"a", "b", "c"}, false),
-                new RdmEnum("b", new [] {"a", "b", "c"}, true) }
+                new RdmEnumType("b", new [] {"a", "b", "c"}, false),
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
         };
 
         [Theory]

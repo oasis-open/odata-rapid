@@ -118,7 +118,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnum("Colors", new [] { "red", "green", "blue"}, true)
+                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, true)
                 }
             );
 
@@ -134,7 +134,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnum("Colors", new [] { "red", "green", "blue"}, false)
+                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, false)
                 }
             );
 

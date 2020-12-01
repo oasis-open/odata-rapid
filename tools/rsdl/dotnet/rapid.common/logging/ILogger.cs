@@ -4,7 +4,7 @@ namespace rapid
 {
     public enum LogLevel
     {
-        None = 0, Information = 1, Error = 2
+        Trace = 0, Information = 1, Error = 2, None = 3
     }
 
     public interface ILogger
