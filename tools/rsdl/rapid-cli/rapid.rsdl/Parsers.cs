@@ -13,15 +13,6 @@ namespace rapid.rsdl
         static TokenListParser<RdmToken, object> Keyword(string name) =>
                 Token.EqualToValue(RdmToken.Identifier, name).Value(unit);
 
-        // static readonly TokenListParser<RdmToken, string> QuotedString = Token
-        //     .EqualTo(RdmToken.QuotedString)
-        //     .Apply(TextParsers.DoubleQuotedString);
-
-        static readonly TokenListParser<RdmToken, IAnnotation> KeyAnnotation =
-            from dp in Token.EqualTo(RdmToken.AtSign)
-            from nm in Keyword("key")
-            select (IAnnotation)new KeyAnnotation();
-
         static readonly TokenListParser<RdmToken, IAnnotation> ActionAnnotation =
            from dp in Token.EqualTo(RdmToken.AtSign)
            from nm in Keyword("action")
@@ -46,7 +37,7 @@ namespace rapid.rsdl
                     from name in QualifiedIdentifier
                     from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
                     select (name, opt)
-                ).Between(RdmToken.LeftBracket, RdmToken.RightBracket)
+                ).Between(RdmToken.OpeningBracket, RdmToken.ClosingBracket)
                 select new rdm.RdmTypeReference(type.name.Name, type.opt != null, true, type.name.Position)
             ).Or(
                 from name in QualifiedIdentifier
@@ -56,17 +47,35 @@ namespace rapid.rsdl
                 "type reference"
             );
 
+        static readonly TokenListParser<RdmToken, rdm.IAnnotation> Annotation =
+            from at in Token.EqualTo(RdmToken.AtSign)
+            from an in (
+                from k in Keyword("key")
+                select (IAnnotation)new KeyAnnotation()
+            ).Or(
+                from nm in QualifiedIdentifier
+                from co in Token.EqualTo(RdmToken.Colon)
+                from ex in ExpressionParsers.Expression
+                select (IAnnotation)new CustomAnnotation(nm.Name, ex)
+            )
+            select an;
+
+        // static TokenListParser<RdmToken, rdm.IAnnotation> CustomAnnotationOr(TokenListParser<RdmToken, rdm.IAnnotation> other)
+        // {
+        //     return Annotation.Cast<RdmToken, CustomAnnotation, IAnnotation>();
+        // }
+
         static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
-            from ka in KeyAnnotation.OptionalOrDefault()
-            from nm in Token.EqualTo(RdmToken.Identifier)
-            from co in Token.EqualTo(RdmToken.Colon)
-            from ty in TypeReference
+            from annotations in Annotation.Many()
+            from name in Token.EqualTo(RdmToken.Identifier)
+            from colon in Token.EqualTo(RdmToken.Colon)
+            from propType in TypeReference
             select new rdm.RdmProperty
             (
-                nm.ToStringValue(),
-                ty,
-                NonNull(ka).ToList(),
-                nm.GetPosition()
+                name.ToStringValue(),
+                propType,
+                annotations,
+                name.GetPosition()
             );
 
         static readonly TokenListParser<RdmToken, rdm.RdmParameter> Parameter =
@@ -87,7 +96,7 @@ namespace rapid.rsdl
             from aa in ActionAnnotation.OptionalOrDefault()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
-                .Between(RdmToken.LeftParentheses, RdmToken.RightParentheses)
+                .Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
             from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type
             select new rdm.RdmOperation
             (
@@ -108,7 +117,7 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, rdm.RdmStructuredType> TypeDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
+            from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmStructuredType(
                 nm.ToStringValue(),
                 ps.OfType<rdm.RdmProperty>().ToList(),
@@ -118,13 +127,13 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, rdm.RdmEnumType> EnumDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "enum")
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
+            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmEnumType(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), false);
 
         static readonly TokenListParser<RdmToken, rdm.RdmEnumType> FlagsDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "flags")
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
+            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmEnumType(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), true);
 
         #region service
@@ -135,7 +144,7 @@ namespace rapid.rsdl
               from nm in Token.EqualTo(RdmToken.Identifier)
               from dp in Token.EqualTo(RdmToken.Colon)
               from ty in (
-                    from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.LeftBracket), Token.EqualTo(RdmToken.RightBracket))
+                    from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
                     select (id, multivalue: true)
                 ).Or(
                     from id in Token.EqualTo(RdmToken.Identifier)
@@ -147,7 +156,7 @@ namespace rapid.rsdl
 
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
-            from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
+            from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmService(es);
         #endregion
 

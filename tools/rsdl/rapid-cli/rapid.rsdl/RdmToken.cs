@@ -11,12 +11,12 @@ namespace rapid.rsdl
 
         [Token(Category = "string")] QuotedString,
 
-        [Token(Category = "parentheses", Example = "(")] LeftParentheses,
-        [Token(Category = "parentheses", Example = ")")] RightParentheses,
-        [Token(Category = "parentheses", Example = "[")] LeftBracket,
-        [Token(Category = "parentheses", Example = "]")] RightBracket,
-        [Token(Category = "parentheses", Example = "{")] LeftBrace,
-        [Token(Category = "parentheses", Example = "}")] RightBrace,
+        [Token(Category = "parentheses", Example = "(")] OpeningParentheses,
+        [Token(Category = "parentheses", Example = ")")] ClosingParentheses,
+        [Token(Category = "parentheses", Example = "[")] OpeningBracket,
+        [Token(Category = "parentheses", Example = "]")] ClosingBracket,
+        [Token(Category = "parentheses", Example = "{")] OpeningBrace,
+        [Token(Category = "parentheses", Example = "}")] ClosingBrace,
 
         [Token(Category = "operator", Example = "+")] Plus,
         [Token(Category = "operator", Example = "-")] Minus,

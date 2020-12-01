@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using rapid.rdm;
 using Xunit;
 
@@ -141,19 +142,30 @@ type Company { something: other.Something }";
             Assert.Equal(expected, actual);
         }
 
-         [Fact]
+        [Fact]
         public void PropertyAnnotationGetsParsed()
         {
-            var content = @"type Foo { @Description:""description"" @key id: String }";
+            var content = @"type Foo { @Core.Description:""description"" @key id: String }";
             var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, false)
+                    new RdmStructuredType("Foo", new [] {
+                        new RdmProperty("id",
+                            new RdmTypeReference("String"),
+                            new IAnnotation[] {
+                                new CustomAnnotation("Core.Description", AnnotationExpression.String("description")),
+                                new KeyAnnotation()
+                            }
+                        ),
+                    })
                 }
             );
 
+            // var foo = actual.Items.OfType<RdmStructuredType>().First(t => t.Name == "Foo");
+            // var id = foo.Properties.First(t => t.Name == "id");
+            // Assert.Equal(2, id.Annotations.Count);
             Assert.Equal(expected, actual);
         }
     }

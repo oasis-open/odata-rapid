@@ -1,4 +1,4 @@
-namespace odata.tc.jetsons
+namespace odata.tc.sample
 
 
 enum Color { red green blue }

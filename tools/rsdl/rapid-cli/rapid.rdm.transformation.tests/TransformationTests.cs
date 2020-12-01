@@ -101,5 +101,42 @@ namespace rapid.rdm.tests
             Assert.Equal(EdmTypeKind.Enum, actual.TypeKind);
             Assert.False(actual.IsFlags);
         }
+
+
+        [Fact]
+        public void AnnotationsGetTransformed()
+        {
+            // arrange
+            var text = @"
+                type Dog
+                {
+                    @Core.Description: ""a thing""
+                    @key
+                    name: String
+
+                    numberOfLegs: Integer
+                }";
+
+            // act
+            IEdmModel edm = CreateEdmModelFromString(text);
+
+            // assert
+            var entity = edm.SchemaElements
+                .Where(e => e.Name == "Dog")
+                .OfType<IEdmEntityType>()
+                .First();
+            Assert.Equal(EdmTypeKind.Entity, entity.TypeKind);
+
+            var prop01 = entity.Properties()
+                .Where(e => e.Name == "name")
+                .First();
+            // assert that "name" is a key property
+            Assert.Contains(prop01, entity.DeclaredKey);
+
+            // assert that "name" has a description annotation
+            Assert.Contains(
+                Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.DescriptionTerm,
+                prop01.VocabularyAnnotations(edm).Select(v => v.Term));
+        }
     }
 }

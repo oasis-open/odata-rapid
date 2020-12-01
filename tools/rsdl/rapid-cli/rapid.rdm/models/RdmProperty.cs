@@ -10,7 +10,7 @@ namespace rapid.rdm
         {
             Name = name;
             Type = type;
-            Annotations = annotations ?? Enumerable.Empty<IAnnotation>();
+            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<IAnnotation>)Array.Empty<IAnnotation>();
             Position = position;
         }
 
@@ -18,7 +18,7 @@ namespace rapid.rdm
 
         public RdmTypeReference Type { get; }
 
-        public IEnumerable<IAnnotation> Annotations { get; }
+        public IReadOnlyList<IAnnotation> Annotations { get; }
 
         public Position Position { get; }
 
@@ -30,7 +30,8 @@ namespace rapid.rdm
             return
                 string.Equals(this.Name, other.Name) &&
                 this.Type.Equals(other.Type) &&
-                Enumerable.SequenceEqual(this.Annotations, other.Annotations);
+                true // Enumerable.SequenceEqual(this.Annotations, other.Annotations);
+                ;
         }
 
         public override bool Equals(object other)
