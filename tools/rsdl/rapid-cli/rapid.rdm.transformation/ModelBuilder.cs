@@ -106,18 +106,22 @@ namespace rapid.rdm
 
         private EdmEnumType AddEnumType(RdmEnumType definition)
         {
-            var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name);
+            var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name, definition.IsFlags);
             edmModel.AddElement(edmType);
+
             return edmType;
         }
 
         private EdmEnumType BuildEnumType(RdmEnumType definition)
         {
             var edmType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.Name) as EdmEnumType;
+
+            var flags = definition.IsFlags;
             for (int i = 0; i < definition.Members.Count; i++)
             {
                 var elem = definition.Members[i];
-                edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(i)));
+                var value = flags ? (1 << i) : i;
+                edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(value)));
             }
             return edmType;
         }
@@ -303,8 +307,8 @@ namespace rapid.rdm
 
         private IEnumerable<EdmEntitySet> FindEntitySetOfType(EdmEntityContainer container, IEdmType type)
         {
-            return container.Elements.OfType<EdmEntitySet>().Where(eset =>
-                eset.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
+            return container.Elements.OfType<EdmEntitySet>().Where(entitySet =>
+                entitySet.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
         }
 
         private EdmEntitySet AddEntitySet(EdmEntityContainer container, IRdmServiceElement item, RdmServiceCollection collection)
@@ -317,8 +321,8 @@ namespace rapid.rdm
                 var type = entityTypeReference.Definition;
                 if (type is IEdmEntityType entityType)
                 {
-                    var eset = container.AddEntitySet(item.Name, entityType);
-                    return eset;
+                    var entitySet = container.AddEntitySet(item.Name, entityType);
+                    return entitySet;
                 }
             }
 

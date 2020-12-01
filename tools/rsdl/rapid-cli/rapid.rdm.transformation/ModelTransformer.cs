@@ -22,10 +22,10 @@ namespace rapid.rdm
             this.logger = logger;
         }
 
-        public IEdmModel Transform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
-        {
-            return TryTransform(model, referencedModels, out var result) ? result : default;
-        }
+        // public IEdmModel Transform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
+        // {
+        //     return TryTransform(model, referencedModels, out var result) ? result : default;
+        // }
 
         public bool TryTransform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels, out IEdmModel edmModel)
         {

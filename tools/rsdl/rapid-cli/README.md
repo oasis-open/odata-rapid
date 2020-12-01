@@ -9,10 +9,10 @@ The rapid cli program can be run from this folder with
 
 ```sh
 cd rapid
-dotnet run -- sample.rsdl --format JSON
-dotnet run -- sample.rsdl --format XML
-dotnet run -- sample.rsdl --format XML.JSON
-dotnet run -- sample.rsdl
+dotnet run -- samples/sample.rsdl --format JSON
+dotnet run -- samples/sample.rsdl --format XML
+dotnet run -- samples/sample.rsdl --format XML.JSON
+dotnet run -- samples/sample.rsdl
 ```
 
 A self contained binary can be generated via
@@ -23,7 +23,7 @@ dotnet publish --configuration release --self-contained true --runtime osx.10.11
 ```
 
 this creates folders
-    bin\Debug\netcoreapp3.1\win10-x64 
+    bin\Debug\netcoreapp3.1\win10-x64
     bin\Debug\netcoreapp3.1\osx.10.11-x64
 with a binary image that any machine and run via the `rapid` or `rapid.exe` command.
 

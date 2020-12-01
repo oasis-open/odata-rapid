@@ -30,6 +30,9 @@ namespace rapid.rsdl.tests
             new object[] {
                 new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"))}),
                 new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"))}) },
+            new object[] {
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true),
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
         };
 
         [Theory]
@@ -37,6 +40,20 @@ namespace rapid.rsdl.tests
         public void StructurallyEqualObjectsAreEqual(object a, object b)
         {
             Assert.Equal(a, b);
+        }
+
+        public static IEnumerable<object[]> NegativeTestData => new List<object[]>
+        {
+            new object[] {
+                new RdmEnumType("b", new [] {"a", "b", "c"}, false),
+                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
+        };
+
+        [Theory]
+        [MemberData(nameof(NegativeTestData))]
+        public void DifferentObjectsAreNotEqual(object a, object b)
+        {
+            Assert.NotEqual(a, b);
         }
     }
 }
