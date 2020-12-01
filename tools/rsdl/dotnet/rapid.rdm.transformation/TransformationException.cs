@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace rapid.rsdl
+namespace rapid.rdm
 {
     [Serializable]
     public class TransformationException : Exception

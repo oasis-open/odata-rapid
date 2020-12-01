@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    public class RdmEnum : IRdmSchemaElement, IRdmType, IEquatable<RdmEnum>
+    public class RdmEnumType : IRdmSchemaElement, IRdmType, IEquatable<RdmEnumType>
     {
-        public RdmEnum(string name, IReadOnlyList<string> members)
+        public RdmEnumType(string name, IReadOnlyList<string> members)
         {
             Name = name;
             Members = members;
@@ -16,7 +16,7 @@ namespace rapid.rdm
 
         public IReadOnlyList<string> Members { get; }
 
-        public bool Equals(RdmEnum other)
+        public bool Equals(RdmEnumType other)
         {
             return string.Equals(this.Name, other.Name) &&
                 Enumerable.SequenceEqual(this.Members, other.Members);
@@ -24,7 +24,7 @@ namespace rapid.rdm
 
         public override bool Equals(object other)
         {
-            return other is RdmEnum model && this.Equals(model);
+            return other is RdmEnumType model && this.Equals(model);
         }
 
         public override int GetHashCode()

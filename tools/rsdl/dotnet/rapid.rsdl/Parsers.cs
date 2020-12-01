@@ -116,11 +116,11 @@ namespace rapid.rsdl
             );
 
 
-        static readonly TokenListParser<RdmToken, rdm.RdmEnum> EnumDefinition =
+        static readonly TokenListParser<RdmToken, rdm.RdmEnumType> EnumDefinition =
             from kw in Token.EqualToValue(RdmToken.Identifier, "enum")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.LeftBrace), Token.EqualTo(RdmToken.RightBrace))
-            select new rdm.RdmEnum(
+            select new rdm.RdmEnumType(
                 nm.ToStringValue(),
                 ps.Select(t => t.ToStringValue()).ToList()
             );
@@ -150,7 +150,7 @@ namespace rapid.rsdl
         #endregion
 
         static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =
-            ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnum>(
+            ParserCombinators.OneOf<RdmToken, rdm.IRdmSchemaElement, rdm.RdmStructuredType, rdm.RdmService, rdm.RdmEnumType>(
                 TypeDefinition,
                 Service,
                 EnumDefinition);
