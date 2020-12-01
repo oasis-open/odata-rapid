@@ -1,5 +1,5 @@
 # This workflow will do a build and test run for the .NET projects in tools/rsdl/rapid-cli
-name: RAPID CLI tool .NET Core CI build
+name: .NET Core CI build - RAPID CLI tool
 
 on:
   push:

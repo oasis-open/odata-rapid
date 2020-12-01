@@ -6,13 +6,13 @@ title: RAPID SDL ABNF
 # RAPID Pro syntax
 
 > DRAFT
-> October 2020
+> November 2020
 
 ## Overview
 
-This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234), with the addition for case-sensitive strigs defined by [RFC7405](https://tools.ietf.org/html/rfc7405)
+This grammar uses ABNF as defined by [RFC5234](https://tools.ietf.org/html/rfc5234), with the addition for case-sensitive strings defined by [RFC7405](https://tools.ietf.org/html/rfc7405)
 
-Note: to increase readability of the grammer, whitespace is not reflected
+Note: to increase readability of the grammar, whitespace is not reflected
 
 ## Syntax rules
 
@@ -60,7 +60,7 @@ actionAnnotation     = %s"@action"
 parameter            = identifier ":" typeReference
 ```
 
-### Enumeration Type
+### Enumeration Types
 
 ```ABNF
 enumType   = ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
