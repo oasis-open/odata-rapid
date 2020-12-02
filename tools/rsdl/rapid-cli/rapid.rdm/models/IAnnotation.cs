@@ -2,8 +2,12 @@
 
 namespace rapid.rdm
 {
+    public interface IAnnotation
+    {
+        public AnnotationKind Kind { get; }
+    }
 
-    public interface IAnnotation { }
+    public enum AnnotationKind { Key, Action, Function, Custom }
 
     /// <summary>
     /// Base class for parameterless annotations
@@ -11,6 +15,10 @@ namespace rapid.rdm
     /// <typeparam name="T"></typeparam>
     public abstract class UnitAnnotation<T> : IAnnotation, IEquatable<T> where T : IAnnotation
     {
+        public UnitAnnotation(AnnotationKind kind) => Kind = kind;
+
+        public AnnotationKind Kind { get; }
+
         public bool Equals(T other)
         {
             return true;
@@ -27,25 +35,36 @@ namespace rapid.rdm
         }
     }
 
-    public class KeyAnnotation : UnitAnnotation<KeyAnnotation>, IAnnotation, IEquatable<KeyAnnotation> { }
+    public class KeyAnnotation : UnitAnnotation<KeyAnnotation>, IAnnotation, IEquatable<KeyAnnotation>
+    {
+        public KeyAnnotation() : base(AnnotationKind.Key) { }
+    }
 
-    public class ActionAnnotation : UnitAnnotation<ActionAnnotation>, IAnnotation, IEquatable<ActionAnnotation> { }
+    public class ActionAnnotation : UnitAnnotation<ActionAnnotation>, IAnnotation, IEquatable<ActionAnnotation>
+    {
+        public ActionAnnotation() : base(AnnotationKind.Action) { }
+    }
 
-    public class FunctionAnnotation : UnitAnnotation<FunctionAnnotation>, IAnnotation, IEquatable<FunctionAnnotation> { }
-
-
+    public class FunctionAnnotation : UnitAnnotation<FunctionAnnotation>, IAnnotation, IEquatable<FunctionAnnotation>
+    {
+        public FunctionAnnotation() : base(AnnotationKind.Function) { }
+    }
 
     public class CustomAnnotation : IAnnotation, IEquatable<CustomAnnotation>
     {
-
         public CustomAnnotation(string name, AnnotationExpression value)
         {
+            Kind = AnnotationKind.Custom;
             Name = name;
             Value = value;
         }
 
+        public AnnotationKind Kind { get; }
+
         public string Name { get; }
+
         public AnnotationExpression Value { get; }
+
 
         public bool Equals(CustomAnnotation other)
         {

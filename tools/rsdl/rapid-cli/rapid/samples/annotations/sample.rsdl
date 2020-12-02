@@ -1,13 +1,11 @@
 
 
-@Core.Description: "best kind of pet"
 type Dog
 {
-    @Core.Description: "a thing"
-    @Validation.AllowedValues: [{value: "a"}, {value: 'b'}]
+    @Org.OData.Core.V1.Description: "a thing"
     @key
-    name: String,
+    name: String
 
-    @Core.Description: "hopefully four"
-    numberOfLegs: Integer,
+
+    numberOfLegs: Integer
 }

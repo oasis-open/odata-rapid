@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace rapid.rdm
 {
@@ -166,36 +169,65 @@ namespace rapid.rdm
             return edmType;
         }
 
-        private void AddProperty(EdmStructuredType edmType, RdmProperty prop)
+        private void AddProperty(EdmStructuredType edmType, RdmProperty rdmProp)
         {
-            var edmTypeRef = env.ResolveTypeReference(prop.Type);
-
+            var edmTypeRef = env.ResolveTypeReference(rdmProp.Type);
+            EdmProperty edmProp;
             // collection navigation property
             if (edmTypeRef is IEdmCollectionTypeReference collRef &&
                 collRef.Definition is IEdmCollectionType collType &&
                 collType.ElementType is IEdmEntityTypeReference elTypeRef &&
                 elTypeRef.Definition is IEdmEntityType elType)
             {
-                var edmProp = new EdmNavigationPropertyInfo { Name = prop.Name, Target = elType, TargetMultiplicity = EdmMultiplicity.Many };
-                edmType.AddUnidirectionalNavigation(edmProp);
+                var info = new EdmNavigationPropertyInfo { Name = rdmProp.Name, Target = elType, TargetMultiplicity = EdmMultiplicity.Many };
+                edmProp = edmType.AddUnidirectionalNavigation(info);
             }
             // single value navigation property
             else if (edmTypeRef is IEdmEntityTypeReference entityRef &&
                 entityRef.Definition is IEdmEntityType svelType)
             {
                 var multiplicity = edmTypeRef.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
-                var edmProp = new EdmNavigationPropertyInfo { Name = prop.Name, Target = svelType, TargetMultiplicity = multiplicity };
-                edmType.AddUnidirectionalNavigation(edmProp);
+                var info = new EdmNavigationPropertyInfo { Name = rdmProp.Name, Target = svelType, TargetMultiplicity = multiplicity };
+                edmProp = edmType.AddUnidirectionalNavigation(info);
             }
             // single value or collection  property
             else if (edmTypeRef is IEdmTypeReference typeRef)
             {
-                edmType.AddStructuralProperty(prop.Name, typeRef);
+                edmProp = edmType.AddStructuralProperty(rdmProp.Name, typeRef);
             }
             else
             {
                 throw new NotSupportedException("unsupported implementation of IEdmTypeReference returned from GetTypeReference");
             }
+
+            foreach (var annotation in rdmProp.Annotations.OfType<CustomAnnotation>())
+            {
+                AddAnnotation(edmProp, annotation);
+            }
+        }
+
+        private void AddAnnotation(IEdmVocabularyAnnotatable annotatable, CustomAnnotation annotation)
+        {
+            var term = FindTerm(annotation.Name);
+            var expr = ConvertAnnotationExpression(annotation.Value);
+
+            var edmAnnotation = new EdmVocabularyAnnotation(annotatable, term, expr);
+            edmModel.AddVocabularyAnnotation(edmAnnotation);
+            edmAnnotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+        }
+
+        private IEdmTerm FindTerm(string name)
+        {
+            if (CoreVocabularyModel.Instance.TryFindTerm(name, out var term))
+            {
+                return term;
+            }
+            if (ValidationVocabularyModel.Instance.TryFindTerm(name, out term))
+            {
+                return term;
+            }
+            this.logger.LogError("Annotation term {0} can't be found");
+            return null;
         }
 
         private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
@@ -341,6 +373,39 @@ namespace rapid.rdm
 
                 default:
                     throw new TransformationException($"Invalid type '{type}' for single valued service property {item.Name}.");
+            }
+        }
+
+
+        private IEdmExpression ConvertAnnotationExpression(AnnotationExpression expression)
+        {
+
+            switch (expression.Kind)
+            {
+                case AnnotationExpressionKind.Null:
+                    return EdmNullExpression.Instance;
+                case AnnotationExpressionKind.Integer:
+                    return new EdmIntegerConstant((long)expression.Value);
+                case AnnotationExpressionKind.Float:
+                    return new EdmFloatingConstant((long)expression.Value);
+                case AnnotationExpressionKind.String:
+                    return new EdmStringConstant((string)expression.Value);
+                case AnnotationExpressionKind.Boolean:
+                    return new EdmBooleanConstant((bool)expression.Value);
+                case AnnotationExpressionKind.Object:
+                    return new EdmRecordExpression(
+                        from prop in expression.Properties
+                        select new EdmPropertyConstructor(
+                            prop.Name,
+                            ConvertAnnotationExpression(prop.Value))
+                    );
+                case AnnotationExpressionKind.Array:
+                    return new EdmCollectionExpression(
+                         from item in expression.Items
+                         select ConvertAnnotationExpression(item)
+                     );
+                default:
+                    throw new NotSupportedException($"Expression kind {expression.Kind}");
             }
         }
     }
