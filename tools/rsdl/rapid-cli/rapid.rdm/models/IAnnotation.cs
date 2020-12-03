@@ -52,11 +52,12 @@ namespace rapid.rdm
 
     public class CustomAnnotation : IAnnotation, IEquatable<CustomAnnotation>
     {
-        public CustomAnnotation(string name, AnnotationExpression value)
+        public CustomAnnotation(string name, AnnotationExpression value, Position position = default)
         {
             Kind = AnnotationKind.Custom;
             Name = name;
             Value = value;
+            Position = position;
         }
 
         public AnnotationKind Kind { get; }
@@ -65,6 +66,7 @@ namespace rapid.rdm
 
         public AnnotationExpression Value { get; }
 
+        public Position Position { get; }
 
         public bool Equals(CustomAnnotation other)
         {

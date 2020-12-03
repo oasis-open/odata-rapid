@@ -2,10 +2,27 @@
 
 type Dog
 {
-    @Org.OData.Core.V1.Description: "a thing"
+    @Core.Description: "mens best friend"
+    @Core.Immutable: true
     @key
+    @Validation.AllowedValues: [{Value: "Rex"}, {Value: "Fifi"}]
     name: String
+}
 
-
+type Animal
+{
+    @Validation.MultipleOf: 2
     numberOfLegs: Integer
+}
+
+type Foo
+{
+    @Validation.AllowedValues: ["Rex", "Fifi"]
+    @Core.RequiresType: "foo"
+    bar: String
+
+
+    @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
+    @Core.RequiresType: "foo"
+    baz: String
 }

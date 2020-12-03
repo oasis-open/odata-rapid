@@ -56,7 +56,7 @@ namespace rapid.rsdl
                 from nm in QualifiedIdentifier
                 from co in Token.EqualTo(RdmToken.Colon)
                 from ex in ExpressionParsers.Expression
-                select (IAnnotation)new CustomAnnotation(nm.Name, ex)
+                select (IAnnotation)new CustomAnnotation(nm.Name, ex, at.GetPosition())
             )
             select an;
 

@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace rapid.rdm
 {
@@ -12,7 +9,7 @@ namespace rapid.rdm
     {
 
         private readonly TypeEnvironment env;
-
+        private readonly AnnotationBuilder annotationBuilder;
         private readonly ILogger logger;
 
         private EdmModel edmModel;
@@ -22,6 +19,7 @@ namespace rapid.rdm
         {
             this.logger = logger;
             this.env = env;
+            this.annotationBuilder = new AnnotationBuilder(logger);
         }
 
         /// <summary>
@@ -38,17 +36,18 @@ namespace rapid.rdm
 
                 edmModel.SetEdmReferences(CreateReferences());
 
-                // create: add each of the schema elements and register them in the environment
+                // add each of the schema elements and register them in the environment
                 foreach (var item in rdmModel.Items)
                 {
                     var edmElement = CreateSchemaElement(item);
                     if (edmElement is IEdmType edmType)
                     {
+                        logger.LogInfo("adding type {0} to environment", item.Name);
                         env.Register(item.Name, edmType);
                     }
                 }
 
-                // add the members, properties, ... or the schema elements
+                // add the members, properties, etc to the schema elements
                 foreach (var item in rdmModel.Items)
                 {
                     var edmElement = BuildSchemaElement(item);
@@ -202,32 +201,8 @@ namespace rapid.rdm
 
             foreach (var annotation in rdmProp.Annotations.OfType<CustomAnnotation>())
             {
-                AddAnnotation(edmProp, annotation);
+                annotationBuilder.AddAnnotation(edmModel, edmProp, annotation);
             }
-        }
-
-        private void AddAnnotation(IEdmVocabularyAnnotatable annotatable, CustomAnnotation annotation)
-        {
-            var term = FindTerm(annotation.Name);
-            var expr = ConvertAnnotationExpression(annotation.Value);
-
-            var edmAnnotation = new EdmVocabularyAnnotation(annotatable, term, expr);
-            edmModel.AddVocabularyAnnotation(edmAnnotation);
-            edmAnnotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-        }
-
-        private IEdmTerm FindTerm(string name)
-        {
-            if (CoreVocabularyModel.Instance.TryFindTerm(name, out var term))
-            {
-                return term;
-            }
-            if (ValidationVocabularyModel.Instance.TryFindTerm(name, out term))
-            {
-                return term;
-            }
-            this.logger.LogError("Annotation term {0} can't be found");
-            return null;
         }
 
         private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
@@ -373,39 +348,6 @@ namespace rapid.rdm
 
                 default:
                     throw new TransformationException($"Invalid type '{type}' for single valued service property {item.Name}.");
-            }
-        }
-
-
-        private IEdmExpression ConvertAnnotationExpression(AnnotationExpression expression)
-        {
-
-            switch (expression.Kind)
-            {
-                case AnnotationExpressionKind.Null:
-                    return EdmNullExpression.Instance;
-                case AnnotationExpressionKind.Integer:
-                    return new EdmIntegerConstant((long)expression.Value);
-                case AnnotationExpressionKind.Float:
-                    return new EdmFloatingConstant((long)expression.Value);
-                case AnnotationExpressionKind.String:
-                    return new EdmStringConstant((string)expression.Value);
-                case AnnotationExpressionKind.Boolean:
-                    return new EdmBooleanConstant((bool)expression.Value);
-                case AnnotationExpressionKind.Object:
-                    return new EdmRecordExpression(
-                        from prop in expression.Properties
-                        select new EdmPropertyConstructor(
-                            prop.Name,
-                            ConvertAnnotationExpression(prop.Value))
-                    );
-                case AnnotationExpressionKind.Array:
-                    return new EdmCollectionExpression(
-                         from item in expression.Items
-                         select ConvertAnnotationExpression(item)
-                     );
-                default:
-                    throw new NotSupportedException($"Expression kind {expression.Kind}");
             }
         }
     }

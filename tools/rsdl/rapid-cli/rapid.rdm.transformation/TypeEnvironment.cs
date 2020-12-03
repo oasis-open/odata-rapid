@@ -39,28 +39,8 @@ namespace rapid.rdm
 
         internal void Register(string name, IEdmType edmElement)
         {
-            logger.LogInfo("registering {0}", name);
             @internal.Add(name, edmElement);
         }
-
-        // /// <summary>
-        // /// creates an EDM model with just the stubs for each RDM type and
-        // /// adds them to the environment for type resolution
-        // /// </summary>
-        // /// <returns></returns>
-        // internal EdmModel CreateStubEdmModel()
-        // {
-        //     var result = new EdmModel();
-        //     var ns = model.Namespace.NamespaceName;
-        //     foreach (var type in model.Items.OfType<IRdmType>())
-        //     {
-        //         var t = CreateTypeSkeleton(ns, type);
-        //         result.AddElement(t);
-        //         this.@internal.Add(type.Name, t);
-        //     }
-        //     return result;
-        // }
-
 
         /// <summary>
         /// List of all referenced models including their alias and namespace
