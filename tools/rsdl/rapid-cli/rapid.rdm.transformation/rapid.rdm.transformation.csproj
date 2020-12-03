@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Description>RAPID schema definition language to CSDL transformation</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.7.2" />
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\rapid.rdm\rapid.rdm.csproj" />
+    <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
+  </ItemGroup>
+</Project>

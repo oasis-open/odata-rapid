@@ -1,0 +1,678 @@
+---
+id: rsdl-semantics
+title: RAPID Pro Schema Definition Language Semantics
+---
+
+> DRAFT
+> Initial Draft. July 2020
+
+The semantic of RSDL (RAPID Pro Schema Definition Language) can be described by mapping
+syntactical constructs described in [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) to equivalent [CSDL](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) constructs.
+
+Please refer to [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) for the syntactical constructs of RSDL.
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+## Model
+
+A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+  <TabItem value="json">
+
+```json
+{
+  "$Version": "4.01",
+  "$EntityContainer": "Model.Service",
+  "Model": {
+    "Service": { "$Kind": "EntityContainer" }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="xml">
+
+```xml
+<Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityContainer Name="Service">
+  </EntityContainer>
+</Schema>
+```
+
+  </TabItem>
+</Tabs>
+
+The model's
+[service](./rapid-pro-rsdl-abnf.md#service),
+[structured types](./rapid-pro-rsdl-abnf.md#structured-type), and
+[enumeration types](./rapid-pro-rsdl-abnf.md#enumeration-type) are mapped to the respective constructs below and added to the schema (or container respectively)
+
+## Structured Types
+
+A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType) or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType).
+
+A structured type with one or more properties marked with `@key` is mapped to an entity type.
+And respectively a structured type without `@key` properties is mapped to a complex type.
+
+### Structured Types without `@key` Properties
+
+```
+type Name {
+  firstName : String
+  lastName: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Name": {
+  "$Kind": "ComplexType",
+  "firstName": { "$Type": "Edm.String" },
+  "lastName": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Name">
+  <Property Name="firstName" Type="Edm.String" Nullable="false" />
+  <Property Name="lastName" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Structured Types with `@key` Properties
+
+```
+type Employee {
+  @key id: Integer
+  name : Name
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Employee": {
+  "$Kind": "EntityType",
+  "$Key": [ "id" ],
+  "id": { "$Type": "Edm.Int32" },
+  "name": { "$Type": "Model.Name" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityType Name="Employee">
+  <Key>
+    <PropertyRef Name="id" />
+  </Key>
+  <Property Name="id" Type="Edm.Int32" Nullable="false" />
+  <Property Name="name" Type="Model.Name" Nullable="false" />
+</EntityType>
+```
+
+</TabItem>
+</Tabs>
+
+### Properties
+
+The properties of a type definition are mapped to either a Property or a NavigationProperty depending on the property's type.
+
+In the following example lets assume, name is mapped to a complete type and employee is mapped to a entity type.
+
+```
+type Company {
+  @key stockSymbol: String
+  name: Name
+  employees: [Employee]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Company": {
+  "$Kind": "EntityType",
+  "$Key": [ "stockSymbol" ],
+  "stockSymbol": { "$Type": "Edm.String" },
+  "name": { "$Type": "Edm.String" },
+  "employees": {
+    "$Kind": "NavigationProperty",
+    "$Type": "Model.Employee",
+    "$Collection": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityType Name="Company">
+  <Key>
+    <PropertyRef Name="stockSymbol" />
+  </Key>
+  <Property Name="name" Type="Edm.String" Nullable="false" />
+  <NavigationProperty Name="ceo" Type="Model.Employee" Nullable="false" />
+</EntityType>
+```
+
+  </TabItem>
+</Tabs>
+
+#### Property Types
+
+The type of a property is one of:
+
+- one of the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
+- any of the primitive EDM type listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
+- the structured or enumeration types defined in the model
+
+Each of these named types can be marked as
+
+- optional via a question mark `?`
+- multi-valued via enclosing it in brackets `[` `]`
+
+```
+type Foo {
+  test1: Integer
+  test2: Integer?
+  test3: [Integer]
+  test4: [Integer?]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Foo": {
+  "$Kind": "EntityType",
+  "test1": {  "$Type": "Edm.Int32" },
+  "test2": { "$Nullable": true, "$Type": "Edm.Int32" },
+  "test3": { "$Collection": true, "$Type": "Edm.Int32" },
+  "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityType Name="Foo">
+  <Property Name="test1" Type="Edm.Int32" Nullable="false" />
+  <Property Name="test2" Type="Edm.Int32" Nullable="true" />
+  <Property Name="test3" Type="Collection(Edm.Int32)" Nullable="false"/>
+  <Property Name="test4" Type="Collection(Edm.Int32)" Nullable="true"/>
+</EntityType>
+```
+
+</TabItem>
+</Tabs>
+
+### Functions and Actions
+
+The syntactical production rule `operation` is mapped to a bound action or a bound function in CSDL.
+
+- functions without annotation are mapped to CSDL [Function](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Function)
+- functions with an `@action` annotation are mapped to a CSDL [Action](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Action)
+
+The binding parameter of the function is inferred from the containing type production rule and named `it`
+
+```
+type Employee {
+  @key id: integer
+  foo()
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"foo": [
+  {
+    "$Kind": "Function",
+    "$IsBound": true,
+    "$IsComposable": true,
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ]
+  }
+]
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<Function Name="foo" IsBound="true" IsComposable="true">
+  <Parameter Name="it" Type="Model.Employee" Nullable="false" />
+</Function>
+```
+
+</TabItem>
+</Tabs>
+
+#### Function Return Type
+
+The return type of a function is mapped similar to a property type with the same semantic for `[` `]` and `?`.
+
+```
+type Employee {
+  @key id: integer
+  foo() : integer
+  bar() : [integer]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"foo": [
+  {
+    "$Kind": "Function",
+    "$IsBound": true,
+    "$IsComposable": true,
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ],
+    "$ReturnType": { "$Type": "Edm.Int32" }
+  }
+],
+"bar": [
+  {
+    "$Kind": "Function",
+    "$IsBound": true,
+    "$IsComposable": true,
+    "$Parameter": [ { "$Name": "it", "$Type": "Model.Employee" } ],
+    "$ReturnType": { "$Collection": true, "$Type": "Edm.Int32" }
+  }
+]
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<Function Name="foo" IsBound="true" IsComposable="true">
+  <Parameter Name="it" Type="Model.Employee" Nullable="false" />
+  <ReturnType Type="Edm.Int32" Nullable="false" />
+</Function>
+
+<Function Name="bar" IsBound="true" IsComposable="true">
+  <Parameter Name="it" Type="Model.Employee" Nullable="false" />
+  <ReturnType Type="Collection(Edm.Int32)" Nullable="false" />
+</Function>
+```
+
+</TabItem>
+</Tabs>
+
+#### Functions Parameters
+
+Parameters are similar to properties in that they have a name and reference a type.
+
+```
+type Employee {
+  @key id: integer
+  foo(a: integer, b: [integer?])
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+  "foo": [
+    {
+      "$Kind": "Function",
+      "$IsBound": true,
+      "$IsComposable": true,
+      "$Parameter": [
+        { "$Name": "it", "$Type": "Model.Employee" },
+        { "$Name": "a", "$Type": "Edm.Int32" },
+        { "$Name": "b", "$Collection": true, "$Type": "Edm.Int32", "$Nullable": true }
+      ]
+    }
+  ]
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<Function Name="foo" IsBound="true" IsComposable="true">
+  <Parameter Name="it" Type="Model.Employee" Nullable="false" />
+  <Parameter Type="Edm.Int32" Nullable="false" />
+  <Parameter Type="Collection(Edm.Int32)" Nullable="true" />
+</Function>
+```
+
+</TabItem>
+</Tabs>
+
+> TODO: decide on optional parameters, how they are different from nullable required parameters, and if that is a feature required now or too much for RAPID
+
+## Enumeration Types
+
+A [Enumeration Type](./rapid-pro-rsdl-abnf.md#enumeration-type) is mapped to an CSDL EnumType. The enumeration members values are automatically assigned.
+
+```json
+enum employmentType { salaried hourly }
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"employmentType": {
+  "$Kind": "EnumType",
+  "salaried": 0,
+  "hourly": 1
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EnumType Name="employmentType">
+  <Member Name="salaried" Value="0" />
+  <Member Name="hourly" Value="1" />
+</EnumType>
+```
+
+</TabItem>
+</Tabs>
+
+## Flag Types
+
+A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`
+The members values are automatically assigned to powers of 2.
+
+```json
+flags PhoneService { LandLine Cell Fax Internet Other }
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+  "PhoneService": {
+    "$Kind": "EnumType",
+    "$IsFlags": true,
+    "LandLine": 1,
+    "Cell": 2,
+    "Fax": 4,
+    "Internet": 8,
+    "Other": 16
+  }
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+  <EnumType Name="PhoneService" IsFlags="true">
+    <Member Name="LandLine" Value="1" />
+    <Member Name="Cell" Value="2" />
+    <Member Name="Fax" Value="4" />
+    <Member Name="Internet" Value="8" />
+    <Member Name="Other" Value="16" />
+  </EnumType>
+```
+
+</TabItem>
+</Tabs>
+
+## Service
+
+As mentioned above, every RAPID service model creates a CSDL entity container named "Service"
+
+```
+service {
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer"
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+```
+
+</TabItem>
+</Tabs>
+
+### Multi-Valued Service Member
+
+A service member of a multi-valued type is mapped to a CSDL entity set.
+
+```
+service {
+  employees: [Employee]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer",
+  "employees": { "$Collection": true, "$Type": "Model.Employee" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+  <EntitySet Name="employees" EntityType="Model.Employee" />
+</EntityContainer>
+```
+
+</TabItem>
+</Tabs>
+
+If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL),
+the appropriate navigation property bindings get created.
+In below example, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
+The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
+
+```
+service {
+  competitors: [Company]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer",
+  "competitors": {
+    "$Collection": true,
+    "$Type": "Model.Company",
+    "$NavigationPropertyBinding": {
+      "ceo": "employees",
+      "employees": "employees"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+  <EntitySet Name="competitors" EntityType="Model.Company">
+    <NavigationPropertyBinding Path="ceo" Target="employees" />
+    <NavigationPropertyBinding Path="employees" Target="employees" />
+  </EntitySet>
+</EntityContainer>
+```
+
+</TabItem>
+</Tabs>
+
+### Single-valued Service Member
+
+A service member of a single-value type gets mapped to a CSDL singleton.
+
+```
+service {
+  company: Company
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer",
+  "company": { "$Type": "Model.Company" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+  <Singleton Name="company" Type="Model.Company" />
+</EntityContainer>
+```
+
+</TabItem>
+</Tabs>
+
+## Appendix
+
+### References
+
+- [Semantics](<https://en.wikipedia.org/wiki/Semantics_(computer_science)>)
+- [OData CSDL JSON Representation](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html)
+- [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html)

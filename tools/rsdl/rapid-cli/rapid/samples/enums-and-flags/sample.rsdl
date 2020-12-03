@@ -1,0 +1,12 @@
+namespace odata.tc.jetsons
+
+
+enum Color { red green blue }
+
+flags PhoneService {
+   LandLine
+   Cell
+   Fax
+   Internet
+   Other
+}

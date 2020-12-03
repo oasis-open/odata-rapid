@@ -1,13 +1,19 @@
-name: rapid cli .NET Core CI build
+# This workflow will do a build and test run for the .NET projects in tools/rsdl/rapid-cli
+name: .NET Core CI build - RAPID CLI tool
 
 on:
   push:
-    branches: [master, parser-tests]
+    branches: [master]
+    paths:
+       - "tools/rsdl/rapid-cli/**"
   pull_request:
     branches: [master]
+    paths:
+       - "tools/rsdl/rapid-cli/**"
+
 env:
   BuildConfig: Release
-  Solution: ./tools/rsdl/dotnet/rapid.sln
+  Solution: ./tools/rsdl/rapid-cli/rapid-cli.sln
 
 jobs:
   build:
@@ -22,19 +28,19 @@ jobs:
         # with:
         #   dotnet-version: 3.1.402
       - name: Restore
-        run: dotnet restore ./tools/rsdl/dotnet/rapid/rapid.csproj
+        run: dotnet restore ./tools/rsdl/rapid-cli/rapid/rapid.csproj
 
       - name: Build
-        run: dotnet build ./tools/rsdl/dotnet/rapid/rapid.csproj --configuration ${{ env.BuildConfig }} --no-restore
+        run: dotnet build ./tools/rsdl/rapid-cli/rapid/rapid.csproj --configuration ${{ env.BuildConfig }} --no-restore
 
       - name: Test
         run: dotnet test ${{ env.Solution }}
 
       - name: Pack
-        run: dotnet pack ./tools/rsdl/dotnet/rapid/rapid.csproj --version-suffix "prerelease"
+        run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
-          path: ./tools/rsdl/dotnet/rapid/nupkg
+          path: ./tools/rsdl/rapid-cli/rapid/nupkg
           if-no-files-found: error
