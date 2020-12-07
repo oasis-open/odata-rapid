@@ -4,25 +4,37 @@ type Dog
 {
     @Core.Description: "mens best friend"
     @Core.Immutable: true
-    @key
     @Validation.AllowedValues: [{Value: "Rex"}, {Value: "Fifi"}]
-    name: String
+    key name: String
+
+
+    key foo : Edm.Int32
+
 }
+
+enum Foo { foo bar baz }
 
 type Animal
 {
+    key name: String
+
+
     @Validation.MultipleOf: 2
     numberOfLegs: Integer
+
+    function a(): Integer
+    action b(): Integer
+    c(): Integer
+    d()
 }
 
-type Foo
-{
-    @Validation.AllowedValues: ["Rex", "Fifi"]
-    @Core.RequiresType: "foo"
-    bar: String
+// type Foo
+// {
+//     @Validation.AllowedValues: ["Rex", "Fifi"]
+//     @Core.RequiresType: "foo"
+//     key bar: String
 
-
-    @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
-    @Core.RequiresType: "foo"
-    baz: String
-}
+//     @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
+//     @Core.RequiresType: "foo"
+//     baz: String
+// }

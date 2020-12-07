@@ -22,7 +22,7 @@ namespace rapid.rdm
         public IReadOnlyList<RdmOperation> Operations { get; }
 
         public IEnumerable<RdmProperty> Keys =>
-            Properties.Where(p => p.Annotations.OfType<KeyAnnotation>().Any());
+            Properties.Where(p => p.IsKey);
 
         public bool Equals(RdmStructuredType other)
         {

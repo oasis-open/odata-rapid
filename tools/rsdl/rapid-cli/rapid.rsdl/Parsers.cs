@@ -8,15 +8,10 @@ namespace rapid.rsdl
 {
     internal static class Parsers
     {
-        private static readonly object unit = new object();
+        // private static readonly object unit = new object();
 
-        static TokenListParser<RdmToken, object> Keyword(string name) =>
-                Token.EqualToValue(RdmToken.Identifier, name).Value(unit);
-
-        static readonly TokenListParser<RdmToken, IAnnotation> ActionAnnotation =
-           from dp in Token.EqualTo(RdmToken.AtSign)
-           from nm in Keyword("action")
-           select (IAnnotation)new ActionAnnotation();
+        static TokenListParser<RdmToken, string> Keyword(string name) =>
+                Token.EqualToValue(RdmToken.Identifier, name).Value(name);
 
         static readonly TokenListParser<RdmToken, CompositeIdentifier> QualifiedIdentifier =
             from head in Token.EqualTo(RdmToken.Identifier)
@@ -47,26 +42,21 @@ namespace rapid.rsdl
                 "type reference"
             );
 
-        static readonly TokenListParser<RdmToken, rdm.IAnnotation> Annotation =
+        static readonly TokenListParser<RdmToken, rdm.Annotation> Annotation =
             from at in Token.EqualTo(RdmToken.AtSign)
-            from an in (
-                from k in Keyword("key")
-                select (IAnnotation)new KeyAnnotation()
-            ).Or(
-                from nm in QualifiedIdentifier
-                from co in Token.EqualTo(RdmToken.Colon)
-                from ex in ExpressionParsers.Expression
-                select (IAnnotation)new CustomAnnotation(nm.Name, ex, at.GetPosition())
-            )
-            select an;
+            from nm in QualifiedIdentifier
+            from co in Token.EqualTo(RdmToken.Colon)
+            from ex in ExpressionParsers.Expression
+            select new rdm.Annotation(nm.Name, ex, at.GetPosition());
 
         // static TokenListParser<RdmToken, rdm.IAnnotation> CustomAnnotationOr(TokenListParser<RdmToken, rdm.IAnnotation> other)
         // {
         //     return Annotation.Cast<RdmToken, CustomAnnotation, IAnnotation>();
         // }
 
-        static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
+        static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property = (
             from annotations in Annotation.Many()
+            from key in Keyword("key").OptionalOrDefault().Try()
             from name in Token.EqualTo(RdmToken.Identifier)
             from colon in Token.EqualTo(RdmToken.Colon)
             from propType in TypeReference
@@ -74,9 +64,10 @@ namespace rapid.rsdl
             (
                 name.ToStringValue(),
                 propType,
+                key != null,
                 annotations,
                 name.GetPosition()
-            );
+            ));
 
         static readonly TokenListParser<RdmToken, rdm.RdmParameter> Parameter =
 
@@ -92,8 +83,16 @@ namespace rapid.rsdl
                 nm.GetPosition()
             );
 
-        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Function =
-            from aa in ActionAnnotation.OptionalOrDefault()
+        static readonly TokenListParser<RdmToken, RdmOperationKind> OperationAnnotation =
+            (
+                Keyword("function").Value(RdmOperationKind.Function)
+            ).Or(
+                Keyword("action").Value(RdmOperationKind.Action)
+            );
+
+        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Operation =
+            from aa in Annotation.Many()
+            from oa in OperationAnnotation.Optional().Try()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
                 .Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
@@ -103,13 +102,14 @@ namespace rapid.rsdl
                 nm.ToStringValue(),
                 rt,
                 ps,
+                oa,
                 NonNull(aa).ToArray(),
                 nm.GetPosition()
             );
 
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
-                Function.Cast<RdmToken, RdmOperation, object>()
+                Operation.Cast<RdmToken, RdmOperation, object>()
             ).Try().Or(
                 Property.Cast<RdmToken, RdmProperty, object>()
             );

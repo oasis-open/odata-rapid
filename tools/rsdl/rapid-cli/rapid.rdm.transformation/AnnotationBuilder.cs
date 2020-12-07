@@ -19,7 +19,7 @@ namespace rapid.rdm
         }
 
 
-        public void AddAnnotation(EdmModel edmModel, IEdmVocabularyAnnotatable annotatable, CustomAnnotation annotation)
+        public void AddAnnotation(EdmModel edmModel, IEdmVocabularyAnnotatable annotatable, Annotation annotation)
         {
             var term = FindTerm(annotation.Name);
             if (term != null)

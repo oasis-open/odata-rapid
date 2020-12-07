@@ -104,7 +104,13 @@ namespace rapid.rdm
                     return new EdmEntityTypeReference(entity, nullable);
 
                 case IEdmPrimitiveType primitive:
-                    return new EdmPrimitiveTypeReference(primitive, nullable);
+                    switch (primitive.PrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.String:
+                            return new EdmStringTypeReference(primitive, nullable, false, null, true);
+                        default:
+                            return new EdmPrimitiveTypeReference(primitive, nullable);
+                    }
 
                 case IEdmEnumType enumeration:
                     return new EdmEnumTypeReference(enumeration, nullable);
@@ -116,7 +122,7 @@ namespace rapid.rdm
 
 
         /// <summary>
-        /// create an EDM type definition based on thegiven  RDM type,
+        /// create an EDM type definition based on the given RDM type,
         /// but does not "build out the type" (no members, properties, functions, ..)
         /// </summary>
         private static IEdmSchemaType CreateTypeSkeleton(string @namespace, IRdmType rdmType)

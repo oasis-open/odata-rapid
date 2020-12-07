@@ -42,7 +42,7 @@ namespace rapid.rdm
                     var edmElement = CreateSchemaElement(item);
                     if (edmElement is IEdmType edmType)
                     {
-                        logger.LogInfo("adding type {0} to environment", item.Name);
+                        logger.LogInfo("adding type '{0}' to environment", item.Name);
                         env.Register(item.Name, edmType);
                     }
                 }
@@ -189,7 +189,7 @@ namespace rapid.rdm
                 var info = new EdmNavigationPropertyInfo { Name = rdmProp.Name, Target = svelType, TargetMultiplicity = multiplicity };
                 edmProp = edmType.AddUnidirectionalNavigation(info);
             }
-            // single value or collection  property
+            // structural property, single or multi value
             else if (edmTypeRef is IEdmTypeReference typeRef)
             {
                 edmProp = edmType.AddStructuralProperty(rdmProp.Name, typeRef);
@@ -199,7 +199,7 @@ namespace rapid.rdm
                 throw new NotSupportedException("unsupported implementation of IEdmTypeReference returned from GetTypeReference");
             }
 
-            foreach (var annotation in rdmProp.Annotations.OfType<CustomAnnotation>())
+            foreach (var annotation in rdmProp.Annotations.OfType<Annotation>())
             {
                 annotationBuilder.AddAnnotation(edmModel, edmProp, annotation);
             }
@@ -207,8 +207,7 @@ namespace rapid.rdm
 
         private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
         {
-            var isFunction = !operation.Annotations.Any(a => a is ActionAnnotation);
-            EdmOperation edmOperation = MakeOperation(operation, isFunction);
+            EdmOperation edmOperation = MakeOperation(operation);
             edmModel.AddElement(edmOperation);
 
             // add binding parameter
@@ -229,10 +228,9 @@ namespace rapid.rdm
             }
         }
 
-        private EdmOperation MakeOperation(RdmOperation operation, bool isFunction)
+        private EdmOperation MakeOperation(RdmOperation operation)
         {
-
-            if (isFunction)
+            if (operation.Kind == RdmOperationKind.Function)
             {
                 if (operation.ReturnType == null)
                 {

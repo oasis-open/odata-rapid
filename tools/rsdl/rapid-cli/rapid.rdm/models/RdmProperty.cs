@@ -6,11 +6,12 @@ namespace rapid.rdm
 {
     public class RdmProperty : IEquatable<RdmProperty>
     {
-        public RdmProperty(string name, RdmTypeReference type, IEnumerable<IAnnotation> annotations = null, Position position = default)
+        public RdmProperty(string name, RdmTypeReference type, bool isKey, IEnumerable<Annotation> annotations = null, Position position = default)
         {
             Name = name;
             Type = type;
-            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<IAnnotation>)Array.Empty<IAnnotation>();
+            IsKey = isKey;
+            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
             Position = position;
         }
 
@@ -18,7 +19,9 @@ namespace rapid.rdm
 
         public RdmTypeReference Type { get; }
 
-        public IReadOnlyList<IAnnotation> Annotations { get; }
+        public bool IsKey { get; }
+
+        public IReadOnlyList<Annotation> Annotations { get; }
 
         public Position Position { get; }
 
