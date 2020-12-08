@@ -14,7 +14,7 @@ type Dog
 
 enum Foo { foo bar baz }
 
-type Animal
+abstract type Animal
 {
     key name: String
 

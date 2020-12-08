@@ -115,13 +115,15 @@ namespace rapid.rsdl
             );
 
         static readonly TokenListParser<RdmToken, rdm.RdmStructuredType> TypeDefinition =
+            from ab in Keyword("abstract").Value(true).Optional().Try()
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmStructuredType(
                 nm.ToStringValue(),
                 ps.OfType<rdm.RdmProperty>().ToList(),
-                ps.OfType<rdm.RdmOperation>().ToList()
+                ps.OfType<rdm.RdmOperation>().ToList(),
+                ab != null
             );
 
         static readonly TokenListParser<RdmToken, rdm.RdmEnumType> EnumDefinition =

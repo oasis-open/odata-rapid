@@ -130,10 +130,15 @@ namespace rapid.rdm
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            var isEntityType = definition.Keys.Any() || HasSingletonOfType(definition);
-            var edmType = isEntityType ?
-               (EdmStructuredType)edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name) :
-               (EdmStructuredType)edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+            EdmStructuredType edmType;
+            if (definition.Keys.Any() || HasSingletonOfType(definition))
+            {
+                edmType = edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
+            }
+            else
+            {
+                edmType = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+            }
             return edmType;
         }
 
