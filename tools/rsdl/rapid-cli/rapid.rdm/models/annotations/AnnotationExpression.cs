@@ -38,7 +38,7 @@ namespace rapid.rdm
                 return;
             if (_kinds.TryGetValue(Type.GetTypeCode(type), out var expected) && expected == kind)
                 return;
-            System.Diagnostics.Debug.Fail($"wrong Expression kind {kind} {type}");
+            System.Diagnostics.Debug.Fail($"wrong Expression kind '{kind}' for '{type}'");
         }
 
         private static IDictionary<TypeCode, AnnotationExpressionKind> _kinds =
@@ -78,7 +78,9 @@ namespace rapid.rdm
 
         public bool Equals(AnnotationExpression other)
         {
-            return this.Kind.Equals(other.Kind) && this.Value.Equals(other.Value);
+            if (other == null)
+                return false;
+            return this.Kind.Equals(other.Kind) && (this.Value == null && other.Value == null || this.Value.Equals(other.Value));
         }
 
         public override bool Equals(object other)

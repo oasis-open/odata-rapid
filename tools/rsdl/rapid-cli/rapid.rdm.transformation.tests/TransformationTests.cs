@@ -111,8 +111,7 @@ namespace rapid.rdm.tests
                 type Dog
                 {
                     @Core.Description: ""a thing""
-                    @key
-                    name: String
+                    key name: String
 
                     numberOfLegs: Integer
                 }";

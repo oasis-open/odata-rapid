@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using rapid.rdm;
 using Xunit;
@@ -17,15 +18,32 @@ namespace rapid.rsdl.tests
 
             var expected = new RdmDataModel(null, new[] {
                 new RdmStructuredType("Company", new [] {
-                        new RdmProperty ("name", new RdmTypeReference("String"), null),
-                        new RdmProperty ("incorporated", new RdmTypeReference("Date"), null)
+                        new RdmProperty ("name", new RdmTypeReference("String"), false, null),
+                        new RdmProperty ("incorporated", new RdmTypeReference("Date"), false, null)
                 })
             });
 
-            // Assert.Equal(((RdmStructuredType)expected.Items[0]).Properties[0], ((RdmStructuredType)actual.Items[0]).Properties[0]);
-            // Assert.Equal(expected.Items[0], actual.Items[0]);
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void TypePropertiesWithKeyGetParsed()
+        {
+            var content = "type Company { key symbol: String   name: String   incorporated: Date}";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(null, new[] {
+                new RdmStructuredType("Company", new [] {
+                        new RdmProperty ("symbol", new RdmTypeReference("String"), true),
+                        new RdmProperty ("name", new RdmTypeReference("String"), false),
+                        new RdmProperty ("incorporated", new RdmTypeReference("Date"), false)
+                })
+            });
+
+            // Assert.Null(Assert2.ObjectDifference(expected, actual));
+            Assert.Equal(expected, actual);
+        }
+
 
         [Fact]
         public void NameSpaceDeclarationGetParsed()
@@ -99,7 +117,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmStructuredType("Company", new [] { new RdmProperty("something", new RdmTypeReference("other.Something"))})
+                    new RdmStructuredType("Company", new [] { new RdmProperty("something", new RdmTypeReference("other.Something"), false)})
                 },
                 new[] {
                     new RdmNamespaceReference("other.rsdl", "other")
@@ -145,7 +163,7 @@ type Company { something: other.Something }";
         [Fact]
         public void PropertyAnnotationGetsParsed()
         {
-            var content = @"type Foo { @Core.Description:""description"" @key id: String }";
+            var content = @"type Foo { @Core.Description:""description"" key id: String }";
             var actual = parser.Parse(content, "test");
 
             var expected = new RdmDataModel(
@@ -154,9 +172,9 @@ type Company { something: other.Something }";
                     new RdmStructuredType("Foo", new [] {
                         new RdmProperty("id",
                             new RdmTypeReference("String"),
-                            new IAnnotation[] {
-                                new CustomAnnotation("Core.Description", AnnotationExpression.String("description")),
-                                new KeyAnnotation()
+                            true,
+                            new [] {
+                                new Annotation("Core.Description", AnnotationExpression.String("description"))
                             }
                         ),
                     })

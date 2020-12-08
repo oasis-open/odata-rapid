@@ -15,6 +15,7 @@ namespace rapid.rdm
         }
 
         public string Name { get; }
+
         public RdmTypeReference Type { get; }
 
         public bool IsOptional { get; }
