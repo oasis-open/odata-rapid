@@ -111,6 +111,11 @@ namespace rapid.rdm
             var edmType = new EdmEnumType(rdmModel.Namespace.NamespaceName, definition.Name, definition.IsFlags);
             edmModel.AddElement(edmType);
 
+            foreach (var annotation in definition.Annotations)
+            {
+                annotationBuilder.AddAnnotation(edmModel, edmType, annotation);
+            }
+
             return edmType;
         }
 
@@ -130,16 +135,24 @@ namespace rapid.rdm
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            EdmStructuredType edmType;
             if (definition.Keys.Any() || HasSingletonOfType(definition))
             {
-                edmType = edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
+                var entity = edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
+                foreach (var annotation in definition.Annotations)
+                {
+                    annotationBuilder.AddAnnotation(edmModel, entity, annotation);
+                }
+                return entity;
             }
             else
             {
-                edmType = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+                var complex = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+                foreach (var annotation in definition.Annotations)
+                {
+                    annotationBuilder.AddAnnotation(edmModel, complex, annotation);
+                }
+                return complex;
             }
-            return edmType;
         }
 
         private EdmStructuredType BuildStructuredType(RdmStructuredType definition)

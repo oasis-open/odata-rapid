@@ -9,13 +9,16 @@ namespace rapid.rdm
         public RdmStructuredType(string name,
             IReadOnlyList<RdmProperty> properties,
             IReadOnlyList<RdmOperation> operations = null,
-            bool isAbstract = false
+            bool isAbstract = false,
+            IEnumerable<Annotation> annotations = null, Position position = default
         )
         {
             Name = name;
             Properties = properties;
             Operations = operations ?? Array.Empty<RdmOperation>();
             IsAbstract = isAbstract;
+            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
+            Position = position;
         }
 
         public string Name { get; }
@@ -26,6 +29,10 @@ namespace rapid.rdm
 
         public IReadOnlyList<RdmOperation> Operations { get; }
 
+        public IReadOnlyList<Annotation> Annotations { get; }
+
+        public Position Position { get; }
+        
         public IEnumerable<RdmProperty> Keys =>
             Properties.Where(p => p.IsKey);
 
