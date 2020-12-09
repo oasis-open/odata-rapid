@@ -1,7 +1,7 @@
 
 type company
 {
-    @key stockSymbol: string
+    key stockSymbol: string
     name: string
     incorporated: dateTime
     employees: [employee]
@@ -12,16 +12,16 @@ type company
 
 type employee
 {
-    @key id: integer 
+    key id: integer 
     key: boolean
     name : name    
     title: string
 
-    // // a CSDL action  with an optional parameter
-    // @action fire(date?: dateTimeOffset) 
+    // a CSDL action  with an optional parameter
+    // action fire(date?: dateTimeOffset) 
         
-    // // a CSDL action with an required parameter that can be null
-    // @action fire(date: dateTimeOffset?) 
+    // a CSDL action with an required parameter that can be null
+    // action fire(date: dateTimeOffset?) 
     
     // promote() : integer     // a CSDL function
 }

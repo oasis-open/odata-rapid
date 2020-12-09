@@ -46,9 +46,5 @@ abstract type Animal
 // }
 
 service {
-    foo: Animal[]
+    dogs: [Dog]
 }
-
-
-enum Bar { foo bar baz }
-

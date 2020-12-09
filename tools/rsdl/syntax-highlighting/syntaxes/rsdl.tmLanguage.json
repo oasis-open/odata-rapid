@@ -19,7 +19,7 @@
       "patterns": [
         {
           "name": "storage.type",
-          "match": "\\b(type|enum|service)\\b"
+          "match": "\\b(type|enum|service|namespace|include|as)\\b"
         },
         {
           "name": "storage.modifier",
