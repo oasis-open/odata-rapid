@@ -25,7 +25,7 @@ type Employee
     title: String
     employmentType: EmploymentType
 
-    // a RSDL function that will be translate to a CSDL function
+    // a RSDL function that will be translate to a CSDL action
     action promote() : Integer
 
     // a RSDL function with parameters
