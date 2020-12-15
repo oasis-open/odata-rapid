@@ -19,22 +19,26 @@
       "patterns": [
         {
           "name": "storage.type",
-          "match": "\\b(type|enum|flags|service|namespace|include|as)\\b"
+          "match": "\\b(type|enum|flags|service)\\b"
+        },
+        {
+          "name": "keyword.control.import",
+          "match": "\\b(namespace|include|as)\\b"
         },
         {
           "name": "storage.modifier",
-          "match": "\\b(key|function|action)\\b"
+          "match": "\\b(key|function|action|abstract)\\b"
         },
         {
           "name": "comment.line.double-slash.rsdl",
           "match": "//.*$\n?"
         },
         {
-          "name": "string.regexp",
+          "name": "entity.other.attribute-name",
           "match": "@\\b([a-zA-Z]+)(\\.([a-zA-Z]+))*"
         },
         {
-          "name": "support.type",
+          "name": "support.type.builtin",
           "match": "\\b(Integer|String|Boolean|Double|DateTime|Decimal|Float)\\b"
         },
         {
@@ -42,8 +46,12 @@
           "match": "Edm\\.\\b([a-zA-z0-9]+)\\b"
         },
         {
-          "name": "constant.language",
-          "match": "\\b(true|false|null)\\b"
+          "name": "constant.language.boolean",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.language.null",
+          "match": "\\b(null)\\b"
         }
       ]
     },

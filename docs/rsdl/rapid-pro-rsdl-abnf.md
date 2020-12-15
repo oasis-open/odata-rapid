@@ -60,7 +60,7 @@ operationModifier    = %s"action" / %s"function"
 parameter            = identifier ":" typeReference
 ```
 
-### Enumeration Types
+### Enumeration Type
 
 ```ABNF
 enumType             = annotations ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
