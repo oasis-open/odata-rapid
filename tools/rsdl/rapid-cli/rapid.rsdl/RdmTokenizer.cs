@@ -80,12 +80,12 @@ namespace rapid.rsdl
             ['*'] = RdmToken.Asterisk,
             ['/'] = RdmToken.Slash,
 
-            ['('] = RdmToken.LeftParentheses,
-            [')'] = RdmToken.RightParentheses,
-            ['['] = RdmToken.LeftBracket,
-            [']'] = RdmToken.RightBracket,
-            ['{'] = RdmToken.LeftBrace,
-            ['}'] = RdmToken.RightBrace,
+            ['('] = RdmToken.OpeningParentheses,
+            [')'] = RdmToken.ClosingParentheses,
+            ['['] = RdmToken.OpeningBracket,
+            [']'] = RdmToken.ClosingBracket,
+            ['{'] = RdmToken.OpeningBrace,
+            ['}'] = RdmToken.ClosingBrace,
 
             [':'] = RdmToken.Colon,
             ['&'] = RdmToken.Ampersand,

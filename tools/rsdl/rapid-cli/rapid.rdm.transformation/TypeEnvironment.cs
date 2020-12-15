@@ -39,28 +39,8 @@ namespace rapid.rdm
 
         internal void Register(string name, IEdmType edmElement)
         {
-            logger.LogInfo("registering {0}", name);
             @internal.Add(name, edmElement);
         }
-
-        // /// <summary>
-        // /// creates an EDM model with just the stubs for each RDM type and
-        // /// adds them to the environment for type resolution
-        // /// </summary>
-        // /// <returns></returns>
-        // internal EdmModel CreateStubEdmModel()
-        // {
-        //     var result = new EdmModel();
-        //     var ns = model.Namespace.NamespaceName;
-        //     foreach (var type in model.Items.OfType<IRdmType>())
-        //     {
-        //         var t = CreateTypeSkeleton(ns, type);
-        //         result.AddElement(t);
-        //         this.@internal.Add(type.Name, t);
-        //     }
-        //     return result;
-        // }
-
 
         /// <summary>
         /// List of all referenced models including their alias and namespace
@@ -124,7 +104,13 @@ namespace rapid.rdm
                     return new EdmEntityTypeReference(entity, nullable);
 
                 case IEdmPrimitiveType primitive:
-                    return new EdmPrimitiveTypeReference(primitive, nullable);
+                    switch (primitive.PrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.String:
+                            return new EdmStringTypeReference(primitive, nullable, false, null, true);
+                        default:
+                            return new EdmPrimitiveTypeReference(primitive, nullable);
+                    }
 
                 case IEdmEnumType enumeration:
                     return new EdmEnumTypeReference(enumeration, nullable);
@@ -136,7 +122,7 @@ namespace rapid.rdm
 
 
         /// <summary>
-        /// create an EDM type definition based on thegiven  RDM type,
+        /// create an EDM type definition based on the given RDM type,
         /// but does not "build out the type" (no members, properties, functions, ..)
         /// </summary>
         private static IEdmSchemaType CreateTypeSkeleton(string @namespace, IRdmType rdmType)

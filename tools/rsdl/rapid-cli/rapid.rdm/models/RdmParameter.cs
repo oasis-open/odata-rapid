@@ -6,20 +6,21 @@ namespace rapid.rdm
 {
     public class RdmParameter : IEquatable<RdmParameter>
     {
-        public RdmParameter(string name, RdmTypeReference type, bool IsOptional = false, IEnumerable<IAnnotation> annotations = null, Position position = default)
+        public RdmParameter(string name, RdmTypeReference type, bool IsOptional = false, IEnumerable<Annotation> annotations = null, Position position = default)
         {
             Name = name;
             Type = type;
-            Annotations = annotations ?? Enumerable.Empty<IAnnotation>();
+            Annotations = annotations ?? Enumerable.Empty<Annotation>();
             Position = position;
         }
 
         public string Name { get; }
+
         public RdmTypeReference Type { get; }
 
         public bool IsOptional { get; }
 
-        public IEnumerable<IAnnotation> Annotations { get; }
+        public IEnumerable<Annotation> Annotations { get; }
 
         public Position Position { get; }
 

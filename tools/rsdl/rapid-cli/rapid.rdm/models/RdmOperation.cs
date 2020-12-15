@@ -4,28 +4,31 @@ using System.Linq;
 
 namespace rapid.rdm
 {
+    public enum RdmOperationKind { Function, Action }
+
     public class RdmOperation : IEquatable<RdmOperation>
     {
-        public RdmOperation(string name, RdmTypeReference returnType, ICollection<RdmParameter> parameters, IEnumerable<IAnnotation> annotations = null, Position position = default)
+        public RdmOperation(string name, 
+            RdmTypeReference returnType, 
+            ICollection<RdmParameter> parameters,
+            RdmOperationKind? kind,
+            IEnumerable<Annotation> annotations = null, 
+            Position position = default)
         {
             Name = name;
             ReturnType = returnType;
             Parameters = parameters;
-            Annotations = annotations ?? Enumerable.Empty<IAnnotation>();
+            Kind = kind ?? (returnType == null ? RdmOperationKind.Action : RdmOperationKind.Function);
+            Annotations = annotations ?? Enumerable.Empty<Annotation>();
             Position = position;
-        }
-
-        public RdmOperation()
-        {
         }
 
         public string Name { get; set; }
         public RdmTypeReference ReturnType { get; set; }
         public ICollection<RdmParameter> Parameters { get; set; }
-        public IEnumerable<IAnnotation> Annotations { get; set; }
+        public RdmOperationKind Kind { get; }
+        public IEnumerable<Annotation> Annotations { get; set; }
         public Position Position { get; set; }
-
-        public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
 
         public bool Equals(RdmOperation other)
         {
@@ -34,6 +37,7 @@ namespace rapid.rdm
                 string.Equals(this.Name, other.Name) &&
                 this.ReturnType.Equals(other.ReturnType) &&
                 this.Parameters.Equals(other.Parameters) &&
+                this.Kind.Equals(other.Kind) &&
                 Enumerable.SequenceEqual(this.Annotations, other.Annotations);
         }
 

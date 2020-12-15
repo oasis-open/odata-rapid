@@ -6,7 +6,7 @@ title: RAPID SDL ABNF
 # RAPID Pro syntax
 
 > DRAFT
-> November 2020
+> December 2020
 
 ## Overview
 
@@ -37,13 +37,13 @@ modelElement = structuredType / enumType / service
 ### Structured Type
 
 ```ABNF
-structuredType       = %s"type" identifier "{" *typeMember "}"
+structuredType       = annotations %s"type" identifier "{" *structuredTypeMember "}"
 
-structuredTypeMember = property / operation ; property, bound action, or bound function
+structuredTypeMember = property / operation ; property, action, or function
 
-property             = *propertyAnnotation identifier ":" typeReference
+property             = annotations [propertyModifier] identifier ":" typeReference
 
-propertyAnnotation   = %s"@key"
+propertyModifier     = %s"key"
 
 typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
@@ -51,11 +51,11 @@ typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
 builtInType          = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
 
-operation            = [ actionAnnotation ] identifier
+operation            = annotations [operationModifier] identifier
                        "(" [ parameter *("," parameter) ] ")"
                        [ ":" typeReference ]
 
-actionAnnotation     = %s"@action"
+operationModifier    = %s"action" / %s"function"
 
 parameter            = identifier ":" typeReference
 ```
@@ -63,25 +63,45 @@ parameter            = identifier ":" typeReference
 ### Enumeration Type
 
 ```ABNF
-enumType   = ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
+enumType             = annotations ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
 
-enumMember = identifier
+enumMember           = identifier
 ```
 
 ### Service
 
 ```ABNF
-service          = %s"service" "{" 1*serviceMember "}"
+service              = %s"service" "{" 1*serviceMember "}"
 
-serviceMember    = entitySet / singleton / serviceOperation
+serviceMember        = entitySet / singleton / serviceOperation
 
-entitySet        = identifier ":" "[" qualifiedName "]"
+entitySet            = identifier ":" "[" qualifiedName "]"
 
-singleton        = identifier ":" qualifiedName
+singleton            = identifier ":" qualifiedName
 
-serviceOperation = [ actionAnnotation ] identifier
-                   "(" [ parameter *("," parameter) ] ")"
-                   [ ":" typeReference ]
+serviceOperation     = [ operationModifier ] identifier
+                       "(" [ parameter *("," parameter) ] ")"
+                       [ ":" typeReference ]
+```
+
+### Annotations
+
+```ABNF
+annotations      = 1*annotation
+
+annotation       = "@" qualifiedName ":" annotationValue
+
+annotationValue  = "true"
+                 / "false"
+                 / "null"
+                 / number
+                 / DQUOTE 1*CHAR DQUOTE
+                 / "[" annotationValue *( [","] annotationValue ) [","] "]"
+                 / "{" property *( [","] property ) [","] "}"
+
+property         = propertyName ":" annotationValue
+
+propertyName     = identifier / DQUOTE 1*CHAR DQUOTE
 ```
 
 ### Core Syntax Elements
@@ -90,10 +110,15 @@ serviceOperation = [ actionAnnotation ] identifier
 qualifiedName   = identifier *( "." identifier )
 
 identifier      = identInitial *identSubsequent
+
 identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
+
 identSubsequent = identInitial / DIGIT
 
+number          = DIGIT *DIGIT ["." *DIGIT ]
+
 ALPHA  = %x41-5A / %x61-7A
+
 DIGIT  = %x30-39
 
 CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
@@ -101,5 +126,6 @@ CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
        / ESCAPE DQUOTE
 
 DQUOTE = %x22              ; "
+
 ESCAPE = %x5C              ; \
 ```

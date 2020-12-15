@@ -10,7 +10,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/rapid/bin/Debug/netcoreapp3.1/rapid.dll",
-      "args": ["samples/demo/sample.rsdl", "--verbose"],
+      "args": ["samples/annotations/sample.rsdl", "--verbose"],
       "cwd": "${workspaceFolder}/rapid",
       "console": "internalConsole",
       "stopAtEntry": false

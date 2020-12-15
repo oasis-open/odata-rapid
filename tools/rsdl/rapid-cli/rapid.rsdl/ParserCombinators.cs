@@ -61,7 +61,11 @@ namespace rapid.rsdl
         public static TokenListParser<TKind, T> Between<TKind, T>(this TokenListParser<TKind, T> parser, TKind left, TKind right)
             => parser.Between(Token.EqualTo(left), Token.EqualTo(right));
 
+
+        public static rdm.Position ToPosition(this Position position) =>
+            new rdm.Position(position.Line, position.Column);
+
         public static rdm.Position GetPosition<TKind>(this Token<TKind> token) =>
-            new rdm.Position(token.Position.Line, token.Position.Column);
+            token.Position.ToPosition();
     }
 }

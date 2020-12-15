@@ -5,7 +5,7 @@ include "common" as common
 
 type Employee
 {
-    @key id: String
+    key id: String
     name : String
 
     employmentType: common.EmploymentType

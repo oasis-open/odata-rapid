@@ -58,7 +58,7 @@ First, we would define the employee type:
 ```rsdl
 type Employee
 {
-    @key id: Integer
+    key id: Integer
     firstName : String
     lastName : String
     title: String
@@ -111,7 +111,7 @@ Because company is now part of a collection, if we want to reference individual 
 ```rsdl
 type Company
 {
-    @key stockSymbol: String
+    key stockSymbol: String
     name: String
     incorporated: Date
     employees: [Employee]
@@ -147,7 +147,7 @@ Now we could use that employmentType enum in our employees example:
 ```rsdl
 type Employee
 {
-    @key id: Integer
+    key id: Integer
     firstName: String
     lastName: String
     title: String
@@ -172,7 +172,7 @@ and then use that type in our employee:
 ```rsdl
 type Employee
 {
-    @key id: Integer
+    key id: Integer
     name: FullName
     title: String
 }
@@ -189,7 +189,7 @@ We can define a "topEmployees" function on our company:
 ```rsdl
 type Company
 {
-    @key stockSymbol: String
+    key stockSymbol: String
     name: String
     incorporated: Date
     employees: [Employee]
@@ -207,21 +207,21 @@ Functions are invoked using a GET request. Function parameters are passed in the
 
 An action takes zero or more input parameters and may or may not return a value. Actions may have side-affects.
 
-We can define a "youreFired" action on our company that takes a string parameter "reason":
+We can define a "youAreFired" action on our company that takes a string parameter "reason":
 
 ```rsdl
 type Company
 {
-    @key stockSymbol: String
+    key stockSymbol: String
     name: String
     incorporated: Date
     employees: [Employee]
     topEmployees(num: Integer): [Employee]
-    @action youreFired(reason: String)
+    action youAreFired(reason: String)
 }
 ```
 
-youreFired has the @action attribute to show that it is an action and may have side-affects. It does not return a value.
+youreFired has the `action` attribute to show that it is an action and may have side-affects. It does not return a value.
 
 Because actions may have side-affects, they are invoked using POST. Their parameters are passed in the body of the request.
 

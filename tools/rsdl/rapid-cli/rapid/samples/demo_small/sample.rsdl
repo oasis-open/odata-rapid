@@ -1,6 +1,6 @@
 type company
 {
-    @key stockSymbol: string
+    key stockSymbol: string
     name: string
 
     employees: [employee] 
@@ -9,7 +9,7 @@ type company
 
 type employee
 {
-    @key id: integer 
+    key id: integer 
     name: string
 }
 

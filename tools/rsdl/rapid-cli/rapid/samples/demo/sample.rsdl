@@ -4,7 +4,7 @@ enum EmploymentType { salaried hourly }
 
 type Company
 {
-    @key stockSymbol: String
+    key stockSymbol: String
     name: String
     incorporated: Date
     employees: [Employee]
@@ -19,26 +19,26 @@ type Company
 
 type Employee
 {
-    @key id: Integer
-    key: Boolean
+    key id: Integer
+
     name : Name
     title: String
     employmentType: EmploymentType
 
-    // a RSDL function that will be translate to a CSDL function
-    promote() : Integer
+    // a RSDL function that will be translate to a CSDL action
+    action promote() : Integer
 
     // a RSDL function with parameters
-    promote(levels: Integer, note: String) : Integer
+    action promote(levels: Integer, note: String) : Integer
 
     // a RSDL function with an optional parameter
-    addNote(text: String, severity?: Integer) : Integer
+    action addNote(text: String, severity?: Integer) : Integer
 
     // a RSDL function that will be translate to a CSDL action with a required parameter that can be null
-    @action fire(date: DateTime?)
+    action fire(date: DateTime?)
 
     // a RSDL function that will be translate to a CSDL action with an optional parameter
-    @action fire(date?: DateTime)
+    action fire(date?: DateTime)
 }
 
 type Name
