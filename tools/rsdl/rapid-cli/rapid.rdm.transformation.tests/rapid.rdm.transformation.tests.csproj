@@ -21,6 +21,13 @@
   <ItemGroup>
     <ProjectReference Include="..\rapid.rdm.transformation\rapid.rdm.transformation.csproj" />
     <ProjectReference Include="..\rapid.rsdl\rapid.rsdl.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.Edm.Equivalency\Microsoft.OData.Edm.Equivalency.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="data\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
