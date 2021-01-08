@@ -39,6 +39,7 @@ Discussion results from virtual offsite on 2020-11-12.
 | Navigation Property Bindings                                                                                  | only implicit, maybe RAPID can use CSDL for the multiple entity-sets per type cases or return `@context` in case of doubt                                                                   | &check;                                                            |
 | Terms                                                                                                         | :x:, maybe later, for now just use annotations from existing vocabularies                                                                                                                   |
 | Annotations                                                                                                   | :question: first figure out representation, then decide, use `@Validation.AllowedValues` as the litmus test, [#164](https://github.com/oasis-open/odata-rapid/issues/164)                   | in progress                                                        |
+| Tag Annotations                                                                                               | :question: currently tags are treated like boolean values annotations:  `@foo:true` or `@foo:false`. should there be a special syntax for Tags?  |   |
 
 ## Query
 
