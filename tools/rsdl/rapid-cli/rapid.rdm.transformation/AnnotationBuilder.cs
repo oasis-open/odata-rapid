@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.Measures.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace rapid.rdm
@@ -210,11 +211,10 @@ namespace rapid.rdm
             {
                 return term;
             }
-            // TODO: MeasuresVocabularyModel is not supported in Microsoft.OData.Edm 7.7.3
-            // if (TryFind(name, "Measures", "Org.OData.Measures.V1", MeasuresVocabularyModel.Instance, out var term))
-            // {
-            //     return term;
-            // }
+            if (TryFind(name, "Measures", "Org.OData.Measures.V1", MeasuresVocabularyModel.Instance, out term))
+            {
+                return term;
+            }
             if (TryFind(name, "Capabilities", "Org.OData.Capabilities.V1", CapabilitiesVocabularyModel.Instance, out term))
             {
                 return term;
@@ -223,11 +223,10 @@ namespace rapid.rdm
             {
                 return term;
             }
-            // TODO: AuthorizationVocabularyModel is not supported in Microsoft.OData.Edm 7.7.3
-            // if (TryFind(name, "Authorization", "Org.OData.Authorization.V1", AuthorizationVocabularyModel.Instance, out term))
-            // {
-            //     return term;
-            // }
+            if (TryFind(name, "Authorization", "Org.OData.Authorization.V1", AuthorizationVocabularyModel.Instance, out term))
+            {
+                return term;
+            }
             this.logger.LogError("Annotation term {0} can't be found", name);
             return null;
         }
