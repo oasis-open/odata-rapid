@@ -8,10 +8,8 @@ namespace rapid.rsdl
 {
     internal static class Parsers
     {
-        // private static readonly object unit = new object();
-
         static TokenListParser<RdmToken, string> Keyword(string name) =>
-                Token.EqualToValue(RdmToken.Identifier, name).Value(name);
+            Token.EqualToValue(RdmToken.Identifier, name).Value(name);
 
         static readonly TokenListParser<RdmToken, CompositeIdentifier> QualifiedIdentifier =
             from head in Token.EqualTo(RdmToken.Identifier)
@@ -24,7 +22,6 @@ namespace rapid.rsdl
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
             from dot in Token.EqualTo(RdmToken.FullStop)
             select pre.ToStringValue();
-
 
         static readonly TokenListParser<RdmToken, rdm.RdmTypeReference> TypeReference =
             (
@@ -83,7 +80,7 @@ namespace rapid.rsdl
                 nm.GetPosition()
             );
 
-        static readonly TokenListParser<RdmToken, RdmOperationKind> OperationAnnotation =
+        static readonly TokenListParser<RdmToken, RdmOperationKind> OperationModifier =
             (
                 Keyword("function").Value(RdmOperationKind.Function)
             ).Or(
@@ -92,7 +89,7 @@ namespace rapid.rsdl
 
         static readonly TokenListParser<RdmToken, rdm.RdmOperation> Operation =
             from aa in Annotation.Many()
-            from oa in OperationAnnotation.Optional().Try()
+            from oa in OperationModifier
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
                 .Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)

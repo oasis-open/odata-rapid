@@ -6,6 +6,7 @@ using Xunit;
 
 namespace rapid.rdm.tests
 {
+
     public class TransformationTests
     {
 

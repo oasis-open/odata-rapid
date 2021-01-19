@@ -11,14 +11,14 @@ namespace rapid.rdm
         public RdmOperation(string name, 
             RdmTypeReference returnType, 
             ICollection<RdmParameter> parameters,
-            RdmOperationKind? kind,
+            RdmOperationKind kind,
             IEnumerable<Annotation> annotations = null, 
             Position position = default)
         {
             Name = name;
             ReturnType = returnType;
             Parameters = parameters;
-            Kind = kind ?? (returnType == null ? RdmOperationKind.Action : RdmOperationKind.Function);
+            Kind = kind;
             Annotations = annotations ?? Enumerable.Empty<Annotation>();
             Position = position;
         }

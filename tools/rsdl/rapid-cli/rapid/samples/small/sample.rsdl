@@ -1,0 +1,29 @@
+type Company
+{
+    key stockSymbol: String
+    name: String
+    address: Address
+
+    employees: [Employee] 
+    ceo: Employee?
+}
+
+type Employee
+{
+    key id: Integer 
+    name: String
+    address: Address
+}
+
+type Address
+{
+    street: String
+    city: String
+    zipCode: String
+}
+
+service
+{
+    companies: [Company]
+    employees: [Employee]
+}
