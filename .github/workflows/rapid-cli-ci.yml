@@ -39,8 +39,8 @@ jobs:
       # - name: Pack
       #   run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
 
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ./tools/rsdl/rapid-cli/rapid/nupkg
-          if-no-files-found: error
+      # - name: Publish artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     path: ./tools/rsdl/rapid-cli/rapid/nupkg
+      #     if-no-files-found: error
