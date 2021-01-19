@@ -12,14 +12,17 @@ type Dog
 
 }
 
+
 @Core.Description: "nonsense"
 enum Foo { foo bar baz }
+
 
 
 @Core.Description: "Kingdom: Animalia"
 abstract type Animal
 {
     key name: String
+
 
     @Validation.MultipleOf: 2
     numberOfLegs: Integer
@@ -29,6 +32,18 @@ abstract type Animal
     c(): Integer
     d()
 }
+
+
+// type Foo
+// {
+//     @Validation.AllowedValues: ["Rex", "Fifi"]
+//     @Core.RequiresType: "foo"
+//     key bar: String
+
+//     @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
+//     @Core.RequiresType: "foo"
+//     baz: String
+// }
 
 service {
     dogs: [Dog]

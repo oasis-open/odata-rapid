@@ -5,11 +5,11 @@ on:
   push:
     branches: [master]
     paths:
-       - "tools/rsdl/rapid-cli/**"
+      - "tools/rsdl/rapid-cli/**"
   pull_request:
     branches: [master]
     paths:
-       - "tools/rsdl/rapid-cli/**"
+      - "tools/rsdl/rapid-cli/**"
 
 env:
   BuildConfig: Release
@@ -24,9 +24,9 @@ jobs:
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.402
 
-        # with:
-        #   dotnet-version: 3.1.402
       - name: Restore
         run: dotnet restore ./tools/rsdl/rapid-cli/rapid/rapid.csproj
 
@@ -36,11 +36,11 @@ jobs:
       - name: Test
         run: dotnet test ${{ env.Solution }}
 
-      - name: Pack
-        run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
+      # - name: Pack
+      #   run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
 
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          path: ./tools/rsdl/rapid-cli/rapid/nupkg
-          if-no-files-found: error
+      # - name: Publish artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     path: ./tools/rsdl/rapid-cli/rapid/nupkg
+      #     if-no-files-found: error
