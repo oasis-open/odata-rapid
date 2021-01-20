@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rapid.rdm
 {
@@ -19,7 +20,7 @@ namespace rapid.rdm
 
         public bool Equals(RdmEnumMember other)
         {
-            return string.Equals(this.Name, other.Name);
+            return string.Equals(this.Name, other.Name) && Enumerable.SequenceEqual(this.Annotations, other.Annotations);
         }
 
         public override bool Equals(object other)
@@ -29,7 +30,7 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name);
+            return HashCode.Combine(Name, Annotations);
         }
     }
 }
