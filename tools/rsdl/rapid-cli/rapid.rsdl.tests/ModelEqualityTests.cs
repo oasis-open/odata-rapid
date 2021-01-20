@@ -48,8 +48,9 @@ namespace rapid.rsdl.tests
         public static IEnumerable<object[]> NegativeTestData => new List<object[]>
         {
             new object[] {
-                new RdmEnumType("b", new [] {"a", "b", "c"}, false),
-                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
+                new RdmEnumType("b", new [] { new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, false),
+                new RdmEnumType("b", new [] { new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true)
+            }
         };
 
         [Theory]

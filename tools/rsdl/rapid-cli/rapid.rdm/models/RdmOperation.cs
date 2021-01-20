@@ -8,11 +8,11 @@ namespace rapid.rdm
 
     public class RdmOperation : IEquatable<RdmOperation>
     {
-        public RdmOperation(string name, 
-            RdmTypeReference returnType, 
+        public RdmOperation(string name,
+            RdmTypeReference returnType,
             ICollection<RdmParameter> parameters,
             RdmOperationKind kind,
-            IEnumerable<Annotation> annotations = null, 
+            IEnumerable<Annotation> annotations = null,
             Position position = default)
         {
             Name = name;

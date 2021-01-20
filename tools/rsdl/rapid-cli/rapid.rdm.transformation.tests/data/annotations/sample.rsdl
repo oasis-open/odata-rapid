@@ -14,7 +14,11 @@ type Dog
 
 
 @Core.Description: "nonsense"
-enum Foo { foo bar baz }
+enum Foo { 
+    @Core.Description: "first nonsense identifier"  foo 
+    @Core.Description: "second nonsense identifier" bar 
+    @Core.Description: "third nonsense identifier"  baz 
+}
 
 
 

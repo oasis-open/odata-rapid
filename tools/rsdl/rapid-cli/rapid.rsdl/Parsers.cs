@@ -126,6 +126,11 @@ namespace rapid.rsdl
                 kw.GetPosition()
             );
 
+        static readonly TokenListParser<RdmToken, rdm.RdmEnumMember> EnumMember =
+            from aa in Annotation.Many()
+            from id in Token.EqualTo(RdmToken.Identifier)
+            select new RdmEnumMember(id.ToStringValue(), aa, id.GetPosition());
+
         static readonly TokenListParser<RdmToken, rdm.RdmEnumType> EnumDefinition =
             from aa in Annotation.Many()
             from kw in (
@@ -134,27 +139,27 @@ namespace rapid.rsdl
                     Token.EqualToValue(RdmToken.Identifier, "flags").Value(true)
                 )
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
-            select new rdm.RdmEnumType(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), kw, aa, nm.GetPosition());
-
+            from me in EnumMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
+            select new rdm.RdmEnumType(nm.ToStringValue(), me, kw, aa, nm.GetPosition());
 
         #region service
 
         // entityset = identifier ':' '[' identifier ']'
         // singelton = identifier ':' identifier
         static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
-              from nm in Token.EqualTo(RdmToken.Identifier)
-              from dp in Token.EqualTo(RdmToken.Colon)
-              from ty in (
-                    from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
-                    select (id, multivalue: true)
-                ).Or(
-                    from id in Token.EqualTo(RdmToken.Identifier)
-                    select (id, multivalue: false)
-                )
-              select ty.multivalue
-                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()))
-                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()));
+            from aa in Annotation.Many()
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from dp in Token.EqualTo(RdmToken.Colon)
+            from ty in (
+                from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
+                select (id, multivalue: true)
+            ).Or(
+                from id in Token.EqualTo(RdmToken.Identifier)
+                select (id, multivalue: false)
+            )
+            select ty.multivalue
+                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa)
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa);
 
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")

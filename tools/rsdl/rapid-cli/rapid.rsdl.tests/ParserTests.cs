@@ -137,7 +137,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, true)
+                    new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, true)
                 }
             );
 
@@ -153,10 +153,30 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, false)
+                    new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, false)
                 }
             );
 
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void EnumMemberAnnotationsGetsParsed()
+        {
+            var content = @"enum Colors { @Core.Description:""ruby"" red green blue }";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmEnumType("Colors", new [] {
+                        new RdmEnumMember("red", new [] { new Annotation("Core.Description", AnnotationExpression.String("ruby")) }),
+                     new RdmEnumMember("green"),
+                     new RdmEnumMember("blue")}, false)
+                }
+            );
+
+            Assert.Equal(((RdmEnumType)expected.Items[0]).Members[0], ((RdmEnumType)actual.Items[0]).Members[0]);
             Assert.Equal(expected, actual);
         }
 

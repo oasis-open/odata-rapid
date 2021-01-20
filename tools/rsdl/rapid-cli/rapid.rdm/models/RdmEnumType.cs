@@ -6,13 +6,13 @@ namespace rapid.rdm
 {
     public class RdmEnumType : IRdmSchemaElement, IRdmType, IEquatable<RdmEnumType>
     {
-        public RdmEnumType(string name, IReadOnlyList<string> members, bool isFlags,
+        public RdmEnumType(string name, IReadOnlyList<RdmEnumMember> members, bool isFlags,
             IEnumerable<Annotation> annotations = null, Position position = default)
         {
             Name = name;
             Members = members;
             IsFlags = isFlags;
-            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
+            Annotations = annotations.ToReadOnlyList();
             Position = position;
         }
 
@@ -20,7 +20,7 @@ namespace rapid.rdm
 
         public bool IsFlags { get; }
 
-        public IReadOnlyList<string> Members { get; }
+        public IReadOnlyList<RdmEnumMember> Members { get; }
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
