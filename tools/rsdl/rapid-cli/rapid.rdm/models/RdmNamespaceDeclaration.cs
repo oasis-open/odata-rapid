@@ -8,7 +8,6 @@ namespace rapid.rdm
         public RdmNamespaceDeclaration(string namespaceName, Position position = default)
         {
             NamespaceName = namespaceName;
-            Position = position;
         }
 
         private const string defaultNamespaceName = "Model";
@@ -17,19 +16,20 @@ namespace rapid.rdm
 
         public string NamespaceName { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
 
-
+        #region equality
         public static bool Equals(RdmNamespaceDeclaration one, RdmNamespaceDeclaration two)
         {
             if (object.ReferenceEquals(one, two)) return true;
             if (one == null || two == null) return one == null && two == null;
-            return one.Equals(two);
+            return
+                string.Equals(one.NamespaceName, two.NamespaceName);
         }
 
         public bool Equals(RdmNamespaceDeclaration other)
         {
-            return string.Equals(this.NamespaceName, other?.NamespaceName);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -41,5 +41,6 @@ namespace rapid.rdm
         {
             return HashCode.Combine(NamespaceName);
         }
+        #endregion
     }
 }

@@ -41,11 +41,21 @@ namespace rapid.rdm
         public IReadOnlyList<RdmNamespaceReference> References { get; }
 
 
+        #region equality
+
+        public static bool Equals(RdmDataModel one, RdmDataModel two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                one.Namespace.Equals(two.Namespace) &&
+                Enumerable.SequenceEqual(one.Items, two.Items) &&
+                Enumerable.SequenceEqual(one.References, two.References);
+        }
+
         public bool Equals(RdmDataModel other)
         {
-            return Namespace.Equals(other.Namespace)
-                && Enumerable.SequenceEqual(this.Items, other.Items)
-                && Enumerable.SequenceEqual(this.References, other.References);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -57,5 +67,7 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Items);
         }
+
+        #endregion
     }
 }

@@ -12,7 +12,6 @@ namespace rapid.rdm
             Type = type;
             IsKey = isKey;
             Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
-            Position = position;
         }
 
         public string Name { get; }
@@ -23,18 +22,26 @@ namespace rapid.rdm
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
 
         public bool ShouldSerializeAnnotations() => Annotations.Count() > 0;
 
+        #region equality 
+
+        public static bool Equals(RdmProperty one, RdmProperty two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Name, two.Name) &&
+                one.Type.Equals(two.Type) &&
+                one.IsKey.Equals(two.IsKey) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
+        }
+
         public bool Equals(RdmProperty other)
         {
-            // Position is intentionally not compared.
-            return
-                string.Equals(this.Name, other.Name) &&
-                this.Type.Equals(other.Type) &&
-                true // Enumerable.SequenceEqual(this.Annotations, other.Annotations);
-                ;
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -44,7 +51,9 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Type, Annotations);
+            return HashCode.Combine(Name, Type, IsKey, Annotations);
         }
+
+        #endregion
     }
 }
