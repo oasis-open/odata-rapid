@@ -26,9 +26,15 @@
         <Property Name="foo" Type="Edm.Int32" Nullable="false" />
       </EntityType>
       <EnumType Name="Foo">
-        <Member Name="foo" Value="0" />
-        <Member Name="bar" Value="1" />
-        <Member Name="baz" Value="2" />
+        <Member Name="foo" Value="0">
+          <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
+        </Member>
+        <Member Name="bar" Value="1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
+        </Member>
+        <Member Name="baz" Value="2">
+          <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
+        </Member>
         <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
       </EnumType>
     </Schema>

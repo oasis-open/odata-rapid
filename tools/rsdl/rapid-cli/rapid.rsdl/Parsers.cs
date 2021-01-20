@@ -147,18 +147,19 @@ namespace rapid.rsdl
         // entityset = identifier ':' '[' identifier ']'
         // singelton = identifier ':' identifier
         static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
-              from nm in Token.EqualTo(RdmToken.Identifier)
-              from dp in Token.EqualTo(RdmToken.Colon)
-              from ty in (
-                    from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
-                    select (id, multivalue: true)
-                ).Or(
-                    from id in Token.EqualTo(RdmToken.Identifier)
-                    select (id, multivalue: false)
-                )
-              select ty.multivalue
-                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()))
-                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()));
+            from aa in Annotation.Many()
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from dp in Token.EqualTo(RdmToken.Colon)
+            from ty in (
+                from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
+                select (id, multivalue: true)
+            ).Or(
+                from id in Token.EqualTo(RdmToken.Identifier)
+                select (id, multivalue: false)
+            )
+            select ty.multivalue
+                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa)
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa);
 
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
