@@ -9,7 +9,6 @@ namespace rapid.rdm
             Name = name;
             IsNullable = isNullable;
             IsMultivalued = isMultivalued;
-            Position = position;
         }
 
         public bool IsNullable { get; }
@@ -18,17 +17,23 @@ namespace rapid.rdm
 
         public string Name { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
 
         public string Prefix => Name.BeforeLast(".");
         public string Suffix => Name.AfterLast(".");
 
-        // IEquatable<RdmTypeReference>.Equals
+        #region equality 
+
+        public static bool Equals(RdmTypeReference one, RdmTypeReference two)
+        {
+            return
+                string.Equals(one.Name, two.Name) &&
+                one.IsNullable == two.IsNullable &&
+                one.IsMultivalued == two.IsMultivalued;
+        }
         public bool Equals(RdmTypeReference other)
         {
-            return string.Equals(this.Name, other.Name) &&
-                this.IsNullable == other.IsNullable &&
-                this.IsMultivalued == other.IsMultivalued;
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -40,5 +45,6 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Name, IsNullable, IsMultivalued);
         }
+        #endregion
     }
 }

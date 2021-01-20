@@ -18,7 +18,6 @@ namespace rapid.rdm
             Operations = operations ?? Array.Empty<RdmOperation>();
             IsAbstract = isAbstract;
             Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
-            Position = position;
         }
 
         public string Name { get; }
@@ -31,16 +30,28 @@ namespace rapid.rdm
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
-        public Position Position { get; }
-        
+        public Position Position { get; set; }
+
         public IEnumerable<RdmProperty> Keys =>
             Properties.Where(p => p.IsKey);
 
+        #region equality 
+
+        public static bool Equals(RdmStructuredType one, RdmStructuredType two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Name, two.Name) &&
+                one.IsAbstract.Equals(two.IsAbstract) &&
+                Enumerable.SequenceEqual(one.Properties, two.Properties) &&
+                Enumerable.SequenceEqual(one.Operations, two.Operations) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
+        }
+
         public bool Equals(RdmStructuredType other)
         {
-            return string.Equals(this.Name, other.Name) &&
-                Enumerable.SequenceEqual(this.Properties, other.Properties) &&
-                Enumerable.SequenceEqual(this.Operations, other.Operations);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -50,7 +61,8 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Properties, Operations);
+            return HashCode.Combine(Name, IsAbstract, Properties, Operations, Annotations);
         }
+        #endregion
     }
 }

@@ -12,18 +12,15 @@ namespace rapid.rsdl
         public CompositeIdentifier(string name, Position position = default)
         {
             Name = name;
-            Position = position;
         }
 
         public string Name { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
 
         public bool Equals(CompositeIdentifier other)
         {
-            // Position is intentionally not compared.
-            return
-                string.Equals(this.Name, other.Name);
+            return string.Equals(this.Name, other.Name);
         }
 
         public override bool Equals(object other)

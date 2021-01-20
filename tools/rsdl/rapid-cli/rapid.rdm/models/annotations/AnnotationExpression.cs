@@ -12,18 +12,19 @@ namespace rapid.rdm
 
     public class AnnotationExpression : IEquatable<AnnotationExpression>
     {
-        public Position Location { get; }
 
         public AnnotationExpressionKind Kind { get; }
 
         public object Value { get; }
 
-        private AnnotationExpression(AnnotationExpressionKind kind, object value, Position position)
+        public Position Position { get; set; }
+
+        private AnnotationExpression(AnnotationExpressionKind kind, object value, Position position = default)
         {
             CheckValueType(kind, value);
             Kind = kind;
             Value = value;
-            Location = position;
+            Position = position;
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
@@ -66,10 +67,10 @@ namespace rapid.rdm
             new AnnotationExpression(AnnotationExpressionKind.Integer, value, position);
 
         public static AnnotationExpression Array(IEnumerable<AnnotationExpression> items, Position position = default) =>
-            new AnnotationExpression(AnnotationExpressionKind.Array, items.ToList().AsReadOnly(), position);
+            new AnnotationExpression(AnnotationExpressionKind.Array, items.ToReadOnlyList(), position);
 
         public static AnnotationExpression Object(IEnumerable<ExpressionProperty> properties, Position position = default) =>
-            new AnnotationExpression(AnnotationExpressionKind.Object, properties.ToList().AsReadOnly(), position);
+            new AnnotationExpression(AnnotationExpressionKind.Object, properties.ToReadOnlyList(), position);
 
         public IReadOnlyList<ExpressionProperty> Properties => (IReadOnlyList<ExpressionProperty>)Value;
 

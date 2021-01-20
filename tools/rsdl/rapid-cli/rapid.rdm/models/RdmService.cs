@@ -19,7 +19,7 @@ namespace rapid.rdm
         //         Name = "Service";
         //     }
 
-        public RdmService(IEnumerable<IRdmServiceElement> items)
+        public RdmService(IEnumerable<IRdmServiceElement> items, Position position = default)
         {
             Name = "Service";
             Items = items;
@@ -29,9 +29,20 @@ namespace rapid.rdm
 
         public IEnumerable<IRdmServiceElement> Items { get; }
 
+        #region equality 
+
+        public static bool Equals(RdmService one, RdmService two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Name, two.Name) &&
+                Enumerable.SequenceEqual(one.Items, two.Items);
+        }
+
         public bool Equals(RdmService other)
         {
-            return Enumerable.SequenceEqual(this.Items, other.Items);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -41,7 +52,9 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Items);
+            return HashCode.Combine(Name, Items);
         }
+
+        #endregion
     }
 }
