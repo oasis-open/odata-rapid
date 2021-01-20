@@ -137,7 +137,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, true)
+                    new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, true)
                 }
             );
 
@@ -153,7 +153,7 @@ type Company { something: other.Something }";
             var expected = new RdmDataModel(
                 null,
                 new[] {
-                    new RdmEnumType("Colors", new [] { "red", "green", "blue"}, false)
+                    new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, false)
                 }
             );
 

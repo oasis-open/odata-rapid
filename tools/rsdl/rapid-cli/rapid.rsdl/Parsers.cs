@@ -126,6 +126,11 @@ namespace rapid.rsdl
                 kw.GetPosition()
             );
 
+        static readonly TokenListParser<RdmToken, rdm.RdmEnumMember> EnumMember =
+            from aa in Annotation.Many()
+            from id in Token.EqualTo(RdmToken.Identifier)
+            select new RdmEnumMember(id.ToStringValue(), aa, id.GetPosition());
+
         static readonly TokenListParser<RdmToken, rdm.RdmEnumType> EnumDefinition =
             from aa in Annotation.Many()
             from kw in (
@@ -134,9 +139,8 @@ namespace rapid.rsdl
                     Token.EqualToValue(RdmToken.Identifier, "flags").Value(true)
                 )
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in Token.EqualTo(RdmToken.Identifier).Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
-            select new rdm.RdmEnumType(nm.ToStringValue(), ps.Select(t => t.ToStringValue()).ToList(), kw, aa, nm.GetPosition());
-
+            from me in EnumMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
+            select new rdm.RdmEnumType(nm.ToStringValue(), me, kw, aa, nm.GetPosition());
 
         #region service
 

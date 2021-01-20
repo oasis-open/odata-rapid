@@ -20,7 +20,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'rapid.common'">
+  <!-- <ItemGroup Condition="'$(MSBuildProjectName)' != 'rapid.common'">
     <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
   </ItemGroup>
 
@@ -28,5 +28,5 @@
     <AssemblyAttribute Include="System.BuildDateAttribute">
       <_Parameter1>$([System.DateTime]::UtcNow.ToString("s"))</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
+  </ItemGroup> -->
 </Project>

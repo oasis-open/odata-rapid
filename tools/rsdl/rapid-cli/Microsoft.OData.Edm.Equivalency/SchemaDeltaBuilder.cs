@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
@@ -62,6 +62,52 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        protected void VisitSet(
+            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> a,
+            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> b,
+            Action<Vocabularies.IEdmVocabularyAnnotation, Vocabularies.IEdmVocabularyAnnotation, PropertyPath> visit,
+            PropertyPath path)
+        {
+            var aa = a.ToDictionary(ai => ai.Term.FullName() + "/" + ai.Target.GetHashCode().ToString());
+            var bb = b.ToDictionary(bi => bi.Term.FullName() + "/" + bi.Target.GetHashCode().ToString());
+
+            var keys = aa.Keys.Concat(bb.Keys).Distinct();
+            foreach (var key in keys)
+            {
+                if (!aa.ContainsKey(key))
+                {
+                    Report(path, $"missing annotation for Term {bb[key].Term.FullName()} on right");
+                }
+                else if (!bb.ContainsKey(key))
+                {
+                    Report(path, $"missing annotation for Term {aa[key].Term.FullName()} on left");
+                }
+                else
+                {
+                    visit(aa[key], bb[key], path);
+                }
+            }
+
+            // for (var i = 0; ; i++)
+            // {
+            //     var aHasMoved = aa.MoveNext();
+            //     var bHasMoved = bb.MoveNext();
+            //     if (aHasMoved && bHasMoved)
+            //     {
+            //         visit(aa.Current, bb.Current, path + i.ToString());
+            //     }
+            //     else if (aHasMoved || bHasMoved)
+            //     {
+            //         // TODO, report non matching length
+            //         break;
+            //     }
+            //     else
+            //     {
+            //         break;
+            //     }
+            // }
+        }
+
         protected void VisitNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Action<T, T, PropertyPath> visit, PropertyPath path, string property) where T : class, IEdmNamedElement
         {
             var pairs = e1.FullOuterJoin(e2, i => i.Name, i => i.Name);
@@ -73,20 +119,25 @@ namespace Microsoft.OData.Edm
                 }
                 else if (a == null)
                 {
-                    var loc = b is IEdmLocatable eloc ? eloc.Location : null;
-                    Report(path, $"missing item with name {name} on left", loc);
+                    Report(path, $"missing item with name {name} on left");
                 }
                 else if (b == null)
                 {
                     var loc = b is IEdmLocatable eloc ? eloc.Location : null;
-                    Report(path, $"missing item with name {name} on right", loc);
+                    Report(path, $"missing item with name {name} on right");
                 }
             }
         }
 
-        protected void Report(PropertyPath path, string message, EdmLocation loc = null)
+        private class UnknwonEdmLocation : EdmLocation
         {
-            var (l, r) = locations.Peek();
+            public override string ToString() => string.Empty;
+            public static UnknwonEdmLocation Instance = new UnknwonEdmLocation();
+        }
+
+        protected void Report(PropertyPath path, string message)
+        {
+            var (l, r) = locations.Count > 0 ? locations.Peek() : (UnknwonEdmLocation.Instance, UnknwonEdmLocation.Instance);
             errors.Add((path, message, l, r));
         }
 
@@ -133,6 +184,96 @@ namespace Microsoft.OData.Edm
         }
 
 
+        public string GetPath(IEdmVocabularyAnnotatable a)
+        {
+            if (a is IEdmAction aAction)
+            {
+                return aAction.FullName();
+            }
+            else if (a is IEdmActionImport aActionImport)
+            {
+                return aActionImport.Name;
+            }
+            else if (a is IEdmComplexType aComplexType)
+            {
+                return aComplexType.ToString();
+            }
+            else if (a is IEdmEntityContainer aEntityContainer)
+            {
+                return aEntityContainer.ToString();
+            }
+            else if (a is IEdmEntitySet aEntitySet)
+            {
+                return aEntitySet.ToString();
+            }
+            else if (a is IEdmEntityType aEntityType)
+            {
+                return aEntityType.ToString();
+            }
+            else if (a is IEdmEnumMember aEnumMember)
+            {
+                return aEnumMember.ToString();
+            }
+            else if (a is IEdmEnumType aEnumType)
+            {
+                return aEnumType.ToString();
+            }
+            else if (a is IEdmFunction aFunction)
+            {
+                return aFunction.ToString();
+            }
+            else if (a is IEdmFunctionImport aFunctionImport)
+            {
+                return aFunctionImport.ToString();
+            }
+            else if (a is IEdmNavigationProperty aNavigationProperty)
+            {
+                return aNavigationProperty.ToString();
+            }
+            else if (a is IEdmOperationReturn aOperationReturn)
+            {
+                return aOperationReturn.ToString();
+            }
+            else if (a is IEdmOptionalParameter aOptionalParameter)
+            {
+                return aOptionalParameter.ToString();
+            }
+            else if (a is IEdmPathType aPathType)
+            {
+                return aPathType.ToString();
+            }
+            else if (a is IEdmPrimitiveType aPrimitiveType)
+            {
+                return aPrimitiveType.ToString();
+            }
+            else if (a is IEdmSingleton aSingleton)
+            {
+                return aSingleton.ToString();
+            }
+            else if (a is IEdmStructuralProperty aStructuralProperty)
+            {
+                return aStructuralProperty.ToString();
+            }
+            else if (a is IEdmTerm aTerm)
+            {
+                return aTerm.ToString();
+            }
+            else if (a is IEdmTypeDefinition aTypeDefinition)
+            {
+                return aTypeDefinition.ToString();
+            }
+            else if (a is IEdmUntypedType aUntypedType)
+            {
+                return aUntypedType.ToString();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        #region locations
+
         private readonly Stack<(EdmLocation, EdmLocation)> locations = new Stack<(EdmLocation, EdmLocation)>();
 
         private IDisposable PushLocation(object a, object b)
@@ -153,6 +294,7 @@ namespace Microsoft.OData.Edm
         class NullDisposable : IDisposable
         {
             private NullDisposable() { }
+
             public void Dispose() { }
             public static IDisposable Instance = new NullDisposable();
         }
@@ -166,4 +308,5 @@ namespace Microsoft.OData.Edm
             public void Dispose() { action(); }
         }
     }
+    #endregion
 }

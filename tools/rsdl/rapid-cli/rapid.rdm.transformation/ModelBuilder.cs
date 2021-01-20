@@ -128,7 +128,13 @@ namespace rapid.rdm
             {
                 var elem = definition.Members[i];
                 var value = flags ? (1 << i) : i;
-                edmType.AddMember(new EdmEnumMember(edmType, elem, new EdmEnumMemberValue(value)));
+                var member = new EdmEnumMember(edmType, elem.Name, new EdmEnumMemberValue(value));
+
+                edmType.AddMember(member);
+                foreach (var annotation in elem.Annotations)
+                {
+                    annotationBuilder.AddAnnotation(edmModel, member, annotation);
+                }
             }
             return edmType;
         }
