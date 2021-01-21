@@ -10,7 +10,8 @@ and because they follow core patterns they can be extended with optional feature
 - [Data Retrieval](../rapid-pro-read.md)
 - [Data Modification](../rapid-pro-data_modification.md)
 - [Actions and Functions](../rapid-pro-operations.md)
-- [Resource Description](./rapid-pro-resource_description.md)
+- [RAPID Schema Definition Language](../rsdl/rapid-pro-rsdl-intro.md)
+- [Runtime Resource Description](./rapid-pro-resource_description.md)
 - [Batch Operations](./rapid-pro-batch.md)
 
 <!--

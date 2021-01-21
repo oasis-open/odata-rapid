@@ -41,8 +41,26 @@ Sweet. Who says you can't have it all?
 
 ## Resource Description
 
-RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service. 
-For more information on the RAPID resource description language, see [RAPID Resource Description](./spec/rapid-pro-resource_description.md).
+RAPID introduces a simple RAPID Schema Definition Language (RSDL) that can be used to define the shape of your service.
+
+For example, the following RSDL defines a simple type "Company", returned by the "company" endpoint of the service.
+
+```rsdl
+type Company
+{
+    stockSymbol: String
+    name: String
+    incorporated: Date
+}
+
+service {
+    company: Company
+}
+```
+
+For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md)
+
+At runtime, services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service. For more information on the runtime resource description, see [RAPID Resource Description](./spec/rapid-pro-resource_description.md).
 
 ## RAPID Requests
 
