@@ -15,7 +15,7 @@ module.exports = {
                 'rapid-read',
                 'rapid-edit',
                 'operations',
-                'spec/resourceformat',
+                'spec/servicedescription',
                 'spec/batch'
             ]
         },
