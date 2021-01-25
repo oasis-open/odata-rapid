@@ -16,10 +16,10 @@ there are well defined conventions and semantics that allow them to seamlessly a
 
 The RAPID profile defines conventions and best practices for services that:
 
--   Retrieve and (optionally) update resources using a simple standard REST API
--   Describe their resources, operations and capabilities in an interoperable JSON Format
--   Support common URL patterns and query parameters
--   Support JSON representations that follow well-defined conventions
+- Retrieve and (optionally) update resources using a simple standard REST API
+- Describe their resources, operations and capabilities in an interoperable JSON Format
+- Support common URL patterns and query parameters
+- Support JSON representations that follow well-defined conventions
 
 ## Why REST?
 
@@ -41,8 +41,51 @@ Sweet. Who says you can't have it all?
 
 ## Resource Description
 
-RAPID services describe their resources through a simple and concise JSON representation in order to allow generic clients to interact with the service. 
-For more information on the RAPID resource description language, see [RAPID Resource Description](./spec/rapid-pro-resource_description.md).
+RAPID introduces a simple RAPID Schema Definition Language (RSDL) that can be used at design time to define the shape of your service.
+
+For example, the following RSDL defines a simple type "Company", returned by the "company" endpoint of the service.
+
+```rsdl
+type Company
+{
+    stockSymbol: String
+    name: String
+    incorporated: Date
+}
+
+service {
+    company: Company
+}
+```
+
+For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md)
+
+This simple design time syntax is converted to a runtime service description that client applications and tooling can use to interact with the service.
+
+```json
+{
+  "$Version": "4.01",
+  "jetsons": {
+    "company": {
+      "$Kind": "EntityType",
+      "$Key": ["stockSymbol"],
+      "name": { "Type": "Edm.String" },
+      "incorporated": { "$Type": "Edm.Date" },
+      "stockSymbol": {}
+      }
+    },
+    "Service": {
+      "$Kind": "EntityContainer",
+      "company": {
+        "$Type": "jetsons.company"
+      },
+    },
+    "$EntityContainer": "jetsons.Service"
+  }
+}
+```
+
+For more information on the runtime service description, see [Runtime Service Description](./spec/rapid-pro-resource_description.md).
 
 ## RAPID Requests
 
@@ -116,8 +159,8 @@ is defined for translating a RAPID service description to OpenAPI.
 RAPID is designed to be a profile that applies a subset of the conventions defined in OData applicable to any RESTful API. 
 A RAPID service can easily support generic OData V4 clients by:
 
--   Supporting OData calling conventions
--   Following OData JSON conventions for OData V4 Clients
+- Supporting OData calling conventions
+- Following OData JSON conventions for OData V4 Clients
 
 RAPID services MAY support any additional conventions defined in the OData specification as appropriate to the service.
 

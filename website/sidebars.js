@@ -15,11 +15,17 @@ module.exports = {
                 'rapid-read',
                 'rapid-edit',
                 'operations',
+                'spec/servicedescription',
+                'spec/batch'
+            ]
+        },
+        {
+            type: 'category',
+            label: 'RAPID Schema Definition Language (RSDL)',
+            items: [
                 'rsdl/rsdl-intro',
                 'rsdl/rsdl-semantics',
                 'rsdl/rsdl-abnf',
-                'spec/resourceformat',
-                'spec/batch'
             ]
         },
         {
