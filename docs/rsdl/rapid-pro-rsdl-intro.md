@@ -5,7 +5,7 @@ title: RAPID SDL intro
 
 # Introduction to RAPID Schema Definition Language (RSDL)
 
-RAPID Schema Definition Language (RSDL) is a language to describe Web APIs.
+RAPID Schema Definition Language (RSDL) is a language to define Web APIs.
 
 RSDL is based on the [RAPID PROfile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
 [OData](https://en.wikipedia.org/wiki/Open_Data_Protocol) specification. RAPID provides an easy way
@@ -13,11 +13,11 @@ to envision, create, and consume a Web API that is compatible with the OData Sta
 
 ## Introductory Example
 
-RAPID APIs are defined by a schema, which can easily be described through RSDL.
+RAPID APIs are defined by a schema, which can easily be specified using RSDL.
 
 ### Defining a Structured Type
 
-Let's say that we wanted our API to deal with information about a company. We could describe the properties of a company as follows:
+Let's say that we wanted our API to deal with information about a company. We could specify the properties of a company as follows:
 
 ```rsdl
 type Company

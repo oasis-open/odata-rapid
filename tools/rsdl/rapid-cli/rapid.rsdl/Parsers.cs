@@ -15,8 +15,11 @@ namespace rapid.rsdl
             from head in Token.EqualTo(RdmToken.Identifier)
             from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Token.EqualTo(RdmToken.Identifier) select i).Many()
             select new CompositeIdentifier(
-                string.Join(".", tail.Prepend(head).Select(i => i.ToStringValue())),
-                head.GetPosition());
+                string.Join(".", tail.Prepend(head).Select(i => i.ToStringValue()))
+            )
+            {
+                Position = head.GetPosition()
+            };
 
         static readonly TokenListParser<RdmToken, string> EdmPrefix =
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
@@ -51,7 +54,7 @@ namespace rapid.rsdl
         //     return Annotation.Cast<RdmToken, CustomAnnotation, IAnnotation>();
         // }
 
-        static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property = (
+        static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
             from annotations in Annotation.Many()
             from key in Keyword("key").OptionalOrDefault().Try()
             from name in Token.EqualTo(RdmToken.Identifier)
@@ -62,9 +65,11 @@ namespace rapid.rsdl
                 name.ToStringValue(),
                 propType,
                 key != null,
-                annotations,
-                name.GetPosition()
-            ));
+                annotations
+            )
+            {
+                Position = name.GetPosition()
+            };
 
         static readonly TokenListParser<RdmToken, rdm.RdmParameter> Parameter =
 
@@ -76,9 +81,11 @@ namespace rapid.rsdl
                 nm.ToStringValue(),
                 ty,
                 op.HasValue,
-                null,
+                null)
+            {
+                Position =
                 nm.GetPosition()
-            );
+            };
 
         static readonly TokenListParser<RdmToken, RdmOperationKind> OperationModifier =
             (
@@ -101,8 +108,7 @@ namespace rapid.rsdl
                 ps,
                 oa,
                 NonNull(aa).ToArray(),
-                nm.GetPosition()
-            );
+                nm.GetPosition());
 
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
@@ -122,9 +128,11 @@ namespace rapid.rsdl
                 ps.OfType<rdm.RdmProperty>().ToList(),
                 ps.OfType<rdm.RdmOperation>().ToList(),
                 ab != null,
-                aa,
-                kw.GetPosition()
-            );
+                aa
+            )
+            {
+                Position = kw.GetPosition()
+            };
 
         static readonly TokenListParser<RdmToken, rdm.RdmEnumMember> EnumMember =
             from aa in Annotation.Many()
@@ -179,15 +187,20 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
                    from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
                    from nm in QualifiedIdentifier
-                   select new RdmNamespaceDeclaration(nm.Name, kw.GetPosition());
+                   select new RdmNamespaceDeclaration(nm.Name)
+                   {
+                       Position = kw.GetPosition()
+                   };
 
         static readonly TokenListParser<RdmToken, RdmNamespaceReference> NamespaceReference =
             from k1 in Token.EqualToValue(RdmToken.Identifier, "include")
             from pa in Token.EqualTo(RdmToken.QuotedString)
             from k2 in Token.EqualToValue(RdmToken.Identifier, "as")
             from al in Token.EqualTo(RdmToken.Identifier)
-            select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue(), k1.GetPosition());
-
+            select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue())
+            {
+                Position = k1.GetPosition()
+            };
 
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =

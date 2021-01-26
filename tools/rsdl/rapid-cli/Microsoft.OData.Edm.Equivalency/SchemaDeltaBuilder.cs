@@ -62,6 +62,52 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        protected void VisitSet(
+            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> a,
+            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> b,
+            Action<Vocabularies.IEdmVocabularyAnnotation, Vocabularies.IEdmVocabularyAnnotation, PropertyPath> visit,
+            PropertyPath path)
+        {
+            var aa = a.ToDictionary(ai => ai.Term.FullName() + "/" + ai.Target.GetHashCode().ToString());
+            var bb = b.ToDictionary(bi => bi.Term.FullName() + "/" + bi.Target.GetHashCode().ToString());
+
+            var keys = aa.Keys.Concat(bb.Keys).Distinct();
+            foreach (var key in keys)
+            {
+                if (!aa.ContainsKey(key))
+                {
+                    Report(path, $"missing annotation for Term {bb[key].Term.FullName()} on right");
+                }
+                else if (!bb.ContainsKey(key))
+                {
+                    Report(path, $"missing annotation for Term {aa[key].Term.FullName()} on left");
+                }
+                else
+                {
+                    visit(aa[key], bb[key], path);
+                }
+            }
+
+            // for (var i = 0; ; i++)
+            // {
+            //     var aHasMoved = aa.MoveNext();
+            //     var bHasMoved = bb.MoveNext();
+            //     if (aHasMoved && bHasMoved)
+            //     {
+            //         visit(aa.Current, bb.Current, path + i.ToString());
+            //     }
+            //     else if (aHasMoved || bHasMoved)
+            //     {
+            //         // TODO, report non matching length
+            //         break;
+            //     }
+            //     else
+            //     {
+            //         break;
+            //     }
+            // }
+        }
+
         protected void VisitNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Action<T, T, PropertyPath> visit, PropertyPath path, string property) where T : class, IEdmNamedElement
         {
             var pairs = e1.FullOuterJoin(e2, i => i.Name, i => i.Name);

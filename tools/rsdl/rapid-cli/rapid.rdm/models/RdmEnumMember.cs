@@ -16,11 +16,21 @@ namespace rapid.rdm
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
+
+        #region equality
+        public static bool Equals(RdmEnumMember one, RdmEnumMember two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Name, two.Name) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
+        }
 
         public bool Equals(RdmEnumMember other)
         {
-            return string.Equals(this.Name, other.Name) && Enumerable.SequenceEqual(this.Annotations, other.Annotations);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -32,5 +42,6 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Name, Annotations);
         }
+        #endregion
     }
 }

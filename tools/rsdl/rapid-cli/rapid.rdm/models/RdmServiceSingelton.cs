@@ -11,9 +11,16 @@ namespace rapid.rdm
         {
         }
 
+        #region equality 
+
+        private new bool Equals(RdmServiceSingelton one, RdmServiceSingelton two)
+        {
+            return RdmServiceElement.Equals(one, two);
+        }
+
         public bool Equals(RdmServiceSingelton other)
         {
-            return string.Equals(Name, other.Name) && this.Type.Equals(other.Type) && Enumerable.SequenceEqual(this.Annotations, other.Annotations);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -25,5 +32,7 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Name, Type, Annotations);
         }
+
+        #endregion
     }
 }

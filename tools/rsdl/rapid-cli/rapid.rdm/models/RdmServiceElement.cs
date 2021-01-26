@@ -20,7 +20,16 @@ namespace rapid.rdm
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
 
+        protected static bool Equals(RdmServiceSingelton one, RdmServiceSingelton two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Name, two.Name) &&
+                one.Type.Equals(two.Type) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
+        }
     }
 }
