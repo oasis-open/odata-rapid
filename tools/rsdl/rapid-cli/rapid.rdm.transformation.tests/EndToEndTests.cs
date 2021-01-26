@@ -46,9 +46,12 @@ namespace rapid.rdm.tests
         {
             foreach (var path in Directory.GetDirectories("data"))
             {
-                var rsdl = Directory.GetFiles(path, "*.rsdl").FirstOrDefault();
-                var csdl = Directory.GetFiles(path, "*.csdl.xml").FirstOrDefault();
-                yield return new object[] { path, rsdl, csdl };
+                if (!Path.GetFileName(path).StartsWith("."))
+                {
+                    var rsdl = Directory.GetFiles(path, "*.rsdl").FirstOrDefault();
+                    var csdl = Directory.GetFiles(path, "*.csdl.xml").FirstOrDefault();
+                    yield return new object[] { path, rsdl, csdl };
+                }
             }
         }
 
