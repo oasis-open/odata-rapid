@@ -184,87 +184,71 @@ namespace Microsoft.OData.Edm
         }
 
 
-        public string GetPath(IEdmVocabularyAnnotatable a)
+        public void VisitAnnotationSet(
+            IEnumerable<IEdmVocabularyAnnotation> a,
+            IEnumerable<IEdmVocabularyAnnotation> b,
+            PropertyPath path)
         {
-            if (a is IEdmAction aAction)
+            var aa = a.ToDictionary(a => (GetTargetPath(a.Target), a.Term.FullName(), a.Qualifier ?? ""));
+            var bb = b.ToDictionary(b => (GetTargetPath(b.Target), b.Term.FullName(), b.Qualifier ?? ""));
+
+            var keys = aa.Keys.Concat(bb.Keys).Distinct();
+            foreach (var key in keys)
             {
-                return aAction.FullName();
+                var (targetPath, termName, qualifier) = key;
+                var segment = targetPath + (string.IsNullOrEmpty(qualifier) ? "" : "/" + qualifier);
+                if (!aa.TryGetValue(key, out var ai))
+                {
+                    Report(path, $"additional {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
+                }
+                else if (!bb.TryGetValue(key, out var bi))
+                {
+                    Report(path, $"missing {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
+                }
+                else
+                {
+                    Visit(ai, bi, path + segment);
+                }
             }
-            else if (a is IEdmActionImport aActionImport)
+        }
+
+        // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530407
+        // https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Edm/EdmUtil.cs#L415
+        private string GetTargetPath(IEdmVocabularyAnnotatable a)
+        {
+            if (a is IEdmSchemaElement aSchemaElement)
             {
-                return aActionImport.Name;
+                return $"{aSchemaElement.Namespace}.{aSchemaElement.Name}";
             }
-            else if (a is IEdmComplexType aComplexType)
+            else if (a is IEdmStructuralProperty aProperty)
             {
-                return aComplexType.ToString();
-            }
-            else if (a is IEdmEntityContainer aEntityContainer)
-            {
-                return aEntityContainer.ToString();
-            }
-            else if (a is IEdmEntitySet aEntitySet)
-            {
-                return aEntitySet.ToString();
-            }
-            else if (a is IEdmEntityType aEntityType)
-            {
-                return aEntityType.ToString();
+                return $"{GetTargetPath((IEdmVocabularyAnnotatable)aProperty.DeclaringType)}/{aProperty.Name}";
             }
             else if (a is IEdmEnumMember aEnumMember)
             {
-                return aEnumMember.ToString();
+                return $"{GetTargetPath(aEnumMember.DeclaringType)}/{aEnumMember.Name}";
             }
-            else if (a is IEdmEnumType aEnumType)
+
+            else if (a is IEdmEntityContainer aEntityContainer)
             {
-                return aEnumType.ToString();
+                return $"{aEntityContainer.Namespace}.{aEntityContainer.Name}";
             }
-            else if (a is IEdmFunction aFunction)
+            else if (a is IEdmEntityContainerElement aContainerElement)
             {
-                return aFunction.ToString();
+                return $"{GetTargetPath(aContainerElement.Container)}/{aContainerElement.Name}";
             }
-            else if (a is IEdmFunctionImport aFunctionImport)
+
+            else if (a is IEdmOperation aAction)
             {
-                return aFunctionImport.ToString();
+                return $"{aAction.Namespace}/{aAction.Name}"; // TODO parameters
             }
-            else if (a is IEdmNavigationProperty aNavigationProperty)
+            else if (a is IEdmOperationParameter aOperationParameter)
             {
-                return aNavigationProperty.ToString();
+                return $"{GetTargetPath(aOperationParameter.DeclaringOperation)}/{aOperationParameter.Name}";
             }
             else if (a is IEdmOperationReturn aOperationReturn)
             {
-                return aOperationReturn.ToString();
-            }
-            else if (a is IEdmOptionalParameter aOptionalParameter)
-            {
-                return aOptionalParameter.ToString();
-            }
-            else if (a is IEdmPathType aPathType)
-            {
-                return aPathType.ToString();
-            }
-            else if (a is IEdmPrimitiveType aPrimitiveType)
-            {
-                return aPrimitiveType.ToString();
-            }
-            else if (a is IEdmSingleton aSingleton)
-            {
-                return aSingleton.ToString();
-            }
-            else if (a is IEdmStructuralProperty aStructuralProperty)
-            {
-                return aStructuralProperty.ToString();
-            }
-            else if (a is IEdmTerm aTerm)
-            {
-                return aTerm.ToString();
-            }
-            else if (a is IEdmTypeDefinition aTypeDefinition)
-            {
-                return aTypeDefinition.ToString();
-            }
-            else if (a is IEdmUntypedType aUntypedType)
-            {
-                return aUntypedType.ToString();
+                return $"{GetTargetPath(aOperationReturn.DeclaringOperation)}.$Return";
             }
             else
             {

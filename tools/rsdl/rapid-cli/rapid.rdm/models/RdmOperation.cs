@@ -12,7 +12,8 @@ namespace rapid.rdm
             RdmTypeReference returnType,
             ICollection<RdmParameter> parameters,
             RdmOperationKind kind,
-            IEnumerable<Annotation> annotations = null, Position position = default)
+            IEnumerable<Annotation> annotations = null,
+            Position position = default)
         {
             Name = name;
             ReturnType = returnType;

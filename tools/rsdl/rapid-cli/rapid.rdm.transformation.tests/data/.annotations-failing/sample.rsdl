@@ -1,0 +1,54 @@
+
+
+type Dog
+{
+    @Core.Description: "mens best friend"
+    @Core.Immutable: true
+    @Validation.AllowedValues: [{Value: "Rex"}, {Value: "Fifi"}]
+    key name: String
+
+
+    key foo : Edm.Int32
+
+}
+
+
+@Core.Description: "nonsense"
+enum Foo { 
+    @Core.Description: "first nonsense identifier"  foo 
+    @Core.Description: "second nonsense identifier" bar 
+    @Core.Description: "third nonsense identifier"  baz 
+}
+
+
+
+@Core.Description: "Kingdom: Animalia"
+abstract type Animal
+{
+    key name: String
+
+
+    @Validation.MultipleOf: 2
+    numberOfLegs: Integer
+
+    function a(): Integer
+    action b(): Integer
+    c(): Integer
+    d()
+}
+
+
+// type Foo
+// {
+//     @Validation.AllowedValues: ["Rex", "Fifi"]
+//     @Core.RequiresType: "foo"
+//     key bar: String
+
+//     @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
+//     @Core.RequiresType: "foo"
+//     baz: String
+// }
+
+service {
+    dogs: [Dog]
+}

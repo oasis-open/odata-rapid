@@ -12,7 +12,6 @@ namespace rapid.rdm
             Annotations = annotations.ToReadOnlyList();
             Position = position;
         }
-
         public string Name { get; }
 
         public IReadOnlyList<Annotation> Annotations { get; }
@@ -43,7 +42,6 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Name, Annotations);
         }
-
         #endregion
     }
 }

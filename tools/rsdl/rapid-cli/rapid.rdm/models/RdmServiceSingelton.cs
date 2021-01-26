@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rapid.rdm
 {
     public class RdmServiceSingelton : RdmServiceElement, IRdmServiceElement, IEquatable<RdmServiceSingelton>
     {
         public RdmServiceSingelton(string name, RdmTypeReference type, IEnumerable<Annotation> annotations = null, Position position = default)
-           : base(name, type, annotations)
+           : base(name, type, annotations, position)
         {
         }
 

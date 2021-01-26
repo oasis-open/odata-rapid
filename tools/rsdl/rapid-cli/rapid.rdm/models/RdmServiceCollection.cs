@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rapid.rdm
 {
     public class RdmServiceCollection : RdmServiceElement, IRdmServiceElement, IEquatable<RdmServiceCollection>
     {
         public RdmServiceCollection(string name, RdmTypeReference type, IEnumerable<Annotation> annotations = null, Position position = default)
-           : base(name, type, annotations)
+           : base(name, type, annotations, position)
         {
         }
 

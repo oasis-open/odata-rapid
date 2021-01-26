@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm
                 if (visited.Contains(a)) return;
                 visited.Add(a);
                 VisitNamedSeq(a.SchemaElements, b.SchemaElements, Visit, path, "SchemaElements");
-                VisitSeq(a.VocabularyAnnotations, b.VocabularyAnnotations, Visit, path + "VocabularyAnnotations");
+                VisitAnnotationSet(a.VocabularyAnnotations, b.VocabularyAnnotations, path + "Annotations");
                 VisitSeq(a.ReferencedModels, b.ReferencedModels, Visit, path + "ReferencedModels");
                 VisitSeq(a.DeclaredNamespaces, b.DeclaredNamespaces, Visit, path + "DeclaredNamespaces");
                 Visit(a.DirectValueAnnotationsManager, b.DirectValueAnnotationsManager, path + "DirectValueAnnotationsManager");
