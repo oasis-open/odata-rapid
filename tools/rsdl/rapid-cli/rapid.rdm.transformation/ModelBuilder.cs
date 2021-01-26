@@ -152,7 +152,7 @@ namespace rapid.rdm
             }
             else
             {
-                var complex = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name);
+                var complex = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
                 foreach (var annotation in definition.Annotations)
                 {
                     annotationBuilder.AddAnnotation(edmModel, complex, annotation);

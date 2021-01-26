@@ -1,0 +1,22 @@
+
+type A 
+{
+    key id: String 
+    a: String
+}
+
+abstract type B
+{
+    key id: String 
+    a: String
+}
+
+type C
+{
+    c: String
+}
+
+abstract type D
+{
+    d: String
+}

@@ -155,12 +155,12 @@ namespace Microsoft.OData.Edm
             }
             if (a == null && b != null)
             {
-                Report(path, "left == null, right not");
+                Report(path, "expected no value but one present in actual");
                 return true;
             }
             if (a != null && b == null)
             {
-                Report(path, "right == null, left not");
+                Report(path, "expected a value but non in actual");
                 return true;
             }
             return false;
