@@ -213,7 +213,8 @@ namespace Microsoft.OData.Edm
         }
 
         // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530407
-        public string GetTargetPath(IEdmVocabularyAnnotatable a)
+        // https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Edm/EdmUtil.cs#L415
+        private string GetTargetPath(IEdmVocabularyAnnotatable a)
         {
             if (a is IEdmSchemaElement aSchemaElement)
             {
@@ -249,19 +250,6 @@ namespace Microsoft.OData.Edm
             {
                 return $"{GetTargetPath(aOperationReturn.DeclaringOperation)}.$Return";
             }
-
-            // else if (a is IEdmActionImport aActionImport)
-            // {
-            //     return aActionImport.Name;
-            // }
-            // else if (a is IEdmFunctionImport aFunctionImport)
-            // {
-            //     return aFunctionImport.ToString();
-            // }
-            // else if (a is IEdmTerm aTerm)
-            // {
-            //     throw new NotSupportedException();
-            // }
             else
             {
                 throw new NotSupportedException();
