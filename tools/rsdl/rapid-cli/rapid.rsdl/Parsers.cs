@@ -118,8 +118,8 @@ namespace rapid.rsdl
             );
 
 
-        static readonly TokenListParser<RdmToken, Superpower.Model.Token<RdmToken>> Inherits =
-            from kw in Keyword("inherits")
+        static readonly TokenListParser<RdmToken, Superpower.Model.Token<RdmToken>> Extends =
+            from kw in Keyword("extends")
             from id in Token.EqualTo(RdmToken.Identifier)
             select id;
 
@@ -128,7 +128,7 @@ namespace rapid.rsdl
             from ab in Keyword("abstract").Value(true).Optional().Try()
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
-            from ih in Inherits.Optional().Try()
+            from ih in Extends.Optional().Try()
             from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmStructuredType(
                 nm.ToStringValue(),

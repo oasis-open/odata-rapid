@@ -1,13 +1,11 @@
 
-
-
-type C inherits B
+type C extends B
 {    
 }
 
 enum I { }
 
-type B inherits A
+type B extends A
 {    
 }
 
