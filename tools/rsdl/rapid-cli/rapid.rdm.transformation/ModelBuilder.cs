@@ -37,7 +37,9 @@ namespace rapid.rdm
                 edmModel.SetEdmReferences(CreateReferences());
 
                 // add each of the schema elements and register them in the environment
-                foreach (var item in rdmModel.Items)
+                // order the elements so that base classes are created before subclasses
+
+                foreach (var item in TopologicalOrder.Sort(rdmModel.Items))
                 {
                     var edmElement = CreateSchemaElement(item);
                     if (edmElement is IEdmType edmType)
@@ -141,9 +143,22 @@ namespace rapid.rdm
 
         private EdmStructuredType AddStructuredType(RdmStructuredType definition)
         {
-            if (definition.Keys.Any() || HasSingletonOfType(definition))
+
+            // base type, the Build method ensure that the base type was added before the 
+            // sub-type and therefore FindType will succeed.
+            IEdmStructuredType edmBaseType = null;
+            if (definition.BaseType != null)
             {
-                var entity = edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
+                edmBaseType = edmModel.FindType(rdmModel.Namespace.NamespaceName + "." + definition.BaseType) as EdmStructuredType;
+                if (edmBaseType == null)
+                {
+                    throw new TransformationException($"unable to find base type {definition.BaseType} for type {definition.Name}");
+                }
+            }
+
+            if (definition.Keys.Any() || HasSingletonOfType(definition) || (edmBaseType != null && edmBaseType.TypeKind == EdmTypeKind.Entity))
+            {
+                var entity = edmModel.AddEntityType(rdmModel.Namespace.NamespaceName, definition.Name, (IEdmEntityType)edmBaseType, definition.IsAbstract, true);
                 foreach (var annotation in definition.Annotations)
                 {
                     annotationBuilder.AddAnnotation(edmModel, entity, annotation);
@@ -152,7 +167,7 @@ namespace rapid.rdm
             }
             else
             {
-                var complex = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name, null, definition.IsAbstract, true);
+                var complex = edmModel.AddComplexType(rdmModel.Namespace.NamespaceName, definition.Name, (IEdmComplexType)edmBaseType, definition.IsAbstract, true);
                 foreach (var annotation in definition.Annotations)
                 {
                     annotationBuilder.AddAnnotation(edmModel, complex, annotation);

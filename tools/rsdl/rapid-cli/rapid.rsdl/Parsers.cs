@@ -117,22 +117,28 @@ namespace rapid.rsdl
                 Property.Cast<RdmToken, RdmProperty, object>()
             );
 
+
+        static readonly TokenListParser<RdmToken, Superpower.Model.Token<RdmToken>> Extends =
+            from kw in Keyword("extends")
+            from id in Token.EqualTo(RdmToken.Identifier)
+            select id;
+
         static readonly TokenListParser<RdmToken, rdm.RdmStructuredType> TypeDefinition =
             from aa in Annotation.Many()
             from ab in Keyword("abstract").Value(true).Optional().Try()
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
+            from ih in Extends.Optional().Try()
             from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmStructuredType(
                 nm.ToStringValue(),
+                ih.HasValue ? ih.Value.ToStringValue() : null,
                 ps.OfType<rdm.RdmProperty>().ToList(),
                 ps.OfType<rdm.RdmOperation>().ToList(),
                 ab != null,
-                aa
-            )
-            {
-                Position = kw.GetPosition()
-            };
+                aa,
+                kw.GetPosition()
+            );
 
         static readonly TokenListParser<RdmToken, rdm.RdmEnumMember> EnumMember =
             from aa in Annotation.Many()

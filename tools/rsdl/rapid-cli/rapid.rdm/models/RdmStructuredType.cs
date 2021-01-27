@@ -6,7 +6,9 @@ namespace rapid.rdm
 {
     public class RdmStructuredType : IRdmSchemaElement, IRdmType, IEquatable<RdmStructuredType>
     {
-        public RdmStructuredType(string name,
+        public RdmStructuredType(
+            string name,
+            string baseType,
             IReadOnlyList<RdmProperty> properties,
             IReadOnlyList<RdmOperation> operations = null,
             bool isAbstract = false,
@@ -14,6 +16,7 @@ namespace rapid.rdm
         )
         {
             Name = name;
+            BaseType = baseType;
             Properties = properties;
             Operations = operations ?? Array.Empty<RdmOperation>();
             IsAbstract = isAbstract;
@@ -21,6 +24,8 @@ namespace rapid.rdm
         }
 
         public string Name { get; }
+
+        public string BaseType { get; }
 
         public bool IsAbstract { get; }
 

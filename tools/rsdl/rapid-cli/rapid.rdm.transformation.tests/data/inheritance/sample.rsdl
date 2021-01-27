@@ -1,0 +1,17 @@
+
+type C extends B
+{    
+}
+
+enum I { }
+
+type B extends A
+{    
+}
+
+enum J { }
+
+abstract type A
+{    
+    // key id: String
+}

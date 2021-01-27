@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model"
+      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="I"/>
+      <EnumType Name="J"/>
+      <ComplexType Name="A" Abstract="true" OpenType="true"/>
+      <ComplexType Name="B" BaseType="Model.A" OpenType="true"/>
+      <ComplexType Name="C" BaseType="Model.B" OpenType="true"/>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

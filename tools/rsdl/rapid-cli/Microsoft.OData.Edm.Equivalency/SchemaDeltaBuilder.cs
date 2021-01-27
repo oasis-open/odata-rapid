@@ -62,69 +62,51 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        protected void VisitSet(
-            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> a,
-            IEnumerable<Vocabularies.IEdmVocabularyAnnotation> b,
-            Action<Vocabularies.IEdmVocabularyAnnotation, Vocabularies.IEdmVocabularyAnnotation, PropertyPath> visit,
-            PropertyPath path)
+        public void VisitAnnotationSet(
+                  IEnumerable<IEdmVocabularyAnnotation> a,
+                  IEnumerable<IEdmVocabularyAnnotation> b,
+                  PropertyPath path)
         {
-            var aa = a.ToDictionary(ai => ai.Term.FullName() + "/" + ai.Target.GetHashCode().ToString());
-            var bb = b.ToDictionary(bi => bi.Term.FullName() + "/" + bi.Target.GetHashCode().ToString());
+            var aa = a.ToDictionary(a => (GetTargetPath(a.Target), a.Term.FullName(), a.Qualifier ?? ""));
+            var bb = b.ToDictionary(b => (GetTargetPath(b.Target), b.Term.FullName(), b.Qualifier ?? ""));
 
             var keys = aa.Keys.Concat(bb.Keys).Distinct();
             foreach (var key in keys)
             {
-                if (!aa.ContainsKey(key))
+                var (targetPath, termName, qualifier) = key;
+                var segment = targetPath + (string.IsNullOrEmpty(qualifier) ? "" : "/" + qualifier);
+                if (!aa.TryGetValue(key, out var ai))
                 {
-                    Report(path, $"missing annotation for Term {bb[key].Term.FullName()} on right");
+                    Report(path, $"additional {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
                 }
-                else if (!bb.ContainsKey(key))
+                else if (!bb.TryGetValue(key, out var bi))
                 {
-                    Report(path, $"missing annotation for Term {aa[key].Term.FullName()} on left");
+                    Report(path, $"missing {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
                 }
                 else
                 {
-                    visit(aa[key], bb[key], path);
+                    Visit(ai, bi, path + segment);
                 }
             }
-
-            // for (var i = 0; ; i++)
-            // {
-            //     var aHasMoved = aa.MoveNext();
-            //     var bHasMoved = bb.MoveNext();
-            //     if (aHasMoved && bHasMoved)
-            //     {
-            //         visit(aa.Current, bb.Current, path + i.ToString());
-            //     }
-            //     else if (aHasMoved || bHasMoved)
-            //     {
-            //         // TODO, report non matching length
-            //         break;
-            //     }
-            //     else
-            //     {
-            //         break;
-            //     }
-            // }
         }
 
         protected void VisitNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Action<T, T, PropertyPath> visit, PropertyPath path, string property) where T : class, IEdmNamedElement
         {
-            var pairs = e1.FullOuterJoin(e2, i => i.Name, i => i.Name);
+            var pairs = (e1 ?? Enumerable.Empty<T>()).FullOuterJoin(e2 ?? Enumerable.Empty<T>(), i => i.Name, i => i.Name);
             foreach (var (name, a, b) in pairs)
             {
                 if (a != null && b != null)
                 {
-                    visit(a, b, path + (property + ":" + name));
+                    visit(a, b, path + $"{property}[{name}]");
                 }
                 else if (a == null)
                 {
-                    Report(path, $"missing item with name {name} on left");
+                    Report(path, $"additional item with name {name}");
                 }
                 else if (b == null)
                 {
                     var loc = b is IEdmLocatable eloc ? eloc.Location : null;
-                    Report(path, $"missing item with name {name} on right");
+                    Report(path, $"missing item with name {name}");
                 }
             }
         }
@@ -166,7 +148,6 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
-
         protected void CheckTypeEquality<T>(T a, T b, IList<Type> types, PropertyPath path)
         {
             static Type FindInterface(T obj, IList<Type> interfaces)
@@ -180,35 +161,6 @@ namespace Microsoft.OData.Edm
             if (ai != null && bi != null && ai != bi)
             {
                 Report(path, $"different types '{ai.Name}' != '{bi.Name}'");
-            }
-        }
-
-
-        public void VisitAnnotationSet(
-            IEnumerable<IEdmVocabularyAnnotation> a,
-            IEnumerable<IEdmVocabularyAnnotation> b,
-            PropertyPath path)
-        {
-            var aa = a.ToDictionary(a => (GetTargetPath(a.Target), a.Term.FullName(), a.Qualifier ?? ""));
-            var bb = b.ToDictionary(b => (GetTargetPath(b.Target), b.Term.FullName(), b.Qualifier ?? ""));
-
-            var keys = aa.Keys.Concat(bb.Keys).Distinct();
-            foreach (var key in keys)
-            {
-                var (targetPath, termName, qualifier) = key;
-                var segment = targetPath + (string.IsNullOrEmpty(qualifier) ? "" : "/" + qualifier);
-                if (!aa.TryGetValue(key, out var ai))
-                {
-                    Report(path, $"additional {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
-                }
-                else if (!bb.TryGetValue(key, out var bi))
-                {
-                    Report(path, $"missing {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
-                }
-                else
-                {
-                    Visit(ai, bi, path + segment);
-                }
             }
         }
 
