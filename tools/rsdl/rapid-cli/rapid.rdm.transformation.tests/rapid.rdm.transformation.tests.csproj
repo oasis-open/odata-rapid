@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- extends watching group to include test data files -->
+    <Watch Include="**\*.rsdl;**\*.csdl.xml" Exclude="obj\**\*;bin\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="data\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

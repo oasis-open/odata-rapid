@@ -101,12 +101,12 @@ namespace Microsoft.OData.Edm
                 }
                 else if (a == null)
                 {
-                    Report(path, $"missing item with name {name} on left");
+                    Report(path, $"additional item with name {name}");
                 }
                 else if (b == null)
                 {
                     var loc = b is IEdmLocatable eloc ? eloc.Location : null;
-                    Report(path, $"missing item with name {name} on right");
+                    Report(path, $"missing item with name {name}");
                 }
             }
         }

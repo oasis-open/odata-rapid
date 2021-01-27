@@ -1,22 +1,18 @@
 
 
 
-type A inherits B
+type C inherits B
 {    
-    a: String
 }
 
-enum I { i }
+enum I { }
 
-type B inherits C
+type B inherits A
 {    
-    b: String
 }
 
-enum J { j }
+enum J { }
 
-abstract type C
+abstract type A
 {
-    // key id: String 
-    c: String
 }
