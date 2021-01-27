@@ -25,16 +25,16 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.402
+          dotnet-version: 5.0.102
 
       - name: Restore
-        run: dotnet restore ./tools/rsdl/rapid-cli/rapid/rapid.csproj
+        run: dotnet restore ${{ env.Solution }}
 
       - name: Build
-        run: dotnet build ./tools/rsdl/rapid-cli/rapid/rapid.csproj --configuration ${{ env.BuildConfig }} --no-restore
+        run: dotnet build ${{ env.Solution }} --configuration ${{ env.BuildConfig }} --no-restore
 
       - name: Test
-        run: dotnet test ${{ env.Solution }}
+        run: dotnet test ${{ env.Solution }} --no-restore
 
       # - name: Pack
       #   run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
