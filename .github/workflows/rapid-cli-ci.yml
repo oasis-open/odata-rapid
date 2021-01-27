@@ -34,7 +34,7 @@ jobs:
         run: dotnet build ./tools/rsdl/rapid-cli/rapid/rapid.csproj --configuration ${{ env.BuildConfig }} --no-restore
 
       - name: Test
-        run: dotnet test ${{ env.Solution }}
+        run: dotnet test ${{ env.Solution }} --no-restore
 
       # - name: Pack
       #   run: dotnet pack ./tools/rsdl/rapid-cli/rapid/rapid.csproj --version-suffix "prerelease"
