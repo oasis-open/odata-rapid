@@ -16,9 +16,6 @@ namespace rapid.rsdl.tests
                 new RdmTypeReference("Integer"),
                 new RdmTypeReference("Integer") },
             new object[] {
-                new RdmTypeReference("String"),
-                new RdmTypeReference("Integer") },
-            new object[] {
                 new RdmProperty("a", new RdmTypeReference("Integer"), false),
                 new RdmProperty("a", new RdmTypeReference("Integer"), false) },
             new object[] {
