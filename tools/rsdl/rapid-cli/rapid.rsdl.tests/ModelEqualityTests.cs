@@ -13,26 +13,29 @@ namespace rapid.rsdl.tests
                 new Position(1,10),
                 new Position(1,10) },
             new object[] {
-                new RdmTypeReference("int"),
-                new RdmTypeReference("int") },
+                new RdmTypeReference("Integer"),
+                new RdmTypeReference("Integer") },
             new object[] {
-                new RdmProperty("a", new RdmTypeReference("int"), false),
-                new RdmProperty("a", new RdmTypeReference("int"), false) },
+                new RdmTypeReference("String"),
+                new RdmTypeReference("Integer") },
             new object[] {
-                new RdmProperty("a", new RdmTypeReference("int"), false),
-                new RdmProperty("a", new RdmTypeReference("int"), false, null, new Position(1,10)) },
+                new RdmProperty("a", new RdmTypeReference("Integer"), false),
+                new RdmProperty("a", new RdmTypeReference("Integer"), false) },
             new object[] {
-                new RdmProperty("a", new RdmTypeReference("int"), true),
-                new RdmProperty("a", new RdmTypeReference("int"), true, null, new Position(1,10)) },
+                new RdmProperty("a", new RdmTypeReference("Integer"), false),
+                new RdmProperty("a", new RdmTypeReference("Integer"), false, null, new Position(1,10)) },
             new object[] {
-                new RdmProperty("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
-                new RdmProperty("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
+                new RdmProperty("a", new RdmTypeReference("Integer"), true),
+                new RdmProperty("a", new RdmTypeReference("Integer"), true, null, new Position(1,10)) },
             new object[] {
-                new RdmParameter("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
-                new RdmParameter("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
+                new RdmProperty("b", new RdmTypeReference("Integer"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
+                new RdmProperty("b", new RdmTypeReference("Integer"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
             new object[] {
-                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}),
-                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}) },
+                new RdmParameter("b", new RdmTypeReference("Integer"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
+                new RdmParameter("b", new RdmTypeReference("Integer"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
+            new object[] {
+                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("Integer"), false)}),
+                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("Integer"), false)}) },
             new object[] {
                 new RdmEnumType("b", new [] {new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true),
                 new RdmEnumType("b", new [] {new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true) }
