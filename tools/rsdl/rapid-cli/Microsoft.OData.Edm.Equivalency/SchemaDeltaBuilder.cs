@@ -97,7 +97,7 @@ namespace Microsoft.OData.Edm
             {
                 if (a != null && b != null)
                 {
-                    visit(a, b, path + (property + ":" + name));
+                    visit(a, b, path + $"{property}[{name}]");
                 }
                 else if (a == null)
                 {

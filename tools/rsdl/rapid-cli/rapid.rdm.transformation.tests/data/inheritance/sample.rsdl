@@ -14,5 +14,6 @@ type B inherits A
 enum J { }
 
 abstract type A
-{
+{    
+    // key id: String
 }
