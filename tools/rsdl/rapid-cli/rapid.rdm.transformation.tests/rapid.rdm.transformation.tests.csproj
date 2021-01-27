@@ -21,6 +21,18 @@
   <ItemGroup>
     <ProjectReference Include="..\rapid.rdm.transformation\rapid.rdm.transformation.csproj" />
     <ProjectReference Include="..\rapid.rsdl\rapid.rsdl.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.Edm.Equivalency\Microsoft.OData.Edm.Equivalency.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- extends watching group to include test data files -->
+    <Watch Include="**\*.rsdl;**\*.csdl.xml" Exclude="obj\**\*;bin\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="data\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

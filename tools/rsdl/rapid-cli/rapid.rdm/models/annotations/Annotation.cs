@@ -8,18 +8,25 @@ namespace rapid.rdm
         {
             Name = name;
             Value = value;
-            Position = position;
         }
 
         public string Name { get; }
 
         public AnnotationExpression Value { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
+
+
+        #region equality 
+
+        public static bool Equals(Annotation one, Annotation two)
+        {
+            return one.Name.Equals(two.Name) && one.Value.Equals(two.Value);
+        }
 
         public bool Equals(Annotation other)
         {
-            return this.Name.Equals(other.Name) && this.Value.Equals(other.Value);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -31,5 +38,7 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Name, Value);
         }
+
+        #endregion
     }
 }

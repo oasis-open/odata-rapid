@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="A" OpenType="true">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="a" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="B" Abstract="true" OpenType="true">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="a" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="C" OpenType="true">
+        <Property Name="c" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="D" Abstract="true" OpenType="true">
+        <Property Name="d" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -9,33 +9,33 @@ namespace rapid.rsdl.tests
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            // new object[] {
-            //     new Position(1,10),
-            //     new Position(1,10) },
-            // new object[] {
-            //     new RdmTypeReference("int"),
-            //     new RdmTypeReference("int") },
-            // new object[] {
-            //     new RdmProperty("a", new RdmTypeReference("int"), false),
-            //     new RdmProperty("a", new RdmTypeReference("int"), false) },
-            // new object[] {
-            //     new RdmProperty("a", new RdmTypeReference("int"), false),
-            //     new RdmProperty("a", new RdmTypeReference("int"), false, null, new Position(1,10)) },
-            // new object[] {
-            //     new RdmProperty("a", new RdmTypeReference("int"), true),
-            //     new RdmProperty("a", new RdmTypeReference("int"), true, null, new Position(1,10)) },
+            new object[] {
+                new Position(1,10),
+                new Position(1,10) },
+            new object[] {
+                new RdmTypeReference("int"),
+                new RdmTypeReference("int") },
+            new object[] {
+                new RdmProperty("a", new RdmTypeReference("int"), false),
+                new RdmProperty("a", new RdmTypeReference("int"), false) },
+            new object[] {
+                new RdmProperty("a", new RdmTypeReference("int"), false),
+                new RdmProperty("a", new RdmTypeReference("int"), false, null, new Position(1,10)) },
+            new object[] {
+                new RdmProperty("a", new RdmTypeReference("int"), true),
+                new RdmProperty("a", new RdmTypeReference("int"), true, null, new Position(1,10)) },
             new object[] {
                 new RdmProperty("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
                 new RdmProperty("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
             new object[] {
                 new RdmParameter("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }),
                 new RdmParameter("b", new RdmTypeReference("int"), false, new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
-            // new object[] {
-            //     new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}),
-            //     new RdmStructuredType("a", new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}) },
-            // new object[] {
-            //     new RdmEnumType("b", new [] {"a", "b", "c"}, true),
-            //     new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
+            new object[] {
+                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}),
+                new RdmStructuredType("a", null, new [] { new RdmProperty("a", new RdmTypeReference("int"), false)}) },
+            new object[] {
+                new RdmEnumType("b", new [] {new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true),
+                new RdmEnumType("b", new [] {new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true) }
         };
 
         [Theory]
@@ -48,8 +48,9 @@ namespace rapid.rsdl.tests
         public static IEnumerable<object[]> NegativeTestData => new List<object[]>
         {
             new object[] {
-                new RdmEnumType("b", new [] {"a", "b", "c"}, false),
-                new RdmEnumType("b", new [] {"a", "b", "c"}, true) }
+                new RdmEnumType("b", new [] { new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, false),
+                new RdmEnumType("b", new [] { new RdmEnumMember("a"), new RdmEnumMember("b"), new RdmEnumMember("c")}, true)
+            }
         };
 
         [Theory]

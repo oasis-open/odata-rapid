@@ -27,7 +27,7 @@
         },
         {
           "name": "storage.modifier",
-          "match": "\\b(key|function|action|abstract)\\b"
+          "match": "\\b(key|function|action|abstract|extends)\\b"
         },
         {
           "name": "comment.line.double-slash.rsdl",

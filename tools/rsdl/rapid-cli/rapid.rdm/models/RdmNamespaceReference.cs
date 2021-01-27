@@ -8,20 +8,28 @@ namespace rapid.rdm
         {
             Alias = alias;
             Path = path;
-            Position = position;
         }
 
         public string Alias { get; }
 
         public string Path { get; }
 
-        public Position Position { get; }
+        public Position Position { get; set; }
+
+        #region equality
+
+        public static bool Equals(RdmNamespaceReference one, RdmNamespaceReference two)
+        {
+            if (object.ReferenceEquals(one, two)) return true;
+            if (one == null || two == null) return one == null && two == null;
+            return
+                string.Equals(one.Alias, two.Alias) &&
+                string.Equals(one.Path, two.Path);
+        }
 
         public bool Equals(RdmNamespaceReference other)
         {
-            return
-                string.Equals(this.Alias, other.Alias) &&
-                string.Equals(this.Path, other.Path);
+            return Equals(this, other);
         }
 
         public override bool Equals(object other)
@@ -33,5 +41,6 @@ namespace rapid.rdm
         {
             return HashCode.Combine(Alias, Path);
         }
+        #endregion
     }
 }

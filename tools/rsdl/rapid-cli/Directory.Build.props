@@ -18,18 +18,15 @@
     <RepositoryUrl>https://github.com/oasis-open/odata-rapid</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/> -->
+  <!-- <ItemGroup Condition="'$(MSBuildProjectName)' != 'rapid.common'">
+    <ProjectReference Include="..\rapid.common\rapid.common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.BuildDateAttribute">
       <_Parameter1>$([System.DateTime]::UtcNow.ToString("s"))</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
+  </ItemGroup> -->
 </Project>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model"
+      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Dog" OpenType="true">
+        <Key>
+          <PropertyRef Name="name" />
+          <PropertyRef Name="foo" />
+        </Key>
+        <Property Name="name" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="mens best friend" />
+          <Annotation Term="Org.OData.Core.V1.Description" String="my best friend" Qualifier="other"/>
+          <Annotation Term="Org.OData.Core.V1.Immutable" Bool="true" />
+          <Annotation Term="Org.OData.Validation.V1.AllowedValues">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Value" String="Rex" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="Fifi" />
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
+        <Property Name="foo" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EnumType Name="Foo">
+        <Member Name="foo" Value="0">
+          <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
+        </Member>
+        <Member Name="bar" Value="1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
+        </Member>
+        <Member Name="baz" Value="2">
+          <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
+        </Member>
+        <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
+      </EnumType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

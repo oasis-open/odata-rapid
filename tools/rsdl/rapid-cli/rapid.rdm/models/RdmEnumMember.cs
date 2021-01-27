@@ -4,39 +4,31 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    public class RdmEnumType : IRdmSchemaElement, IRdmType, IEquatable<RdmEnumType>
+    public class RdmEnumMember : IEquatable<RdmEnumMember>
     {
-        public RdmEnumType(string name, IReadOnlyList<RdmEnumMember> members, bool isFlags, IEnumerable<Annotation> annotations = null, Position position = default)
+        public RdmEnumMember(string name, IEnumerable<Annotation> annotations = null, Position position = default)
         {
             Name = name;
-            Members = members;
-            IsFlags = isFlags;
             Annotations = annotations.ToReadOnlyList();
+            Position = position;
         }
-
         public string Name { get; }
-
-        public bool IsFlags { get; }
-
-        public IReadOnlyList<RdmEnumMember> Members { get; }
 
         public IReadOnlyList<Annotation> Annotations { get; }
 
         public Position Position { get; set; }
 
         #region equality
-
-        public static bool Equals(RdmEnumType one, RdmEnumType two)
+        public static bool Equals(RdmEnumMember one, RdmEnumMember two)
         {
             if (object.ReferenceEquals(one, two)) return true;
             if (one == null || two == null) return one == null && two == null;
-            return string.Equals(one.Name, two.Name) &&
-                one.IsFlags == two.IsFlags &&
-                Enumerable.SequenceEqual(one.Members, two.Members) &&
+            return
+                string.Equals(one.Name, two.Name) &&
                 Enumerable.SequenceEqual(one.Annotations, two.Annotations);
         }
 
-        public bool Equals(RdmEnumType other)
+        public bool Equals(RdmEnumMember other)
         {
             return Equals(this, other);
         }
@@ -48,9 +40,8 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Members, IsFlags, Annotations);
+            return HashCode.Combine(Name, Annotations);
         }
-
         #endregion
     }
 }
