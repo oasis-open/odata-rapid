@@ -1,0 +1,22 @@
+
+
+
+type A inherits B
+{    
+    a: String
+}
+
+enum I { i }
+
+type B inherits C
+{    
+    b: String
+}
+
+enum J { j }
+
+abstract type C
+{
+    // key id: String 
+    c: String
+}
