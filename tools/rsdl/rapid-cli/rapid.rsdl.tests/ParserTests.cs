@@ -201,10 +201,39 @@ type Company { something: other.Something }";
                 }
             );
 
-            // var foo = actual.Items.OfType<RdmStructuredType>().First(t => t.Name == "Foo");
-            // var id = foo.Properties.First(t => t.Name == "id");
-            // Assert.Equal(2, id.Annotations.Count);
+
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void PathExpressionGetsParsed()
+        {
+            var content = "@Core.Description: ./a/b type Foo { }";
+            var actual = parser.Parse(content, "test");
+
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmStructuredType("Foo", null, Array.Empty<RdmProperty>(), null, false,
+                        new [] {
+                            new Annotation("Core.Description", AnnotationExpression.Path(new string[]{"a", "b"}))
+                        }
+                    )
+                }
+            );
+            Assert.Equal(expected, actual);
+        }
+
+        // [Fact]
+        // public void X()
+        // {
+        //     var content = "./a/b ";
+
+        //     var tokenizer = RdmTokenizer.Tokenizer;
+        //     var tokenList = tokenizer.Tokenize(content);
+
+        //     var parser = ExpressionParsers.Path;
+        //     var model = Superpower.ParserExtensions.Parse(parser, tokenList);
+        // }
     }
 }

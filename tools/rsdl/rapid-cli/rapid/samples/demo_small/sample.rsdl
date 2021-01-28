@@ -17,6 +17,6 @@ service
 {
     companies: [company]
     employees: [employee]
-    // vips: [employee]
-    // largecaps: [company]
+    # vips: [employee]
+    # largecaps: [company]
 }

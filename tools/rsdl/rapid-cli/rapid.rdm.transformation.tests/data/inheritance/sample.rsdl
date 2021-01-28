@@ -13,5 +13,5 @@ enum J { }
 
 abstract type A
 {    
-    // key id: String
+    # key id: String
 }

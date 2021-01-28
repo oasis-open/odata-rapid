@@ -210,10 +210,12 @@ namespace rapid.rsdl
 
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
-           from nd in NamespaceDeclaration.OptionalOrDefault()
-           from nr in NamespaceReference.Many()
-           from se in SchemaElement.Many()
-           select new rdm.RdmDataModel(nd, se, nr);
+           (
+                from nd in NamespaceDeclaration.OptionalOrDefault()
+                from nr in NamespaceReference.Many()
+                from se in SchemaElement.Many()
+                select new rdm.RdmDataModel(nd, se, nr)
+            ).AtEnd();
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }
