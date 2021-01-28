@@ -1,0 +1,19 @@
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.colorTheme": "Complete Dark",
+  "antlr4.generation": {
+    "mode": "external",
+    "language": "JavaScript",
+    "outputDir": "parser"
+  },
+  "editor.renderWhitespace": "trailing",
+  "editor.formatOnSave": true
+}

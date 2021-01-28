@@ -1,0 +1,25 @@
+{
+  "name": "rsdl-js",
+  "version": "0.1.0",
+  "description": "RSDL parser",
+  "bin": {
+    "rsdl2csdl": "lib/cli.js"
+  },
+  "main": "lib/parser.js",
+  "scripts": {
+    "jetsons": "node lib/cli.js -p jetsons.rsdl",
+    "test": "c8 mocha"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "antlr4": "4.8.0",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "c8": "^7.3.5",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1"
+  }
+}

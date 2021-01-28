@@ -1,0 +1,50 @@
+
+type company
+{
+    key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [employee]
+
+    test: [Integer]
+    ceo: employee
+}
+
+type employee
+{
+    key id: Integer 
+    key: Boolean
+    name : name
+    title: String
+
+    // // a CSDL action  with an optional parameter
+    // action fire(date?: Date) 
+        
+    // // a CSDL action with an required parameter that can be null
+    // action fire(date: Date?) 
+    
+    // promote() : Integer     // a CSDL function
+}
+
+type name
+{
+    firstName : String
+    middleInitial: String?
+    lastName: String
+    title: String?
+}
+
+// function resetDataSource() 
+
+
+service
+{
+    // unbound, "global" action
+    // resetDataSource
+
+    // entitySet http://host/competitors
+    competitors: [company]
+
+    // singleton http://host/company
+    company: company
+}
