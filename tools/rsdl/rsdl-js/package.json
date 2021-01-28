@@ -2,6 +2,16 @@
   "name": "rsdl-js",
   "version": "0.1.0",
   "description": "RSDL parser",
+  "homepage": "https://rapid.rocks/",
+  "bugs": "https://github.com/oasis-open/odata-rapid/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oasis-open/odata-rapid.git"
+  },
+  "files": [
+    "grammar/parser/*",
+    "lib/*"
+  ],
   "bin": {
     "rsdl2csdl": "lib/cli.js"
   },
@@ -11,7 +21,7 @@
     "test": "c8 mocha"
   },
   "author": "",
-  "license": "",
+  "license": "Apache-2.0",
   "dependencies": {
     "antlr4": "4.8.0",
     "minimist": "^1.2.5"
