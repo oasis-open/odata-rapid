@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="4.0"
-  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
-    <Schema Namespace="Model"
-      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EnumType Name="Foo">
         <Member Name="foo" Value="0">
           <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />

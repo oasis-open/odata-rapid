@@ -12,7 +12,8 @@ namespace rapid.rdm
             IReadOnlyList<RdmProperty> properties,
             IReadOnlyList<RdmOperation> operations = null,
             bool isAbstract = false,
-            IEnumerable<Annotation> annotations = null, Position position = default
+            IEnumerable<Annotation> annotations = null,
+            Position position = default
         )
         {
             Name = name;

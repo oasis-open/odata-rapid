@@ -13,7 +13,7 @@ namespace rapid.rdm
 
         #region equality 
 
-        private new bool Equals(RdmServiceSingelton one, RdmServiceSingelton two)
+        private new bool Equals(RdmServiceSingleton one, RdmServiceSingleton two)
         {
             return RdmServiceElement.Equals(one, two);
         }

@@ -288,6 +288,7 @@ namespace rapid.rdm
         private EdmEntityContainer AddService(RdmService service)
         {
             var container = edmModel.AddEntityContainer(rdmModel.Namespace.NamespaceName, service.Name);
+            annotationBuilder.AddAnnotations(edmModel, container, service.Annotations);
             return container;
         }
 
@@ -300,10 +301,10 @@ namespace rapid.rdm
                 switch (item)
                 {
                     case RdmServiceCollection collection:
-                        AddEntitySet(container, item, collection);
+                        AddEntitySet(container, collection);
                         break;
-                    case RdmServiceSingelton singleton:
-                        AddSingelton(container, item, singleton);
+                    case RdmServiceSingleton singleton:
+                        AddSingleton(container, singleton);
                         break;
                     default:
                         throw new NotSupportedException("unknown implementation of IRdmServiceElement");
@@ -343,7 +344,7 @@ namespace rapid.rdm
         private bool HasSingletonOfType(RdmStructuredType definition)
         {
             var singletons = from service in rdmModel.Items.OfType<RdmService>()
-                             from item in service.Items.OfType<RdmServiceSingelton>()
+                             from item in service.Items.OfType<RdmServiceSingleton>()
                              select item;
             var matches = singletons.Where(singleton => singleton.Type.Name == definition.Name);
             return matches.Any();
@@ -355,7 +356,7 @@ namespace rapid.rdm
                 entitySet.Type is IEdmCollectionType coll && coll.ElementType.Definition == type);
         }
 
-        private EdmEntitySet AddEntitySet(EdmEntityContainer container, IRdmServiceElement item, RdmServiceCollection collection)
+        private EdmEntitySet AddEntitySet(EdmEntityContainer container, RdmServiceCollection collection)
         {
             var @ref = env.ResolveTypeReference(collection.Type);
             // TODO: ensure resolved type is actually an entity
@@ -365,7 +366,8 @@ namespace rapid.rdm
                 var type = entityTypeReference.Definition;
                 if (type is IEdmEntityType entityType)
                 {
-                    var entitySet = container.AddEntitySet(item.Name, entityType);
+                    var entitySet = container.AddEntitySet(collection.Name, entityType);
+                    annotationBuilder.AddAnnotations(edmModel, entitySet, collection.Annotations);
                     return entitySet;
                 }
             }
@@ -373,18 +375,19 @@ namespace rapid.rdm
             throw new Exception("");
         }
 
-        private EdmSingleton AddSingelton(EdmEntityContainer container, IRdmServiceElement item, RdmServiceSingelton singleton)
+        private EdmSingleton AddSingleton(EdmEntityContainer container, RdmServiceSingleton singleton)
         {
             var type = env.ResolveTypeReference(singleton.Type);
 
             switch (type.Definition)
             {
                 case IEdmEntityType entityType:
-                    var singelton = container.AddSingleton(item.Name, entityType);
-                    return singelton;
+                    var edmSingleton = container.AddSingleton(singleton.Name, entityType);
+                    annotationBuilder.AddAnnotations(edmModel, edmSingleton, singleton.Annotations);
+                    return edmSingleton;
 
                 default:
-                    throw new TransformationException($"Invalid type '{type}' for single valued service property {item.Name}.");
+                    throw new TransformationException($"Invalid type '{type}' for single valued service property {singleton.Name}.");
             }
         }
     }

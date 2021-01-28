@@ -22,7 +22,7 @@ namespace rapid.rdm
 
         public Position Position { get; set; }
 
-        protected static bool Equals(RdmServiceSingelton one, RdmServiceSingelton two)
+        protected static bool Equals(RdmServiceSingleton one, RdmServiceSingleton two)
         {
             if (object.ReferenceEquals(one, two)) return true;
             if (one == null || two == null) return one == null && two == null;

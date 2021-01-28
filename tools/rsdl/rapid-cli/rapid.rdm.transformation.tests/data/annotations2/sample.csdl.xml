@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="Enum1">
+        <Member Name="enumMember1" Value="0">
+          <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+        </Member>
+        <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+      </EnumType>
+      <EntityType Name="Type1" OpenType="true">
+        <Key>
+          <PropertyRef Name="prop0" />
+        </Key>
+        <Property Name="prop0" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+        </Property>
+        <Property Name="prop1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+        </Property>
+        <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+      </EntityType>
+      <EntityContainer Name="Service1">
+        <EntitySet Name="set1" EntityType="Model.Type1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+        </EntitySet>
+        <Singleton Name="singleton" Type="Model.Type1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+        </Singleton>
+        <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

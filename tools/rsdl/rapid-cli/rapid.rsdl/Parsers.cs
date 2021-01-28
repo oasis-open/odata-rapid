@@ -173,12 +173,14 @@ namespace rapid.rsdl
             )
             select ty.multivalue
                 ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa)
-                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingelton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa);
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa);
 
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
+            from aa in Annotation.Many()
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
+            from nm in Token.EqualTo(RdmToken.Identifier).Optional()
             from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
-            select new rdm.RdmService(es);
+            select new rdm.RdmService(nm.HasValue ? nm.Value.ToStringValue() : null, es, aa, kw.GetPosition());
         #endregion
 
         static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =
