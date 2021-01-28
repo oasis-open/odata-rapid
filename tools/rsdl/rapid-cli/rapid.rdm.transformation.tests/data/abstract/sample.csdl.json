@@ -1,0 +1,35 @@
+{
+  "$Version": "4.0",
+  "Model": {
+    "D": {
+      "$Kind": "ComplexType",
+      "$Abstract": true,
+      "$OpenType": true,
+      "d": {}
+    },
+    "C": {
+      "$Kind": "ComplexType",
+      "$OpenType": true,
+      "c": {}
+    },
+    "B": {
+      "$Kind": "EntityType",
+      "$Abstract": true,
+      "$OpenType": true,
+      "$Key": [
+        "id"
+      ],
+      "id": {},
+      "a": {}
+    },
+    "A": {
+      "$Kind": "EntityType",
+      "$OpenType": true,
+      "$Key": [
+        "id"
+      ],
+      "id": {},
+      "a": {}
+    }
+  }
+}

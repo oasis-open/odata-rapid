@@ -4,6 +4,28 @@
   <edmx:DataServices>
     <Schema Namespace="Model"
       xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="Foo">
+        <Member Name="foo" Value="0">
+          <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
+        </Member>
+        <Member Name="bar" Value="1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
+        </Member>
+        <Member Name="baz" Value="2">
+          <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
+        </Member>
+        <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
+      </EnumType>
+      <EntityType Name="Animal" Abstract="true" OpenType="true">
+        <Key>
+          <PropertyRef Name="name" />
+        </Key>
+        <Property Name="name" Type="Edm.String" Nullable="false" />
+        <Property Name="numberOfLegs" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Validation.V1.MultipleOf" Int="2" />
+        </Property>
+        <Annotation Term="Org.OData.Core.V1.Description" String="Kingdom: Animalia" />
+      </EntityType>
       <EntityType Name="Dog" OpenType="true">
         <Key>
           <PropertyRef Name="name" />
@@ -25,18 +47,17 @@
         </Property>
         <Property Name="foo" Type="Edm.Int32" Nullable="false" />
       </EntityType>
-      <EnumType Name="Foo">
-        <Member Name="foo" Value="0">
-          <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
-        </Member>
-        <Member Name="bar" Value="1">
-          <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
-        </Member>
-        <Member Name="baz" Value="2">
-          <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
-        </Member>
-        <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
-      </EnumType>
+      <Function Name="a" IsBound="true" IsComposable="true">
+        <Parameter Name="this" Type="Model.Animal" Nullable="false" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Function>
+      <Action Name="b" IsBound="true">
+        <Parameter Name="this" Type="Model.Animal" Nullable="false" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Action>
+      <EntityContainer Name="Service">
+        <EntitySet Name="dogs" EntityType="Model.Dog" />
+      </EntityContainer>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>

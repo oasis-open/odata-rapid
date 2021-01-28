@@ -27,7 +27,6 @@ namespace rapid.rdm.tests
             {
                 throw new System.Exception("failed to transform model");
             }
-
         }
 
         [Fact]
