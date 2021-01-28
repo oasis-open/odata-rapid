@@ -5,46 +5,50 @@
 @Core.Description: "a"
 type Type1
 {
-    @Core.Description: "a"
+    @Core.Description: "b"
     key prop0: String
 
-    @Core.Description: "a"
+    @Core.Description: "c"
     prop1 : Edm.Int32
 
-    # @Core.Description: "a"
-    # function f1(
-    #     @Core.Description: "a" p1: Integer,
-    # ) : @Core.Description: "a" Integer
+    @Core.Description: "d"
+    function f1(
+        @Core.Description: "e" 
+        p1: Integer
+    ) : @Core.Description: "f"  Integer
 
-    # @Core.Description: "a"
-    # action a1(
-    #     @Core.Description: "a" p1: Integer,
-    # )
+    @Core.Description: "g"
+    action a1(
+        @Core.Description: "h" 
+        p2: Integer
+    )
 }
 
-@Core.Description: "a"
+@Core.Description: "i"
 enum Enum1 { 
-    @Core.Description: "a"  
+    @Core.Description: "j"  
     enumMember1 
 }
 
-@Core.Description: "a"
+@Core.Description: "k"
 service Service1
 {
-    @Core.Description: "a"
+    @Core.Description: "l"
     set1: [Type1]
 
-    @Core.Description: "a"
-    singleton: Type1
+    @Core.Description: "m"
+    singleton1: Type1
     
-#    @Core.Description: "a"
-#     function f2(
-#         @Core.Description: "a" p1: Integer,
-#     ) : @Core.Description: "a" Integer
+    # function f2() : Integer
 
-#     @Core.Description: "a"
+#     @Core.Description: "n"
+#     function f2(
+#          @Core.Description: "o" p1: Integer,
+#      ) : @Core.Description: "p" Integer
+
+#     @Core.Description: "q"
 #     action a2(
-#         @Core.Description: "a" p1: Integer,
+#         @Core.Description: "r" p1: Integer,
 #     )
 }
 

@@ -49,11 +49,7 @@ namespace rapid.rsdl
             from ex in ExpressionParsers.Expression
             select new rdm.Annotation(nm.Name, ex, at.GetPosition());
 
-        // static TokenListParser<RdmToken, rdm.IAnnotation> CustomAnnotationOr(TokenListParser<RdmToken, rdm.IAnnotation> other)
-        // {
-        //     return Annotation.Cast<RdmToken, CustomAnnotation, IAnnotation>();
-        // }
-
+        #region structured types
         static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
             from annotations in Annotation.Many()
             from key in Keyword("key").OptionalOrDefault().Try()
@@ -72,7 +68,7 @@ namespace rapid.rsdl
             };
 
         static readonly TokenListParser<RdmToken, rdm.RdmParameter> Parameter =
-
+            from aa in Annotation.Many()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from op in Token.EqualTo(RdmToken.QuestionMark).Optional()
             from co in Token.EqualTo(RdmToken.Colon)
@@ -81,42 +77,55 @@ namespace rapid.rsdl
                 nm.ToStringValue(),
                 ty,
                 op.HasValue,
-                null)
-            {
-                Position =
+                aa,
                 nm.GetPosition()
-            };
+            );
 
-        static readonly TokenListParser<RdmToken, RdmOperationKind> OperationModifier =
-            (
-                Keyword("function").Value(RdmOperationKind.Function)
-            ).Or(
-                Keyword("action").Value(RdmOperationKind.Action)
+        static readonly TokenListParser<RdmToken, rdm.RdmParameter> ReturnParameter =
+            from co in Token.EqualTo(RdmToken.Colon)
+            from aa in Annotation.Many()
+            from ty in TypeReference
+            select new rdm.RdmParameter(null, ty, false, aa, co.GetPosition());
+
+        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Function =
+            from aa in Annotation.Many()
+            from fn in Keyword("function")
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma)).Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+            from rt in ReturnParameter
+            select new rdm.RdmOperation(
+                RdmOperationKind.Function,
+                nm.ToStringValue(),
+                ps,
+                rt,
+                aa,
+                nm.GetPosition()
+            );
+
+        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Action =
+            from aa in Annotation.Many()
+            from ac in Keyword("action")
+            from nm in Token.EqualTo(RdmToken.Identifier)
+            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma)).Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+            select new rdm.RdmOperation(
+                RdmOperationKind.Action,
+                nm.ToStringValue(),
+                ps,
+                null,
+                aa,
+                nm.GetPosition()
             );
 
         static readonly TokenListParser<RdmToken, rdm.RdmOperation> Operation =
-            from aa in Annotation.Many()
-            from oa in OperationModifier
-            from nm in Token.EqualTo(RdmToken.Identifier)
-            from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma))                    // parameters
-                .Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
-            from rt in Token.EqualTo(RdmToken.Colon).IgnoreThen(TypeReference).OptionalOrDefault() // optional return type
-            select new rdm.RdmOperation
-            (
-                nm.ToStringValue(),
-                rt,
-                ps,
-                oa,
-                NonNull(aa).ToArray(),
-                nm.GetPosition());
+            (Function).Try().Or(Action);
 
+        // Type member have no common supertype since they are stored in two different collection properties
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
                 Operation.Cast<RdmToken, RdmOperation, object>()
             ).Try().Or(
                 Property.Cast<RdmToken, RdmProperty, object>()
             );
-
 
         static readonly TokenListParser<RdmToken, Superpower.Model.Token<RdmToken>> Extends =
             from kw in Keyword("extends")
@@ -139,7 +148,9 @@ namespace rapid.rsdl
                 aa,
                 kw.GetPosition()
             );
+        #endregion
 
+        #region enum types
         static readonly TokenListParser<RdmToken, rdm.RdmEnumMember> EnumMember =
             from aa in Annotation.Many()
             from id in Token.EqualTo(RdmToken.Identifier)
@@ -155,25 +166,28 @@ namespace rapid.rsdl
             from nm in Token.EqualTo(RdmToken.Identifier)
             from me in EnumMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmEnumType(nm.ToStringValue(), me, kw, aa, nm.GetPosition());
+        #endregion
 
         #region service
 
         // entityset = identifier ':' '[' identifier ']'
         // singelton = identifier ':' identifier
+
+        static readonly TokenListParser<RdmToken, (string id, bool multivalue)> Single =
+            from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
+            select (id.ToStringValue(), multivalue: true);
+        static readonly TokenListParser<RdmToken, (string id, bool multivalue)> Multiple =
+            from id in Token.EqualTo(RdmToken.Identifier)
+            select (id.ToStringValue(), multivalue: false);
+
         static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
             from aa in Annotation.Many()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from dp in Token.EqualTo(RdmToken.Colon)
-            from ty in (
-                from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
-                select (id, multivalue: true)
-            ).Or(
-                from id in Token.EqualTo(RdmToken.Identifier)
-                select (id, multivalue: false)
-            )
+            from ty in (Single).Or(Multiple)
             select ty.multivalue
-                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa)
-                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), new RdmTypeReference(ty.id.ToStringValue()), aa);
+                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id), aa)
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), new RdmTypeReference(ty.id), aa);
 
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from aa in Annotation.Many()

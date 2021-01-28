@@ -201,7 +201,7 @@ namespace rapid.rdm
                 {
                     throw new InvalidOperationException($"function on complex type at {func.Position}");
                 }
-                AddFunction(definition, func);
+                AddOperation(definition, func);
             }
 
             return edmType;
@@ -244,7 +244,7 @@ namespace rapid.rdm
             }
         }
 
-        private void AddFunction(RdmStructuredType rdmType, RdmOperation operation)
+        private void AddOperation(RdmStructuredType rdmType, RdmOperation operation)
         {
             EdmOperation edmOperation = MakeOperation(operation);
             edmModel.AddElement(edmOperation);
@@ -256,33 +256,34 @@ namespace rapid.rdm
             foreach (var param in operation.Parameters)
             {
                 var paramType = env.ResolveTypeReference(param.Type);
-                if (param.IsOptional)
-                {
-                    edmOperation.AddOptionalParameter(param.Name, paramType);
-                }
-                else
-                {
+                EdmOperationParameter edmParameter = param.IsOptional ?
+                    edmOperation.AddOptionalParameter(param.Name, paramType) :
                     edmOperation.AddParameter(param.Name, paramType);
-                }
+
+                annotationBuilder.AddAnnotations(edmModel, edmParameter, param.Annotations);
             }
         }
 
         private EdmOperation MakeOperation(RdmOperation operation)
         {
+            EdmOperation edmOperation;
             if (operation.Kind == RdmOperationKind.Function)
             {
                 if (operation.ReturnType == null)
                 {
                     throw new TransformationException($"function \"{operation.Name}\" at {operation.Position} must have a return type");
                 }
-                var edmTypeRef = env.ResolveTypeReference(operation.ReturnType);
-                return (EdmOperation)new EdmFunction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null, true);
+                var edmTypeRef = env.ResolveTypeReference(operation.ReturnType.Type);
+                edmOperation = new EdmFunction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null, true);
+                annotationBuilder.AddAnnotations(edmModel, edmOperation.GetReturn(), operation.ReturnType.Annotations);
             }
             else
             {
-                var edmTypeRef = operation.ReturnType != null ? env.ResolveTypeReference(operation.ReturnType) : null;
-                return new EdmAction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null);
+                var edmTypeRef = operation.ReturnType != null ? env.ResolveTypeReference(operation.ReturnType.Type) : null;
+                edmOperation = new EdmAction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null);
             }
+            annotationBuilder.AddAnnotations(edmModel, edmOperation, operation.Annotations);
+            return edmOperation;
         }
 
         private EdmEntityContainer AddService(RdmService service)
