@@ -13,7 +13,7 @@ include: 'include' FILENAME 'as' ID;
 
 modelElement: structuredType | enumType | service;
 
-structuredType: 'type' ID '{' typeMember* '}';
+structuredType: ABSTRACT? 'type' ID '{' typeMember* '}';
 typeMember: property | operation;
 property: KEY? ID ':' typeReference;
 
@@ -53,6 +53,7 @@ serviceOperation:
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
+ABSTRACT: 'abstract' WS;
 ACTION: 'action' WS;
 FUNCTION: 'function' WS;
 KEY: 'key' WS;

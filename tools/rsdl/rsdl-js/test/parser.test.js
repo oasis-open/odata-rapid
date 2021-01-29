@@ -307,7 +307,7 @@ describe("Parse correct RSDL", () => {
 describe("Reference test cases", () => {
   //TODO: use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
   const files = [
-    // "abstract",
+    "abstract",
     // "annotations",
     // "inheritance",
     "operations",

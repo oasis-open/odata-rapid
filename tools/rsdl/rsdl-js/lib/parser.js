@@ -56,7 +56,12 @@ class MyListener extends rsdlListener {
 
   enterStructuredType(ctx) {
     const name = ctx.ID().getText();
-    this.current.type = { $Kind: "ComplexType", $$Name: name, $OpenType: true };
+    this.current.type = {
+      $Kind: "ComplexType",
+      $$Name: name,
+      ...(ctx.ABSTRACT() && { $Abstract: true }),
+      $OpenType: true,
+    };
     this.schema[name] = this.current.type;
   }
 

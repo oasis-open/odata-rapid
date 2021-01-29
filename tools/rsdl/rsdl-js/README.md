@@ -64,10 +64,11 @@ Install
 - [x] create grammar
 - [x] create listener that produces CSDL
 - [x] create CLI
+- [x] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
 - [ ] inheritance
 - [ ] annotations
-- [ ] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
 - [ ] create error listener for syntactically incorrect "files"
 - [ ] log errors from CLI
-- [ ] Option `-r` for recursive translation
+- [ ] Option `-a` for compiling all files in a folder?
+- [ ] Option `-r` for recursive compilation?
 - [ ] Update to ANTLR 4.9.x
