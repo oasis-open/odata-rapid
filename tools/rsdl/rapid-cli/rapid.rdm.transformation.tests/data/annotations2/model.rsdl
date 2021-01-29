@@ -1,0 +1,52 @@
+
+# one annotation on each of the elements that support it. 
+# https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Applicability
+
+@Core.Description: "a"
+type Type1
+{
+    @Core.Description: "b"
+    key prop0: String
+
+    @Core.Description: "c"
+    prop1 : Edm.Int32
+
+    @Core.Description: "d"
+    function f1(
+        @Core.Description: "e" 
+        p1: Integer
+    ) : @Core.Description: "f"  Integer
+
+    @Core.Description: "g"
+    action a1(
+        @Core.Description: "h" 
+        p2: Integer
+    )
+}
+
+@Core.Description: "i"
+enum Enum1 { 
+    @Core.Description: "j"  
+    enumMember1 
+}
+
+@Core.Description: "k"
+service Service1
+{
+    @Core.Description: "l"
+    set1: [Type1]
+
+    @Core.Description: "m"
+    singleton1: Type1
+    
+    @Core.Description: "n"
+    function f2(
+        @Core.Description: "o" p1: Integer
+     ) : @Core.Description: "p" Integer
+
+    @Core.Description: "q"
+    action a2(
+        @Core.Description: "r" p1: Integer
+    )
+}
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="Enum1">
+        <Member Name="enumMember1" Value="0">
+          <Annotation Term="Org.OData.Core.V1.Description" String="j" />
+        </Member>
+        <Annotation Term="Org.OData.Core.V1.Description" String="i" />
+      </EnumType>
+      <EntityType Name="Type1" OpenType="true">
+        <Key>
+          <PropertyRef Name="prop0" />
+        </Key>
+        <Property Name="prop0" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="b" />
+        </Property>
+        <Property Name="prop1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="c" />
+        </Property>
+        <Annotation Term="Org.OData.Core.V1.Description" String="a" />
+      </EntityType>
+      <Function Name="f1" IsBound="true" IsComposable="true">
+        <Parameter Name="this" Type="Model.Type1" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="e" />
+        </Parameter>
+        <ReturnType Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="f" />
+        </ReturnType>
+        <Annotation Term="Org.OData.Core.V1.Description" String="d" />
+      </Function>
+      <Action Name="a1" IsBound="true">
+        <Parameter Name="this" Type="Model.Type1" Nullable="false" />
+        <Parameter Name="p2" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="h" />
+        </Parameter>
+        <Annotation Term="Org.OData.Core.V1.Description" String="g" />
+      </Action>
+      <Function Name="f2" IsBound="true" IsComposable="true">
+        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="o" />
+        </Parameter>
+        <ReturnType Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="p" />
+        </ReturnType>
+        <Annotation Term="Org.OData.Core.V1.Description" String="n" />
+      </Function>
+      <Action Name="a2" IsBound="true">
+        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="r" />
+        </Parameter>
+        <Annotation Term="Org.OData.Core.V1.Description" String="q" />
+      </Action>
+      <EntityContainer Name="Service1">
+        <EntitySet Name="set1" EntityType="Model.Type1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="l" />
+        </EntitySet>
+        <Singleton Name="singleton1" Type="Model.Type1">
+          <Annotation Term="Org.OData.Core.V1.Description" String="m" />
+        </Singleton>
+        <FunctionImport Name="f2" Function="Model.f2" />
+        <ActionImport Name="a2" Action="Model.a2" />
+        <Annotation Term="Org.OData.Core.V1.Description" String="k" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

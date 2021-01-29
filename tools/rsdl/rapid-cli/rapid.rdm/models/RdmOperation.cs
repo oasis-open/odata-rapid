@@ -6,27 +6,29 @@ namespace rapid.rdm
 {
     public enum RdmOperationKind { Function, Action }
 
-    public class RdmOperation : IEquatable<RdmOperation>
+    public class RdmOperation : IEquatable<RdmOperation>, IRdmServiceElement
     {
-        public RdmOperation(string name,
-            RdmTypeReference returnType,
-            ICollection<RdmParameter> parameters,
+        public RdmOperation(
             RdmOperationKind kind,
+            string name,
+            ICollection<RdmParameter> parameters,
+            RdmParameter returnType,
             IEnumerable<Annotation> annotations = null,
             Position position = default)
         {
-            Name = name;
-            ReturnType = returnType;
-            Parameters = parameters;
             Kind = kind;
-            Annotations = annotations ?? Enumerable.Empty<Annotation>();
+            Name = name;
+            Parameters = parameters;
+            ReturnType = returnType;
+            Annotations = annotations.ToReadOnlyList();
+            Position = position;
         }
 
-        public string Name { get; set; }
-        public RdmTypeReference ReturnType { get; set; }
-        public ICollection<RdmParameter> Parameters { get; set; }
+        public string Name { get; }
+        public RdmParameter ReturnType { get; }
+        public ICollection<RdmParameter> Parameters { get; }
         public RdmOperationKind Kind { get; }
-        public IEnumerable<Annotation> Annotations { get; set; }
+        public IReadOnlyList<Annotation> Annotations { get; }
         public Position Position { get; set; }
 
         #region equality

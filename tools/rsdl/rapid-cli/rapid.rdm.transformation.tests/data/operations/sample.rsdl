@@ -1,8 +1,10 @@
 
-type demo1 
+
+type Demo1 
 {
-    key id: String # operations and functions only allowed on keyed types
+    key id: String # operations and functions only allowed on type with keyes
 
     function a() : Integer
     action b() : Integer
 }
+

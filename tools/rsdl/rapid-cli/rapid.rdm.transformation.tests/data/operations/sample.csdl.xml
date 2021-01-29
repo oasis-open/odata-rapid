@@ -4,18 +4,18 @@
     <edmx:DataServices>
         <Schema Namespace="Model"
             xmlns="http://docs.oasis-open.org/odata/ns/edm">
-            <EntityType Name="demo1" OpenType="true">
+            <EntityType Name="Demo1" OpenType="true">
                 <Key>
                     <PropertyRef Name="id" />
                 </Key>
                 <Property Name="id" Type="Edm.String" Nullable="false" />
             </EntityType>
             <Function Name="a" IsBound="true" IsComposable="true">
-                <Parameter Name="this" Type="Model.demo1" Nullable="false" />
+                <Parameter Name="this" Type="Model.Demo1" Nullable="false" />
                 <ReturnType Type="Edm.Int32" Nullable="false" />
             </Function>
             <Action Name="b" IsBound="true">
-                <Parameter Name="this" Type="Model.demo1" Nullable="false" />
+                <Parameter Name="this" Type="Model.Demo1" Nullable="false" />
                 <ReturnType Type="Edm.Int32" Nullable="false" />
             </Action>
         </Schema>

@@ -10,24 +10,22 @@ namespace rapid.rdm
     public interface IRdmServiceElement
     {
         string Name { get; }
+        IReadOnlyList<Annotation> Annotations { get; }
     }
 
     public class RdmService : IRdmSchemaElement, IEquatable<RdmService>
     {
-        //     public RdmService()
-        //     {
-        //         Name = "Service";
-        //     }
-
-        public RdmService(IEnumerable<IRdmServiceElement> items, Position position = default)
+        public RdmService(string name, IEnumerable<IRdmServiceElement> items, IEnumerable<Annotation> annotations = null, Position position = default)
         {
-            Name = "Service";
+            Name = name ?? "Service";
             Items = items;
+            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
         }
 
         public string Name { get; }
 
         public IEnumerable<IRdmServiceElement> Items { get; }
+        public IReadOnlyList<Annotation> Annotations { get; }
 
         #region equality 
 
@@ -37,7 +35,8 @@ namespace rapid.rdm
             if (one == null || two == null) return one == null && two == null;
             return
                 string.Equals(one.Name, two.Name) &&
-                Enumerable.SequenceEqual(one.Items, two.Items);
+                Enumerable.SequenceEqual(one.Items, two.Items) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
         }
 
         public bool Equals(RdmService other)
@@ -52,7 +51,7 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Items);
+            return HashCode.Combine(Name, Items, Annotations);
         }
 
         #endregion

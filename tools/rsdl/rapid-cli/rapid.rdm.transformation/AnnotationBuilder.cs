@@ -19,6 +19,13 @@ namespace rapid.rdm
             this.logger = logger;
         }
 
+        public void AddAnnotations(EdmModel edmModel, IEdmVocabularyAnnotatable annotatable, IEnumerable<Annotation> annotations)
+        {
+            foreach (var annotation in annotations)
+            {
+                this.AddAnnotation(edmModel, annotatable, annotation);
+            }
+        }
 
         public void AddAnnotation(EdmModel edmModel, IEdmVocabularyAnnotatable annotatable, Annotation annotation)
         {
