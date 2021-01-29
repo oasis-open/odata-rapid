@@ -309,7 +309,7 @@ describe("Reference test cases", () => {
   const files = [
     "abstract",
     // "annotations",
-    // "inheritance",
+    "inheritance",
     "operations",
   ];
   files.forEach((f) => {

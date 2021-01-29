@@ -83,6 +83,15 @@ rsdlListener.prototype.exitProperty = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#baseType.
+rsdlListener.prototype.enterBaseType = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#baseType.
+rsdlListener.prototype.exitBaseType = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#single.
 rsdlListener.prototype.enterSingle = function(ctx) {
 };

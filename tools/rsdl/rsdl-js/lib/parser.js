@@ -70,6 +70,10 @@ class MyListener extends rsdlListener {
     this.current.type = null;
   }
 
+  enterBaseType(ctx) {
+    this.current.type.$BaseType = `${this.namespace}.${ctx.ID().getText()}`;
+  }
+
   enterProperty(ctx) {
     const name = ctx.ID().getText();
     this.current.typedElement = {};

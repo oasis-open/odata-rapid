@@ -13,9 +13,12 @@ include: 'include' FILENAME 'as' ID;
 
 modelElement: structuredType | enumType | service;
 
-structuredType: ABSTRACT? 'type' ID '{' typeMember* '}';
+structuredType:
+	ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
 typeMember: property | operation;
 property: KEY? ID ':' typeReference;
+
+baseType: EXTENDS ID;
 
 typeReference:
 	typeName NULLABLE?				# single
@@ -40,10 +43,10 @@ operation:
 parameter: ID ':' typeReference;
 returnType: ':' typeReference;
 
-enumType: 'enum' ID '{' enumMember+ '}';
+enumType: 'enum' ID '{' enumMember* '}';
 enumMember: ID;
 
-service: 'service' '{' serviceMember+ '}';
+service: 'service' '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;
 entitySet: ID ':' '[' qualifiedName ']';
 singleton: ID ':' qualifiedName;
@@ -55,6 +58,7 @@ ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 ABSTRACT: 'abstract' WS;
 ACTION: 'action' WS;
+EXTENDS: 'extends' WS;
 FUNCTION: 'function' WS;
 KEY: 'key' WS;
 NULLABLE: '?';

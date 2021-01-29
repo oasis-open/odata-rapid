@@ -65,7 +65,7 @@ Install
 - [x] create listener that produces CSDL
 - [x] create CLI
 - [x] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
-- [ ] inheritance
+- [x] inheritance
 - [ ] annotations
 - [ ] create error listener for syntactically incorrect "files"
 - [ ] log errors from CLI
