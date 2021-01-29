@@ -14,11 +14,11 @@ describe("CLI", () => {
   });
 
   it("Translate one file", async () => {
-    const outfile = "jetsons.csdl.json";
+    const outfile = "examples/jetsons.csdl.json";
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "jetsons.rsdl"], ".");
+    const result = await cmd(["-p", "examples/jetsons.rsdl"], ".");
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.equal("jetsons.csdl.json\n");
+    expect(result.stdout).to.equal("examples/jetsons.csdl.json\n");
     expect(fs.existsSync(outfile)).to.equal(true);
     const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
     expect(csdl).to.contain({
