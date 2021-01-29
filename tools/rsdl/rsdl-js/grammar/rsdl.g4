@@ -1,6 +1,3 @@
-//TODO
-// comments, doc comments, type definitions
-
 grammar rsdl;
 
 model: namespace? include* modelElement* EOF;
@@ -43,6 +40,7 @@ operation:
 parameter: ID ':' typeReference;
 returnType: ':' typeReference;
 
+//TODO: flags
 enumType: 'enum' ID '{' enumMember* '}';
 enumMember: ID;
 
