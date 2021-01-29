@@ -280,7 +280,7 @@ describe("Parse correct RSDL", () => {
     assert.deepStrictEqual(parse(`enum foo { bar baz }`), {
       $Version: "4.0",
       Model: {
-        foo: { $Kind: "EnumType", bar: 1, baz: 2 },
+        foo: { $Kind: "EnumType", bar: 0, baz: 1 },
       },
     });
   });
@@ -307,7 +307,7 @@ describe("Reference test cases", () => {
   //TODO: use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
   const files = [
     "abstract",
-    // "annotations",
+    "annotations",
     "inheritance",
     "operations",
     // "path-expressions",

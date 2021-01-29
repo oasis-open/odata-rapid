@@ -21,9 +21,10 @@ class MyListener extends rsdlListener {
     this.csdl = { $Version: "4.0" };
     this.namespace = "Model";
     this.schema = {};
-    this.current = {};
+    this.current = { annotatable: [], annotation: [] };
     this.topLevelTypes = {};
     this.includeReader = includeReader;
+    this.pushAnnotatable(this.schema);
   }
 
   enterNamespace(ctx) {
@@ -33,7 +34,7 @@ class MyListener extends rsdlListener {
   enterInclude(ctx) {
     const alias = ctx.ID() && ctx.ID().getText();
 
-    const quotedFilename = ctx.FILENAME().getText();
+    const quotedFilename = ctx.STRING().getText();
     const filename = quotedFilename.substring(1, quotedFilename.length - 1);
     const rsdl = this.includeReader(filename);
     //TODO: build full model with recursively included files
@@ -54,6 +55,73 @@ class MyListener extends rsdlListener {
     });
   }
 
+  //TODO: construct annotation value
+  enterAnnotation(ctx) {
+    this.current.annotation.unshift({});
+  }
+
+  enterArr(ctx) {
+    this.current.annotation[0].value = [];
+  }
+
+  enterItem(ctx) {
+    this.current.annotation.unshift({});
+  }
+
+  exitItem(ctx) {
+    const value = this.current.annotation[0].value;
+    this.current.annotation.shift();
+    this.current.annotation[0].value.push(value);
+  }
+
+  enterObj(ctx) {
+    this.current.annotation[0].value = {};
+  }
+
+  enterPair(ctx) {
+    this.current.annotation.unshift({});
+  }
+
+  exitPair(ctx) {
+    const value = this.current.annotation[0].value;
+    this.current.annotation.shift();
+    this.current.annotation[0].value[ctx.ID().getText()] = value;
+  }
+
+  exitValue(ctx) {
+    if (this.current.annotation[0].value === undefined) {
+      this.current.annotation[0].value = JSON.parse(ctx.getText());
+    }
+  }
+
+  exitAnnotation(ctx) {
+    if (this.current.annotatable.length === 0) {
+      console.log("Panic: no annotatable!!!");
+    }
+
+    const term = this.normalizeTermName(ctx.qualifiedName().getText());
+    this.current.annotatable[0].target[
+      `${this.current.annotatable[0].prefix}@${term}`
+      //TODO: parse annotation value
+    ] = this.current.annotation[0].value;
+    this.current.annotation.shift();
+  }
+
+  normalizeTermName(name) {
+    //TODO: clean up
+    return name
+      .replace(/^Core./, "Org.OData.Core.V1.")
+      .replace(/^Validation./, "Org.OData.Validation.V1.");
+  }
+
+  pushAnnotatable(target, prefix = "") {
+    this.current.annotatable.unshift({ target, prefix });
+  }
+
+  popAnnotatable() {
+    this.current.annotatable.shift();
+  }
+
   enterStructuredType(ctx) {
     const name = ctx.ID().getText();
     this.current.type = {
@@ -63,11 +131,13 @@ class MyListener extends rsdlListener {
       $OpenType: true,
     };
     this.schema[name] = this.current.type;
+    this.pushAnnotatable(this.current.type);
   }
 
   exitStructuredType(ctx) {
     delete this.current.type.$$Name;
     this.current.type = null;
+    this.popAnnotatable();
   }
 
   enterBaseType(ctx) {
@@ -83,10 +153,12 @@ class MyListener extends rsdlListener {
       this.current.type.$Key.push(name);
     }
     this.current.type[name] = this.current.typedElement;
+    this.pushAnnotatable(this.current.typedElement);
   }
 
   exitProperty(ctx) {
     this.current.typedElement = null;
+    this.popAnnotatable();
   }
 
   enterTypeName(ctx) {
@@ -148,18 +220,25 @@ class MyListener extends rsdlListener {
 
   enterEnumType(ctx) {
     const name = ctx.ID().getText();
-    this.current.type = { $Kind: "EnumType", $$nextMemberNumber: 1 };
+    this.current.type = { $Kind: "EnumType", $$nextMemberNumber: 0 };
     this.schema[name] = this.current.type;
+    this.pushAnnotatable(this.current.type);
   }
 
   enterEnumMember(ctx) {
     const name = ctx.ID().getText();
     this.current.type[name] = this.current.type.$$nextMemberNumber++;
+    this.pushAnnotatable(this.current.type, name);
+  }
+
+  exitEnumMember(ctx) {
+    this.popAnnotatable();
   }
 
   exitEnumType(ctx) {
     delete this.current.type.$$nextMemberNumber;
     this.current.type = null;
+    this.popAnnotatable();
   }
 
   enterService(ctx) {

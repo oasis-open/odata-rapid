@@ -218,5 +218,59 @@ rsdlListener.prototype.exitServiceOperation = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#annotation.
+rsdlListener.prototype.enterAnnotation = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#annotation.
+rsdlListener.prototype.exitAnnotation = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#value.
+rsdlListener.prototype.enterValue = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#value.
+rsdlListener.prototype.exitValue = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#obj.
+rsdlListener.prototype.enterObj = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#obj.
+rsdlListener.prototype.exitObj = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#pair.
+rsdlListener.prototype.enterPair = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#pair.
+rsdlListener.prototype.exitPair = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#arr.
+rsdlListener.prototype.enterArr = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#arr.
+rsdlListener.prototype.exitArr = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#item.
+rsdlListener.prototype.enterItem = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#item.
+rsdlListener.prototype.exitItem = function(ctx) {
+};
+
+
 
 exports.rsdlListener = rsdlListener;

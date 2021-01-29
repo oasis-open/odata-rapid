@@ -6,14 +6,14 @@ namespace: 'namespace' qualifiedName;
 
 qualifiedName: ID ('.' ID)*;
 
-include: 'include' FILENAME 'as' ID;
+include: 'include' STRING 'as' ID;
 
 modelElement: structuredType | enumType | service;
 
 structuredType:
-	ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
+	annotation* ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
 typeMember: property | operation;
-property: KEY? ID ':' typeReference;
+property: annotation* KEY? ID ':' typeReference;
 
 baseType: EXTENDS ID;
 
@@ -41,8 +41,8 @@ parameter: ID ':' typeReference;
 returnType: ':' typeReference;
 
 //TODO: flags
-enumType: 'enum' ID '{' enumMember* '}';
-enumMember: ID;
+enumType: annotation* 'enum' ID '{' enumMember* '}';
+enumMember: annotation* ID;
 
 service: 'service' '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;
@@ -50,6 +50,14 @@ entitySet: ID ':' '[' qualifiedName ']';
 singleton: ID ':' qualifiedName;
 serviceOperation:
 	ACTION? ID '(' (parameter (',' parameter)*)? ')' returnType?;
+
+annotation: '@' qualifiedName ':' value;
+value: STRING | NUMBER | obj | arr | 'true' | 'false' | 'null';
+obj: '{' pair (',' pair)* '}' | '{' '}';
+//TODO: pair can also be an annotation
+pair: ID ':' value;
+arr: '[' item (',' item)* ']' | '[' ']';
+item: value;
 
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
@@ -61,8 +69,15 @@ FUNCTION: 'function' WS;
 KEY: 'key' WS;
 NULLABLE: '?';
 
-FILENAME: '"' (ESC | .)+? '"';
-fragment ESC: '\\"' | '\\\\';
+NUMBER: '-'? INT ('.' [0-9]+)? EXP?;
+fragment INT: '0' | [1-9] [0-9]*;
+fragment EXP: [Ee] [+\-]? INT;
+
+STRING: '"' (ESC | SAFECODEPOINT)* '"';
+fragment ESC: '\\' (["\\/bfnrt] | UNICODE);
+fragment UNICODE: 'u' HEX HEX HEX HEX;
+fragment HEX: [0-9a-fA-F];
+fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 
 LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 
