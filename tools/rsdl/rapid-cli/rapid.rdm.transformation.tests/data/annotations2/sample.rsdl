@@ -39,16 +39,14 @@ service Service1
     @Core.Description: "m"
     singleton1: Type1
     
-    # function f2() : Integer
+    @Core.Description: "n"
+    function f2(
+        @Core.Description: "o" p1: Integer
+     ) : @Core.Description: "p" Integer
 
-#     @Core.Description: "n"
-#     function f2(
-#          @Core.Description: "o" p1: Integer,
-#      ) : @Core.Description: "p" Integer
-
-#     @Core.Description: "q"
-#     action a2(
-#         @Core.Description: "r" p1: Integer,
-#     )
+    @Core.Description: "q"
+    action a2(
+        @Core.Description: "r" p1: Integer
+    )
 }
 

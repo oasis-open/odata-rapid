@@ -15,11 +15,10 @@ namespace rapid.rsdl
             from head in Token.EqualTo(RdmToken.Identifier)
             from tail in (from d in Token.EqualTo(RdmToken.FullStop) from i in Token.EqualTo(RdmToken.Identifier) select i).Many()
             select new CompositeIdentifier(
-                string.Join(".", tail.Prepend(head).Select(i => i.ToStringValue()))
-            )
-            {
-                Position = head.GetPosition()
-            };
+                string.Join(".", tail.Prepend(head).Select(i => i.ToStringValue())),
+                head.GetPosition()
+            );
+
 
         static readonly TokenListParser<RdmToken, string> EdmPrefix =
             from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
@@ -176,11 +175,12 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, (string id, bool multivalue)> Single =
             from id in Token.EqualTo(RdmToken.Identifier).Between(Token.EqualTo(RdmToken.OpeningBracket), Token.EqualTo(RdmToken.ClosingBracket))
             select (id.ToStringValue(), multivalue: true);
+
         static readonly TokenListParser<RdmToken, (string id, bool multivalue)> Multiple =
             from id in Token.EqualTo(RdmToken.Identifier)
             select (id.ToStringValue(), multivalue: false);
 
-        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
+        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceProperty =
             from aa in Annotation.Many()
             from nm in Token.EqualTo(RdmToken.Identifier)
             from dp in Token.EqualTo(RdmToken.Colon)
@@ -189,12 +189,22 @@ namespace rapid.rsdl
                 ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id), aa)
                 : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), new RdmTypeReference(ty.id), aa);
 
+        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> UnboundFunction =
+           Function.Cast<RdmToken, rdm.RdmOperation, rdm.IRdmServiceElement>();
+
+        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> UnboundAction =
+            Action.Cast<RdmToken, rdm.RdmOperation, rdm.IRdmServiceElement>();
+
+        static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> ServiceElement =
+            (ServiceProperty).Try().Or(UnboundFunction).Try().Or(UnboundAction);
+
         static readonly TokenListParser<RdmToken, rdm.RdmService> Service =
             from aa in Annotation.Many()
             from kw in Token.EqualToValue(RdmToken.Identifier, "service")
             from nm in Token.EqualTo(RdmToken.Identifier).Optional()
             from es in ServiceElement.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmService(nm.HasValue ? nm.Value.ToStringValue() : null, es, aa, kw.GetPosition());
+
         #endregion
 
         static readonly TokenListParser<RdmToken, rdm.IRdmSchemaElement> SchemaElement =

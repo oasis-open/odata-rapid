@@ -195,13 +195,13 @@ namespace rapid.rdm
 
             // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530382
             // add functions
-            foreach (var func in definition.Operations)
+            foreach (var operation in definition.Operations)
             {
                 if (!(edmType is EdmEntityType))
                 {
-                    throw new InvalidOperationException($"function on complex type at {func.Position}");
+                    throw new InvalidOperationException($"function on complex type at {operation.Position}");
                 }
-                AddOperation(definition, func);
+                AddOperation(operation, definition);
             }
 
             return edmType;
@@ -244,14 +244,17 @@ namespace rapid.rdm
             }
         }
 
-        private void AddOperation(RdmStructuredType rdmType, RdmOperation operation)
+        private IEdmOperation AddOperation(RdmOperation operation, RdmStructuredType rdmType)
         {
-            EdmOperation edmOperation = MakeOperation(operation);
+            var edmOperation = MakeOperation(operation);
             edmModel.AddElement(edmOperation);
 
-            // add binding parameter
-            var self = env.ResolveTypeReference(new RdmTypeReference(rdmType.Name));
-            edmOperation.AddParameter(new EdmOperationParameter(edmOperation, "this", self));
+            if (rdmType != null)
+            {
+                // add binding parameter
+                var self = env.ResolveTypeReference(new RdmTypeReference(rdmType.Name));
+                edmOperation.AddParameter(new EdmOperationParameter(edmOperation, "this", self));
+            }
 
             foreach (var param in operation.Parameters)
             {
@@ -262,6 +265,7 @@ namespace rapid.rdm
 
                 annotationBuilder.AddAnnotations(edmModel, edmParameter, param.Annotations);
             }
+            return edmOperation;
         }
 
         private EdmOperation MakeOperation(RdmOperation operation)
@@ -306,6 +310,9 @@ namespace rapid.rdm
                         break;
                     case RdmServiceSingleton singleton:
                         AddSingleton(container, singleton);
+                        break;
+                    case RdmOperation operation:
+                        AddServiceOperation(container, operation);
                         break;
                     default:
                         throw new NotSupportedException("unknown implementation of IRdmServiceElement");
@@ -389,6 +396,26 @@ namespace rapid.rdm
 
                 default:
                     throw new TransformationException($"Invalid type '{type}' for single valued service property {singleton.Name}.");
+            }
+        }
+
+        private void AddServiceOperation(EdmEntityContainer container, RdmOperation operation)
+        {
+            var edmOperation = AddOperation(operation, null);
+            edmModel.AddElement(edmOperation);
+
+            if (edmOperation is IEdmFunction edmFunction)
+            {
+                container.AddFunctionImport(edmFunction);
+            }
+            else if (edmOperation is IEdmAction edmAction)
+            {
+                container.AddActionImport(edmAction);
+            }
+            else
+            {
+                throw new NotSupportedException();
+                throw new NotSupportedException("unknown implementation of IEdmOperation");
             }
         }
     }
