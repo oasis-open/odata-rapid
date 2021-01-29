@@ -21,9 +21,11 @@ class MyListener extends rsdlListener {
     this.csdl = { $Version: "4.0" };
     this.namespace = "Model";
     this.schema = {};
-    this.current = { annotatable: [], annotation: [] };
+    this.current = {};
     this.topLevelTypes = {};
     this.includeReader = includeReader;
+    this.annotatable = [];
+    this.annotation = [];
     this.pushAnnotatable(this.schema);
   }
 
@@ -57,59 +59,59 @@ class MyListener extends rsdlListener {
 
   //TODO: construct annotation value
   enterAnnotation(ctx) {
-    this.current.annotation.unshift({});
+    this.annotation.unshift({});
   }
 
   exitPath(ctx) {
     //TODO: do we support absolute paths?
-    this.current.annotation[0].value = { $Path: ctx.getText().substring(2) };
+    this.annotation[0].value = { $Path: ctx.getText().substring(2) };
   }
 
   enterArr(ctx) {
-    this.current.annotation[0].value = [];
+    this.annotation[0].value = [];
   }
 
   enterItem(ctx) {
-    this.current.annotation.unshift({});
+    this.annotation.unshift({});
   }
 
   exitItem(ctx) {
-    const value = this.current.annotation[0].value;
-    this.current.annotation.shift();
-    this.current.annotation[0].value.push(value);
+    const value = this.annotation[0].value;
+    this.annotation.shift();
+    this.annotation[0].value.push(value);
   }
 
   enterObj(ctx) {
-    this.current.annotation[0].value = {};
+    this.annotation[0].value = {};
   }
 
   enterPair(ctx) {
-    this.current.annotation.unshift({});
+    this.annotation.unshift({});
   }
 
   exitPair(ctx) {
-    const value = this.current.annotation[0].value;
-    this.current.annotation.shift();
-    this.current.annotation[0].value[ctx.ID().getText()] = value;
+    const value = this.annotation[0].value;
+    this.annotation.shift();
+    this.annotation[0].value[ctx.ID().getText()] = value;
   }
 
   exitValue(ctx) {
-    if (this.current.annotation[0].value === undefined) {
-      this.current.annotation[0].value = JSON.parse(ctx.getText());
+    if (this.annotation[0].value === undefined) {
+      this.annotation[0].value = JSON.parse(ctx.getText());
     }
   }
 
   exitAnnotation(ctx) {
-    if (this.current.annotatable.length === 0) {
+    if (this.annotatable.length === 0) {
       console.log("Panic: no annotatable!!!");
     }
 
     const term = this.normalizeTermName(ctx.qualifiedName().getText());
-    this.current.annotatable[0].target[
-      `${this.current.annotatable[0].prefix}@${term}`
+    this.annotatable[0].target[
+      `${this.annotatable[0].prefix}@${term}`
       //TODO: parse annotation value
-    ] = this.current.annotation[0].value;
-    this.current.annotation.shift();
+    ] = this.annotation[0].value;
+    this.annotation.shift();
   }
 
   normalizeTermName(name) {
@@ -120,11 +122,11 @@ class MyListener extends rsdlListener {
   }
 
   pushAnnotatable(target, prefix = "") {
-    this.current.annotatable.unshift({ target, prefix });
+    this.annotatable.unshift({ target, prefix });
   }
 
   popAnnotatable() {
-    this.current.annotatable.shift();
+    this.annotatable.shift();
   }
 
   enterStructuredType(ctx) {
