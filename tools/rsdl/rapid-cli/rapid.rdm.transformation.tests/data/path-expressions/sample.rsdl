@@ -1,0 +1,8 @@
+
+
+@Core.Description: ./a/b/c
+type A 
+{
+    key id: String 
+    a: String
+}

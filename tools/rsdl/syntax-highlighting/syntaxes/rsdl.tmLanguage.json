@@ -30,8 +30,8 @@
           "match": "\\b(key|function|action|abstract|extends)\\b"
         },
         {
-          "name": "comment.line.double-slash.rsdl",
-          "match": "//.*$\n?"
+          "name": "comment.line.hash.rsdl",
+          "match": "#.*$\n?"
         },
         {
           "name": "entity.other.attribute-name",

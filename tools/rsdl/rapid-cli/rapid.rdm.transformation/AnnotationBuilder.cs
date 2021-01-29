@@ -246,6 +246,10 @@ namespace rapid.rdm
                     return new EdmStringConstant((string)expression.Value);
                 case AnnotationExpressionKind.Boolean:
                     return new EdmBooleanConstant((bool)expression.Value);
+
+                case AnnotationExpressionKind.Path:
+                    return new EdmPathExpression((string)expression.Value);
+
                 case AnnotationExpressionKind.Object:
                     return new EdmRecordExpression(
                         from prop in expression.Properties

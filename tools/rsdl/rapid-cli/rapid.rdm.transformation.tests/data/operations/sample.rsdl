@@ -1,7 +1,7 @@
 
 type demo1 
 {
-    key id: String // operations and functions only allowed on keyed types
+    key id: String # operations and functions only allowed on keyed types
 
     function a() : Integer
     action b() : Integer

@@ -6,7 +6,7 @@ using Superpower.Parsers;
 
 namespace rapid.rsdl
 {
-    internal static class ExpressionParsers
+    public static class ExpressionParsers
     {
         private static readonly TokenListParser<RdmToken, AnnotationExpression> Number =
             Token.EqualTo(RdmToken.Number).Apply(ExpressionTextParsers.NumberToExpression);
@@ -19,6 +19,15 @@ namespace rapid.rsdl
             from token in Token.EqualTo(RdmToken.QuotedString)
             let pair = ExpressionTextParsers.JsonString.Apply(token)
             select AnnotationExpression.String(pair.Value, pair.Position);
+
+        public static readonly TokenListParser<RdmToken, AnnotationExpression> Path =
+            from token in Token.EqualTo(RdmToken.FullStop)
+            from segments in (
+                from s in Token.EqualTo(RdmToken.Slash)
+                from i in Token.EqualTo(RdmToken.Identifier)
+                select i.ToStringValue()
+            ).Many()
+            select AnnotationExpression.Path(segments, token.GetPosition());
 
         private static readonly TokenListParser<RdmToken, AnnotationExpression> True =
             from token in Token.EqualToValue(RdmToken.Identifier, "true")
@@ -36,7 +45,7 @@ namespace rapid.rsdl
             (True).Or(False);
 
         private static readonly TokenListParser<RdmToken, AnnotationExpression> Literal =
-           (Null).Or(Number).Or(Boolean).Or(String);
+           (Null).Or(Number).Or(Boolean).Or(String).Or(Path);
 
         private static readonly TokenListParser<RdmToken, string> PropertyName =
             (
@@ -46,7 +55,7 @@ namespace rapid.rsdl
             );
 
         private static readonly TokenListParser<RdmToken, ExpressionProperty> Property =
-            from name in PropertyName// Token.EqualTo(RdmToken.Identifier)
+            from name in PropertyName
             from colon in Token.EqualTo(RdmToken.Colon)
             from value in Parse.Ref(() => Expression)
             select new ExpressionProperty(name, value);

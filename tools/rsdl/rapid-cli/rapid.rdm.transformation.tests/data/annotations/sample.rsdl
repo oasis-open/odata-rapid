@@ -20,8 +20,6 @@ enum Foo {
     @Core.Description: "third nonsense identifier"  baz 
 }
 
-
-
 @Core.Description: "Kingdom: Animalia"
 abstract type Animal
 {
@@ -33,21 +31,18 @@ abstract type Animal
 
     function a(): Integer
     action b(): Integer
-    c(): Integer
-    d()
 }
 
+# type Foo
+# {
+#     @Validation.AllowedValues: ["Rex", "Fifi"]
+#     @Core.RequiresType: "foo"
+#     key bar: String
 
-// type Foo
-// {
-//     @Validation.AllowedValues: ["Rex", "Fifi"]
-//     @Core.RequiresType: "foo"
-//     key bar: String
-
-//     @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
-//     @Core.RequiresType: "foo"
-//     baz: String
-// }
+#     @Validation.AllowedValues: [{value: "Rex"}, {value: "Fifi"}]
+#     @Core.RequiresType: "foo"
+#     baz: String
+# }
 
 service {
     dogs: [Dog]
