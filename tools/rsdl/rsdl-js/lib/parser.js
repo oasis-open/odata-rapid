@@ -60,6 +60,11 @@ class MyListener extends rsdlListener {
     this.current.annotation.unshift({});
   }
 
+  exitPath(ctx) {
+    //TODO: do we support absolute paths?
+    this.current.annotation[0].value = { $Path: ctx.getText().substring(2) };
+  }
+
   enterArr(ctx) {
     this.current.annotation[0].value = [];
   }

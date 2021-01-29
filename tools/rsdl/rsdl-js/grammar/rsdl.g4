@@ -52,7 +52,16 @@ serviceOperation:
 	ACTION? ID '(' (parameter (',' parameter)*)? ')' returnType?;
 
 annotation: '@' qualifiedName ':' value;
-value: STRING | NUMBER | obj | arr | 'true' | 'false' | 'null';
+value:
+	path
+	| STRING
+	| NUMBER
+	| obj
+	| arr
+	| 'true'
+	| 'false'
+	| 'null';
+path: '.' ('/' ID)+;
 obj: '{' pair (',' pair)* '}' | '{' '}';
 //TODO: pair can also be an annotation
 pair: ID ':' value;

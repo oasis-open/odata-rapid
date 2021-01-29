@@ -310,7 +310,7 @@ describe("Reference test cases", () => {
     "annotations",
     "inheritance",
     "operations",
-    // "path-expressions",
+    "path-expressions",
   ];
   files.forEach((f) => {
     it(f, function () {

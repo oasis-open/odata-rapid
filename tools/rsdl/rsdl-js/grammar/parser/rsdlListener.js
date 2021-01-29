@@ -236,6 +236,15 @@ rsdlListener.prototype.exitValue = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#path.
+rsdlListener.prototype.enterPath = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#path.
+rsdlListener.prototype.exitPath = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#obj.
 rsdlListener.prototype.enterObj = function(ctx) {
 };
