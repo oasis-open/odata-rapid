@@ -34,7 +34,8 @@ builtInType:
 
 //TODO: Require comma, or make it (in general) optional "whitespace"?
 operation:
-	ACTION? ID '(' (parameter (',' parameter)*)? ')' returnType?;
+	ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
+	| FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 //TODO: optional parameters
 parameter: ID ':' typeReference;
 returnType: ':' typeReference;
@@ -53,6 +54,7 @@ serviceOperation:
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 ACTION: 'action' WS;
+FUNCTION: 'function' WS;
 KEY: 'key' WS;
 NULLABLE: '?';
 

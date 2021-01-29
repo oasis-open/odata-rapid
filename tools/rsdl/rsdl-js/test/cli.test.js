@@ -22,7 +22,7 @@ describe("CLI", () => {
     expect(fs.existsSync(outfile)).to.equal(true);
     const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
     expect(csdl).to.contain({
-      $Version: "4.01",
+      $Version: "4.0",
       $EntityContainer: "Model.Service",
     });
     expect(csdl.Model.Service).to.deep.equal({
@@ -44,7 +44,7 @@ describe("CLI", () => {
     expect(fs.existsSync(outfile)).to.equal(true);
     const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
     expect(csdl).to.deep.equal({
-      $Version: "4.01",
+      $Version: "4.0",
       $Reference: {
         "foo-bar.rsdl": {
           $Include: [{ $Namespace: "foo.bar", $Alias: "foobar" }],

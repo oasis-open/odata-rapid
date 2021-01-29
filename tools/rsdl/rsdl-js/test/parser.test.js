@@ -1,28 +1,31 @@
 const assert = require("chai").assert;
 
+const csdl = require("odata-csdl");
+const fs = require("fs");
+
 const { parse } = require("../lib/parser");
 
 describe("Parse correct RSDL", () => {
   it("Empty file", () => {
     assert.deepStrictEqual(parse(""), {
-      $Version: "4.01",
+      $Version: "4.0",
       Model: {},
     });
   });
 
   it("Empty type", () => {
     assert.deepStrictEqual(parse("type foo { }"), {
-      $Version: "4.01",
-      Model: { foo: { $Kind: "ComplexType" } },
+      $Version: "4.0",
+      Model: { foo: { $Kind: "ComplexType", $OpenType: true } },
     });
   });
 
   it("Two types", () => {
     assert.deepStrictEqual(parse("type foo {}\ntype bar { baz: String }"), {
-      $Version: "4.01",
+      $Version: "4.0",
       Model: {
-        foo: { $Kind: "ComplexType" },
-        bar: { $Kind: "ComplexType", baz: {} },
+        foo: { $Kind: "ComplexType", $OpenType: true },
+        bar: { $Kind: "ComplexType", $OpenType: true, baz: {} },
       },
     });
   });
@@ -31,10 +34,11 @@ describe("Parse correct RSDL", () => {
     assert.deepStrictEqual(
       parse("type foo { key bar: String baz: Integer? }"),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         Model: {
           foo: {
             $Kind: "EntityType",
+            $OpenType: true,
             $Key: ["bar"],
             bar: {},
             baz: { $Type: "Edm.Int32", $Nullable: true },
@@ -57,10 +61,11 @@ describe("Parse correct RSDL", () => {
                geo: Edm.GeographyPoint
              }`),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         Model: {
           foo: {
             $Kind: "EntityType",
+            $OpenType: true,
             $Key: ["qux", "dat"],
             bar: { $Collection: true },
             baz: { $Collection: true, $Nullable: true, $Type: "Edm.Int32" },
@@ -85,11 +90,11 @@ describe("Parse correct RSDL", () => {
                one: bar
              }`),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         $EntityContainer: "Model.Service",
         Model: {
-          foo: { $Kind: "EntityType" },
-          bar: { $Kind: "EntityType" },
+          foo: { $Kind: "EntityType", $OpenType: true },
+          bar: { $Kind: "EntityType", $OpenType: true },
           Service: {
             $Kind: "EntityContainer",
             set: { $Type: "Model.foo", $Collection: true },
@@ -106,10 +111,14 @@ describe("Parse correct RSDL", () => {
              type baz {}
             `),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         Model: {
-          foo: { $Kind: "ComplexType", bar: { $Type: "Model.baz" } },
-          baz: { $Kind: "ComplexType" },
+          foo: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            bar: { $Type: "Model.baz" },
+          },
+          baz: { $Kind: "ComplexType", $OpenType: true },
         },
       }
     );
@@ -129,6 +138,7 @@ describe("Parse correct RSDL", () => {
       {
         foo: {
           $Kind: "EntityType",
+          $OpenType: true,
           bar: {
             $Kind: "NavigationProperty",
             $Type: "Model.baz",
@@ -137,6 +147,7 @@ describe("Parse correct RSDL", () => {
         },
         baz: {
           $Kind: "EntityType",
+          $OpenType: true,
           $Key: ["qux"],
           qux: {},
           foo: {
@@ -150,8 +161,8 @@ describe("Parse correct RSDL", () => {
 
   it("Namespace", () => {
     assert.deepStrictEqual(parse("namespace here.we.go type foo { }"), {
-      $Version: "4.01",
-      "here.we.go": { foo: { $Kind: "ComplexType" } },
+      $Version: "4.0",
+      "here.we.go": { foo: { $Kind: "ComplexType", $OpenType: true } },
     });
   });
 
@@ -171,7 +182,7 @@ describe("Parse correct RSDL", () => {
         }
       ),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         $Reference: {
           "foo-bar.rsdl": {
             $Include: [{ $Namespace: "foo.bar", $Alias: "foobar" }],
@@ -188,20 +199,21 @@ describe("Parse correct RSDL", () => {
   it("Actions and Functions", () => {
     assert.deepStrictEqual(
       parse(`type foo { 
-               bar(): Boolean
+               function bar(): Boolean
                action baz( quux: Integer )
                action qux( quux: [String], quuz: foo? ): foo
              }
              `),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         Model: {
-          foo: { $Kind: "ComplexType" },
+          foo: { $Kind: "ComplexType", $OpenType: true },
           bar: [
             {
               $Kind: "Function",
               $IsBound: true,
-              $Parameter: [{ $Name: "it", $Type: "Model.foo" }],
+              $IsComposable: true,
+              $Parameter: [{ $Name: "this", $Type: "Model.foo" }],
               $ReturnType: { $Type: "Edm.Boolean" },
             },
           ],
@@ -210,7 +222,7 @@ describe("Parse correct RSDL", () => {
               $Kind: "Action",
               $IsBound: true,
               $Parameter: [
-                { $Name: "it", $Type: "Model.foo" },
+                { $Name: "this", $Type: "Model.foo" },
                 { $Name: "quux", $Type: "Edm.Int32" },
               ],
             },
@@ -220,7 +232,7 @@ describe("Parse correct RSDL", () => {
               $Kind: "Action",
               $IsBound: true,
               $Parameter: [
-                { $Name: "it", $Type: "Model.foo" },
+                { $Name: "this", $Type: "Model.foo" },
                 { $Name: "quux", $Collection: true },
                 { $Name: "quuz", $Type: "Model.foo", $Nullable: true },
               ],
@@ -239,7 +251,7 @@ describe("Parse correct RSDL", () => {
                action bar( quux: Integer )
              }`),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         $EntityContainer: "Model.Service",
         Model: {
           foo: [
@@ -266,7 +278,7 @@ describe("Parse correct RSDL", () => {
 
   it("Enumeration types", () => {
     assert.deepStrictEqual(parse(`enum foo { bar baz }`), {
-      $Version: "4.01",
+      $Version: "4.0",
       Model: {
         foo: { $Kind: "EnumType", bar: 1, baz: 2 },
       },
@@ -283,12 +295,37 @@ describe("Parse correct RSDL", () => {
              }
              `),
       {
-        $Version: "4.01",
+        $Version: "4.0",
         Model: {
-          foo: { $Kind: "ComplexType", bar: {}, baz: {} },
+          foo: { $Kind: "ComplexType", $OpenType: true, bar: {}, baz: {} },
         },
       }
     );
+  });
+});
+
+describe("Reference test cases", () => {
+  //TODO: use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
+  const files = [
+    // "abstract",
+    // "annotations",
+    // "inheritance",
+    "operations",
+  ];
+  files.forEach((f) => {
+    it(f, function () {
+      const input = fs.readFileSync(
+        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.rsdl`,
+        "utf8"
+      );
+      const expected = csdl.xml2json(
+        fs.readFileSync(
+          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.csdl.xml`
+        )
+      );
+
+      assert.deepStrictEqual(parse(input), expected);
+    });
   });
 });
 
@@ -297,7 +334,7 @@ describe("Parse RSDL with errors", () => {
     //TODO: find out how to complain here
     // - https://medium.com/dailyjs/compiler-in-javascript-using-antlr-9ec53fd2780f
     assert.deepStrictEqual(parse("type foo"), {
-      $Version: "4.01",
+      $Version: "4.0",
       Model: { foo: { $Kind: "ComplexType" } },
     });
   });

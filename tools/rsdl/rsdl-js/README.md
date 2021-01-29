@@ -66,7 +66,7 @@ Install
 - [x] create CLI
 - [ ] inheritance
 - [ ] annotations
-- [ ] use test files from ..\rapid-cli\rapid.rdm.transformation.tests\data
+- [ ] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
 - [ ] create error listener for syntactically incorrect "files"
 - [ ] log errors from CLI
 - [ ] Option `-r` for recursive translation

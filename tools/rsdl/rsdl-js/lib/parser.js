@@ -18,7 +18,7 @@ const TYPENAMES = {
 class MyListener extends rsdlListener {
   constructor(includeReader) {
     super();
-    this.csdl = { $Version: "4.01" };
+    this.csdl = { $Version: "4.0" };
     this.namespace = "Model";
     this.schema = {};
     this.current = {};
@@ -56,7 +56,7 @@ class MyListener extends rsdlListener {
 
   enterStructuredType(ctx) {
     const name = ctx.ID().getText();
-    this.current.type = { $Kind: "ComplexType", $$Name: name };
+    this.current.type = { $Kind: "ComplexType", $$Name: name, $OpenType: true };
     this.schema[name] = this.current.type;
   }
 
@@ -105,8 +105,12 @@ class MyListener extends rsdlListener {
     this.current.overload = {
       $Kind: ctx.ACTION() ? "Action" : "Function",
       $IsBound: true,
+      ...(ctx.FUNCTION() && { $IsComposable: true }),
       $Parameter: [
-        { $Name: "it", $Type: `${this.namespace}.${this.current.type.$$Name}` },
+        {
+          $Name: "this",
+          $Type: `${this.namespace}.${this.current.type.$$Name}`,
+        },
       ],
     };
     this.schema[name].push(this.current.overload);

@@ -1,9 +1,10 @@
 {
-  "$Version": "4.01",
+  "$Version": "4.0",
   "$EntityContainer": "Model.Service",
   "Model": {
     "company": {
       "$Kind": "EntityType",
+      "$OpenType": true,
       "$Key": [
         "stockSymbol"
       ],
@@ -30,6 +31,7 @@
     },
     "employee": {
       "$Kind": "EntityType",
+      "$OpenType": true,
       "$Key": [
         "id"
       ],
@@ -46,6 +48,7 @@
     },
     "name": {
       "$Kind": "ComplexType",
+      "$OpenType": true,
       "firstName": {},
       "middleInitial": {
         "$Nullable": true
