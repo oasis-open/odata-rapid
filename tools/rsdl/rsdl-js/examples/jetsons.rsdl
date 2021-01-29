@@ -17,13 +17,13 @@ type employee
     name : name
     title: String
 
-    // // a CSDL action  with an optional parameter
-    // action fire(date?: Date) 
+    # a bound action  with an optional parameter that cannot be null if provided
+    # action fire(date?: Date) 
         
-    // // a CSDL action with an required parameter that can be null
-    // action fire(date: Date?) 
+    # a bound action with a required parameter that can be null
+    action fire(date: Date?) 
     
-    // promote() : Integer     // a CSDL function
+    function promote() : Integer     # a bound function
 }
 
 type name
@@ -34,17 +34,14 @@ type name
     title: String?
 }
 
-// function resetDataSource() 
-
-
 service
 {
-    // unbound, "global" action
-    // resetDataSource
+    # unbound, "global" action
+    # resetDataSource()
 
-    // entitySet http://host/competitors
+    # entity set
     competitors: [company]
 
-    // singleton http://host/company
+    # singleton
     company: company
 }

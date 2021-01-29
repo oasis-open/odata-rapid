@@ -46,6 +46,39 @@
       },
       "title": {}
     },
+    "fire": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Model.employee"
+          },
+          {
+            "$Name": "date",
+            "$Nullable": true,
+            "$Type": "Edm.Date"
+          }
+        ]
+      }
+    ],
+    "promote": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Model.employee"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Int32"
+        }
+      }
+    ],
     "name": {
       "$Kind": "ComplexType",
       "$OpenType": true,

@@ -6,7 +6,7 @@ var grammarFileName = "rsdl.g4";
 
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003#\u00e9\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+    "\u0003\"\u00e9\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
     "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0004",
@@ -170,7 +170,7 @@ var symbolicNames = [ null, null, null, null, null, null, null, null, null,
                       null, null, null, null, null, null, null, null, null, 
                       null, null, null, null, null, "ID", "ABSTRACT", "ACTION", 
                       "EXTENDS", "FUNCTION", "KEY", "NULLABLE", "FILENAME", 
-                      "LINE_COMMENT", "COMMENT", "WS" ];
+                      "LINE_COMMENT", "WS" ];
 
 var ruleNames =  [ "model", "namespace", "qualifiedName", "include", "modelElement", 
                    "structuredType", "typeMember", "property", "baseType", 
@@ -229,8 +229,7 @@ rsdlParser.KEY = 28;
 rsdlParser.NULLABLE = 29;
 rsdlParser.FILENAME = 30;
 rsdlParser.LINE_COMMENT = 31;
-rsdlParser.COMMENT = 32;
-rsdlParser.WS = 33;
+rsdlParser.WS = 32;
 
 rsdlParser.RULE_model = 0;
 rsdlParser.RULE_namespace = 1;

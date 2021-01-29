@@ -66,8 +66,7 @@ NULLABLE: '?';
 FILENAME: '"' (ESC | .)+? '"';
 fragment ESC: '\\"' | '\\\\';
 
-LINE_COMMENT: '//' .*? '\r'? '\n' -> skip;
-COMMENT: '/*' .*? '*/' -> skip;
+LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 
 //TODO: include comma here?
 WS: [ \t\n\r]+ -> skip;

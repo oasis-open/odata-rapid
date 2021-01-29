@@ -289,9 +289,8 @@ describe("Parse correct RSDL", () => {
     assert.deepStrictEqual(
       parse(`type foo { 
                bar: String
-               // action baz( quux: Integer )
-               /* action qux( quux: [String], quuz: foo? ): foo */
-               baz: String
+               # action baz( quux: Integer )
+               baz: String # ignore
              }
              `),
       {
@@ -311,6 +310,7 @@ describe("Reference test cases", () => {
     // "annotations",
     "inheritance",
     "operations",
+    // "path-expressions",
   ];
   files.forEach((f) => {
     it(f, function () {
