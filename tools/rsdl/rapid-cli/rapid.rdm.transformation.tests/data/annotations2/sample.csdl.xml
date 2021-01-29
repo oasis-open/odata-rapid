@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="4.0"
-  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
-    <Schema Namespace="Model"
-      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EnumType Name="Enum1">
         <Member Name="enumMember1" Value="0">
           <Annotation Term="Org.OData.Core.V1.Description" String="j" />
@@ -48,21 +46,6 @@
         </ReturnType>
         <Annotation Term="Org.OData.Core.V1.Description" String="n" />
       </Function>
-      <Function Name="f2" IsBound="true" IsComposable="true">
-        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
-          <Annotation Term="Org.OData.Core.V1.Description" String="o" />
-        </Parameter>
-        <ReturnType Type="Edm.Int32" Nullable="false">
-          <Annotation Term="Org.OData.Core.V1.Description" String="p" />
-        </ReturnType>
-        <Annotation Term="Org.OData.Core.V1.Description" String="n" />
-      </Function>
-      <Action Name="a2" IsBound="true">
-        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
-          <Annotation Term="Org.OData.Core.V1.Description" String="r" />
-        </Parameter>
-        <Annotation Term="Org.OData.Core.V1.Description" String="q" />
-      </Action>
       <Action Name="a2" IsBound="true">
         <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
           <Annotation Term="Org.OData.Core.V1.Description" String="r" />

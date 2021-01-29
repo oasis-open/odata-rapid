@@ -402,7 +402,6 @@ namespace rapid.rdm
         private void AddServiceOperation(EdmEntityContainer container, RdmOperation operation)
         {
             var edmOperation = AddOperation(operation, null);
-            edmModel.AddElement(edmOperation);
 
             if (edmOperation is IEdmFunction edmFunction)
             {

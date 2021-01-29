@@ -106,11 +106,12 @@ namespace rapid.rsdl
             from ac in Keyword("action")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ps in Parameter.ManyDelimitedBy(Token.EqualTo(RdmToken.Comma)).Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+            from rt in ReturnParameter.OptionalOrDefault()
             select new rdm.RdmOperation(
                 RdmOperationKind.Action,
                 nm.ToStringValue(),
                 ps,
-                null,
+                rt,
                 aa,
                 nm.GetPosition()
             );
