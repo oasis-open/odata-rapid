@@ -1,0 +1,6 @@
+# Dependency directories
+coverage/
+node_modules/
+
+# ANTLR Local files
+.antlr/

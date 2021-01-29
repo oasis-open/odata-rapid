@@ -1,0 +1,47 @@
+
+type company
+{
+    key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [employee]
+
+    test: [Integer]
+    ceo: employee
+}
+
+type employee
+{
+    key id: Integer 
+    key: Boolean
+    name : name
+    title: String
+
+    # a bound action  with an optional parameter that cannot be null if provided
+    # action fire(date?: Date) 
+        
+    # a bound action with a required parameter that can be null
+    action fire(date: Date?) 
+    
+    function promote() : Integer     # a bound function
+}
+
+type name
+{
+    firstName : String
+    middleInitial: String?
+    lastName: String
+    title: String?
+}
+
+service
+{
+    # unbound, "global" action
+    # resetDataSource()
+
+    # entity set
+    competitors: [company]
+
+    # singleton
+    company: company
+}

@@ -1,0 +1,2 @@
+include "foo-bar.rsdl" as foobar
+include "other/baz.rsdl" as hwga
