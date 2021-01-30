@@ -152,9 +152,11 @@ class MyListener extends rsdlListener {
   }
 
   enterProperty(ctx) {
-    const name = ctx.ID().getText();
     this.current.typedElement = {};
-    if (ctx.KEY()) {
+    let name = ctx.ID().getText();
+    //HACK: allow "key" as property name
+    if (name === "<missing undefined>") name = "key";
+    if (ctx.KEY() && ctx.ID().getText() !== "<missing undefined>") {
       this.current.type.$Kind = "EntityType";
       if (!this.current.type.$Key) this.current.type.$Key = [];
       this.current.type.$Key.push(name);
@@ -341,8 +343,11 @@ class ErrorListener extends antlr4.error.ErrorListener {
   }
 
   syntaxError(recognizer, symbol, line, column, message, payload) {
-    //TODO: include filename, also from included files, via includeReader (rename to fileReader?)
-    this.errors.push({ message, target: `${line}:${column}` });
+    //HACK: allow "key" as property name
+    if (message !== "missing ID at ':'") {
+      //TODO: include filename, also from included files, via includeReader (rename to fileReader?)
+      this.errors.push({ message, target: `${line}:${column}` });
+    }
   }
 }
 

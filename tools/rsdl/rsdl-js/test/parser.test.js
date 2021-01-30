@@ -32,15 +32,15 @@ describe("Parse correct RSDL", () => {
 
   it("Two properties, one key", () => {
     assert.deepStrictEqual(
-      parse("type foo { key bar: String baz: Integer? }"),
+      parse("type foo { key key: String baz: Integer? }"),
       {
         $Version: "4.0",
         Model: {
           foo: {
             $Kind: "EntityType",
             $OpenType: true,
-            $Key: ["bar"],
-            bar: {},
+            $Key: ["key"],
+            key: {},
             baz: { $Type: "Edm.Int32", $Nullable: true },
           },
         },

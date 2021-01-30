@@ -70,9 +70,8 @@ item: value;
 
 ABSTRACT: 'abstract';
 ACTION: 'action';
-EXTENDS: 'extends';
 FUNCTION: 'function';
-KEY: 'key';
+KEY: 'key' WS;
 NULLABLE: '?';
 
 NUMBER: '-'? INT ('.' [0-9]+)? EXP?;
