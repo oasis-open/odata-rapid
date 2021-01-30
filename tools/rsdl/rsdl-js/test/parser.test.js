@@ -330,12 +330,29 @@ describe("Reference test cases", () => {
 });
 
 describe("Parse RSDL with errors", () => {
-  it.skip("Incomplete type", () => {
-    //TODO: find out how to complain here
-    // - https://medium.com/dailyjs/compiler-in-javascript-using-antlr-9ec53fd2780f
+  it("Parser error", () => {
     assert.deepStrictEqual(parse("type foo"), {
+      $$errors: [
+        {
+          message: "mismatched input '<EOF>' expecting {'{', 'extends'}",
+          target: "1:8",
+        },
+      ],
       $Version: "4.0",
-      Model: { foo: { $Kind: "ComplexType" } },
+      Model: { foo: { $Kind: "ComplexType", $OpenType: true } },
+    });
+  });
+
+  it("Lexer error", () => {
+    assert.deepStrictEqual(parse("type foo {};"), {
+      $$errors: [
+        {
+          message: "token recognition error at: ';'",
+          target: "1:11",
+        },
+      ],
+      $Version: "4.0",
+      Model: { foo: { $Kind: "ComplexType", $OpenType: true } },
     });
   });
 

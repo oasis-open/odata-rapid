@@ -50,11 +50,10 @@ function convert(source) {
   try {
     const json = parse(rsdl, includeReader(source));
 
-    //TODO: just .json?
     const target = source.substring(0, source.lastIndexOf(".")) + ".csdl.json";
     console.log(target);
 
-    //TODO: use Prettier for more compact JSON
+    //TODO: use Prettier for more compact JSON?
     fs.writeFileSync(target, JSON.stringify(json, null, argv.pretty ? 2 : 0));
   } catch (e) {
     console.error(e);

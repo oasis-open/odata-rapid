@@ -334,18 +334,40 @@ class MyListener extends rsdlListener {
   }
 }
 
+class ErrorListener extends antlr4.error.ErrorListener {
+  constructor() {
+    super();
+    this.errors = [];
+  }
+
+  syntaxError(recognizer, symbol, line, column, message, payload) {
+    //TODO: include filename, also from included files, via includeReader (rename to fileReader?)
+    this.errors.push({ message, target: `${line}:${column}` });
+  }
+}
+
 function parse(input, includeReader) {
+  const errorListener = new ErrorListener();
+
   const chars = new antlr4.InputStream(input);
   const lexer = new rsdlLexer(chars);
+  lexer.removeErrorListeners();
+  lexer.addErrorListener(errorListener);
   const tokens = new antlr4.CommonTokenStream(lexer);
   const parser = new rsdlParser(tokens);
   parser.buildParseTrees = true;
+  parser.removeErrorListeners();
+  parser.addErrorListener(errorListener);
   const tree = parser.model();
   const listener = new MyListener(includeReader);
 
   antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
 
+  if (errorListener.errors.length > 0) {
+    listener.csdl.$$errors = errorListener.errors;
+  }
+
   return listener.csdl;
 }
 
-module.exports.parse = parse;
+module.exports = { parse };

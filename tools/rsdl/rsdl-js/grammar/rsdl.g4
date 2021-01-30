@@ -15,7 +15,7 @@ structuredType:
 typeMember: property | operation;
 property: annotation* KEY? ID ':' typeReference;
 
-baseType: EXTENDS ID;
+baseType: 'extends' ID;
 
 typeReference:
 	typeName NULLABLE?				# single
@@ -68,14 +68,11 @@ pair: ID ':' value;
 arr: '[' item (',' item)* ']' | '[' ']';
 item: value;
 
-//TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
-ID: [a-zA-Z_][a-zA-Z_0-9]*;
-
-ABSTRACT: 'abstract' WS;
-ACTION: 'action' WS;
-EXTENDS: 'extends' WS;
-FUNCTION: 'function' WS;
-KEY: 'key' WS;
+ABSTRACT: 'abstract';
+ACTION: 'action';
+EXTENDS: 'extends';
+FUNCTION: 'function';
+KEY: 'key';
 NULLABLE: '?';
 
 NUMBER: '-'? INT ('.' [0-9]+)? EXP?;
@@ -87,6 +84,9 @@ fragment ESC: '\\' (["\\/bfnrt] | UNICODE);
 fragment UNICODE: 'u' HEX HEX HEX HEX;
 fragment HEX: [0-9a-fA-F];
 fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
+
+//TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 
