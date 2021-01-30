@@ -67,4 +67,5 @@ WS=38
 'abstract'=29
 'action'=30
 'function'=31
+'key'=32
 '?'=33

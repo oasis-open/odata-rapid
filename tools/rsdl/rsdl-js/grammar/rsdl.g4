@@ -13,7 +13,8 @@ modelElement: structuredType | enumType | service;
 structuredType:
 	annotation* ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
 typeMember: property | operation;
-property: annotation* KEY? ID ':' typeReference;
+property: annotation* KEY? propertyName ':' typeReference;
+propertyName: ID | KEY;
 
 baseType: 'extends' ID;
 
@@ -71,7 +72,7 @@ item: value;
 ABSTRACT: 'abstract';
 ACTION: 'action';
 FUNCTION: 'function';
-KEY: 'key' WS;
+KEY: 'key';
 NULLABLE: '?';
 
 NUMBER: '-'? INT ('.' [0-9]+)? EXP?;

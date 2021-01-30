@@ -32,7 +32,7 @@ describe("Parse correct RSDL", () => {
 
   it("Two properties, one key", () => {
     assert.deepStrictEqual(
-      parse("type foo { key key: String baz: Integer? }"),
+      parse("type foo { key key : String baz: Integer? }"),
       {
         $Version: "4.0",
         Model: {
