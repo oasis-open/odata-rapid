@@ -335,7 +335,7 @@ describe("Parse RSDL with errors", () => {
       $$errors: [
         {
           message: "mismatched input '<EOF>' expecting {'{', 'extends'}",
-          target: "1:8",
+          target: "1:9",
         },
       ],
       $Version: "4.0",
@@ -348,7 +348,7 @@ describe("Parse RSDL with errors", () => {
       $$errors: [
         {
           message: "token recognition error at: ';'",
-          target: "1:11",
+          target: "1:12",
         },
       ],
       $Version: "4.0",

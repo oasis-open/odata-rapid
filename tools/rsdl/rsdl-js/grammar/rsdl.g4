@@ -33,7 +33,6 @@ builtInType:
 	| 'Integer'
 	| 'String';
 
-//TODO: Require comma, or make it (in general) optional "whitespace"?
 operation:
 	ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
 	| FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;

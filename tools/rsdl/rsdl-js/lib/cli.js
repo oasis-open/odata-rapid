@@ -50,6 +50,16 @@ function convert(source) {
   try {
     const json = parse(rsdl, includeReader(source));
 
+    //TODO: adapt for errors in included files
+    if (json.$$errors) {
+      json.$$errors.map((error) =>
+        console.error(`${source}:${error.target} ${error.message}`)
+      );
+      console.log();
+
+      delete json.$$errors;
+    }
+
     const target = source.substring(0, source.lastIndexOf(".")) + ".csdl.json";
     console.log(target);
 

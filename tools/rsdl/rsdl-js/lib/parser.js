@@ -342,7 +342,7 @@ class ErrorListener extends antlr4.error.ErrorListener {
 
   syntaxError(recognizer, symbol, line, column, message, payload) {
     //TODO: include filename, also from included files, via includeReader (rename to fileReader?)
-    this.errors.push({ message, target: `${line}:${column}` });
+    this.errors.push({ message, target: `${line}:${column + 1}` });
   }
 }
 

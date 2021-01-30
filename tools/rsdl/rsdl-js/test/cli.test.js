@@ -71,7 +71,19 @@ describe("CLI - error cases", () => {
     expect(result.stderr).to.contain("Source file not found: no-such.rsdl");
   });
 
-  //TODO: invalid input
+  it("File with syntax errors", async () => {
+    const outfile = "examples/kaputt.csdl.json";
+    if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
+    const result = await cmd(["-p", "examples/kaputt.rsdl"], ".");
+    expect(result.code).to.equal(0);
+    expect(result.stdout).to.equal("\nexamples/kaputt.csdl.json\n");
+    expect(fs.existsSync(outfile)).to.equal(true);
+    const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
+    expect(csdl).to.deep.equal({
+      $Version: "4.0",
+      Model: { kaputt: { $Kind: "ComplexType", $OpenType: true } },
+    });
+  });
 });
 
 function cmd(args, cwd) {

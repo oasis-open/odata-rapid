@@ -18,6 +18,7 @@
   "main": "lib/parser.js",
   "scripts": {
     "jetsons": "node lib/cli.js -p examples/jetsons.rsdl",
+    "kaputt": "node lib/cli.js -p examples/kaputt.rsdl",
     "test": "c8 mocha"
   },
   "author": "",
