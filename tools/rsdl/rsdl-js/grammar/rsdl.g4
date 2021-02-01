@@ -34,22 +34,24 @@ builtInType:
 	| 'String';
 
 operation:
-	ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
-	| FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
+	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
+	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 //TODO: optional parameters
-parameter: ID ':' typeReference;
-returnType: ':' typeReference;
+parameter: annotation* ID ':' typeReference;
+returnType: ':' annotation* typeReference;
 
 //TODO: flags
 enumType: annotation* 'enum' ID '{' enumMember* '}';
 enumMember: annotation* ID;
 
-service: 'service' '{' serviceMember* '}';
+//TODO: do we really want to allow service names?
+service: annotation* 'service' ID? '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;
-entitySet: ID ':' '[' qualifiedName ']';
-singleton: ID ':' qualifiedName;
+entitySet: annotation* ID ':' '[' qualifiedName ']';
+singleton: annotation* ID ':' qualifiedName;
 serviceOperation:
-	ACTION? ID '(' (parameter (',' parameter)*)? ')' returnType?;
+	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
+	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 
 annotation: '@' qualifiedName ':' value;
 value:

@@ -21,6 +21,7 @@ class MyListener extends rsdlListener {
     this.csdl = { $Version: "4.0" };
     this.namespace = "Model";
     this.schema = {};
+    this.entityContainer = { $Kind: "EntityContainer" };
     this.current = {};
     this.topLevelTypes = {};
     this.includeReader = includeReader;
@@ -62,6 +63,26 @@ class MyListener extends rsdlListener {
     this.annotation.unshift({});
   }
 
+  exitAnnotation(ctx) {
+    if (this.annotatable.length === 0) {
+      console.log("Panic: no annotatable!!!");
+    }
+
+    const term = this.normalizeTermName(ctx.qualifiedName().getText());
+    this.annotatable[0].target[
+      `${this.annotatable[0].prefix}@${term}`
+      //TODO: parse annotation value
+    ] = this.annotation[0].value;
+    this.annotation.shift();
+  }
+
+  normalizeTermName(name) {
+    //TODO: clean up
+    return name
+      .replace(/^Core./, "Org.OData.Core.V1.")
+      .replace(/^Validation./, "Org.OData.Validation.V1.");
+  }
+
   exitPath(ctx) {
     //TODO: do we support absolute paths?
     this.annotation[0].value = { $Path: ctx.getText().substring(2) };
@@ -101,26 +122,6 @@ class MyListener extends rsdlListener {
     }
   }
 
-  exitAnnotation(ctx) {
-    if (this.annotatable.length === 0) {
-      console.log("Panic: no annotatable!!!");
-    }
-
-    const term = this.normalizeTermName(ctx.qualifiedName().getText());
-    this.annotatable[0].target[
-      `${this.annotatable[0].prefix}@${term}`
-      //TODO: parse annotation value
-    ] = this.annotation[0].value;
-    this.annotation.shift();
-  }
-
-  normalizeTermName(name) {
-    //TODO: clean up
-    return name
-      .replace(/^Core./, "Org.OData.Core.V1.")
-      .replace(/^Validation./, "Org.OData.Validation.V1.");
-  }
-
   pushAnnotatable(target, prefix = "") {
     this.annotatable.unshift({ target, prefix });
   }
@@ -153,7 +154,8 @@ class MyListener extends rsdlListener {
 
   enterProperty(ctx) {
     this.current.typedElement = {};
-    const name = ctx.propertyName().getText();
+    const propertyName = ctx.propertyName();
+    const name = propertyName && propertyName.getText();
     if (ctx.KEY()) {
       this.current.type.$Kind = "EntityType";
       if (!this.current.type.$Key) this.current.type.$Key = [];
@@ -202,6 +204,12 @@ class MyListener extends rsdlListener {
       ],
     };
     this.schema[name].push(this.current.overload);
+    this.pushAnnotatable(this.current.overload);
+  }
+
+  exitOperation(ctx) {
+    this.current.typedElement = null;
+    this.popAnnotatable();
   }
 
   enterParameter(ctx) {
@@ -210,19 +218,23 @@ class MyListener extends rsdlListener {
     if (!this.current.overload.$Parameter)
       this.current.overload.$Parameter = [];
     this.current.overload.$Parameter.push(this.current.typedElement);
+    this.pushAnnotatable(this.current.typedElement);
   }
 
   exitParameter(ctx) {
     this.current.typedElement = null;
+    this.popAnnotatable();
   }
 
   enterReturnType(ctx) {
     this.current.typedElement = {};
     this.current.overload.$ReturnType = this.current.typedElement;
+    this.pushAnnotatable(this.current.typedElement);
   }
 
   exitReturnType(ctx) {
     this.current.typedElement = null;
+    this.popAnnotatable();
   }
 
   enterEnumType(ctx) {
@@ -230,6 +242,12 @@ class MyListener extends rsdlListener {
     this.current.type = { $Kind: "EnumType", $$nextMemberNumber: 0 };
     this.schema[name] = this.current.type;
     this.pushAnnotatable(this.current.type);
+  }
+
+  exitEnumType(ctx) {
+    delete this.current.type.$$nextMemberNumber;
+    this.current.type = null;
+    this.popAnnotatable();
   }
 
   enterEnumMember(ctx) {
@@ -242,15 +260,15 @@ class MyListener extends rsdlListener {
     this.popAnnotatable();
   }
 
-  exitEnumType(ctx) {
-    delete this.current.type.$$nextMemberNumber;
-    this.current.type = null;
-    this.popAnnotatable();
+  enterService(ctx) {
+    const name = (ctx.ID() && ctx.ID().getText()) || "Service";
+    this.csdl.$EntityContainer = `${this.namespace}.${name}`;
+    this.schema[name] = this.entityContainer;
+    this.pushAnnotatable(this.entityContainer);
   }
 
-  enterService(ctx) {
-    this.csdl.$EntityContainer = `${this.namespace}.Service`;
-    this.schema.Service = { $Kind: "EntityContainer" };
+  exitService(ctx) {
+    this.popAnnotatable();
   }
 
   enterEntitySet(ctx) {
@@ -258,7 +276,12 @@ class MyListener extends rsdlListener {
     const set = { $Collection: true };
     set.$Type = `${this.namespace}.${ctx.qualifiedName().getText()}`;
     this.topLevelTypes[set.$Type] = true;
-    this.schema.Service[name] = set;
+    this.entityContainer[name] = set;
+    this.pushAnnotatable(set);
+  }
+
+  exitEntitySet(ctx) {
+    this.popAnnotatable();
   }
 
   enterSingleton(ctx) {
@@ -266,7 +289,12 @@ class MyListener extends rsdlListener {
     const singleton = {};
     singleton.$Type = `${this.namespace}.${ctx.qualifiedName().getText()}`;
     this.topLevelTypes[singleton.$Type] = true;
-    this.schema.Service[name] = singleton;
+    this.entityContainer[name] = singleton;
+    this.pushAnnotatable(singleton);
+  }
+
+  exitSingleton(ctx) {
+    this.popAnnotatable();
   }
 
   enterServiceOperation(ctx) {
@@ -277,14 +305,19 @@ class MyListener extends rsdlListener {
     this.schema[name].push(this.current.overload);
     const serviceOperation = {};
     serviceOperation[`$${kind}`] = `${this.namespace}.${name}`;
-    this.schema.Service[name] = serviceOperation;
+    this.entityContainer[name] = serviceOperation;
+    this.pushAnnotatable(this.current.overload);
+  }
+
+  exitServiceOperation(ctx) {
+    this.popAnnotatable();
   }
 
   exitModel(ctx) {
     this.csdl[this.namespace] = this.schema;
 
     // types referenced in entity sets or singletons are entity types
-    for (const [name, child] of Object.entries(this.schema.Service || {})) {
+    for (const [name, child] of Object.entries(this.entityContainer || {})) {
       if (!this.isIdentifier(name) || !child.$Type) continue;
       const type = this.modelElement(child.$Type);
       if (!["ComplexType", "EntityType"].includes(type.$Kind)) {

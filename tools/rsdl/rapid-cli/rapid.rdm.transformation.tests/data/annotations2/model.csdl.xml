@@ -37,7 +37,7 @@
         </Parameter>
         <Annotation Term="Org.OData.Core.V1.Description" String="g" />
       </Action>
-      <Function Name="f2" IsBound="true" IsComposable="true">
+      <Function Name="f2">
         <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
           <Annotation Term="Org.OData.Core.V1.Description" String="o" />
         </Parameter>
@@ -46,7 +46,7 @@
         </ReturnType>
         <Annotation Term="Org.OData.Core.V1.Description" String="n" />
       </Function>
-      <Action Name="a2" IsBound="true">
+      <Action Name="a2">
         <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
           <Annotation Term="Org.OData.Core.V1.Description" String="r" />
         </Parameter>

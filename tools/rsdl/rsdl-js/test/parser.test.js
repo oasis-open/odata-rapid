@@ -247,7 +247,7 @@ describe("Parse correct RSDL", () => {
   it("Action and function imports", () => {
     assert.deepStrictEqual(
       parse(`service {
-               foo(): Boolean
+               function foo(): Boolean
                action bar( quux: Integer )
              }`),
       {
@@ -308,19 +308,21 @@ describe("Reference test cases", () => {
   const files = [
     "abstract",
     "annotations",
+    "annotations2",
     "inheritance",
     "operations",
     "path-expressions",
   ];
   files.forEach((f) => {
     it(f, function () {
+      const name = f === "annotations2" ? "model" : "sample";
       const input = fs.readFileSync(
-        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.rsdl`,
+        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.rsdl`,
         "utf8"
       );
       const expected = csdl.xml2json(
         fs.readFileSync(
-          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.csdl.xml`
+          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.csdl.xml`
         )
       );
 
