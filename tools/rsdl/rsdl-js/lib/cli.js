@@ -50,11 +50,20 @@ function convert(source) {
   try {
     const json = parse(rsdl, includeReader(source));
 
-    //TODO: just .json?
+    //TODO: adapt for errors in included files
+    if (json.$$errors) {
+      json.$$errors.map((error) =>
+        console.error(`${source}:${error.target} ${error.message}`)
+      );
+      console.log();
+
+      delete json.$$errors;
+    }
+
     const target = source.substring(0, source.lastIndexOf(".")) + ".csdl.json";
     console.log(target);
 
-    //TODO: use Prettier for more compact JSON
+    //TODO: use Prettier for more compact JSON?
     fs.writeFileSync(target, JSON.stringify(json, null, argv.pretty ? 2 : 0));
   } catch (e) {
     console.error(e);

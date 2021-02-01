@@ -1,4 +1,4 @@
-// Generated from c:\SAPDevelop\odata-rapid\tools\rsdl\rsdl-js\grammar\rsdl.g4 by ANTLR 4.8
+// Generated from c:\git\odata-rapid\tools\rsdl\rsdl-js\grammar\rsdl.g4 by ANTLR 4.8
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 
@@ -83,6 +83,15 @@ rsdlListener.prototype.exitProperty = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#propertyName.
+rsdlListener.prototype.enterPropertyName = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#propertyName.
+rsdlListener.prototype.exitPropertyName = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#baseType.
 rsdlListener.prototype.enterBaseType = function(ctx) {
 };
@@ -161,6 +170,15 @@ rsdlListener.prototype.enterEnumType = function(ctx) {
 
 // Exit a parse tree produced by rsdlParser#enumType.
 rsdlListener.prototype.exitEnumType = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#enumKind.
+rsdlListener.prototype.enterEnumKind = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#enumKind.
+rsdlListener.prototype.exitEnumKind = function(ctx) {
 };
 
 
