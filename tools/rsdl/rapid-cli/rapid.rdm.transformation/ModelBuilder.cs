@@ -246,7 +246,7 @@ namespace rapid.rdm
 
         private IEdmOperation AddOperation(RdmOperation operation, RdmStructuredType rdmType)
         {
-            var edmOperation = MakeOperation(operation);
+            var edmOperation = MakeOperation(operation, rdmType);
             edmModel.AddElement(edmOperation);
 
             if (rdmType != null)
@@ -268,7 +268,7 @@ namespace rapid.rdm
             return edmOperation;
         }
 
-        private EdmOperation MakeOperation(RdmOperation operation)
+        private EdmOperation MakeOperation(RdmOperation operation, RdmStructuredType rdmType)
         {
             EdmOperation edmOperation;
             if (operation.Kind == RdmOperationKind.Function)
@@ -278,13 +278,13 @@ namespace rapid.rdm
                     throw new TransformationException($"function \"{operation.Name}\" at {operation.Position} must have a return type");
                 }
                 var edmTypeRef = env.ResolveTypeReference(operation.ReturnType.Type);
-                edmOperation = new EdmFunction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null, true);
+                edmOperation = new EdmFunction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, rdmType != null, null, true);
                 annotationBuilder.AddAnnotations(edmModel, edmOperation.GetReturn(), operation.ReturnType.Annotations);
             }
             else
             {
                 var edmTypeRef = operation.ReturnType != null ? env.ResolveTypeReference(operation.ReturnType.Type) : null;
-                edmOperation = new EdmAction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, true, null);
+                edmOperation = new EdmAction(rdmModel.Namespace.NamespaceName, operation.Name, edmTypeRef, rdmType != null, null);
             }
             annotationBuilder.AddAnnotations(edmModel, edmOperation, operation.Annotations);
             return edmOperation;
