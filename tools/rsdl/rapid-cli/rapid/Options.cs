@@ -12,7 +12,7 @@ namespace rapid
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
             public bool Verbose { get; set; }
 
-            [Option('f', "format", Required = false, HelpText = "Specify the format of the generated CSDL. One of JSON, XML, OpenAPI or all.", Default = OutputFormat.All)]
+            [Option('f', "format", Required = false, HelpText = "Specify the output format. One of JSON, XML, OpenAPI or all.", Default = OutputFormat.All)]
             public OutputFormat Format { get; set; }
 
             [Option('o', "output", Required = false, HelpText = "Output directory. Defaults to input file's directory.")]

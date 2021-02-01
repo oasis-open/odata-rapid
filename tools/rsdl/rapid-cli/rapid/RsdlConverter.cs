@@ -130,8 +130,8 @@ namespace rapid
                 string version = null;
                 if (model.EntityContainer != null)
                 {
-                    title = model.GetDescriptionAnnotation(model.EntityContainer) ?? title;
-                    description = model.GetLongDescriptionAnnotation(model.EntityContainer) ?? "RAPID Service for namespace " + model.EntityContainer.Namespace;
+                    title = model.EntityContainer.Name ?? title;
+                    description = model.GetDescriptionAnnotation(model.EntityContainer) ?? "RAPID Service for namespace " + model.EntityContainer.Namespace;
                     version = model.GetAnnotationValue(model.EntityContainer, "Org.OData.Core.V1", "SchemaVersion") as string;
                 }
                 var path = Path.ChangeExtension(inputPath, ".openapi");
