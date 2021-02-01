@@ -1,0 +1,12 @@
+
+
+type Thing
+{
+    key id: String 
+}
+
+
+service Service1 
+{
+    things: [Thing]
+}
