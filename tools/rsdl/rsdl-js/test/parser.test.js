@@ -278,10 +278,25 @@ describe("Parse correct RSDL", () => {
   });
 
   it("Enumeration types", () => {
-    assert.deepStrictEqual(parse(`enum foo { bar baz }`), {
+    assert.deepStrictEqual(parse(`enum foo { bar baz qux }`), {
       $Version: "4.0",
       Model: {
-        foo: { $Kind: "EnumType", bar: 0, baz: 1 },
+        foo: { $Kind: "EnumType", bar: 0, baz: 1, qux: 2 },
+      },
+    });
+  });
+
+  it("Flag enumeration types", () => {
+    assert.deepStrictEqual(parse(`flags Colors { red green blue }`), {
+      $Version: "4.0",
+      Model: {
+        Colors: {
+          $Kind: "EnumType",
+          $IsFlags: true,
+          red: 1,
+          green: 2,
+          blue: 4,
+        },
       },
     });
   });

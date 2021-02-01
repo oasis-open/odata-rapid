@@ -67,6 +67,7 @@ Install
 - [x] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
 - [x] inheritance
 - [x] annotations
+- [x] flags enumerations
 - [x] create error listener for syntactically incorrect "files"
 - [x] log errors from CLI
 - [ ] Option `-a` for compiling all files in a folder?

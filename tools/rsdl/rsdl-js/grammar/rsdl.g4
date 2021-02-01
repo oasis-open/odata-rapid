@@ -41,7 +41,8 @@ parameter: annotation* ID ':' typeReference;
 returnType: ':' annotation* typeReference;
 
 //TODO: flags
-enumType: annotation* 'enum' ID '{' enumMember* '}';
+enumType: annotation* enumKind ID '{' enumMember* '}';
+enumKind: 'enum' | 'flags';
 enumMember: annotation* ID;
 
 //TODO: do we really want to allow service names?

@@ -239,20 +239,32 @@ class MyListener extends rsdlListener {
 
   enterEnumType(ctx) {
     const name = ctx.ID().getText();
-    this.current.type = { $Kind: "EnumType", $$nextMemberNumber: 0 };
+    const enumKind = ctx.enumKind().getText();
+    this.current.type = {
+      $Kind: "EnumType",
+      ...(enumKind === "flags" && { $IsFlags: true }),
+      $$nextMemberNumber: enumKind === "flags" ? 1 : 0,
+      $$enumKind: enumKind,
+    };
     this.schema[name] = this.current.type;
     this.pushAnnotatable(this.current.type);
   }
 
   exitEnumType(ctx) {
     delete this.current.type.$$nextMemberNumber;
+    delete this.current.type.$$enumKind;
     this.current.type = null;
     this.popAnnotatable();
   }
 
   enterEnumMember(ctx) {
     const name = ctx.ID().getText();
-    this.current.type[name] = this.current.type.$$nextMemberNumber++;
+    this.current.type[name] = this.current.type.$$nextMemberNumber;
+    if (this.current.type.$$enumKind === "flags") {
+      this.current.type.$$nextMemberNumber *= 2;
+    } else {
+      this.current.type.$$nextMemberNumber += 1;
+    }
     this.pushAnnotatable(this.current.type, name);
   }
 
