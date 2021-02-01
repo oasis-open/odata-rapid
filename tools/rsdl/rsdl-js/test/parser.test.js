@@ -287,18 +287,25 @@ describe("Parse correct RSDL", () => {
   });
 
   it("Flag enumeration types", () => {
-    assert.deepStrictEqual(parse(`flags Colors { red green blue }`), {
-      $Version: "4.0",
-      Model: {
-        Colors: {
-          $Kind: "EnumType",
-          $IsFlags: true,
-          red: 1,
-          green: 2,
-          blue: 4,
+    assert.deepStrictEqual(
+      parse(
+        `@Core.Description: "colours" flags Colors { @Core.Description: "ruby" red green blue }`
+      ),
+      {
+        $Version: "4.0",
+        Model: {
+          Colors: {
+            "@Org.OData.Core.V1.Description": "colours",
+            $Kind: "EnumType",
+            $IsFlags: true,
+            red: 1,
+            "red@Org.OData.Core.V1.Description": "ruby",
+            green: 2,
+            blue: 4,
+          },
         },
-      },
-    });
+      }
+    );
   });
 
   it("Comments", () => {
