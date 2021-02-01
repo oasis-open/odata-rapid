@@ -257,6 +257,7 @@ describe("Parse correct RSDL", () => {
           foo: [
             {
               $Kind: "Function",
+              $IsComposable: true,
               $ReturnType: { $Type: "Edm.Boolean" },
             },
           ],

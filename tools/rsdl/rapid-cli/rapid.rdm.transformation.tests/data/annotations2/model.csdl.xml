@@ -37,7 +37,7 @@
         </Parameter>
         <Annotation Term="Org.OData.Core.V1.Description" String="g" />
       </Action>
-      <Function Name="f2">
+      <Function Name="f2" IsComposable="true">
         <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
           <Annotation Term="Org.OData.Core.V1.Description" String="o" />
         </Parameter>

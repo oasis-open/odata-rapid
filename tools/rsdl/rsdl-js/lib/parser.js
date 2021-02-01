@@ -301,7 +301,10 @@ class MyListener extends rsdlListener {
     const name = ctx.ID().getText();
     if (!this.schema[name]) this.schema[name] = [];
     const kind = ctx.ACTION() ? "Action" : "Function";
-    this.current.overload = { $Kind: kind };
+    this.current.overload = {
+      $Kind: kind,
+      ...(ctx.FUNCTION() && { $IsComposable: true }),
+    };
     this.schema[name].push(this.current.overload);
     const serviceOperation = {};
     serviceOperation[`$${kind}`] = `${this.namespace}.${name}`;
