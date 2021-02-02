@@ -327,25 +327,26 @@ describe("Parse correct RSDL", () => {
 });
 
 describe("Reference test cases", () => {
-  //TODO: use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
+  //TODO: collect files from ../rapid-cli/rapid.rdm.transformation.tests/data
   const files = [
-    "abstract",
-    "annotations",
-    "annotations2",
-    "inheritance",
-    "operations",
-    "path-expressions",
+    { d: "abstract" },
+    { d: "annotations" },
+    { d: "annotations2", n: "model" },
+    { d: "inheritance" },
+    { d: "named-service", n: "service" },
+    { d: "operations" },
+    { d: "path-expressions" },
   ];
   files.forEach((f) => {
-    it(f, function () {
-      const name = f === "annotations2" ? "model" : "sample";
+    it(f.d, function () {
+      f.n = f.n || "sample";
       const input = fs.readFileSync(
-        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.rsdl`,
+        `../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.rsdl`,
         "utf8"
       );
       const expected = csdl.xml2json(
         fs.readFileSync(
-          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.csdl.xml`
+          `../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.csdl.xml`
         )
       );
 
