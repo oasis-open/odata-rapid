@@ -32,15 +32,15 @@ describe("Parse correct RSDL", () => {
 
   it("Two properties, one key", () => {
     assert.deepStrictEqual(
-      parse("type foo { key bar: String baz: Integer? }"),
+      parse("type foo { key key : String baz: Integer? }"),
       {
         $Version: "4.0",
         Model: {
           foo: {
             $Kind: "EntityType",
             $OpenType: true,
-            $Key: ["bar"],
-            bar: {},
+            $Key: ["key"],
+            key: {},
             baz: { $Type: "Edm.Int32", $Nullable: true },
           },
         },
@@ -247,7 +247,7 @@ describe("Parse correct RSDL", () => {
   it("Action and function imports", () => {
     assert.deepStrictEqual(
       parse(`service {
-               foo(): Boolean
+               function foo(): Boolean
                action bar( quux: Integer )
              }`),
       {
@@ -257,6 +257,7 @@ describe("Parse correct RSDL", () => {
           foo: [
             {
               $Kind: "Function",
+              $IsComposable: true,
               $ReturnType: { $Type: "Edm.Boolean" },
             },
           ],
@@ -277,12 +278,34 @@ describe("Parse correct RSDL", () => {
   });
 
   it("Enumeration types", () => {
-    assert.deepStrictEqual(parse(`enum foo { bar baz }`), {
+    assert.deepStrictEqual(parse(`enum foo { bar baz qux }`), {
       $Version: "4.0",
       Model: {
-        foo: { $Kind: "EnumType", bar: 0, baz: 1 },
+        foo: { $Kind: "EnumType", bar: 0, baz: 1, qux: 2 },
       },
     });
+  });
+
+  it("Flag enumeration types", () => {
+    assert.deepStrictEqual(
+      parse(
+        `@Core.Description: "colours" flags Colors { @Core.Description: "ruby" red green blue }`
+      ),
+      {
+        $Version: "4.0",
+        Model: {
+          Colors: {
+            "@Org.OData.Core.V1.Description": "colours",
+            $Kind: "EnumType",
+            $IsFlags: true,
+            red: 1,
+            "red@Org.OData.Core.V1.Description": "ruby",
+            green: 2,
+            blue: 4,
+          },
+        },
+      }
+    );
   });
 
   it("Comments", () => {
@@ -308,19 +331,21 @@ describe("Reference test cases", () => {
   const files = [
     "abstract",
     "annotations",
+    "annotations2",
     "inheritance",
     "operations",
     "path-expressions",
   ];
   files.forEach((f) => {
     it(f, function () {
+      const name = f === "annotations2" ? "model" : "sample";
       const input = fs.readFileSync(
-        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.rsdl`,
+        `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.rsdl`,
         "utf8"
       );
       const expected = csdl.xml2json(
         fs.readFileSync(
-          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/sample.csdl.xml`
+          `../rapid-cli/rapid.rdm.transformation.tests/data/${f}/${name}.csdl.xml`
         )
       );
 
@@ -330,12 +355,29 @@ describe("Reference test cases", () => {
 });
 
 describe("Parse RSDL with errors", () => {
-  it.skip("Incomplete type", () => {
-    //TODO: find out how to complain here
-    // - https://medium.com/dailyjs/compiler-in-javascript-using-antlr-9ec53fd2780f
+  it("Parser error", () => {
     assert.deepStrictEqual(parse("type foo"), {
+      $$errors: [
+        {
+          message: "mismatched input '<EOF>' expecting {'{', 'extends'}",
+          target: "1:9",
+        },
+      ],
       $Version: "4.0",
-      Model: { foo: { $Kind: "ComplexType" } },
+      Model: { foo: { $Kind: "ComplexType", $OpenType: true } },
+    });
+  });
+
+  it("Lexer error", () => {
+    assert.deepStrictEqual(parse("type foo {};"), {
+      $$errors: [
+        {
+          message: "token recognition error at: ';'",
+          target: "1:12",
+        },
+      ],
+      $Version: "4.0",
+      Model: { foo: { $Kind: "ComplexType", $OpenType: true } },
     });
   });
 

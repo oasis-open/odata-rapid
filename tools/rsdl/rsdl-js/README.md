@@ -67,8 +67,9 @@ Install
 - [x] use test files from ../rapid-cli/rapid.rdm.transformation.tests/data
 - [x] inheritance
 - [x] annotations
-- [ ] create error listener for syntactically incorrect "files"
-- [ ] log errors from CLI
+- [x] flags enumerations
+- [x] create error listener for syntactically incorrect "files"
+- [x] log errors from CLI
 - [ ] Option `-a` for compiling all files in a folder?
 - [ ] Option `-r` for recursive compilation?
 - [ ] Update to ANTLR 4.9.x

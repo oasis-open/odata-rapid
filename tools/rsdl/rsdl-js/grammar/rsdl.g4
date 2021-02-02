@@ -13,9 +13,10 @@ modelElement: structuredType | enumType | service;
 structuredType:
 	annotation* ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
 typeMember: property | operation;
-property: annotation* KEY? ID ':' typeReference;
+property: annotation* KEY? propertyName ':' typeReference;
+propertyName: ID | KEY;
 
-baseType: EXTENDS ID;
+baseType: 'extends' ID;
 
 typeReference:
 	typeName NULLABLE?				# single
@@ -32,24 +33,26 @@ builtInType:
 	| 'Integer'
 	| 'String';
 
-//TODO: Require comma, or make it (in general) optional "whitespace"?
 operation:
-	ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
-	| FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
+	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
+	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 //TODO: optional parameters
-parameter: ID ':' typeReference;
-returnType: ':' typeReference;
+parameter: annotation* ID ':' typeReference;
+returnType: ':' annotation* typeReference;
 
 //TODO: flags
-enumType: annotation* 'enum' ID '{' enumMember* '}';
+enumType: annotation* enumKind ID '{' enumMember* '}';
+enumKind: 'enum' | 'flags';
 enumMember: annotation* ID;
 
-service: 'service' '{' serviceMember* '}';
+//TODO: do we really want to allow service names?
+service: annotation* 'service' ID? '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;
-entitySet: ID ':' '[' qualifiedName ']';
-singleton: ID ':' qualifiedName;
+entitySet: annotation* ID ':' '[' qualifiedName ']';
+singleton: annotation* ID ':' qualifiedName;
 serviceOperation:
-	ACTION? ID '(' (parameter (',' parameter)*)? ')' returnType?;
+	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
+	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 
 annotation: '@' qualifiedName ':' value;
 value:
@@ -68,14 +71,10 @@ pair: ID ':' value;
 arr: '[' item (',' item)* ']' | '[' ']';
 item: value;
 
-//TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
-ID: [a-zA-Z_][a-zA-Z_0-9]*;
-
-ABSTRACT: 'abstract' WS;
-ACTION: 'action' WS;
-EXTENDS: 'extends' WS;
-FUNCTION: 'function' WS;
-KEY: 'key' WS;
+ABSTRACT: 'abstract';
+ACTION: 'action';
+FUNCTION: 'function';
+KEY: 'key';
 NULLABLE: '?';
 
 NUMBER: '-'? INT ('.' [0-9]+)? EXP?;
@@ -87,6 +86,9 @@ fragment ESC: '\\' (["\\/bfnrt] | UNICODE);
 fragment UNICODE: 'u' HEX HEX HEX HEX;
 fragment HEX: [0-9a-fA-F];
 fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
+
+//TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 
