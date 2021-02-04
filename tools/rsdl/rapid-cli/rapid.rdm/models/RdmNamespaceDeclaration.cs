@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rapid.rdm
 {
     public class RdmNamespaceDeclaration : IEquatable<RdmNamespaceDeclaration>
     {
-        public RdmNamespaceDeclaration(string namespaceName, Position position = default)
+        public RdmNamespaceDeclaration(string namespaceName, IEnumerable<Annotation> annotations = null, Position position = default)
         {
             NamespaceName = namespaceName;
+            Position = position;
+            Annotations = annotations.ToReadOnlyList();
         }
 
         private const string defaultNamespaceName = "Model";
@@ -15,6 +18,8 @@ namespace rapid.rdm
         public static RdmNamespaceDeclaration Default = new RdmNamespaceDeclaration(defaultNamespaceName);
 
         public string NamespaceName { get; }
+
+        public IReadOnlyList<Annotation> Annotations { get; }
 
         public Position Position { get; set; }
 
@@ -24,7 +29,8 @@ namespace rapid.rdm
             if (object.ReferenceEquals(one, two)) return true;
             if (one == null || two == null) return one == null && two == null;
             return
-                string.Equals(one.NamespaceName, two.NamespaceName);
+                string.Equals(one.NamespaceName, two.NamespaceName) &&
+                Enumerable.SequenceEqual(one.Annotations, two.Annotations);
         }
 
         public bool Equals(RdmNamespaceDeclaration other)
@@ -39,7 +45,7 @@ namespace rapid.rdm
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NamespaceName);
+            return HashCode.Combine(NamespaceName, Annotations);
         }
         #endregion
     }

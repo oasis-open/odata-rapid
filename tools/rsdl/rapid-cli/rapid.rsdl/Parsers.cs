@@ -218,22 +218,18 @@ namespace rapid.rsdl
             );
 
         static readonly TokenListParser<RdmToken, RdmNamespaceDeclaration> NamespaceDeclaration =
-                   from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
-                   from nm in QualifiedIdentifier
-                   select new RdmNamespaceDeclaration(nm.Name)
-                   {
-                       Position = kw.GetPosition()
-                   };
+            from aa in Annotation.Many()
+            from kw in Token.EqualToValue(RdmToken.Identifier, "namespace")
+            from nm in QualifiedIdentifier
+            select new RdmNamespaceDeclaration(nm.Name, aa, kw.GetPosition());
 
         static readonly TokenListParser<RdmToken, RdmNamespaceReference> NamespaceReference =
+            from aa in Annotation.Many()
             from k1 in Token.EqualToValue(RdmToken.Identifier, "include")
             from pa in Token.EqualTo(RdmToken.QuotedString)
             from k2 in Token.EqualToValue(RdmToken.Identifier, "as")
             from al in Token.EqualTo(RdmToken.Identifier)
-            select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue())
-            {
-                Position = k1.GetPosition()
-            };
+            select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue(), aa, k1.GetPosition());
 
         // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
