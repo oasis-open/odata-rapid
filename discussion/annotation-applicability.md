@@ -3,7 +3,7 @@ https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html
 | Symbolic Value        | Model Element                                                   | Status             | Comment                                 |
 | --------------------- | --------------------------------------------------------------- | ------------------ | --------------------------------------- |
 | Action                | Action                                                          | :heavy_check_mark: |                                         |
-| ActionImport          | Action Import                                                   | :heavy_plus_sign:  |                                         |
+| ActionImport          | Action Import                                                   | :x:                | no direct representation of import      |
 | Annotation            | Annotation                                                      | :x:                |                                         |
 | Apply                 | Application of a client-side function in an annotation          | :x:                |                                         |
 | Cast                  | Type Cast annotation expression                                 | :x:                |                                         |
@@ -14,9 +14,9 @@ https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html
 | EntityType            | Entity Type                                                     | :heavy_check_mark: |                                         |
 | EnumType              | Enumeration Type                                                | :heavy_check_mark: |                                         |
 | Function              | Function                                                        | :heavy_check_mark: |                                         |
-| FunctionImport        | Function Import                                                 | :heavy_plus_sign:  |                                         |
+| FunctionImport        | Function Import                                                 | :x:                | no direct representation of import      |
 | If                    | Conditional annotation expression                               | :x:                |                                         |
-| Include               | Reference to an Included Schema                                 | :question:         | default namespace                       |
+| Include               | Reference to an Included Schema                                 | :heavy_check_mark  | default namespace                       |
 | IsOf                  | Type Check annotation expression                                | :x:                |                                         |
 | LabeledElement        | Labeled Element expression                                      | :x:                |                                         |
 | Member                | Enumeration Member                                              | :heavy_check_mark: |                                         |
@@ -30,8 +30,8 @@ https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html
 | Reference             | Reference to another CSDL document                              | :x:                |                                         |
 | ReferentialConstraint | Referential Constraint of a navigation property                 | :x:                |                                         |
 | ReturnType            | Return Type of an Action or Function                            | :heavy_check_mark: |                                         |
-| Schema                | Schema                                                          | :question:         | schema version, default namespace       |
+| Schema                | Schema                                                          | :heavy_plus_sign:  | schema version, default namespace       |
 | Singleton             | Singleton                                                       | :heavy_check_mark: |                                         |
 | Term                  | Term                                                            | :x:,               | not in RSDL                             |
-| TypeDefinition        | Type Definition                                                 | :heavy_plus_sign:  | once we add them                        |
+| TypeDefinition        | Type Definition                                                 | :x:                | once we add type definitions it will required |
 | UrlRef                | UrlRef annotation expression                                    | :x:                |                                         |
