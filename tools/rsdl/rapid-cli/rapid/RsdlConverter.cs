@@ -5,6 +5,11 @@ using Microsoft.OData.Edm;
 using System.Linq;
 using rapid.rsdl;
 using rapid.rdm;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.OData;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi;
 
 namespace rapid
 {
@@ -25,7 +30,7 @@ namespace rapid
         /// </summary>
         /// <param name="path">file path of input file to parse</param>
         /// <param name="format">indicates whether it should be written as XML or JSON CSDL</param>
-        public bool Convert(string path, CsdlFormat format)
+        public bool Convert(string path, OutputFormat format)
         {
             // create parser and model transformer.
             var parser = new RdmParser(logger);
@@ -90,9 +95,9 @@ namespace rapid
             }
         }
 
-        private void WriteCsdl(IEdmModel model, string inputPath, CsdlFormat format = CsdlFormat.XML, bool verbose = false)
+        private void WriteCsdl(IEdmModel model, string inputPath, OutputFormat format = OutputFormat.XML, bool verbose = false)
         {
-            if (format.HasFlag(CsdlFormat.XML))
+            if (format.HasFlag(OutputFormat.XML))
             {
                 var path = Path.ChangeExtension(inputPath, ".csdl.xml");
                 if (verbose)
@@ -105,7 +110,7 @@ namespace rapid
                     CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out var errors);
                 }
             }
-            if (format.HasFlag(CsdlFormat.JSON))
+            if (format.HasFlag(OutputFormat.JSON))
             {
                 var path = Path.ChangeExtension(inputPath, ".csdl.json");
                 if (verbose)
@@ -116,6 +121,35 @@ namespace rapid
                 using (var jsonWriter = new System.Text.Json.Utf8JsonWriter(file, new System.Text.Json.JsonWriterOptions { Indented = true }))
                 {
                     CsdlWriter.TryWriteCsdl(model, jsonWriter, out var errors);
+                }
+            }
+            if (format.HasFlag(OutputFormat.OpenAPI))
+            {
+                string title = "RAPID Service";
+                string description = null;
+                string version = null;
+                if (model.EntityContainer != null)
+                {
+                    title = model.EntityContainer.Name ?? title;
+                    description = model.GetDescriptionAnnotation(model.EntityContainer) ?? "RAPID Service for namespace " + model.EntityContainer.Namespace;
+                    version = model.GetAnnotationValue(model.EntityContainer, "Org.OData.Core.V1", "SchemaVersion") as string;
+                }
+                var path = Path.ChangeExtension(inputPath, ".openapi");
+                if (verbose)
+                {
+                    logger.LogInfo("writing {0}", path);
+                }
+                using (var file = new StreamWriter(path))
+                {
+                    var document = model.ConvertToOpenApi();
+                    document.Servers.Clear();
+                    document.Info.Title = title;
+                    document.Info.Description = description;
+                    document.Info.Version = version;
+                    var openApi = document.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+                    file.WriteLine(openApi);
+                    file.Flush();
+                    file.Close();
                 }
             }
         }
