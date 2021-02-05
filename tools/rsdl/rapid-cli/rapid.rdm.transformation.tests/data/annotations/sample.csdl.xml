@@ -3,46 +3,23 @@
   <edmx:DataServices>
     <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EnumType Name="Foo">
-        <Member Name="foo" Value="0">
-          <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
-        </Member>
-        <Member Name="bar" Value="1">
-          <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
-        </Member>
-        <Member Name="baz" Value="2">
-          <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
-        </Member>
-        <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
+        <Member Name="foo" Value="0" />
+        <Member Name="bar" Value="1" />
+        <Member Name="baz" Value="2" />
       </EnumType>
       <EntityType Name="Animal" Abstract="true" OpenType="true">
         <Key>
           <PropertyRef Name="name" />
         </Key>
         <Property Name="name" Type="Edm.String" Nullable="false" />
-        <Property Name="numberOfLegs" Type="Edm.Int32" Nullable="false">
-          <Annotation Term="Org.OData.Validation.V1.MultipleOf" Int="2" />
-        </Property>
-        <Annotation Term="Org.OData.Core.V1.Description" String="Kingdom: Animalia" />
+        <Property Name="numberOfLegs" Type="Edm.Int32" Nullable="false" />
       </EntityType>
       <EntityType Name="Dog" OpenType="true">
         <Key>
           <PropertyRef Name="name" />
           <PropertyRef Name="foo" />
         </Key>
-        <Property Name="name" Type="Edm.String" Nullable="false">
-          <Annotation Term="Org.OData.Core.V1.Description" String="mens best friend" />
-          <Annotation Term="Org.OData.Core.V1.Immutable" Bool="true" />
-          <Annotation Term="Org.OData.Validation.V1.AllowedValues">
-            <Collection>
-              <Record>
-                <PropertyValue Property="Value" String="Rex" />
-              </Record>
-              <Record>
-                <PropertyValue Property="Value" String="Fifi" />
-              </Record>
-            </Collection>
-          </Annotation>
-        </Property>
+        <Property Name="name" Type="Edm.String" Nullable="false" />
         <Property Name="foo" Type="Edm.Int32" Nullable="false" />
       </EntityType>
       <Function Name="a" IsBound="true" IsComposable="true">
@@ -56,6 +33,38 @@
       <EntityContainer Name="Service">
         <EntitySet Name="dogs" EntityType="Model.Dog" />
       </EntityContainer>
+      <Annotations Target="Model.Foo">
+        <Annotation Term="Org.OData.Core.V1.Description" String="nonsense" />
+      </Annotations>
+      <Annotations Target="Model.Animal">
+        <Annotation Term="Org.OData.Core.V1.Description" String="Kingdom: Animalia" />
+      </Annotations>
+      <Annotations Target="Model.Dog/name">
+        <Annotation Term="Org.OData.Core.V1.Description" String="mens best friend" />
+        <Annotation Term="Org.OData.Core.V1.Immutable" Bool="true" />
+        <Annotation Term="Org.OData.Validation.V1.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="Rex" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="Fifi" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="Model.Foo/foo">
+        <Annotation Term="Org.OData.Core.V1.Description" String="first nonsense identifier" />
+      </Annotations>
+      <Annotations Target="Model.Foo/bar">
+        <Annotation Term="Org.OData.Core.V1.Description" String="second nonsense identifier" />
+      </Annotations>
+      <Annotations Target="Model.Foo/baz">
+        <Annotation Term="Org.OData.Core.V1.Description" String="third nonsense identifier" />
+      </Annotations>
+      <Annotations Target="Model.Animal/numberOfLegs">
+        <Annotation Term="Org.OData.Validation.V1.MultipleOf" Int="2" />
+      </Annotations>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>

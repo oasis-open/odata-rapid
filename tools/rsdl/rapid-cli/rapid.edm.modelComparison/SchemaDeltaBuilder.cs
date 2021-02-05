@@ -62,6 +62,8 @@ namespace rapid.edm.modelComparison
 
         protected bool IsDifferentNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Func<T, T, PropertyPath, bool> visit, PropertyPath path) where T : class, IEdmNamedElement
         {
+            e1 = e1 ?? Enumerable.Empty<T>();
+            e2 = e2 ?? Enumerable.Empty<T>();
             var pairs = e1.FullOuterJoin(e2, i => i.Name, i => i.Name);
             var anyDifferent = false;
             foreach (var (name, a, b) in pairs)
