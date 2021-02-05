@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 
 
-namespace Microsoft.OData.Edm
+namespace rapid.edm.modelComparison
 {
     public class PropertyPath
     {

@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\rapid.rdm.transformation\rapid.rdm.transformation.csproj" />
     <ProjectReference Include="..\rapid.rsdl\rapid.rsdl.csproj" />
-    <ProjectReference Include="..\Microsoft.OData.Edm.Equivalency\Microsoft.OData.Edm.Equivalency.csproj" />
+    <ProjectReference Include="..\rapid.edm.modelComparison\rapid.edm.modelComparison.csproj" />
   </ItemGroup>
 
   <ItemGroup>
