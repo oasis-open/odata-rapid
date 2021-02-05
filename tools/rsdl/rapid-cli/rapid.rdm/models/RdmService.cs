@@ -4,22 +4,13 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-    /// <summary>
-    /// interfaces can't be sealed but remainder assumes only two implementations: RdmServiceCollection, RdmServiceSingelton
-    /// </summary>
-    public interface IRdmServiceElement
-    {
-        string Name { get; }
-        IReadOnlyList<Annotation> Annotations { get; }
-    }
-
     public class RdmService : IRdmSchemaElement, IEquatable<RdmService>
     {
         public RdmService(string name, IEnumerable<IRdmServiceElement> items, IEnumerable<Annotation> annotations = null, Position position = default)
         {
             Name = name ?? "Service";
             Items = items;
-            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
+            Annotations = annotations.ToReadOnlyList();
         }
 
         public string Name { get; }

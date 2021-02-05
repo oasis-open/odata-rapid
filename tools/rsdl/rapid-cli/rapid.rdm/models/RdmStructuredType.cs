@@ -21,7 +21,7 @@ namespace rapid.rdm
             Properties = properties;
             Operations = operations ?? Array.Empty<RdmOperation>();
             IsAbstract = isAbstract;
-            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
+            Annotations = annotations.ToReadOnlyList();
         }
 
         public string Name { get; }

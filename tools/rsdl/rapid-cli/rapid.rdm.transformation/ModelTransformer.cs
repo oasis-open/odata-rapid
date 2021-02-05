@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Microsoft.OData.Edm;
-using rapid.rdm;
 
 namespace rapid.rdm
 {
@@ -22,12 +18,7 @@ namespace rapid.rdm
             this.logger = logger;
         }
 
-        // public IEdmModel Transform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
-        // {
-        //     return TryTransform(model, referencedModels, out var result) ? result : default;
-        // }
-
-        public bool TryTransform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels, out IEdmModel edmModel)
+        public bool TryTransform(RdmSchemaDefinition model, IDictionary<string, RdmSchemaDefinition> referencedModels, out IEdmModel edmModel)
         {
             // The transformation essentially happens in the phases
             // 1) create the type environment with all external and pre-defined types
@@ -43,7 +34,7 @@ namespace rapid.rdm
                 var env = new TypeEnvironment(logger);
 
                 // adds the dependencies to allow to resolve the imported types.
-                env.AddReferences(model, referencedModels ?? new Dictionary<string, RdmDataModel>());
+                env.AddReferences(model, referencedModels ?? new Dictionary<string, RdmSchemaDefinition>());
 
                 // create the model that is going to be filled on by the builder;
                 var result = new EdmModel();

@@ -13,10 +13,12 @@ namespace rapid.rdm
     public class AnnotationBuilder
     {
         private readonly ILogger logger;
+        private readonly EdmVocabularyAnnotationSerializationLocation serializationLocation;
 
-        public AnnotationBuilder(ILogger logger)
+        public AnnotationBuilder(ILogger logger, bool serializeAnnotationsInline)
         {
             this.logger = logger;
+            this.serializationLocation = serializeAnnotationsInline ? EdmVocabularyAnnotationSerializationLocation.Inline : EdmVocabularyAnnotationSerializationLocation.OutOfLine;
         }
 
         public void AddAnnotations(EdmModel edmModel, IEdmVocabularyAnnotatable annotatable, IEnumerable<Annotation> annotations)
@@ -35,7 +37,7 @@ namespace rapid.rdm
                 var expr = ConvertAnnotationExpression(annotation.Value);
 
                 var edmAnnotation = new EdmVocabularyAnnotation(annotatable, term, expr);
-                edmModel.AddVocabularyAnnotation(edmAnnotation, EdmVocabularyAnnotationSerializationLocation.Inline);
+                edmModel.AddVocabularyAnnotation(edmAnnotation, this.serializationLocation);
 
                 ValidateAppliesTo(term, annotatable, annotation.Position);
                 ValidateExpressionType(term, expr, annotation.Position);

@@ -231,14 +231,14 @@ namespace rapid.rsdl
             from al in Token.EqualTo(RdmToken.Identifier)
             select new RdmNamespaceReference(pa.ToStringValue().Trim('"'), al.ToStringValue(), aa, k1.GetPosition());
 
-        // TODO: check for EOF
-        public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
-           (
-                from nd in NamespaceDeclaration.OptionalOrDefault()
-                from nr in NamespaceReference.Many()
-                from se in SchemaElement.Many()
-                select new rdm.RdmDataModel(nd, se, nr)
-            ).AtEnd();
+        static readonly TokenListParser<RdmToken, rdm.RdmSchemaDefinition> SchemaDefinition =
+            from nd in NamespaceDeclaration.Try().OptionalOrDefault()
+            from nr in NamespaceReference.Try().Many()
+            from se in SchemaElement.Many()
+            select new rdm.RdmSchemaDefinition(nd, se, nr);
+
+        public static readonly TokenListParser<RdmToken, rdm.RdmSchemaDefinition> SchemaDefinitionFile =
+           SchemaDefinition.AtEnd();
 
         static IEnumerable<T> NonNull<T>(params T[] items) => items.Where(item => item != null);
     }

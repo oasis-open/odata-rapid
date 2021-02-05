@@ -16,7 +16,7 @@ namespace rapid.rsdl
             this.logger = logger ?? NullLogger.Instance;
         }
 
-        public RdmDataModel Parse(string content, string name)
+        public RdmSchemaDefinition Parse(string content, string name)
         {
             // TODO: check https://github.com/serilog/serilog-filters-expressions/blob/dev/src/Serilog.Filters.Expressions/Filters/Expressions/Parsing/FilterExpressionParser.cs
             // for reference implementation
@@ -30,7 +30,7 @@ namespace rapid.rsdl
 
             // 2. parse
             sw.Start();
-            var parser = Parsers.DataModel;
+            var parser = Parsers.SchemaDefinitionFile;
             var model = parser.Parse(tokenList);
             logger.LogInfo("parsed    \"{0}\" in {1}", name, sw.Elapsed);
 

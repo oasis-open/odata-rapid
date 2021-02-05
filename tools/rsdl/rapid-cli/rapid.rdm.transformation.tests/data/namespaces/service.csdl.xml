@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="http://unknown.com">
+    <edmx:Include Namespace="namespace2" Alias="other" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="MyModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="A" OpenType="true">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="other" Type="namespace2.B" Nullable="false" />
+      </EntityType>
+      <Annotations Target="MyModel.A">
+        <Annotation Term="Org.OData.Core.V1.Description" String="a structured type" />
+      </Annotations>
+      <Annotations Target="MyModel.A/id">
+        <Annotation Term="Org.OData.Core.V1.Description" String="x" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

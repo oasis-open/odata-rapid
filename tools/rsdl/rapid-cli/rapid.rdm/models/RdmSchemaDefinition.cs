@@ -4,27 +4,9 @@ using System.Linq;
 
 namespace rapid.rdm
 {
-
-    /// <summary>
-    /// interfaces can't be sealed but remainder assumes only two implementations:
-    //  RdmStructuredType, RdmService, RdmEnum
-    /// </summary>
-    public interface IRdmSchemaElement
+    public class RdmSchemaDefinition : IEquatable<RdmSchemaDefinition>
     {
-        string Name { get; }
-    }
-
-    /// <summary>
-    /// interfaces can't be sealed but remainder assumes only two implementations:
-    //  RdmStructuredType, RdmEnum
-    /// </summary>
-    public interface IRdmType : IRdmSchemaElement
-    {
-    }
-
-    public class RdmDataModel : IEquatable<RdmDataModel>
-    {
-        public RdmDataModel(
+        public RdmSchemaDefinition(
             RdmNamespaceDeclaration @namespace,
             IReadOnlyList<IRdmSchemaElement> items,
             IReadOnlyList<RdmNamespaceReference> references = null)
@@ -43,7 +25,7 @@ namespace rapid.rdm
 
         #region equality
 
-        public static bool Equals(RdmDataModel one, RdmDataModel two)
+        public static bool Equals(RdmSchemaDefinition one, RdmSchemaDefinition two)
         {
             if (object.ReferenceEquals(one, two)) return true;
             if (one == null || two == null) return one == null && two == null;
@@ -53,14 +35,14 @@ namespace rapid.rdm
                 Enumerable.SequenceEqual(one.References, two.References);
         }
 
-        public bool Equals(RdmDataModel other)
+        public bool Equals(RdmSchemaDefinition other)
         {
             return Equals(this, other);
         }
 
         public override bool Equals(object other)
         {
-            return other is RdmDataModel model && this.Equals(model);
+            return other is RdmSchemaDefinition model && this.Equals(model);
         }
 
         public override int GetHashCode()

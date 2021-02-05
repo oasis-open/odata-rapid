@@ -16,7 +16,7 @@ namespace rapid.rsdl.tests
             var content = "type Company { name: String incorporated: Date}";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(null, new[] {
+            var expected = new RdmSchemaDefinition(null, new[] {
                 new RdmStructuredType("Company", null, new [] {
                         new RdmProperty ("name", new RdmTypeReference("String"), false, null),
                         new RdmProperty ("incorporated", new RdmTypeReference("Date"), false, null)
@@ -32,7 +32,7 @@ namespace rapid.rsdl.tests
             var content = "type Company { key symbol: String   name: String   incorporated: Date}";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(null, new[] {
+            var expected = new RdmSchemaDefinition(null, new[] {
                 new RdmStructuredType("Company", null, new [] {
                         new RdmProperty ("symbol", new RdmTypeReference("String"), true),
                         new RdmProperty ("name", new RdmTypeReference("String"), false),
@@ -51,7 +51,7 @@ namespace rapid.rsdl.tests
             var content = "namespace foo.bar type Company { }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(new RdmNamespaceDeclaration("foo.bar"),
+            var expected = new RdmSchemaDefinition(new RdmNamespaceDeclaration("foo.bar"),
                 new[] {
                     new RdmStructuredType("Company", null, new RdmProperty[] {
                 })
@@ -69,7 +69,7 @@ include ""other.rsdl"" as other
 type Company { }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 new RdmNamespaceDeclaration("foo.bar"),
                 new[] {
                     new RdmStructuredType("Company", null, new RdmProperty[] {})
@@ -92,7 +92,7 @@ include ""other.rsdl"" as other
 type Company { }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 new RdmNamespaceDeclaration("foo.bar"),
                 new[] {
                     new RdmStructuredType("Company", null, new RdmProperty[] {})
@@ -114,7 +114,7 @@ include ""other.rsdl"" as other
 type Company { something: other.Something }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmStructuredType("Company", null, new [] { new RdmProperty("something", new RdmTypeReference("other.Something"), false)})
@@ -134,7 +134,7 @@ type Company { something: other.Something }";
             var content = @"flags Colors { red green blue }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, true)
@@ -150,7 +150,7 @@ type Company { something: other.Something }";
             var content = @"enum Colors { red green blue }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmEnumType("Colors", new [] { new RdmEnumMember("red"), new RdmEnumMember("green"), new RdmEnumMember("blue")}, false)
@@ -166,7 +166,7 @@ type Company { something: other.Something }";
             var content = @"enum Colors { @Core.Description:""ruby"" red green blue }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmEnumType("Colors", new [] {
@@ -186,7 +186,7 @@ type Company { something: other.Something }";
             var content = @"type Foo { @Core.Description:""description"" key id: String }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmStructuredType("Foo", null, new [] {
@@ -211,7 +211,7 @@ type Company { something: other.Something }";
             var content = "@Core.Description: ./a/b type Foo { }";
             var actual = parser.Parse(content, "test");
 
-            var expected = new RdmDataModel(
+            var expected = new RdmSchemaDefinition(
                 null,
                 new[] {
                     new RdmStructuredType("Foo", null, Array.Empty<RdmProperty>(), null, false,

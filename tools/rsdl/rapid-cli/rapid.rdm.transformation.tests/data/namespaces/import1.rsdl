@@ -1,0 +1,7 @@
+
+namespace namespace2
+
+type B
+{
+    prop1: String
+}

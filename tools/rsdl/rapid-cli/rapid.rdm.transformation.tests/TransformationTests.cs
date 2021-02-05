@@ -16,7 +16,7 @@ namespace rapid.rdm.tests
         {
 
             var model = parser.Parse(text, "main");
-            var referencedModels = new Dictionary<string, RdmDataModel>();
+            var referencedModels = new Dictionary<string, RdmSchemaDefinition>();
             var transformer = new ModelTransformer(NullLogger.Instance);
 
             if (transformer.TryTransform(model, referencedModels, out var result))

@@ -9,11 +9,12 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/rapid/bin/Debug/netcoreapp3.1/rapid.dll",
+      "program": "${workspaceFolder}/rapid/bin/Debug/net5.0/rapid.dll",
       "args": ["samples/annotations/sample.rsdl", "--verbose"],
       "cwd": "${workspaceFolder}/rapid",
       "console": "internalConsole",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "requireExactSource": true
     },
     {
       "name": ".NET Core Attach",

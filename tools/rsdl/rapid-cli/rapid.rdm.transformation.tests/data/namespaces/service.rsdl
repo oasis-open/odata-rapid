@@ -1,0 +1,15 @@
+
+@Core.Description: "the main model namespace"
+namespace MyModel
+
+@Core.Description: "an import from file \"import1\" with alias `other`"
+include "import1" as other
+
+@Core.Description: "a structured type"
+type A 
+{
+    @Core.Description: "x"
+    key id: String 
+
+    other: other.B
+}

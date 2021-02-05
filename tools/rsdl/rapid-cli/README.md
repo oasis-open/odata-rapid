@@ -23,8 +23,8 @@ dotnet publish --configuration release --self-contained true --runtime osx.10.11
 ```
 
 this creates folders
-    bin\Debug\netcoreapp3.1\win10-x64
-    bin\Debug\netcoreapp3.1\osx.10.11-x64
+    bin\Debug\net5.1\win10-x64
+    bin\Debug\net5.1\osx.10.11-x64
 with a binary image that any machine and run via the `rapid` or `rapid.exe` command.
 
 See [docs](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish) and [publish a single exe](

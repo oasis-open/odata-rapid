@@ -63,7 +63,7 @@ namespace rapid
             }
         }
 
-        private RdmDataModel LoadModel(string path, RdmParser parser, string baseDirectory)
+        private RdmSchemaDefinition LoadModel(string path, RdmParser parser, string baseDirectory)
         {
             if (!Path.IsPathRooted(path))
             {
@@ -79,7 +79,7 @@ namespace rapid
             return model;
         }
 
-        private rdm.RdmDataModel ParseFile(RdmParser parser, string path)
+        private rdm.RdmSchemaDefinition ParseFile(RdmParser parser, string path)
         {
             try
             {

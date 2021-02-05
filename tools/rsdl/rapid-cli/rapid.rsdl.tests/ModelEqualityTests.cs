@@ -35,7 +35,13 @@ namespace rapid.rsdl.tests
                 new RdmStructuredType("f", null, new [] { new RdmProperty("g", new RdmTypeReference("Integer"), false)}) },
             new object[] {
                 new RdmEnumType("h", new [] {new RdmEnumMember("i"), new RdmEnumMember("j"), new RdmEnumMember("c")}, true),
-                new RdmEnumType("h", new [] {new RdmEnumMember("i"), new RdmEnumMember("j"), new RdmEnumMember("c")}, true) }
+                new RdmEnumType("h", new [] {new RdmEnumMember("i"), new RdmEnumMember("j"), new RdmEnumMember("c")}, true) },
+            new object[] {
+                new RdmNamespaceDeclaration("n", new [] { new Annotation("foo", AnnotationExpression.Null()) }),
+                new RdmNamespaceDeclaration("n", new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
+            new object[] {
+                new RdmNamespaceReference("h", "a", new [] { new Annotation("foo", AnnotationExpression.Null()) }),
+                new RdmNamespaceReference("h", "a", new [] { new Annotation("foo", AnnotationExpression.Null()) }) },
         };
 
         [Theory]

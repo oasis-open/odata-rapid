@@ -70,7 +70,7 @@ namespace rapid.rdm.tests
         private IEdmModel LoadAndTransformRsdlModel(string rsdlPath)
         {
             var model = parser.Parse(File.ReadAllText(rsdlPath), System.IO.Path.GetFileNameWithoutExtension(rsdlPath));
-            var referencedModels = new Dictionary<string, RdmDataModel>();
+            var referencedModels = new Dictionary<string, RdmSchemaDefinition>();
             var transformer = new ModelTransformer(NullLogger.Instance);
 
             if (transformer.TryTransform(model, referencedModels, out var result))

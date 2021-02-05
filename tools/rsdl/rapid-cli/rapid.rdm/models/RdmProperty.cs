@@ -11,7 +11,7 @@ namespace rapid.rdm
             Name = name;
             Type = type;
             IsKey = isKey;
-            Annotations = annotations?.ToList().AsReadOnly() ?? (IReadOnlyList<Annotation>)Array.Empty<Annotation>();
+            Annotations = annotations.ToReadOnlyList();
         }
 
         public string Name { get; }

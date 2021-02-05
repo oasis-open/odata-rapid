@@ -13,13 +13,13 @@ namespace rapid.rdm
         private readonly ILogger logger;
 
         private EdmModel edmModel;
-        private RdmDataModel rdmModel;
+        private RdmSchemaDefinition rdmModel;
 
         public ModelBuilder(ILogger logger, TypeEnvironment env)
         {
             this.logger = logger;
             this.env = env;
-            this.annotationBuilder = new AnnotationBuilder(logger);
+            this.annotationBuilder = new AnnotationBuilder(logger, false);
         }
 
         /// <summary>
@@ -27,18 +27,19 @@ namespace rapid.rdm
         /// </summary>
         /// <remarks>This method is not thread safe.</remarks>
         /// <returns>The constructed EDM model</returns>
-        public IEdmModel Build(RdmDataModel rdmModel, EdmModel edmModel)
+        public IEdmModel Build(RdmSchemaDefinition rdmModel, EdmModel edmModel)
         {
             try
             {
                 this.rdmModel = rdmModel;
                 this.edmModel = edmModel;
 
+                // TODO: when EdmLib allows to annotatate Schema, add annotationBuilder.AddAnnotations(edmModel, edmModel, rdmModel.Namespace.Annotations);                
+
                 edmModel.SetEdmReferences(CreateReferences());
 
                 // add each of the schema elements and register them in the environment
                 // order the elements so that base classes are created before subclasses
-
                 foreach (var item in TopologicalOrder.Sort(rdmModel.Items))
                 {
                     var edmElement = CreateSchemaElement(item);
@@ -65,17 +66,21 @@ namespace rapid.rdm
 
         private IEnumerable<EdmReference> CreateReferences()
         {
-            EdmReference MakeReference(string alias, string @namespace, IEdmModel model)
+            EdmReference MakeReference(string alias, string @namespace, IEdmModel model, IReadOnlyList<Annotation> annotations)
             {
                 var reference = new EdmReference(new Uri("http://unknown.com"));
-                reference.AddInclude(new EdmInclude(alias, @namespace));
+                var include = new EdmInclude(alias, @namespace);
+
+                reference.AddInclude(include);
+                // TODO: when included can be annotated in edmLib, add annotationBuilder.AddAnnotations(edmModel, include, annotations);
+
                 return reference;
             }
 
             // https://devblogs.microsoft.com/odata/tutorial-sample-refering-when-constructing-edm-model/
             return
                 from referenced in env.References
-                select MakeReference(referenced.alias, referenced.@namespace, referenced.model);
+                select MakeReference(referenced.alias, referenced.@namespace, referenced.model, referenced.annotations);
         }
 
         private IEdmElement CreateSchemaElement(IRdmSchemaElement item)
@@ -133,10 +138,7 @@ namespace rapid.rdm
                 var member = new EdmEnumMember(edmType, elem.Name, new EdmEnumMemberValue(value));
 
                 edmType.AddMember(member);
-                foreach (var annotation in elem.Annotations)
-                {
-                    annotationBuilder.AddAnnotation(edmModel, member, annotation);
-                }
+                annotationBuilder.AddAnnotations(edmModel, member, elem.Annotations);
             }
             return edmType;
         }

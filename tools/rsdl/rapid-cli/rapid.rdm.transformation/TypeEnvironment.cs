@@ -13,16 +13,16 @@ namespace rapid.rdm
         private readonly Dictionary<string, IEdmType> @internal;
 
         // dictionary of schema alias to dictionary of (namespace,  EDM model)
-        private readonly IDictionary<string, (string @namespace, IEdmModel model)> external;
+        private readonly IDictionary<string, (string @namespace, IEdmModel model, IReadOnlyList<Annotation> annotations)> external;
 
         public TypeEnvironment(ILogger logger)
         {
             this.logger = logger;
             this.@internal = new Dictionary<string, IEdmType>();
-            this.external = new Dictionary<string, (string @namespace, IEdmModel model)>();
+            this.external = new Dictionary<string, (string @namespace, IEdmModel model, IReadOnlyList<Annotation> annotations)>();
         }
 
-        public void AddReferences(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
+        public void AddReferences(RdmSchemaDefinition model, IDictionary<string, RdmSchemaDefinition> referencedModels)
         {
             foreach (var reference in model.References)
             {
@@ -32,7 +32,8 @@ namespace rapid.rdm
                 }
                 external[reference.Alias] = (
                     referencedModels[reference.Alias].Namespace.NamespaceName,
-                    CreateExternalModel(referencedRdmModel)
+                    CreateExternalModel(referencedRdmModel),
+                    reference.Annotations
                 );
             }
         }
@@ -45,8 +46,8 @@ namespace rapid.rdm
         /// <summary>
         /// List of all referenced models including their alias and namespace
         /// </summary>
-        public IEnumerable<(string alias, string @namespace, IEdmModel model)> References =>
-            external.Select(kvp => (kvp.Key, kvp.Value.@namespace, kvp.Value.model));
+        public IEnumerable<(string alias, string @namespace, IEdmModel model, IReadOnlyList<Annotation> annotations)> References =>
+            external.Select(kvp => (kvp.Key, kvp.Value.@namespace, kvp.Value.model, kvp.Value.annotations));
 
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace rapid.rdm
         /// <summary>
         /// creates a stub EDM model representing the referenced RDM model
         /// </summary>
-        private IEdmModel CreateExternalModel(RdmDataModel model)
+        private IEdmModel CreateExternalModel(RdmSchemaDefinition model)
         {
             var edmModel = new EdmModel(false);
             foreach (var rdmType in model.Items.OfType<IRdmType>())

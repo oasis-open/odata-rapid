@@ -20,7 +20,7 @@ namespace rapid.rdm.tests
             var incl = parser.Parse(inclText, "incl");
 
             var env = new TypeEnvironment(NullLogger.Instance);
-            env.AddReferences(main, new Dictionary<string, RdmDataModel> { ["common"] = incl });
+            env.AddReferences(main, new Dictionary<string, RdmSchemaDefinition> { ["common"] = incl });
 
             // act
             var actual = env.ResolveTypeReference(new RdmTypeReference("common.EmploymentType", false));
