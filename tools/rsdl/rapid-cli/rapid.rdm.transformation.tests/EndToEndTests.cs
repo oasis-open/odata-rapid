@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
+using rapid.edm.modelComparison;
 using rapid.rsdl;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace rapid.rdm.tests
             var actual = LoadAndTransformRsdlModel(rsdlPath);
             var expected = LoadEdmModel(csdlPath);
 
-            var delta = comparer.Compare(expected, actual).ToList();
+            var delta = comparer.GetDifferences(expected, actual).ToList();
             if (delta.Any())
             {
                 using (var file = File.CreateText(System.IO.Path.ChangeExtension(rsdlPath, ".delta")))
@@ -46,7 +47,7 @@ namespace rapid.rdm.tests
         {
             foreach (var path in Directory.GetDirectories("data"))
             {
-                if (!Path.GetFileName(path).StartsWith("."))
+                if (!System.IO.Path.GetFileName(path).StartsWith("."))
                 {
                     var rsdl = Directory.GetFiles(path, "*.rsdl").FirstOrDefault();
                     var csdl = Directory.GetFiles(path, "*.csdl.xml").FirstOrDefault();
