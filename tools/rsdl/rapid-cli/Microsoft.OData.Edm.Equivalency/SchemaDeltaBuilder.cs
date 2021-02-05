@@ -4,156 +4,152 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm
+namespace rapid.edm.modelComparison
 {
-    internal partial class SchemaDeltaBuilder
+
+    partial class SchemaDeltaBuilder
     {
         private readonly HashSet<object> visited = new HashSet<object>();
-        private readonly List<(PropertyPath, String, EdmLocation, EdmLocation)> errors = new List<(PropertyPath, String, EdmLocation, EdmLocation)>();
+        private readonly List<Difference> errors = new List<Difference>();
 
-        public IEnumerable<(PropertyPath Path, String Message, EdmLocation Left, EdmLocation Right)> Errors => errors;
+        public IEnumerable<Difference> Differences => errors;
 
-        protected void Visit(String a, String b, PropertyPath path)
+        protected bool IsDifferent(String a, String b, PropertyPath path) { if (!String.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Boolean a, Boolean b, PropertyPath path) { if (!Boolean.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Date a, Date b, PropertyPath path) { if (!Date.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(DateTimeOffset a, DateTimeOffset b, PropertyPath path) { if (!DateTimeOffset.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Decimal a, Decimal b, PropertyPath path) { if (!Decimal.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(TimeSpan a, TimeSpan b, PropertyPath path) { if (!TimeSpan.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Double a, Double b, PropertyPath path) { if (!Double.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Guid a, Guid b, PropertyPath path) { if (!Guid.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Int64 a, Int64 b, PropertyPath path) { if (!Int64.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(TimeOfDay a, TimeOfDay b, PropertyPath path) { if (!TimeOfDay.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(int? a, int? b, PropertyPath path) { if (!Nullable<int>.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(bool? a, bool? b, PropertyPath path) { if (!Nullable<bool>.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent(Byte[] a, Byte[] b, PropertyPath path) { if (!Enumerable.SequenceEqual(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } }
+        protected bool IsDifferent<T>(T a, T b, PropertyPath path) where T : Enum { { if (!object.Equals(a, b)) { Report(path, $"different values '{a}' != '{b}'"); return true; } else { return false; } } }
+
+        protected bool IsDifferent(EdmReferentialConstraintPropertyPair a, EdmReferentialConstraintPropertyPair b, PropertyPath path)
         {
-            if (!String.Equals(a, b))
-                Report(path, $"different values '{a}' != '{b}'");
-        }
-        protected void Visit(Boolean a, Boolean b, PropertyPath path) { if (!Boolean.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Date a, Date b, PropertyPath path) { if (!Date.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(DateTimeOffset a, DateTimeOffset b, PropertyPath path) { if (!DateTimeOffset.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Decimal a, Decimal b, PropertyPath path) { if (!Decimal.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(TimeSpan a, TimeSpan b, PropertyPath path) { if (!TimeSpan.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Double a, Double b, PropertyPath path) { if (!Double.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Guid a, Guid b, PropertyPath path) { if (!Guid.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Int64 a, Int64 b, PropertyPath path) { if (!Int64.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(TimeOfDay a, TimeOfDay b, PropertyPath path) { if (!TimeOfDay.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(int? a, int? b, PropertyPath path) { if (!Nullable<int>.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(bool? a, bool? b, PropertyPath path) { if (!Nullable<bool>.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit(Byte[] a, Byte[] b, PropertyPath path) { if (!Enumerable.SequenceEqual(a, b)) Report(path, $"different values '{a}' != '{b}'"); }
-        protected void Visit<T>(T a, T b, PropertyPath path) where T : Enum { { if (!object.Equals(a, b)) Report(path, $"different values '{a}' != '{b}'"); } }
-
-        protected void Visit(EdmReferentialConstraintPropertyPair a, EdmReferentialConstraintPropertyPair b, PropertyPath path)
-        {
-            Visit(a.DependentProperty, b.DependentProperty, path + "DependentProperty");
-            Visit(a.PrincipalProperty, b.PrincipalProperty, path + "PrincipalProperty");
+            var anyDifferent = false;
+            anyDifferent |= IsDifferent(a.DependentProperty, b.DependentProperty, path + "DependentProperty");
+            anyDifferent |= IsDifferent(a.PrincipalProperty, b.PrincipalProperty, path + "PrincipalProperty");
+            return anyDifferent;
         }
 
-        protected void VisitSeq<T>(IEnumerable<T> a, IEnumerable<T> b, Action<T, T, PropertyPath> visit, PropertyPath path) where T : class
+        protected bool IsDifferentSeq<T>(IEnumerable<T> expected, IEnumerable<T> actual, Func<T, T, PropertyPath, bool> visit, PropertyPath path) where T : class
         {
-            var aa = a.GetEnumerator();
-            var bb = b.GetEnumerator();
+            var expectedEnumerator = expected.GetEnumerator();
+            var actualEnumerator = actual.GetEnumerator();
+            var anyDifferent = false;
             for (var i = 0; ; i++)
             {
-                var aHasMoved = aa.MoveNext();
-                var bHasMoved = bb.MoveNext();
-                if (aHasMoved && bHasMoved)
+                var expectedHasMore = expectedEnumerator.MoveNext();
+                var actualHasMore = actualEnumerator.MoveNext();
+                if (expectedHasMore && actualHasMore)
                 {
-                    visit(aa.Current, bb.Current, path + i.ToString());
-                }
-                else if (aHasMoved || bHasMoved)
-                {
-                    // TODO, report non matching length
-                    break;
+                    anyDifferent |= visit(expectedEnumerator.Current, actualEnumerator.Current, path + i.ToString());
                 }
                 else
                 {
+                    if (expectedHasMore) { Report(path, $"missing element after element {i}"); }
+                    if (actualHasMore) { Report(path, $"extraneous element after element {i}"); }
                     break;
                 }
             }
+            return anyDifferent;
         }
 
-        public void VisitAnnotationSet(
-                  IEnumerable<IEdmVocabularyAnnotation> a,
-                  IEnumerable<IEdmVocabularyAnnotation> b,
-                  PropertyPath path)
+        protected bool IsDifferentNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Func<T, T, PropertyPath, bool> visit, PropertyPath path) where T : class, IEdmNamedElement
         {
-            var aa = a.ToDictionary(a => (GetTargetPath(a.Target), a.Term.FullName(), a.Qualifier ?? ""));
-            var bb = b.ToDictionary(b => (GetTargetPath(b.Target), b.Term.FullName(), b.Qualifier ?? ""));
-
-            var keys = aa.Keys.Concat(bb.Keys).Distinct();
-            foreach (var key in keys)
-            {
-                var (targetPath, termName, qualifier) = key;
-                var segment = targetPath + (string.IsNullOrEmpty(qualifier) ? "" : "/" + qualifier);
-                if (!aa.TryGetValue(key, out var ai))
-                {
-                    Report(path, $"additional {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
-                }
-                else if (!bb.TryGetValue(key, out var bi))
-                {
-                    Report(path, $"missing {termName} annotation{(string.IsNullOrEmpty(qualifier) ? "" : $" with qualifier {qualifier}")}");
-                }
-                else
-                {
-                    Visit(ai, bi, path + segment);
-                }
-            }
-        }
-
-        protected void VisitNamedSeq<T>(IEnumerable<T> e1, IEnumerable<T> e2, Action<T, T, PropertyPath> visit, PropertyPath path, string property) where T : class, IEdmNamedElement
-        {
-            var pairs = (e1 ?? Enumerable.Empty<T>()).FullOuterJoin(e2 ?? Enumerable.Empty<T>(), i => i.Name, i => i.Name);
+            var pairs = e1.FullOuterJoin(e2, i => i.Name, i => i.Name);
+            var anyDifferent = false;
             foreach (var (name, a, b) in pairs)
             {
                 if (a != null && b != null)
                 {
-                    visit(a, b, path + $"{property}[{name}]");
+                    anyDifferent |= visit(a, b, path + name);
                 }
                 else if (a == null)
                 {
-                    Report(path, $"additional item with name {name}");
+                    var lox = b is IEdmLocatable loc ? loc.Location : null;
+                    Report(path, $"superfluous item with name {name}", lox);
                 }
                 else if (b == null)
                 {
-                    var loc = b is IEdmLocatable eloc ? eloc.Location : null;
                     Report(path, $"missing item with name {name}");
                 }
             }
+            return anyDifferent;
         }
 
-        private class UnknwonEdmLocation : EdmLocation
+        protected void Report(PropertyPath path, string message, EdmLocation loc = null)
         {
-            public override string ToString() => string.Empty;
-            public static UnknwonEdmLocation Instance = new UnknwonEdmLocation();
+            if (locations.Count > 0)
+            {
+                var (l, r) = locations.Peek();
+                errors.Add(new Difference(path, message, l, r));
+            }
+            else
+            {
+                errors.Add(new Difference(path, message, UnknownEdmLocation.Instance, UnknownEdmLocation.Instance));
+            }
         }
 
-        protected void Report(PropertyPath path, string message)
+        private class UnknownEdmLocation : EdmLocation
         {
-            var (l, r) = locations.Count > 0 ? locations.Peek() : (UnknwonEdmLocation.Instance, UnknwonEdmLocation.Instance);
-            errors.Add((path, message, l, r));
+            private UnknownEdmLocation(bool v) { }
+
+            public static UnknownEdmLocation Instance = new UnknownEdmLocation(false);
+
+            public override string ToString() => "unknown";
         }
 
-        // check for reference equality and null, report on it and
-        // return true if no further checks/visits are required.
-        protected bool IsReferenceCheckComplete<T>(T a, T b, PropertyPath path)
+        // check for reference equality and null. 
+        // if equal, set `areDifferent` to false; else report on it and set `areDifferent`  to false;
+        // return true if no further checks are required.
+        protected bool IsReferenceCheckComplete<T>(T a, T b, PropertyPath path, out bool areDifferent)
         {
             if (object.ReferenceEquals(a, b))
             {
+                areDifferent = false;
                 return true;
             }
             if (a == null && b == null)
             {
+                areDifferent = false;
                 return true;
             }
             if (a == null && b != null)
             {
-                Report(path, "expected no value but one present in actual");
+                Report(path, "expected is null, actual is not null");
+                areDifferent = true;
                 return true;
             }
             if (a != null && b == null)
             {
-                Report(path, "expected a value but non in actual");
+                Report(path, "expected is not null, actual is null");
+                areDifferent = true;
                 return true;
             }
+            areDifferent = default;
             return false;
         }
+
+        private bool IsDuplicateVisit(object a)
+        {
+            var visited = this.visited.Contains(a);
+            this.visited.Add(a);
+            return visited;
+        }
+
 
         protected void CheckTypeEquality<T>(T a, T b, IList<Type> types, PropertyPath path)
         {
             static Type FindInterface(T obj, IList<Type> interfaces)
             {
                 var t = obj.GetType();
-                return interfaces.SingleOrDefault(i => i.IsAssignableFrom(t));
+                return interfaces.SingleOrDefault(i => t.IsAssignableTo(i));
             }
 
             var ai = FindInterface(a, types);
@@ -164,51 +160,6 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530407
-        // https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Edm/EdmUtil.cs#L415
-        private string GetTargetPath(IEdmVocabularyAnnotatable a)
-        {
-            if (a is IEdmSchemaElement aSchemaElement)
-            {
-                return $"{aSchemaElement.Namespace}.{aSchemaElement.Name}";
-            }
-            else if (a is IEdmStructuralProperty aProperty)
-            {
-                return $"{GetTargetPath((IEdmVocabularyAnnotatable)aProperty.DeclaringType)}/{aProperty.Name}";
-            }
-            else if (a is IEdmEnumMember aEnumMember)
-            {
-                return $"{GetTargetPath(aEnumMember.DeclaringType)}/{aEnumMember.Name}";
-            }
-
-            else if (a is IEdmEntityContainer aEntityContainer)
-            {
-                return $"{aEntityContainer.Namespace}.{aEntityContainer.Name}";
-            }
-            else if (a is IEdmEntityContainerElement aContainerElement)
-            {
-                return $"{GetTargetPath(aContainerElement.Container)}/{aContainerElement.Name}";
-            }
-
-            else if (a is IEdmOperation aAction)
-            {
-                return $"{aAction.Namespace}/{aAction.Name}"; // TODO parameters
-            }
-            else if (a is IEdmOperationParameter aOperationParameter)
-            {
-                return $"{GetTargetPath(aOperationParameter.DeclaringOperation)}/{aOperationParameter.Name}";
-            }
-            else if (a is IEdmOperationReturn aOperationReturn)
-            {
-                return $"{GetTargetPath(aOperationReturn.DeclaringOperation)}.$Return";
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        #region locations
 
         private readonly Stack<(EdmLocation, EdmLocation)> locations = new Stack<(EdmLocation, EdmLocation)>();
 
@@ -230,19 +181,117 @@ namespace Microsoft.OData.Edm
         class NullDisposable : IDisposable
         {
             private NullDisposable() { }
-
             public void Dispose() { }
             public static IDisposable Instance = new NullDisposable();
         }
 
-        class AnonymousDisposable : IDisposable
+        record AnonymousDisposable(Action action) : IDisposable
         {
-            private readonly Action action;
-
-            public AnonymousDisposable(Action action) { this.action = action; }
-
             public void Dispose() { action(); }
         }
+
+
+        // https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Target
+        static string AnnotationTargetPath(IEdmVocabularyAnnotatable target)
+        {
+            // structured types and their properties
+            if (target is IEdmEntityType targetEntityType)
+            {
+                return $"{targetEntityType.Namespace}.{targetEntityType.Name}";
+            }
+            else if (target is IEdmComplexType targetComplexType)
+            {
+                return $"{targetComplexType.Namespace}.{targetComplexType.Name}";
+            }
+            else if (target is IEdmStructuralProperty targetStructuralProperty)
+            {
+                return $"{AnnotationTargetPath((IEdmVocabularyAnnotatable)targetStructuralProperty.DeclaringType)}.{targetStructuralProperty.Name}";
+            }
+            else if (target is IEdmNavigationProperty targetNavigationProperty)
+            {
+                return $"{AnnotationTargetPath((IEdmVocabularyAnnotatable)targetNavigationProperty.DeclaringType)}.{targetNavigationProperty.Name}";
+            }
+
+            // enum types
+            else if (target is IEdmEnumType targetEnumType)
+            {
+                return $"{targetEnumType.Namespace}.{targetEnumType.Name}";
+            }
+            else if (target is IEdmEnumMember targetEnumMember)
+            {
+                return $"{targetEnumMember.DeclaringType.Namespace}.{targetEnumMember.DeclaringType.Name}.{targetEnumMember.Name}";
+            }
+
+            // service
+            else if (target is IEdmEntityContainer targetEntityContainer)
+            {
+                return $"{targetEntityContainer.Namespace}.{targetEntityContainer.Name}";
+            }
+            else if (target is IEdmEntitySet targetEntitySet)
+            {
+                return $"{targetEntitySet.Container.Namespace}.{targetEntitySet.Container.Name}.{targetEntitySet.Name}";
+            }
+            else if (target is IEdmSingleton targetSingleton)
+            {
+                return $"{targetSingleton.Container.Namespace}.{targetSingleton.Container.Name}.{targetSingleton.Name}";
+            }
+
+            // operations
+            else if (target is IEdmAction targetAction)
+            {
+                // TODO: deal with overloads
+                return $"{targetAction.Namespace}.{targetAction.Name}";
+            }
+            else if (target is IEdmFunction targetFunction)
+            {
+                // TODO: deal with overloads
+                return $"{targetFunction.Namespace}.{targetFunction.Name}";
+            }
+
+            else if (target is IEdmOperationReturn targetOperationReturn)
+            {
+                return $"{AnnotationTargetPath(targetOperationReturn.DeclaringOperation)}.$ReturnType";
+            }
+            else if (target is IEdmOperationParameter targetOperationParameter)
+            {
+                return $"{AnnotationTargetPath(targetOperationParameter.DeclaringOperation)}.{targetOperationParameter.Name}";
+            }
+
+            else if (target is IEdmActionImport targetActionImport)
+            {
+                return $"{targetActionImport.Container.Namespace}.{targetActionImport.Container.Name}/{targetActionImport.Name}";
+            }
+            else if (target is IEdmFunctionImport targetFunctionImport)
+            {
+                return $"{targetFunctionImport.Container.Namespace}.{targetFunctionImport.Container.Name}/{targetFunctionImport.Name}";
+            }
+
+
+            else if (target is IEdmPathType targetPathType)
+            {
+                return "notImplemented";
+            }
+            else if (target is IEdmPrimitiveType targetPrimitiveType)
+            {
+                return "notImplemented";
+            }
+
+            else if (target is IEdmTerm targetTerm)
+            {
+                return "notImplemented";
+            }
+            else if (target is IEdmTypeDefinition targetTypeDefinition)
+            {
+                return "notImplemented";
+            }
+            else if (target is IEdmUntypedType targetUntypedType)
+            {
+                return "notImplemented";
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
-    #endregion
 }

@@ -3,1665 +3,1681 @@ using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm
+namespace rapid.edm.modelComparison
 {
-    internal partial class SchemaDeltaBuilder
+    partial class SchemaDeltaBuilder
     {
-        public void Visit(IEdmSchemaElement a, IEdmSchemaElement b, PropertyPath path)
+        public bool IsDifferent(IEdmSchemaElement expected, IEdmSchemaElement actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmAction aAction && b is IEdmAction bAction)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmAction expectedAction && actual is IEdmAction actualAction)
                 {
-                    Visit(aAction, bAction, path);
+                    return IsDifferent(expectedAction, actualAction, path);
                 }
-                else if (a is IEdmComplexType aComplexType && b is IEdmComplexType bComplexType)
+                else if (expected is IEdmComplexType expectedComplexType && actual is IEdmComplexType actualComplexType)
                 {
-                    Visit(aComplexType, bComplexType, path);
+                    return IsDifferent(expectedComplexType, actualComplexType, path);
                 }
-                else if (a is IEdmEntityContainer aEntityContainer && b is IEdmEntityContainer bEntityContainer)
+                else if (expected is IEdmEntityContainer expectedEntityContainer && actual is IEdmEntityContainer actualEntityContainer)
                 {
-                    Visit(aEntityContainer, bEntityContainer, path);
+                    return IsDifferent(expectedEntityContainer, actualEntityContainer, path);
                 }
-                else if (a is IEdmEntityType aEntityType && b is IEdmEntityType bEntityType)
+                else if (expected is IEdmEntityType expectedEntityType && actual is IEdmEntityType actualEntityType)
                 {
-                    Visit(aEntityType, bEntityType, path);
+                    return IsDifferent(expectedEntityType, actualEntityType, path);
                 }
-                else if (a is IEdmEnumType aEnumType && b is IEdmEnumType bEnumType)
+                else if (expected is IEdmEnumType expectedEnumType && actual is IEdmEnumType actualEnumType)
                 {
-                    Visit(aEnumType, bEnumType, path);
+                    return IsDifferent(expectedEnumType, actualEnumType, path);
                 }
-                else if (a is IEdmFunction aFunction && b is IEdmFunction bFunction)
+                else if (expected is IEdmFunction expectedFunction && actual is IEdmFunction actualFunction)
                 {
-                    Visit(aFunction, bFunction, path);
+                    return IsDifferent(expectedFunction, actualFunction, path);
                 }
-                else if (a is IEdmPathType aPathType && b is IEdmPathType bPathType)
+                else if (expected is IEdmPathType expectedPathType && actual is IEdmPathType actualPathType)
                 {
-                    Visit(aPathType, bPathType, path);
+                    return IsDifferent(expectedPathType, actualPathType, path);
                 }
-                else if (a is IEdmPrimitiveType aPrimitiveType && b is IEdmPrimitiveType bPrimitiveType)
+                else if (expected is IEdmPrimitiveType expectedPrimitiveType && actual is IEdmPrimitiveType actualPrimitiveType)
                 {
-                    Visit(aPrimitiveType, bPrimitiveType, path);
+                    return IsDifferent(expectedPrimitiveType, actualPrimitiveType, path);
                 }
-                else if (a is IEdmTerm aTerm && b is IEdmTerm bTerm)
+                else if (expected is IEdmTerm expectedTerm && actual is IEdmTerm actualTerm)
                 {
-                    Visit(aTerm, bTerm, path);
+                    return IsDifferent(expectedTerm, actualTerm, path);
                 }
-                else if (a is IEdmTypeDefinition aTypeDefinition && b is IEdmTypeDefinition bTypeDefinition)
+                else if (expected is IEdmTypeDefinition expectedTypeDefinition && actual is IEdmTypeDefinition actualTypeDefinition)
                 {
-                    Visit(aTypeDefinition, bTypeDefinition, path);
+                    return IsDifferent(expectedTypeDefinition, actualTypeDefinition, path);
                 }
-                else if (a is IEdmUntypedType aUntypedType && b is IEdmUntypedType bUntypedType)
+                else if (expected is IEdmUntypedType expectedUntypedType && actual is IEdmUntypedType actualUntypedType)
                 {
-                    Visit(aUntypedType, bUntypedType, path);
+                    return IsDifferent(expectedUntypedType, actualUntypedType, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmSchemaElementSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                    Visit(a.Namespace, b.Namespace, path + "Namespace");
+                    CheckTypeEquality(expected, actual, IEdmSchemaElementSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                    if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmSchemaElementSubtypes = new[] { typeof(IEdmAction), typeof(IEdmComplexType), typeof(IEdmEntityContainer), typeof(IEdmEntityType), typeof(IEdmEnumType), typeof(IEdmFunction), typeof(IEdmPathType), typeof(IEdmPrimitiveType), typeof(IEdmTerm), typeof(IEdmTypeDefinition), typeof(IEdmUntypedType) };
 
-        public void Visit(IEdmVocabularyAnnotation a, IEdmVocabularyAnnotation b, PropertyPath path)
+        public bool IsDifferent(IEdmVocabularyAnnotation expected, IEdmVocabularyAnnotation actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Qualifier, b.Qualifier, path + "Qualifier");
-                Visit(a.Term, b.Term, path + "Term");
-                Visit(a.Target, b.Target, path + "Target");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Qualifier, actual.Qualifier, path + "Qualifier")) { return true; }
+                if (IsDifferent(expected.Term, actual.Term, path + "Term")) { return true; }
+                if (IsDifferent(expected.Target, actual.Target, path + "Target")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmModel a, IEdmModel b, PropertyPath path)
+        public bool IsDifferent(IEdmModel expected, IEdmModel actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                VisitNamedSeq(a.SchemaElements, b.SchemaElements, Visit, path, "SchemaElements");
-                VisitAnnotationSet(a.VocabularyAnnotations, b.VocabularyAnnotations, path + "Annotations");
-                VisitSeq(a.ReferencedModels, b.ReferencedModels, Visit, path + "ReferencedModels");
-                VisitSeq(a.DeclaredNamespaces, b.DeclaredNamespaces, Visit, path + "DeclaredNamespaces");
-                Visit(a.DirectValueAnnotationsManager, b.DirectValueAnnotationsManager, path + "DirectValueAnnotationsManager");
-                Visit(a.EntityContainer, b.EntityContainer, path + "EntityContainer");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferentNamedSeq(expected.SchemaElements, actual.SchemaElements, IsDifferent, path)) { return true; }
+                if (IsDifferentSeq(expected.VocabularyAnnotations, actual.VocabularyAnnotations, IsDifferent, path + "VocabularyAnnotations")) { return true; }
+                if (IsDifferentSeq(expected.ReferencedModels, actual.ReferencedModels, IsDifferent, path + "ReferencedModels")) { return true; }
+                if (IsDifferentSeq(expected.DeclaredNamespaces, actual.DeclaredNamespaces, IsDifferent, path + "DeclaredNamespaces")) { return true; }
+                if (IsDifferent(expected.DirectValueAnnotationsManager, actual.DirectValueAnnotationsManager, path + "DirectValueAnnotationsManager")) { return true; }
+                if (IsDifferent(expected.EntityContainer, actual.EntityContainer, path + "EntityContainer")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDirectValueAnnotationsManager a, IEdmDirectValueAnnotationsManager b, PropertyPath path)
+        public bool IsDifferent(IEdmDirectValueAnnotationsManager expected, IEdmDirectValueAnnotationsManager actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntityContainer a, IEdmEntityContainer b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityContainer expected, IEdmEntityContainer actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                VisitNamedSeq(a.Elements, b.Elements, Visit, path, "Elements");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferentNamedSeq(expected.Elements, actual.Elements, IsDifferent, path)) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmAction a, IEdmAction b, PropertyPath path)
+        public bool IsDifferent(IEdmAction expected, IEdmAction actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.ReturnType, b.ReturnType, path + "ReturnType");
-                VisitNamedSeq(a.Parameters, b.Parameters, Visit, path, "Parameters");
-                Visit(a.IsBound, b.IsBound, path + "IsBound");
-                Visit(a.EntitySetPath, b.EntitySetPath, path + "EntitySetPath");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.ReturnType, actual.ReturnType, path + "ReturnType")) { return true; }
+                if (IsDifferentNamedSeq(expected.Parameters, actual.Parameters, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.IsBound, actual.IsBound, path + "IsBound")) { return true; }
+                if (IsDifferent(expected.EntitySetPath, actual.EntitySetPath, path + "EntitySetPath")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmComplexType a, IEdmComplexType b, PropertyPath path)
+        public bool IsDifferent(IEdmComplexType expected, IEdmComplexType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.IsAbstract, b.IsAbstract, path + "IsAbstract");
-                Visit(a.IsOpen, b.IsOpen, path + "IsOpen");
-                Visit(a.BaseType, b.BaseType, path + "BaseType");
-                VisitNamedSeq(a.DeclaredProperties, b.DeclaredProperties, Visit, path, "DeclaredProperties");
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.IsAbstract, actual.IsAbstract, path + "IsAbstract")) { return true; }
+                if (IsDifferent(expected.IsOpen, actual.IsOpen, path + "IsOpen")) { return true; }
+                if (IsDifferent(expected.BaseType, actual.BaseType, path + "BaseType")) { return true; }
+                if (IsDifferentNamedSeq(expected.DeclaredProperties, actual.DeclaredProperties, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntityType a, IEdmEntityType b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityType expected, IEdmEntityType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.IsAbstract, b.IsAbstract, path + "IsAbstract");
-                Visit(a.IsOpen, b.IsOpen, path + "IsOpen");
-                Visit(a.BaseType, b.BaseType, path + "BaseType");
-                VisitNamedSeq(a.DeclaredProperties, b.DeclaredProperties, Visit, path, "DeclaredProperties");
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                VisitNamedSeq(a.DeclaredKey, b.DeclaredKey, Visit, path, "DeclaredKey");
-                Visit(a.HasStream, b.HasStream, path + "HasStream");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.IsAbstract, actual.IsAbstract, path + "IsAbstract")) { return true; }
+                if (IsDifferent(expected.IsOpen, actual.IsOpen, path + "IsOpen")) { return true; }
+                if (IsDifferent(expected.BaseType, actual.BaseType, path + "BaseType")) { return true; }
+                if (IsDifferentNamedSeq(expected.DeclaredProperties, actual.DeclaredProperties, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferentNamedSeq(expected.DeclaredKey, actual.DeclaredKey, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.HasStream, actual.HasStream, path + "HasStream")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEnumType a, IEdmEnumType b, PropertyPath path)
+        public bool IsDifferent(IEdmEnumType expected, IEdmEnumType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.UnderlyingType, b.UnderlyingType, path + "UnderlyingType");
-                VisitNamedSeq(a.Members, b.Members, Visit, path, "Members");
-                Visit(a.IsFlags, b.IsFlags, path + "IsFlags");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.UnderlyingType, actual.UnderlyingType, path + "UnderlyingType")) { return true; }
+                if (IsDifferentNamedSeq(expected.Members, actual.Members, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.IsFlags, actual.IsFlags, path + "IsFlags")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmFunction a, IEdmFunction b, PropertyPath path)
+        public bool IsDifferent(IEdmFunction expected, IEdmFunction actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.ReturnType, b.ReturnType, path + "ReturnType");
-                VisitNamedSeq(a.Parameters, b.Parameters, Visit, path, "Parameters");
-                Visit(a.IsBound, b.IsBound, path + "IsBound");
-                Visit(a.EntitySetPath, b.EntitySetPath, path + "EntitySetPath");
-                Visit(a.IsComposable, b.IsComposable, path + "IsComposable");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.ReturnType, actual.ReturnType, path + "ReturnType")) { return true; }
+                if (IsDifferentNamedSeq(expected.Parameters, actual.Parameters, IsDifferent, path)) { return true; }
+                if (IsDifferent(expected.IsBound, actual.IsBound, path + "IsBound")) { return true; }
+                if (IsDifferent(expected.EntitySetPath, actual.EntitySetPath, path + "EntitySetPath")) { return true; }
+                if (IsDifferent(expected.IsComposable, actual.IsComposable, path + "IsComposable")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmOperation a, IEdmOperation b, PropertyPath path)
+        public bool IsDifferent(IEdmOperation expected, IEdmOperation actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmAction aAction && b is IEdmAction bAction)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmAction expectedAction && actual is IEdmAction actualAction)
                 {
-                    Visit(aAction, bAction, path);
+                    return IsDifferent(expectedAction, actualAction, path);
                 }
-                else if (a is IEdmFunction aFunction && b is IEdmFunction bFunction)
+                else if (expected is IEdmFunction expectedFunction && actual is IEdmFunction actualFunction)
                 {
-                    Visit(aFunction, bFunction, path);
+                    return IsDifferent(expectedFunction, actualFunction, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmOperationSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                    Visit(a.Namespace, b.Namespace, path + "Namespace");
-                    Visit(a.ReturnType, b.ReturnType, path + "ReturnType");
-                    VisitNamedSeq(a.Parameters, b.Parameters, Visit, path, "Parameters");
-                    Visit(a.IsBound, b.IsBound, path + "IsBound");
-                    Visit(a.EntitySetPath, b.EntitySetPath, path + "EntitySetPath");
+                    CheckTypeEquality(expected, actual, IEdmOperationSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                    if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                    if (IsDifferent(expected.ReturnType, actual.ReturnType, path + "ReturnType")) { return true; }
+                    if (IsDifferentNamedSeq(expected.Parameters, actual.Parameters, IsDifferent, path)) { return true; }
+                    if (IsDifferent(expected.IsBound, actual.IsBound, path + "IsBound")) { return true; }
+                    if (IsDifferent(expected.EntitySetPath, actual.EntitySetPath, path + "EntitySetPath")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmOperationSubtypes = new[] { typeof(IEdmAction), typeof(IEdmFunction) };
 
-        public void Visit(IEdmPathType a, IEdmPathType b, PropertyPath path)
+        public bool IsDifferent(IEdmPathType expected, IEdmPathType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.PathKind, b.PathKind, path + "PathKind");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.PathKind, actual.PathKind, path + "PathKind")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmPrimitiveType a, IEdmPrimitiveType b, PropertyPath path)
+        public bool IsDifferent(IEdmPrimitiveType expected, IEdmPrimitiveType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.PrimitiveKind, b.PrimitiveKind, path + "PrimitiveKind");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.PrimitiveKind, actual.PrimitiveKind, path + "PrimitiveKind")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmSchemaType a, IEdmSchemaType b, PropertyPath path)
+        public bool IsDifferent(IEdmSchemaType expected, IEdmSchemaType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmComplexType aComplexType && b is IEdmComplexType bComplexType)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmComplexType expectedComplexType && actual is IEdmComplexType actualComplexType)
                 {
-                    Visit(aComplexType, bComplexType, path);
+                    return IsDifferent(expectedComplexType, actualComplexType, path);
                 }
-                else if (a is IEdmEntityType aEntityType && b is IEdmEntityType bEntityType)
+                else if (expected is IEdmEntityType expectedEntityType && actual is IEdmEntityType actualEntityType)
                 {
-                    Visit(aEntityType, bEntityType, path);
+                    return IsDifferent(expectedEntityType, actualEntityType, path);
                 }
-                else if (a is IEdmEnumType aEnumType && b is IEdmEnumType bEnumType)
+                else if (expected is IEdmEnumType expectedEnumType && actual is IEdmEnumType actualEnumType)
                 {
-                    Visit(aEnumType, bEnumType, path);
+                    return IsDifferent(expectedEnumType, actualEnumType, path);
                 }
-                else if (a is IEdmPathType aPathType && b is IEdmPathType bPathType)
+                else if (expected is IEdmPathType expectedPathType && actual is IEdmPathType actualPathType)
                 {
-                    Visit(aPathType, bPathType, path);
+                    return IsDifferent(expectedPathType, actualPathType, path);
                 }
-                else if (a is IEdmPrimitiveType aPrimitiveType && b is IEdmPrimitiveType bPrimitiveType)
+                else if (expected is IEdmPrimitiveType expectedPrimitiveType && actual is IEdmPrimitiveType actualPrimitiveType)
                 {
-                    Visit(aPrimitiveType, bPrimitiveType, path);
+                    return IsDifferent(expectedPrimitiveType, actualPrimitiveType, path);
                 }
-                else if (a is IEdmTypeDefinition aTypeDefinition && b is IEdmTypeDefinition bTypeDefinition)
+                else if (expected is IEdmTypeDefinition expectedTypeDefinition && actual is IEdmTypeDefinition actualTypeDefinition)
                 {
-                    Visit(aTypeDefinition, bTypeDefinition, path);
+                    return IsDifferent(expectedTypeDefinition, actualTypeDefinition, path);
                 }
-                else if (a is IEdmUntypedType aUntypedType && b is IEdmUntypedType bUntypedType)
+                else if (expected is IEdmUntypedType expectedUntypedType && actual is IEdmUntypedType actualUntypedType)
                 {
-                    Visit(aUntypedType, bUntypedType, path);
+                    return IsDifferent(expectedUntypedType, actualUntypedType, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmSchemaTypeSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                    Visit(a.Namespace, b.Namespace, path + "Namespace");
-                    Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
+                    CheckTypeEquality(expected, actual, IEdmSchemaTypeSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                    if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                    if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmSchemaTypeSubtypes = new[] { typeof(IEdmComplexType), typeof(IEdmEntityType), typeof(IEdmEnumType), typeof(IEdmPathType), typeof(IEdmPrimitiveType), typeof(IEdmTypeDefinition), typeof(IEdmUntypedType) };
 
-        public void Visit(IEdmTerm a, IEdmTerm b, PropertyPath path)
+        public bool IsDifferent(IEdmTerm expected, IEdmTerm actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.AppliesTo, b.AppliesTo, path + "AppliesTo");
-                Visit(a.DefaultValue, b.DefaultValue, path + "DefaultValue");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.AppliesTo, actual.AppliesTo, path + "AppliesTo")) { return true; }
+                if (IsDifferent(expected.DefaultValue, actual.DefaultValue, path + "DefaultValue")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmTypeDefinition a, IEdmTypeDefinition b, PropertyPath path)
+        public bool IsDifferent(IEdmTypeDefinition expected, IEdmTypeDefinition actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.UnderlyingType, b.UnderlyingType, path + "UnderlyingType");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.UnderlyingType, actual.UnderlyingType, path + "UnderlyingType")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmUntypedType a, IEdmUntypedType b, PropertyPath path)
+        public bool IsDifferent(IEdmUntypedType expected, IEdmUntypedType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.SchemaElementKind, b.SchemaElementKind, path + "SchemaElementKind");
-                Visit(a.Namespace, b.Namespace, path + "Namespace");
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.SchemaElementKind, actual.SchemaElementKind, path + "SchemaElementKind")) { return true; }
+                if (IsDifferent(expected.Namespace, actual.Namespace, path + "Namespace")) { return true; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmVocabularyAnnotatable a, IEdmVocabularyAnnotatable b, PropertyPath path)
+        public bool IsDifferent(IEdmVocabularyAnnotatable expected, IEdmVocabularyAnnotatable actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmAction aAction && b is IEdmAction bAction)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmAction expectedAction && actual is IEdmAction actualAction)
                 {
-                    Visit(aAction, bAction, path);
+                    return IsDifferent(expectedAction, actualAction, path);
                 }
-                else if (a is IEdmActionImport aActionImport && b is IEdmActionImport bActionImport)
+                else if (expected is IEdmActionImport expectedActionImport && actual is IEdmActionImport actualActionImport)
                 {
-                    Visit(aActionImport, bActionImport, path);
+                    return IsDifferent(expectedActionImport, actualActionImport, path);
                 }
-                else if (a is IEdmComplexType aComplexType && b is IEdmComplexType bComplexType)
+                else if (expected is IEdmComplexType expectedComplexType && actual is IEdmComplexType actualComplexType)
                 {
-                    Visit(aComplexType, bComplexType, path);
+                    return IsDifferent(expectedComplexType, actualComplexType, path);
                 }
-                else if (a is IEdmEntityContainer aEntityContainer && b is IEdmEntityContainer bEntityContainer)
+                else if (expected is IEdmEntityContainer expectedEntityContainer && actual is IEdmEntityContainer actualEntityContainer)
                 {
-                    Visit(aEntityContainer, bEntityContainer, path);
+                    return IsDifferent(expectedEntityContainer, actualEntityContainer, path);
                 }
-                else if (a is IEdmEntitySet aEntitySet && b is IEdmEntitySet bEntitySet)
+                else if (expected is IEdmEntitySet expectedEntitySet && actual is IEdmEntitySet actualEntitySet)
                 {
-                    Visit(aEntitySet, bEntitySet, path);
+                    return IsDifferent(expectedEntitySet, actualEntitySet, path);
                 }
-                else if (a is IEdmEntityType aEntityType && b is IEdmEntityType bEntityType)
+                else if (expected is IEdmEntityType expectedEntityType && actual is IEdmEntityType actualEntityType)
                 {
-                    Visit(aEntityType, bEntityType, path);
+                    return IsDifferent(expectedEntityType, actualEntityType, path);
                 }
-                else if (a is IEdmEnumMember aEnumMember && b is IEdmEnumMember bEnumMember)
+                else if (expected is IEdmEnumMember expectedEnumMember && actual is IEdmEnumMember actualEnumMember)
                 {
-                    Visit(aEnumMember, bEnumMember, path);
+                    return IsDifferent(expectedEnumMember, actualEnumMember, path);
                 }
-                else if (a is IEdmEnumType aEnumType && b is IEdmEnumType bEnumType)
+                else if (expected is IEdmEnumType expectedEnumType && actual is IEdmEnumType actualEnumType)
                 {
-                    Visit(aEnumType, bEnumType, path);
+                    return IsDifferent(expectedEnumType, actualEnumType, path);
                 }
-                else if (a is IEdmFunction aFunction && b is IEdmFunction bFunction)
+                else if (expected is IEdmFunction expectedFunction && actual is IEdmFunction actualFunction)
                 {
-                    Visit(aFunction, bFunction, path);
+                    return IsDifferent(expectedFunction, actualFunction, path);
                 }
-                else if (a is IEdmFunctionImport aFunctionImport && b is IEdmFunctionImport bFunctionImport)
+                else if (expected is IEdmFunctionImport expectedFunctionImport && actual is IEdmFunctionImport actualFunctionImport)
                 {
-                    Visit(aFunctionImport, bFunctionImport, path);
+                    return IsDifferent(expectedFunctionImport, actualFunctionImport, path);
                 }
-                else if (a is IEdmNavigationProperty aNavigationProperty && b is IEdmNavigationProperty bNavigationProperty)
+                else if (expected is IEdmNavigationProperty expectedNavigationProperty && actual is IEdmNavigationProperty actualNavigationProperty)
                 {
-                    Visit(aNavigationProperty, bNavigationProperty, path);
+                    return IsDifferent(expectedNavigationProperty, actualNavigationProperty, path);
                 }
-                else if (a is IEdmOperationReturn aOperationReturn && b is IEdmOperationReturn bOperationReturn)
+                else if (expected is IEdmOperationReturn expectedOperationReturn && actual is IEdmOperationReturn actualOperationReturn)
                 {
-                    Visit(aOperationReturn, bOperationReturn, path);
+                    return IsDifferent(expectedOperationReturn, actualOperationReturn, path);
                 }
-                else if (a is IEdmOptionalParameter aOptionalParameter && b is IEdmOptionalParameter bOptionalParameter)
+                else if (expected is IEdmOptionalParameter expectedOptionalParameter && actual is IEdmOptionalParameter actualOptionalParameter)
                 {
-                    Visit(aOptionalParameter, bOptionalParameter, path);
+                    return IsDifferent(expectedOptionalParameter, actualOptionalParameter, path);
                 }
-                else if (a is IEdmPathType aPathType && b is IEdmPathType bPathType)
+                else if (expected is IEdmPathType expectedPathType && actual is IEdmPathType actualPathType)
                 {
-                    Visit(aPathType, bPathType, path);
+                    return IsDifferent(expectedPathType, actualPathType, path);
                 }
-                else if (a is IEdmPrimitiveType aPrimitiveType && b is IEdmPrimitiveType bPrimitiveType)
+                else if (expected is IEdmPrimitiveType expectedPrimitiveType && actual is IEdmPrimitiveType actualPrimitiveType)
                 {
-                    Visit(aPrimitiveType, bPrimitiveType, path);
+                    return IsDifferent(expectedPrimitiveType, actualPrimitiveType, path);
                 }
-                else if (a is IEdmSingleton aSingleton && b is IEdmSingleton bSingleton)
+                else if (expected is IEdmSingleton expectedSingleton && actual is IEdmSingleton actualSingleton)
                 {
-                    Visit(aSingleton, bSingleton, path);
+                    return IsDifferent(expectedSingleton, actualSingleton, path);
                 }
-                else if (a is IEdmStructuralProperty aStructuralProperty && b is IEdmStructuralProperty bStructuralProperty)
+                else if (expected is IEdmStructuralProperty expectedStructuralProperty && actual is IEdmStructuralProperty actualStructuralProperty)
                 {
-                    Visit(aStructuralProperty, bStructuralProperty, path);
+                    return IsDifferent(expectedStructuralProperty, actualStructuralProperty, path);
                 }
-                else if (a is IEdmTerm aTerm && b is IEdmTerm bTerm)
+                else if (expected is IEdmTerm expectedTerm && actual is IEdmTerm actualTerm)
                 {
-                    Visit(aTerm, bTerm, path);
+                    return IsDifferent(expectedTerm, actualTerm, path);
                 }
-                else if (a is IEdmTypeDefinition aTypeDefinition && b is IEdmTypeDefinition bTypeDefinition)
+                else if (expected is IEdmTypeDefinition expectedTypeDefinition && actual is IEdmTypeDefinition actualTypeDefinition)
                 {
-                    Visit(aTypeDefinition, bTypeDefinition, path);
+                    return IsDifferent(expectedTypeDefinition, actualTypeDefinition, path);
                 }
-                else if (a is IEdmUntypedType aUntypedType && b is IEdmUntypedType bUntypedType)
+                else if (expected is IEdmUntypedType expectedUntypedType && actual is IEdmUntypedType actualUntypedType)
                 {
-                    Visit(aUntypedType, bUntypedType, path);
+                    return IsDifferent(expectedUntypedType, actualUntypedType, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmVocabularyAnnotatableSubtypes, path);
+                    CheckTypeEquality(expected, actual, IEdmVocabularyAnnotatableSubtypes, path);
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmVocabularyAnnotatableSubtypes = new[] { typeof(IEdmAction), typeof(IEdmActionImport), typeof(IEdmComplexType), typeof(IEdmEntityContainer), typeof(IEdmEntitySet), typeof(IEdmEntityType), typeof(IEdmEnumMember), typeof(IEdmEnumType), typeof(IEdmFunction), typeof(IEdmFunctionImport), typeof(IEdmNavigationProperty), typeof(IEdmOperationReturn), typeof(IEdmOptionalParameter), typeof(IEdmPathType), typeof(IEdmPrimitiveType), typeof(IEdmSingleton), typeof(IEdmStructuralProperty), typeof(IEdmTerm), typeof(IEdmTypeDefinition), typeof(IEdmUntypedType) };
 
-        public void Visit(IEdmExpression a, IEdmExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmExpression expected, IEdmExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmApplyExpression aApplyExpression && b is IEdmApplyExpression bApplyExpression)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmApplyExpression expectedApplyExpression && actual is IEdmApplyExpression actualApplyExpression)
                 {
-                    Visit(aApplyExpression, bApplyExpression, path);
+                    return IsDifferent(expectedApplyExpression, actualApplyExpression, path);
                 }
-                else if (a is IEdmBinaryConstantExpression aBinaryConstantExpression && b is IEdmBinaryConstantExpression bBinaryConstantExpression)
+                else if (expected is IEdmBinaryConstantExpression expectedBinaryConstantExpression && actual is IEdmBinaryConstantExpression actualBinaryConstantExpression)
                 {
-                    Visit(aBinaryConstantExpression, bBinaryConstantExpression, path);
+                    return IsDifferent(expectedBinaryConstantExpression, actualBinaryConstantExpression, path);
                 }
-                else if (a is IEdmBooleanConstantExpression aBooleanConstantExpression && b is IEdmBooleanConstantExpression bBooleanConstantExpression)
+                else if (expected is IEdmBooleanConstantExpression expectedBooleanConstantExpression && actual is IEdmBooleanConstantExpression actualBooleanConstantExpression)
                 {
-                    Visit(aBooleanConstantExpression, bBooleanConstantExpression, path);
+                    return IsDifferent(expectedBooleanConstantExpression, actualBooleanConstantExpression, path);
                 }
-                else if (a is IEdmCastExpression aCastExpression && b is IEdmCastExpression bCastExpression)
+                else if (expected is IEdmCastExpression expectedCastExpression && actual is IEdmCastExpression actualCastExpression)
                 {
-                    Visit(aCastExpression, bCastExpression, path);
+                    return IsDifferent(expectedCastExpression, actualCastExpression, path);
                 }
-                else if (a is IEdmCollectionExpression aCollectionExpression && b is IEdmCollectionExpression bCollectionExpression)
+                else if (expected is IEdmCollectionExpression expectedCollectionExpression && actual is IEdmCollectionExpression actualCollectionExpression)
                 {
-                    Visit(aCollectionExpression, bCollectionExpression, path);
+                    return IsDifferent(expectedCollectionExpression, actualCollectionExpression, path);
                 }
-                else if (a is IEdmDateConstantExpression aDateConstantExpression && b is IEdmDateConstantExpression bDateConstantExpression)
+                else if (expected is IEdmDateConstantExpression expectedDateConstantExpression && actual is IEdmDateConstantExpression actualDateConstantExpression)
                 {
-                    Visit(aDateConstantExpression, bDateConstantExpression, path);
+                    return IsDifferent(expectedDateConstantExpression, actualDateConstantExpression, path);
                 }
-                else if (a is IEdmDateTimeOffsetConstantExpression aDateTimeOffsetConstantExpression && b is IEdmDateTimeOffsetConstantExpression bDateTimeOffsetConstantExpression)
+                else if (expected is IEdmDateTimeOffsetConstantExpression expectedDateTimeOffsetConstantExpression && actual is IEdmDateTimeOffsetConstantExpression actualDateTimeOffsetConstantExpression)
                 {
-                    Visit(aDateTimeOffsetConstantExpression, bDateTimeOffsetConstantExpression, path);
+                    return IsDifferent(expectedDateTimeOffsetConstantExpression, actualDateTimeOffsetConstantExpression, path);
                 }
-                else if (a is IEdmDecimalConstantExpression aDecimalConstantExpression && b is IEdmDecimalConstantExpression bDecimalConstantExpression)
+                else if (expected is IEdmDecimalConstantExpression expectedDecimalConstantExpression && actual is IEdmDecimalConstantExpression actualDecimalConstantExpression)
                 {
-                    Visit(aDecimalConstantExpression, bDecimalConstantExpression, path);
+                    return IsDifferent(expectedDecimalConstantExpression, actualDecimalConstantExpression, path);
                 }
-                else if (a is IEdmDurationConstantExpression aDurationConstantExpression && b is IEdmDurationConstantExpression bDurationConstantExpression)
+                else if (expected is IEdmDurationConstantExpression expectedDurationConstantExpression && actual is IEdmDurationConstantExpression actualDurationConstantExpression)
                 {
-                    Visit(aDurationConstantExpression, bDurationConstantExpression, path);
+                    return IsDifferent(expectedDurationConstantExpression, actualDurationConstantExpression, path);
                 }
-                else if (a is IEdmEnumMemberExpression aEnumMemberExpression && b is IEdmEnumMemberExpression bEnumMemberExpression)
+                else if (expected is IEdmEnumMemberExpression expectedEnumMemberExpression && actual is IEdmEnumMemberExpression actualEnumMemberExpression)
                 {
-                    Visit(aEnumMemberExpression, bEnumMemberExpression, path);
+                    return IsDifferent(expectedEnumMemberExpression, actualEnumMemberExpression, path);
                 }
-                else if (a is IEdmFloatingConstantExpression aFloatingConstantExpression && b is IEdmFloatingConstantExpression bFloatingConstantExpression)
+                else if (expected is IEdmFloatingConstantExpression expectedFloatingConstantExpression && actual is IEdmFloatingConstantExpression actualFloatingConstantExpression)
                 {
-                    Visit(aFloatingConstantExpression, bFloatingConstantExpression, path);
+                    return IsDifferent(expectedFloatingConstantExpression, actualFloatingConstantExpression, path);
                 }
-                else if (a is IEdmGuidConstantExpression aGuidConstantExpression && b is IEdmGuidConstantExpression bGuidConstantExpression)
+                else if (expected is IEdmGuidConstantExpression expectedGuidConstantExpression && actual is IEdmGuidConstantExpression actualGuidConstantExpression)
                 {
-                    Visit(aGuidConstantExpression, bGuidConstantExpression, path);
+                    return IsDifferent(expectedGuidConstantExpression, actualGuidConstantExpression, path);
                 }
-                else if (a is IEdmIfExpression aIfExpression && b is IEdmIfExpression bIfExpression)
+                else if (expected is IEdmIfExpression expectedIfExpression && actual is IEdmIfExpression actualIfExpression)
                 {
-                    Visit(aIfExpression, bIfExpression, path);
+                    return IsDifferent(expectedIfExpression, actualIfExpression, path);
                 }
-                else if (a is IEdmIntegerConstantExpression aIntegerConstantExpression && b is IEdmIntegerConstantExpression bIntegerConstantExpression)
+                else if (expected is IEdmIntegerConstantExpression expectedIntegerConstantExpression && actual is IEdmIntegerConstantExpression actualIntegerConstantExpression)
                 {
-                    Visit(aIntegerConstantExpression, bIntegerConstantExpression, path);
+                    return IsDifferent(expectedIntegerConstantExpression, actualIntegerConstantExpression, path);
                 }
-                else if (a is IEdmIsTypeExpression aIsTypeExpression && b is IEdmIsTypeExpression bIsTypeExpression)
+                else if (expected is IEdmIsTypeExpression expectedIsTypeExpression && actual is IEdmIsTypeExpression actualIsTypeExpression)
                 {
-                    Visit(aIsTypeExpression, bIsTypeExpression, path);
+                    return IsDifferent(expectedIsTypeExpression, actualIsTypeExpression, path);
                 }
-                else if (a is IEdmLabeledExpression aLabeledExpression && b is IEdmLabeledExpression bLabeledExpression)
+                else if (expected is IEdmLabeledExpression expectedLabeledExpression && actual is IEdmLabeledExpression actualLabeledExpression)
                 {
-                    Visit(aLabeledExpression, bLabeledExpression, path);
+                    return IsDifferent(expectedLabeledExpression, actualLabeledExpression, path);
                 }
-                else if (a is IEdmLabeledExpressionReferenceExpression aLabeledExpressionReferenceExpression && b is IEdmLabeledExpressionReferenceExpression bLabeledExpressionReferenceExpression)
+                else if (expected is IEdmLabeledExpressionReferenceExpression expectedLabeledExpressionReferenceExpression && actual is IEdmLabeledExpressionReferenceExpression actualLabeledExpressionReferenceExpression)
                 {
-                    Visit(aLabeledExpressionReferenceExpression, bLabeledExpressionReferenceExpression, path);
+                    return IsDifferent(expectedLabeledExpressionReferenceExpression, actualLabeledExpressionReferenceExpression, path);
                 }
-                else if (a is IEdmNullExpression aNullExpression && b is IEdmNullExpression bNullExpression)
+                else if (expected is IEdmNullExpression expectedNullExpression && actual is IEdmNullExpression actualNullExpression)
                 {
-                    Visit(aNullExpression, bNullExpression, path);
+                    return IsDifferent(expectedNullExpression, actualNullExpression, path);
                 }
-                else if (a is IEdmPathExpression aPathExpression && b is IEdmPathExpression bPathExpression)
+                else if (expected is IEdmPathExpression expectedPathExpression && actual is IEdmPathExpression actualPathExpression)
                 {
-                    Visit(aPathExpression, bPathExpression, path);
+                    return IsDifferent(expectedPathExpression, actualPathExpression, path);
                 }
-                else if (a is IEdmRecordExpression aRecordExpression && b is IEdmRecordExpression bRecordExpression)
+                else if (expected is IEdmRecordExpression expectedRecordExpression && actual is IEdmRecordExpression actualRecordExpression)
                 {
-                    Visit(aRecordExpression, bRecordExpression, path);
+                    return IsDifferent(expectedRecordExpression, actualRecordExpression, path);
                 }
-                else if (a is IEdmStringConstantExpression aStringConstantExpression && b is IEdmStringConstantExpression bStringConstantExpression)
+                else if (expected is IEdmStringConstantExpression expectedStringConstantExpression && actual is IEdmStringConstantExpression actualStringConstantExpression)
                 {
-                    Visit(aStringConstantExpression, bStringConstantExpression, path);
+                    return IsDifferent(expectedStringConstantExpression, actualStringConstantExpression, path);
                 }
-                else if (a is IEdmTimeOfDayConstantExpression aTimeOfDayConstantExpression && b is IEdmTimeOfDayConstantExpression bTimeOfDayConstantExpression)
+                else if (expected is IEdmTimeOfDayConstantExpression expectedTimeOfDayConstantExpression && actual is IEdmTimeOfDayConstantExpression actualTimeOfDayConstantExpression)
                 {
-                    Visit(aTimeOfDayConstantExpression, bTimeOfDayConstantExpression, path);
+                    return IsDifferent(expectedTimeOfDayConstantExpression, actualTimeOfDayConstantExpression, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmExpressionSubtypes, path);
-                    Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
+                    CheckTypeEquality(expected, actual, IEdmExpressionSubtypes, path);
+                    if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmExpressionSubtypes = new[] { typeof(IEdmApplyExpression), typeof(IEdmBinaryConstantExpression), typeof(IEdmBooleanConstantExpression), typeof(IEdmCastExpression), typeof(IEdmCollectionExpression), typeof(IEdmDateConstantExpression), typeof(IEdmDateTimeOffsetConstantExpression), typeof(IEdmDecimalConstantExpression), typeof(IEdmDurationConstantExpression), typeof(IEdmEnumMemberExpression), typeof(IEdmFloatingConstantExpression), typeof(IEdmGuidConstantExpression), typeof(IEdmIfExpression), typeof(IEdmIntegerConstantExpression), typeof(IEdmIsTypeExpression), typeof(IEdmLabeledExpression), typeof(IEdmLabeledExpressionReferenceExpression), typeof(IEdmNullExpression), typeof(IEdmPathExpression), typeof(IEdmRecordExpression), typeof(IEdmStringConstantExpression), typeof(IEdmTimeOfDayConstantExpression) };
 
-        public void Visit(IEdmEntityContainerElement a, IEdmEntityContainerElement b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityContainerElement expected, IEdmEntityContainerElement actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmActionImport aActionImport && b is IEdmActionImport bActionImport)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmActionImport expectedActionImport && actual is IEdmActionImport actualActionImport)
                 {
-                    Visit(aActionImport, bActionImport, path);
+                    return IsDifferent(expectedActionImport, actualActionImport, path);
                 }
-                else if (a is IEdmEntitySet aEntitySet && b is IEdmEntitySet bEntitySet)
+                else if (expected is IEdmEntitySet expectedEntitySet && actual is IEdmEntitySet actualEntitySet)
                 {
-                    Visit(aEntitySet, bEntitySet, path);
+                    return IsDifferent(expectedEntitySet, actualEntitySet, path);
                 }
-                else if (a is IEdmFunctionImport aFunctionImport && b is IEdmFunctionImport bFunctionImport)
+                else if (expected is IEdmFunctionImport expectedFunctionImport && actual is IEdmFunctionImport actualFunctionImport)
                 {
-                    Visit(aFunctionImport, bFunctionImport, path);
+                    return IsDifferent(expectedFunctionImport, actualFunctionImport, path);
                 }
-                else if (a is IEdmSingleton aSingleton && b is IEdmSingleton bSingleton)
+                else if (expected is IEdmSingleton expectedSingleton && actual is IEdmSingleton actualSingleton)
                 {
-                    Visit(aSingleton, bSingleton, path);
+                    return IsDifferent(expectedSingleton, actualSingleton, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmEntityContainerElementSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                    Visit(a.Container, b.Container, path + "Container");
+                    CheckTypeEquality(expected, actual, IEdmEntityContainerElementSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                    if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmEntityContainerElementSubtypes = new[] { typeof(IEdmActionImport), typeof(IEdmEntitySet), typeof(IEdmFunctionImport), typeof(IEdmSingleton) };
 
-        public void Visit(IEdmTypeReference a, IEdmTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmTypeReference expected, IEdmTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmBinaryTypeReference aBinaryTypeReference && b is IEdmBinaryTypeReference bBinaryTypeReference)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmBinaryTypeReference expectedBinaryTypeReference && actual is IEdmBinaryTypeReference actualBinaryTypeReference)
                 {
-                    Visit(aBinaryTypeReference, bBinaryTypeReference, path);
+                    return IsDifferent(expectedBinaryTypeReference, actualBinaryTypeReference, path);
                 }
-                else if (a is IEdmCollectionTypeReference aCollectionTypeReference && b is IEdmCollectionTypeReference bCollectionTypeReference)
+                else if (expected is IEdmCollectionTypeReference expectedCollectionTypeReference && actual is IEdmCollectionTypeReference actualCollectionTypeReference)
                 {
-                    Visit(aCollectionTypeReference, bCollectionTypeReference, path);
+                    return IsDifferent(expectedCollectionTypeReference, actualCollectionTypeReference, path);
                 }
-                else if (a is IEdmComplexTypeReference aComplexTypeReference && b is IEdmComplexTypeReference bComplexTypeReference)
+                else if (expected is IEdmComplexTypeReference expectedComplexTypeReference && actual is IEdmComplexTypeReference actualComplexTypeReference)
                 {
-                    Visit(aComplexTypeReference, bComplexTypeReference, path);
+                    return IsDifferent(expectedComplexTypeReference, actualComplexTypeReference, path);
                 }
-                else if (a is IEdmDecimalTypeReference aDecimalTypeReference && b is IEdmDecimalTypeReference bDecimalTypeReference)
+                else if (expected is IEdmDecimalTypeReference expectedDecimalTypeReference && actual is IEdmDecimalTypeReference actualDecimalTypeReference)
                 {
-                    Visit(aDecimalTypeReference, bDecimalTypeReference, path);
+                    return IsDifferent(expectedDecimalTypeReference, actualDecimalTypeReference, path);
                 }
-                else if (a is IEdmEntityReferenceTypeReference aEntityReferenceTypeReference && b is IEdmEntityReferenceTypeReference bEntityReferenceTypeReference)
+                else if (expected is IEdmEntityReferenceTypeReference expectedEntityReferenceTypeReference && actual is IEdmEntityReferenceTypeReference actualEntityReferenceTypeReference)
                 {
-                    Visit(aEntityReferenceTypeReference, bEntityReferenceTypeReference, path);
+                    return IsDifferent(expectedEntityReferenceTypeReference, actualEntityReferenceTypeReference, path);
                 }
-                else if (a is IEdmEntityTypeReference aEntityTypeReference && b is IEdmEntityTypeReference bEntityTypeReference)
+                else if (expected is IEdmEntityTypeReference expectedEntityTypeReference && actual is IEdmEntityTypeReference actualEntityTypeReference)
                 {
-                    Visit(aEntityTypeReference, bEntityTypeReference, path);
+                    return IsDifferent(expectedEntityTypeReference, actualEntityTypeReference, path);
                 }
-                else if (a is IEdmEnumTypeReference aEnumTypeReference && b is IEdmEnumTypeReference bEnumTypeReference)
+                else if (expected is IEdmEnumTypeReference expectedEnumTypeReference && actual is IEdmEnumTypeReference actualEnumTypeReference)
                 {
-                    Visit(aEnumTypeReference, bEnumTypeReference, path);
+                    return IsDifferent(expectedEnumTypeReference, actualEnumTypeReference, path);
                 }
-                else if (a is IEdmPathTypeReference aPathTypeReference && b is IEdmPathTypeReference bPathTypeReference)
+                else if (expected is IEdmPathTypeReference expectedPathTypeReference && actual is IEdmPathTypeReference actualPathTypeReference)
                 {
-                    Visit(aPathTypeReference, bPathTypeReference, path);
+                    return IsDifferent(expectedPathTypeReference, actualPathTypeReference, path);
                 }
-                else if (a is IEdmSpatialTypeReference aSpatialTypeReference && b is IEdmSpatialTypeReference bSpatialTypeReference)
+                else if (expected is IEdmSpatialTypeReference expectedSpatialTypeReference && actual is IEdmSpatialTypeReference actualSpatialTypeReference)
                 {
-                    Visit(aSpatialTypeReference, bSpatialTypeReference, path);
+                    return IsDifferent(expectedSpatialTypeReference, actualSpatialTypeReference, path);
                 }
-                else if (a is IEdmStringTypeReference aStringTypeReference && b is IEdmStringTypeReference bStringTypeReference)
+                else if (expected is IEdmStringTypeReference expectedStringTypeReference && actual is IEdmStringTypeReference actualStringTypeReference)
                 {
-                    Visit(aStringTypeReference, bStringTypeReference, path);
+                    return IsDifferent(expectedStringTypeReference, actualStringTypeReference, path);
                 }
-                else if (a is IEdmTemporalTypeReference aTemporalTypeReference && b is IEdmTemporalTypeReference bTemporalTypeReference)
+                else if (expected is IEdmTemporalTypeReference expectedTemporalTypeReference && actual is IEdmTemporalTypeReference actualTemporalTypeReference)
                 {
-                    Visit(aTemporalTypeReference, bTemporalTypeReference, path);
+                    return IsDifferent(expectedTemporalTypeReference, actualTemporalTypeReference, path);
                 }
-                else if (a is IEdmTypeDefinitionReference aTypeDefinitionReference && b is IEdmTypeDefinitionReference bTypeDefinitionReference)
+                else if (expected is IEdmTypeDefinitionReference expectedTypeDefinitionReference && actual is IEdmTypeDefinitionReference actualTypeDefinitionReference)
                 {
-                    Visit(aTypeDefinitionReference, bTypeDefinitionReference, path);
+                    return IsDifferent(expectedTypeDefinitionReference, actualTypeDefinitionReference, path);
                 }
-                else if (a is IEdmUntypedTypeReference aUntypedTypeReference && b is IEdmUntypedTypeReference bUntypedTypeReference)
+                else if (expected is IEdmUntypedTypeReference expectedUntypedTypeReference && actual is IEdmUntypedTypeReference actualUntypedTypeReference)
                 {
-                    Visit(aUntypedTypeReference, bUntypedTypeReference, path);
+                    return IsDifferent(expectedUntypedTypeReference, actualUntypedTypeReference, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmTypeReferenceSubtypes, path);
-                    Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                    Visit(a.Definition, b.Definition, path + "Definition");
+                    CheckTypeEquality(expected, actual, IEdmTypeReferenceSubtypes, path);
+                    if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                    if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmTypeReferenceSubtypes = new[] { typeof(IEdmBinaryTypeReference), typeof(IEdmCollectionTypeReference), typeof(IEdmComplexTypeReference), typeof(IEdmDecimalTypeReference), typeof(IEdmEntityReferenceTypeReference), typeof(IEdmEntityTypeReference), typeof(IEdmEnumTypeReference), typeof(IEdmPathTypeReference), typeof(IEdmSpatialTypeReference), typeof(IEdmStringTypeReference), typeof(IEdmTemporalTypeReference), typeof(IEdmTypeDefinitionReference), typeof(IEdmUntypedTypeReference) };
 
-        public void Visit(IEdmOperationParameter a, IEdmOperationParameter b, PropertyPath path)
+        public bool IsDifferent(IEdmOperationParameter expected, IEdmOperationParameter actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmOptionalParameter aOptionalParameter && b is IEdmOptionalParameter bOptionalParameter)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmOptionalParameter expectedOptionalParameter && actual is IEdmOptionalParameter actualOptionalParameter)
                 {
-                    Visit(aOptionalParameter, bOptionalParameter, path);
+                    return IsDifferent(expectedOptionalParameter, actualOptionalParameter, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmOperationParameterSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.Type, b.Type, path + "Type");
-                    Visit(a.DeclaringOperation, b.DeclaringOperation, path + "DeclaringOperation");
+                    CheckTypeEquality(expected, actual, IEdmOperationParameterSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                    if (IsDifferent(expected.DeclaringOperation, actual.DeclaringOperation, path + "DeclaringOperation")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmOperationParameterSubtypes = new[] { typeof(IEdmOptionalParameter) };
 
-        public void Visit(IEdmPathExpression a, IEdmPathExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmPathExpression expected, IEdmPathExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                VisitSeq(a.PathSegments, b.PathSegments, Visit, path + "PathSegments");
-                Visit(a.Path, b.Path, path + "Path");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferentSeq(expected.PathSegments, actual.PathSegments, IsDifferent, path + "PathSegments")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmStructuredType a, IEdmStructuredType b, PropertyPath path)
+        public bool IsDifferent(IEdmStructuredType expected, IEdmStructuredType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmComplexType aComplexType && b is IEdmComplexType bComplexType)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmComplexType expectedComplexType && actual is IEdmComplexType actualComplexType)
                 {
-                    Visit(aComplexType, bComplexType, path);
+                    return IsDifferent(expectedComplexType, actualComplexType, path);
                 }
-                else if (a is IEdmEntityType aEntityType && b is IEdmEntityType bEntityType)
+                else if (expected is IEdmEntityType expectedEntityType && actual is IEdmEntityType actualEntityType)
                 {
-                    Visit(aEntityType, bEntityType, path);
+                    return IsDifferent(expectedEntityType, actualEntityType, path);
                 }
-                else if (a is IEdmRowType aRowType && b is IEdmRowType bRowType)
+                else if (expected is IEdmRowType expectedRowType && actual is IEdmRowType actualRowType)
                 {
-                    Visit(aRowType, bRowType, path);
+                    return IsDifferent(expectedRowType, actualRowType, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmStructuredTypeSubtypes, path);
-                    Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                    Visit(a.IsAbstract, b.IsAbstract, path + "IsAbstract");
-                    Visit(a.IsOpen, b.IsOpen, path + "IsOpen");
-                    Visit(a.BaseType, b.BaseType, path + "BaseType");
-                    VisitNamedSeq(a.DeclaredProperties, b.DeclaredProperties, Visit, path, "DeclaredProperties");
+                    CheckTypeEquality(expected, actual, IEdmStructuredTypeSubtypes, path);
+                    if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                    if (IsDifferent(expected.IsAbstract, actual.IsAbstract, path + "IsAbstract")) { return true; }
+                    if (IsDifferent(expected.IsOpen, actual.IsOpen, path + "IsOpen")) { return true; }
+                    if (IsDifferent(expected.BaseType, actual.BaseType, path + "BaseType")) { return true; }
+                    if (IsDifferentNamedSeq(expected.DeclaredProperties, actual.DeclaredProperties, IsDifferent, path)) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmStructuredTypeSubtypes = new[] { typeof(IEdmComplexType), typeof(IEdmEntityType), typeof(IEdmRowType) };
 
-        public void Visit(IEdmProperty a, IEdmProperty b, PropertyPath path)
+        public bool IsDifferent(IEdmProperty expected, IEdmProperty actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmNavigationProperty aNavigationProperty && b is IEdmNavigationProperty bNavigationProperty)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmNavigationProperty expectedNavigationProperty && actual is IEdmNavigationProperty actualNavigationProperty)
                 {
-                    Visit(aNavigationProperty, bNavigationProperty, path);
+                    return IsDifferent(expectedNavigationProperty, actualNavigationProperty, path);
                 }
-                else if (a is IEdmStructuralProperty aStructuralProperty && b is IEdmStructuralProperty bStructuralProperty)
+                else if (expected is IEdmStructuralProperty expectedStructuralProperty && actual is IEdmStructuralProperty actualStructuralProperty)
                 {
-                    Visit(aStructuralProperty, bStructuralProperty, path);
+                    return IsDifferent(expectedStructuralProperty, actualStructuralProperty, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmPropertySubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.PropertyKind, b.PropertyKind, path + "PropertyKind");
-                    Visit(a.Type, b.Type, path + "Type");
-                    Visit(a.DeclaringType, b.DeclaringType, path + "DeclaringType");
+                    CheckTypeEquality(expected, actual, IEdmPropertySubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.PropertyKind, actual.PropertyKind, path + "PropertyKind")) { return true; }
+                    if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                    if (IsDifferent(expected.DeclaringType, actual.DeclaringType, path + "DeclaringType")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmPropertySubtypes = new[] { typeof(IEdmNavigationProperty), typeof(IEdmStructuralProperty) };
 
-        public void Visit(IEdmStructuralProperty a, IEdmStructuralProperty b, PropertyPath path)
+        public bool IsDifferent(IEdmStructuralProperty expected, IEdmStructuralProperty actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.PropertyKind, b.PropertyKind, path + "PropertyKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.DeclaringType, b.DeclaringType, path + "DeclaringType");
-                Visit(a.DefaultValueString, b.DefaultValueString, path + "DefaultValueString");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.PropertyKind, actual.PropertyKind, path + "PropertyKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.DeclaringType, actual.DeclaringType, path + "DeclaringType")) { return true; }
+                if (IsDifferent(expected.DefaultValueString, actual.DefaultValueString, path + "DefaultValueString")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEnumMember a, IEdmEnumMember b, PropertyPath path)
+        public bool IsDifferent(IEdmEnumMember expected, IEdmEnumMember actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.Value, b.Value, path + "Value");
-                Visit(a.DeclaringType, b.DeclaringType, path + "DeclaringType");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                if (IsDifferent(expected.DeclaringType, actual.DeclaringType, path + "DeclaringType")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmActionImport a, IEdmActionImport b, PropertyPath path)
+        public bool IsDifferent(IEdmActionImport expected, IEdmActionImport actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                Visit(a.Container, b.Container, path + "Container");
-                Visit(a.Operation, b.Operation, path + "Operation");
-                Visit(a.EntitySet, b.EntitySet, path + "EntitySet");
-                Visit(a.Action, b.Action, path + "Action");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                if (IsDifferent(expected.Operation, actual.Operation, path + "Operation")) { return true; }
+                if (IsDifferent(expected.EntitySet, actual.EntitySet, path + "EntitySet")) { return true; }
+                if (IsDifferent(expected.Action, actual.Action, path + "Action")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntitySet a, IEdmEntitySet b, PropertyPath path)
+        public bool IsDifferent(IEdmEntitySet expected, IEdmEntitySet actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                Visit(a.Path, b.Path, path + "Path");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                Visit(a.Container, b.Container, path + "Container");
-                Visit(a.IncludeInServiceDocument, b.IncludeInServiceDocument, path + "IncludeInServiceDocument");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                if (IsDifferent(expected.IncludeInServiceDocument, actual.IncludeInServiceDocument, path + "IncludeInServiceDocument")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmFunctionImport a, IEdmFunctionImport b, PropertyPath path)
+        public bool IsDifferent(IEdmFunctionImport expected, IEdmFunctionImport actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                Visit(a.Container, b.Container, path + "Container");
-                Visit(a.Operation, b.Operation, path + "Operation");
-                Visit(a.EntitySet, b.EntitySet, path + "EntitySet");
-                Visit(a.IncludeInServiceDocument, b.IncludeInServiceDocument, path + "IncludeInServiceDocument");
-                Visit(a.Function, b.Function, path + "Function");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                if (IsDifferent(expected.Operation, actual.Operation, path + "Operation")) { return true; }
+                if (IsDifferent(expected.EntitySet, actual.EntitySet, path + "EntitySet")) { return true; }
+                if (IsDifferent(expected.IncludeInServiceDocument, actual.IncludeInServiceDocument, path + "IncludeInServiceDocument")) { return true; }
+                if (IsDifferent(expected.Function, actual.Function, path + "Function")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmNavigationProperty a, IEdmNavigationProperty b, PropertyPath path)
+        public bool IsDifferent(IEdmNavigationProperty expected, IEdmNavigationProperty actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.PropertyKind, b.PropertyKind, path + "PropertyKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.DeclaringType, b.DeclaringType, path + "DeclaringType");
-                Visit(a.Partner, b.Partner, path + "Partner");
-                Visit(a.OnDelete, b.OnDelete, path + "OnDelete");
-                Visit(a.ContainsTarget, b.ContainsTarget, path + "ContainsTarget");
-                Visit(a.ReferentialConstraint, b.ReferentialConstraint, path + "ReferentialConstraint");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.PropertyKind, actual.PropertyKind, path + "PropertyKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.DeclaringType, actual.DeclaringType, path + "DeclaringType")) { return true; }
+                if (IsDifferent(expected.Partner, actual.Partner, path + "Partner")) { return true; }
+                if (IsDifferent(expected.OnDelete, actual.OnDelete, path + "OnDelete")) { return true; }
+                if (IsDifferent(expected.ContainsTarget, actual.ContainsTarget, path + "ContainsTarget")) { return true; }
+                if (IsDifferent(expected.ReferentialConstraint, actual.ReferentialConstraint, path + "ReferentialConstraint")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmOperationImport a, IEdmOperationImport b, PropertyPath path)
+        public bool IsDifferent(IEdmOperationImport expected, IEdmOperationImport actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmActionImport aActionImport && b is IEdmActionImport bActionImport)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmActionImport expectedActionImport && actual is IEdmActionImport actualActionImport)
                 {
-                    Visit(aActionImport, bActionImport, path);
+                    return IsDifferent(expectedActionImport, actualActionImport, path);
                 }
-                else if (a is IEdmFunctionImport aFunctionImport && b is IEdmFunctionImport bFunctionImport)
+                else if (expected is IEdmFunctionImport expectedFunctionImport && actual is IEdmFunctionImport actualFunctionImport)
                 {
-                    Visit(aFunctionImport, bFunctionImport, path);
+                    return IsDifferent(expectedFunctionImport, actualFunctionImport, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmOperationImportSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                    Visit(a.Container, b.Container, path + "Container");
-                    Visit(a.Operation, b.Operation, path + "Operation");
-                    Visit(a.EntitySet, b.EntitySet, path + "EntitySet");
+                    CheckTypeEquality(expected, actual, IEdmOperationImportSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                    if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                    if (IsDifferent(expected.Operation, actual.Operation, path + "Operation")) { return true; }
+                    if (IsDifferent(expected.EntitySet, actual.EntitySet, path + "EntitySet")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmOperationImportSubtypes = new[] { typeof(IEdmActionImport), typeof(IEdmFunctionImport) };
 
-        public void Visit(IEdmOperationReturn a, IEdmOperationReturn b, PropertyPath path)
+        public bool IsDifferent(IEdmOperationReturn expected, IEdmOperationReturn actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.DeclaringOperation, b.DeclaringOperation, path + "DeclaringOperation");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.DeclaringOperation, actual.DeclaringOperation, path + "DeclaringOperation")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmOptionalParameter a, IEdmOptionalParameter b, PropertyPath path)
+        public bool IsDifferent(IEdmOptionalParameter expected, IEdmOptionalParameter actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.DeclaringOperation, b.DeclaringOperation, path + "DeclaringOperation");
-                Visit(a.DefaultValueString, b.DefaultValueString, path + "DefaultValueString");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.DeclaringOperation, actual.DeclaringOperation, path + "DeclaringOperation")) { return true; }
+                if (IsDifferent(expected.DefaultValueString, actual.DefaultValueString, path + "DefaultValueString")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmSingleton a, IEdmSingleton b, PropertyPath path)
+        public bool IsDifferent(IEdmSingleton expected, IEdmSingleton actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.ContainerElementKind, b.ContainerElementKind, path + "ContainerElementKind");
-                Visit(a.Container, b.Container, path + "Container");
-                VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                Visit(a.Path, b.Path, path + "Path");
-                Visit(a.Type, b.Type, path + "Type");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.ContainerElementKind, actual.ContainerElementKind, path + "ContainerElementKind")) { return true; }
+                if (IsDifferent(expected.Container, actual.Container, path + "Container")) { return true; }
+                if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmApplyExpression a, IEdmApplyExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmApplyExpression expected, IEdmApplyExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.AppliedFunction, b.AppliedFunction, path + "AppliedFunction");
-                VisitSeq(a.Arguments, b.Arguments, Visit, path + "Arguments");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.AppliedFunction, actual.AppliedFunction, path + "AppliedFunction")) { return true; }
+                if (IsDifferentSeq(expected.Arguments, actual.Arguments, IsDifferent, path + "Arguments")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmBinaryConstantExpression a, IEdmBinaryConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmBinaryConstantExpression expected, IEdmBinaryConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmBooleanConstantExpression a, IEdmBooleanConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmBooleanConstantExpression expected, IEdmBooleanConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmCastExpression a, IEdmCastExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmCastExpression expected, IEdmCastExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Operand, b.Operand, path + "Operand");
-                Visit(a.Type, b.Type, path + "Type");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Operand, actual.Operand, path + "Operand")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmCollectionExpression a, IEdmCollectionExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmCollectionExpression expected, IEdmCollectionExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.DeclaredType, b.DeclaredType, path + "DeclaredType");
-                VisitSeq(a.Elements, b.Elements, Visit, path + "Elements");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.DeclaredType, actual.DeclaredType, path + "DeclaredType")) { return true; }
+                if (IsDifferentSeq(expected.Elements, actual.Elements, IsDifferent, path + "Elements")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDateConstantExpression a, IEdmDateConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmDateConstantExpression expected, IEdmDateConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDateTimeOffsetConstantExpression a, IEdmDateTimeOffsetConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmDateTimeOffsetConstantExpression expected, IEdmDateTimeOffsetConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDecimalConstantExpression a, IEdmDecimalConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmDecimalConstantExpression expected, IEdmDecimalConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDurationConstantExpression a, IEdmDurationConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmDurationConstantExpression expected, IEdmDurationConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEnumMemberExpression a, IEdmEnumMemberExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmEnumMemberExpression expected, IEdmEnumMemberExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                VisitNamedSeq(a.EnumMembers, b.EnumMembers, Visit, path, "EnumMembers");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferentNamedSeq(expected.EnumMembers, actual.EnumMembers, IsDifferent, path)) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmFloatingConstantExpression a, IEdmFloatingConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmFloatingConstantExpression expected, IEdmFloatingConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmGuidConstantExpression a, IEdmGuidConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmGuidConstantExpression expected, IEdmGuidConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmIfExpression a, IEdmIfExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmIfExpression expected, IEdmIfExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.TestExpression, b.TestExpression, path + "TestExpression");
-                Visit(a.TrueExpression, b.TrueExpression, path + "TrueExpression");
-                Visit(a.FalseExpression, b.FalseExpression, path + "FalseExpression");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.TestExpression, actual.TestExpression, path + "TestExpression")) { return true; }
+                if (IsDifferent(expected.TrueExpression, actual.TrueExpression, path + "TrueExpression")) { return true; }
+                if (IsDifferent(expected.FalseExpression, actual.FalseExpression, path + "FalseExpression")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmIntegerConstantExpression a, IEdmIntegerConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmIntegerConstantExpression expected, IEdmIntegerConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmIsTypeExpression a, IEdmIsTypeExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmIsTypeExpression expected, IEdmIsTypeExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Operand, b.Operand, path + "Operand");
-                Visit(a.Type, b.Type, path + "Type");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Operand, actual.Operand, path + "Operand")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmLabeledExpression a, IEdmLabeledExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmLabeledExpression expected, IEdmLabeledExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Expression, b.Expression, path + "Expression");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Expression, actual.Expression, path + "Expression")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmLabeledExpressionReferenceExpression a, IEdmLabeledExpressionReferenceExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmLabeledExpressionReferenceExpression expected, IEdmLabeledExpressionReferenceExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.ReferencedLabeledExpression, b.ReferencedLabeledExpression, path + "ReferencedLabeledExpression");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.ReferencedLabeledExpression, actual.ReferencedLabeledExpression, path + "ReferencedLabeledExpression")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmNullExpression a, IEdmNullExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmNullExpression expected, IEdmNullExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmRecordExpression a, IEdmRecordExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmRecordExpression expected, IEdmRecordExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.DeclaredType, b.DeclaredType, path + "DeclaredType");
-                VisitSeq(a.Properties, b.Properties, Visit, path + "Properties");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.DeclaredType, actual.DeclaredType, path + "DeclaredType")) { return true; }
+                if (IsDifferentSeq(expected.Properties, actual.Properties, IsDifferent, path + "Properties")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmStringConstantExpression a, IEdmStringConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmStringConstantExpression expected, IEdmStringConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmTimeOfDayConstantExpression a, IEdmTimeOfDayConstantExpression b, PropertyPath path)
+        public bool IsDifferent(IEdmTimeOfDayConstantExpression expected, IEdmTimeOfDayConstantExpression actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.ExpressionKind, b.ExpressionKind, path + "ExpressionKind");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ValueKind, b.ValueKind, path + "ValueKind");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.ExpressionKind, actual.ExpressionKind, path + "ExpressionKind")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ValueKind, actual.ValueKind, path + "ValueKind")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmType a, IEdmType b, PropertyPath path)
+        public bool IsDifferent(IEdmType expected, IEdmType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmCollectionType aCollectionType && b is IEdmCollectionType bCollectionType)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmCollectionType expectedCollectionType && actual is IEdmCollectionType actualCollectionType)
                 {
-                    Visit(aCollectionType, bCollectionType, path);
+                    return IsDifferent(expectedCollectionType, actualCollectionType, path);
                 }
-                else if (a is IEdmComplexType aComplexType && b is IEdmComplexType bComplexType)
+                else if (expected is IEdmComplexType expectedComplexType && actual is IEdmComplexType actualComplexType)
                 {
-                    Visit(aComplexType, bComplexType, path);
+                    return IsDifferent(expectedComplexType, actualComplexType, path);
                 }
-                else if (a is IEdmEntityReferenceType aEntityReferenceType && b is IEdmEntityReferenceType bEntityReferenceType)
+                else if (expected is IEdmEntityReferenceType expectedEntityReferenceType && actual is IEdmEntityReferenceType actualEntityReferenceType)
                 {
-                    Visit(aEntityReferenceType, bEntityReferenceType, path);
+                    return IsDifferent(expectedEntityReferenceType, actualEntityReferenceType, path);
                 }
-                else if (a is IEdmEntityType aEntityType && b is IEdmEntityType bEntityType)
+                else if (expected is IEdmEntityType expectedEntityType && actual is IEdmEntityType actualEntityType)
                 {
-                    Visit(aEntityType, bEntityType, path);
+                    return IsDifferent(expectedEntityType, actualEntityType, path);
                 }
-                else if (a is IEdmEnumType aEnumType && b is IEdmEnumType bEnumType)
+                else if (expected is IEdmEnumType expectedEnumType && actual is IEdmEnumType actualEnumType)
                 {
-                    Visit(aEnumType, bEnumType, path);
+                    return IsDifferent(expectedEnumType, actualEnumType, path);
                 }
-                else if (a is IEdmPathType aPathType && b is IEdmPathType bPathType)
+                else if (expected is IEdmPathType expectedPathType && actual is IEdmPathType actualPathType)
                 {
-                    Visit(aPathType, bPathType, path);
+                    return IsDifferent(expectedPathType, actualPathType, path);
                 }
-                else if (a is IEdmPrimitiveType aPrimitiveType && b is IEdmPrimitiveType bPrimitiveType)
+                else if (expected is IEdmPrimitiveType expectedPrimitiveType && actual is IEdmPrimitiveType actualPrimitiveType)
                 {
-                    Visit(aPrimitiveType, bPrimitiveType, path);
+                    return IsDifferent(expectedPrimitiveType, actualPrimitiveType, path);
                 }
-                else if (a is IEdmRowType aRowType && b is IEdmRowType bRowType)
+                else if (expected is IEdmRowType expectedRowType && actual is IEdmRowType actualRowType)
                 {
-                    Visit(aRowType, bRowType, path);
+                    return IsDifferent(expectedRowType, actualRowType, path);
                 }
-                else if (a is IEdmTypeDefinition aTypeDefinition && b is IEdmTypeDefinition bTypeDefinition)
+                else if (expected is IEdmTypeDefinition expectedTypeDefinition && actual is IEdmTypeDefinition actualTypeDefinition)
                 {
-                    Visit(aTypeDefinition, bTypeDefinition, path);
+                    return IsDifferent(expectedTypeDefinition, actualTypeDefinition, path);
                 }
-                else if (a is IEdmUntypedType aUntypedType && b is IEdmUntypedType bUntypedType)
+                else if (expected is IEdmUntypedType expectedUntypedType && actual is IEdmUntypedType actualUntypedType)
                 {
-                    Visit(aUntypedType, bUntypedType, path);
+                    return IsDifferent(expectedUntypedType, actualUntypedType, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmTypeSubtypes, path);
-                    Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
+                    CheckTypeEquality(expected, actual, IEdmTypeSubtypes, path);
+                    if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmTypeSubtypes = new[] { typeof(IEdmCollectionType), typeof(IEdmComplexType), typeof(IEdmEntityReferenceType), typeof(IEdmEntityType), typeof(IEdmEnumType), typeof(IEdmPathType), typeof(IEdmPrimitiveType), typeof(IEdmRowType), typeof(IEdmTypeDefinition), typeof(IEdmUntypedType) };
 
-        public void Visit(IEdmBinaryTypeReference a, IEdmBinaryTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmBinaryTypeReference expected, IEdmBinaryTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.IsUnbounded, b.IsUnbounded, path + "IsUnbounded");
-                Visit(a.MaxLength, b.MaxLength, path + "MaxLength");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.IsUnbounded, actual.IsUnbounded, path + "IsUnbounded")) { return true; }
+                if (IsDifferent(expected.MaxLength, actual.MaxLength, path + "MaxLength")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmCollectionTypeReference a, IEdmCollectionTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmCollectionTypeReference expected, IEdmCollectionTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmComplexTypeReference a, IEdmComplexTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmComplexTypeReference expected, IEdmComplexTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmDecimalTypeReference a, IEdmDecimalTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmDecimalTypeReference expected, IEdmDecimalTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.Precision, b.Precision, path + "Precision");
-                Visit(a.Scale, b.Scale, path + "Scale");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.Precision, actual.Precision, path + "Precision")) { return true; }
+                if (IsDifferent(expected.Scale, actual.Scale, path + "Scale")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntityReferenceTypeReference a, IEdmEntityReferenceTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityReferenceTypeReference expected, IEdmEntityReferenceTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntityTypeReference a, IEdmEntityTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityTypeReference expected, IEdmEntityTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEnumTypeReference a, IEdmEnumTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmEnumTypeReference expected, IEdmEnumTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmPathTypeReference a, IEdmPathTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmPathTypeReference expected, IEdmPathTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmPrimitiveTypeReference a, IEdmPrimitiveTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmPrimitiveTypeReference expected, IEdmPrimitiveTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmBinaryTypeReference aBinaryTypeReference && b is IEdmBinaryTypeReference bBinaryTypeReference)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmBinaryTypeReference expectedBinaryTypeReference && actual is IEdmBinaryTypeReference actualBinaryTypeReference)
                 {
-                    Visit(aBinaryTypeReference, bBinaryTypeReference, path);
+                    return IsDifferent(expectedBinaryTypeReference, actualBinaryTypeReference, path);
                 }
-                else if (a is IEdmDecimalTypeReference aDecimalTypeReference && b is IEdmDecimalTypeReference bDecimalTypeReference)
+                else if (expected is IEdmDecimalTypeReference expectedDecimalTypeReference && actual is IEdmDecimalTypeReference actualDecimalTypeReference)
                 {
-                    Visit(aDecimalTypeReference, bDecimalTypeReference, path);
+                    return IsDifferent(expectedDecimalTypeReference, actualDecimalTypeReference, path);
                 }
-                else if (a is IEdmSpatialTypeReference aSpatialTypeReference && b is IEdmSpatialTypeReference bSpatialTypeReference)
+                else if (expected is IEdmSpatialTypeReference expectedSpatialTypeReference && actual is IEdmSpatialTypeReference actualSpatialTypeReference)
                 {
-                    Visit(aSpatialTypeReference, bSpatialTypeReference, path);
+                    return IsDifferent(expectedSpatialTypeReference, actualSpatialTypeReference, path);
                 }
-                else if (a is IEdmStringTypeReference aStringTypeReference && b is IEdmStringTypeReference bStringTypeReference)
+                else if (expected is IEdmStringTypeReference expectedStringTypeReference && actual is IEdmStringTypeReference actualStringTypeReference)
                 {
-                    Visit(aStringTypeReference, bStringTypeReference, path);
+                    return IsDifferent(expectedStringTypeReference, actualStringTypeReference, path);
                 }
-                else if (a is IEdmTemporalTypeReference aTemporalTypeReference && b is IEdmTemporalTypeReference bTemporalTypeReference)
+                else if (expected is IEdmTemporalTypeReference expectedTemporalTypeReference && actual is IEdmTemporalTypeReference actualTemporalTypeReference)
                 {
-                    Visit(aTemporalTypeReference, bTemporalTypeReference, path);
+                    return IsDifferent(expectedTemporalTypeReference, actualTemporalTypeReference, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmPrimitiveTypeReferenceSubtypes, path);
-                    Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                    Visit(a.Definition, b.Definition, path + "Definition");
+                    CheckTypeEquality(expected, actual, IEdmPrimitiveTypeReferenceSubtypes, path);
+                    if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                    if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmPrimitiveTypeReferenceSubtypes = new[] { typeof(IEdmBinaryTypeReference), typeof(IEdmDecimalTypeReference), typeof(IEdmSpatialTypeReference), typeof(IEdmStringTypeReference), typeof(IEdmTemporalTypeReference) };
 
-        public void Visit(IEdmSpatialTypeReference a, IEdmSpatialTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmSpatialTypeReference expected, IEdmSpatialTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.SpatialReferenceIdentifier, b.SpatialReferenceIdentifier, path + "SpatialReferenceIdentifier");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.SpatialReferenceIdentifier, actual.SpatialReferenceIdentifier, path + "SpatialReferenceIdentifier")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmStringTypeReference a, IEdmStringTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmStringTypeReference expected, IEdmStringTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.IsUnbounded, b.IsUnbounded, path + "IsUnbounded");
-                Visit(a.MaxLength, b.MaxLength, path + "MaxLength");
-                Visit(a.IsUnicode, b.IsUnicode, path + "IsUnicode");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.IsUnbounded, actual.IsUnbounded, path + "IsUnbounded")) { return true; }
+                if (IsDifferent(expected.MaxLength, actual.MaxLength, path + "MaxLength")) { return true; }
+                if (IsDifferent(expected.IsUnicode, actual.IsUnicode, path + "IsUnicode")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmStructuredTypeReference a, IEdmStructuredTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmStructuredTypeReference expected, IEdmStructuredTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmComplexTypeReference aComplexTypeReference && b is IEdmComplexTypeReference bComplexTypeReference)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmComplexTypeReference expectedComplexTypeReference && actual is IEdmComplexTypeReference actualComplexTypeReference)
                 {
-                    Visit(aComplexTypeReference, bComplexTypeReference, path);
+                    return IsDifferent(expectedComplexTypeReference, actualComplexTypeReference, path);
                 }
-                else if (a is IEdmEntityTypeReference aEntityTypeReference && b is IEdmEntityTypeReference bEntityTypeReference)
+                else if (expected is IEdmEntityTypeReference expectedEntityTypeReference && actual is IEdmEntityTypeReference actualEntityTypeReference)
                 {
-                    Visit(aEntityTypeReference, bEntityTypeReference, path);
+                    return IsDifferent(expectedEntityTypeReference, actualEntityTypeReference, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmStructuredTypeReferenceSubtypes, path);
-                    Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                    Visit(a.Definition, b.Definition, path + "Definition");
+                    CheckTypeEquality(expected, actual, IEdmStructuredTypeReferenceSubtypes, path);
+                    if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                    if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmStructuredTypeReferenceSubtypes = new[] { typeof(IEdmComplexTypeReference), typeof(IEdmEntityTypeReference) };
 
-        public void Visit(IEdmTemporalTypeReference a, IEdmTemporalTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmTemporalTypeReference expected, IEdmTemporalTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.Precision, b.Precision, path + "Precision");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.Precision, actual.Precision, path + "Precision")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmTypeDefinitionReference a, IEdmTypeDefinitionReference b, PropertyPath path)
+        public bool IsDifferent(IEdmTypeDefinitionReference expected, IEdmTypeDefinitionReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
-                Visit(a.IsUnbounded, b.IsUnbounded, path + "IsUnbounded");
-                Visit(a.MaxLength, b.MaxLength, path + "MaxLength");
-                Visit(a.IsUnicode, b.IsUnicode, path + "IsUnicode");
-                Visit(a.Precision, b.Precision, path + "Precision");
-                Visit(a.Scale, b.Scale, path + "Scale");
-                Visit(a.SpatialReferenceIdentifier, b.SpatialReferenceIdentifier, path + "SpatialReferenceIdentifier");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                if (IsDifferent(expected.IsUnbounded, actual.IsUnbounded, path + "IsUnbounded")) { return true; }
+                if (IsDifferent(expected.MaxLength, actual.MaxLength, path + "MaxLength")) { return true; }
+                if (IsDifferent(expected.IsUnicode, actual.IsUnicode, path + "IsUnicode")) { return true; }
+                if (IsDifferent(expected.Precision, actual.Precision, path + "Precision")) { return true; }
+                if (IsDifferent(expected.Scale, actual.Scale, path + "Scale")) { return true; }
+                if (IsDifferent(expected.SpatialReferenceIdentifier, actual.SpatialReferenceIdentifier, path + "SpatialReferenceIdentifier")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmUntypedTypeReference a, IEdmUntypedTypeReference b, PropertyPath path)
+        public bool IsDifferent(IEdmUntypedTypeReference expected, IEdmUntypedTypeReference actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.IsNullable, b.IsNullable, path + "IsNullable");
-                Visit(a.Definition, b.Definition, path + "Definition");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.IsNullable, actual.IsNullable, path + "IsNullable")) { return true; }
+                if (IsDifferent(expected.Definition, actual.Definition, path + "Definition")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmRowType a, IEdmRowType b, PropertyPath path)
+        public bool IsDifferent(IEdmRowType expected, IEdmRowType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.IsAbstract, b.IsAbstract, path + "IsAbstract");
-                Visit(a.IsOpen, b.IsOpen, path + "IsOpen");
-                Visit(a.BaseType, b.BaseType, path + "BaseType");
-                VisitNamedSeq(a.DeclaredProperties, b.DeclaredProperties, Visit, path, "DeclaredProperties");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.IsAbstract, actual.IsAbstract, path + "IsAbstract")) { return true; }
+                if (IsDifferent(expected.IsOpen, actual.IsOpen, path + "IsOpen")) { return true; }
+                if (IsDifferent(expected.BaseType, actual.BaseType, path + "BaseType")) { return true; }
+                if (IsDifferentNamedSeq(expected.DeclaredProperties, actual.DeclaredProperties, IsDifferent, path)) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEnumMemberValue a, IEdmEnumMemberValue b, PropertyPath path)
+        public bool IsDifferent(IEdmEnumMemberValue expected, IEdmEnumMemberValue actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmNavigationPropertyBinding a, IEdmNavigationPropertyBinding b, PropertyPath path)
+        public bool IsDifferent(IEdmNavigationPropertyBinding expected, IEdmNavigationPropertyBinding actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.NavigationProperty, b.NavigationProperty, path + "NavigationProperty");
-                Visit(a.Target, b.Target, path + "Target");
-                Visit(a.Path, b.Path, path + "Path");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.NavigationProperty, actual.NavigationProperty, path + "NavigationProperty")) { return true; }
+                if (IsDifferent(expected.Target, actual.Target, path + "Target")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmReferentialConstraint a, IEdmReferentialConstraint b, PropertyPath path)
+        public bool IsDifferent(IEdmReferentialConstraint expected, IEdmReferentialConstraint actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                VisitSeq(a.PropertyPairs, b.PropertyPairs, Visit, path + "PropertyPairs");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferentSeq(expected.PropertyPairs, actual.PropertyPairs, IsDifferent, path + "PropertyPairs")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmPropertyConstructor a, IEdmPropertyConstructor b, PropertyPath path)
+        public bool IsDifferent(IEdmPropertyConstructor expected, IEdmPropertyConstructor actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                Visit(a.Value, b.Value, path + "Value");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferent(expected.Value, actual.Value, path + "Value")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmCollectionType a, IEdmCollectionType b, PropertyPath path)
+        public bool IsDifferent(IEdmCollectionType expected, IEdmCollectionType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.ElementType, b.ElementType, path + "ElementType");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.ElementType, actual.ElementType, path + "ElementType")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntityReferenceType a, IEdmEntityReferenceType b, PropertyPath path)
+        public bool IsDifferent(IEdmEntityReferenceType expected, IEdmEntityReferenceType actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.TypeKind, b.TypeKind, path + "TypeKind");
-                Visit(a.EntityType, b.EntityType, path + "EntityType");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.TypeKind, actual.TypeKind, path + "TypeKind")) { return true; }
+                if (IsDifferent(expected.EntityType, actual.EntityType, path + "EntityType")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmNavigationSource a, IEdmNavigationSource b, PropertyPath path)
+        public bool IsDifferent(IEdmNavigationSource expected, IEdmNavigationSource actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmContainedEntitySet aContainedEntitySet && b is IEdmContainedEntitySet bContainedEntitySet)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmContainedEntitySet expectedContainedEntitySet && actual is IEdmContainedEntitySet actualContainedEntitySet)
                 {
-                    Visit(aContainedEntitySet, bContainedEntitySet, path);
+                    return IsDifferent(expectedContainedEntitySet, actualContainedEntitySet, path);
                 }
-                else if (a is IEdmEntitySet aEntitySet && b is IEdmEntitySet bEntitySet)
+                else if (expected is IEdmEntitySet expectedEntitySet && actual is IEdmEntitySet actualEntitySet)
                 {
-                    Visit(aEntitySet, bEntitySet, path);
+                    return IsDifferent(expectedEntitySet, actualEntitySet, path);
                 }
-                else if (a is IEdmSingleton aSingleton && b is IEdmSingleton bSingleton)
+                else if (expected is IEdmSingleton expectedSingleton && actual is IEdmSingleton actualSingleton)
                 {
-                    Visit(aSingleton, bSingleton, path);
+                    return IsDifferent(expectedSingleton, actualSingleton, path);
                 }
-                else if (a is IEdmUnknownEntitySet aUnknownEntitySet && b is IEdmUnknownEntitySet bUnknownEntitySet)
+                else if (expected is IEdmUnknownEntitySet expectedUnknownEntitySet && actual is IEdmUnknownEntitySet actualUnknownEntitySet)
                 {
-                    Visit(aUnknownEntitySet, bUnknownEntitySet, path);
+                    return IsDifferent(expectedUnknownEntitySet, actualUnknownEntitySet, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmNavigationSourceSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                    Visit(a.Path, b.Path, path + "Path");
-                    Visit(a.Type, b.Type, path + "Type");
+                    CheckTypeEquality(expected, actual, IEdmNavigationSourceSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                    if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                    if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmNavigationSourceSubtypes = new[] { typeof(IEdmContainedEntitySet), typeof(IEdmEntitySet), typeof(IEdmSingleton), typeof(IEdmUnknownEntitySet) };
 
-        public void Visit(IEdmContainedEntitySet a, IEdmContainedEntitySet b, PropertyPath path)
+        public bool IsDifferent(IEdmContainedEntitySet expected, IEdmContainedEntitySet actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                Visit(a.Path, b.Path, path + "Path");
-                Visit(a.Type, b.Type, path + "Type");
-                Visit(a.ParentNavigationSource, b.ParentNavigationSource, path + "ParentNavigationSource");
-                Visit(a.NavigationProperty, b.NavigationProperty, path + "NavigationProperty");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                if (IsDifferent(expected.ParentNavigationSource, actual.ParentNavigationSource, path + "ParentNavigationSource")) { return true; }
+                if (IsDifferent(expected.NavigationProperty, actual.NavigationProperty, path + "NavigationProperty")) { return true; }
+                return false;
             }
         }
 
-        public void Visit(IEdmEntitySetBase a, IEdmEntitySetBase b, PropertyPath path)
+        public bool IsDifferent(IEdmEntitySetBase expected, IEdmEntitySetBase actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (a is IEdmContainedEntitySet aContainedEntitySet && b is IEdmContainedEntitySet bContainedEntitySet)
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (expected is IEdmContainedEntitySet expectedContainedEntitySet && actual is IEdmContainedEntitySet actualContainedEntitySet)
                 {
-                    Visit(aContainedEntitySet, bContainedEntitySet, path);
+                    return IsDifferent(expectedContainedEntitySet, actualContainedEntitySet, path);
                 }
-                else if (a is IEdmEntitySet aEntitySet && b is IEdmEntitySet bEntitySet)
+                else if (expected is IEdmEntitySet expectedEntitySet && actual is IEdmEntitySet actualEntitySet)
                 {
-                    Visit(aEntitySet, bEntitySet, path);
+                    return IsDifferent(expectedEntitySet, actualEntitySet, path);
                 }
-                else if (a is IEdmUnknownEntitySet aUnknownEntitySet && b is IEdmUnknownEntitySet bUnknownEntitySet)
+                else if (expected is IEdmUnknownEntitySet expectedUnknownEntitySet && actual is IEdmUnknownEntitySet actualUnknownEntitySet)
                 {
-                    Visit(aUnknownEntitySet, bUnknownEntitySet, path);
+                    return IsDifferent(expectedUnknownEntitySet, actualUnknownEntitySet, path);
                 }
                 else
                 {
-                    CheckTypeEquality(a, b, IEdmEntitySetBaseSubtypes, path);
-                    Visit(a.Name, b.Name, path + "Name");
-                    VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                    Visit(a.Path, b.Path, path + "Path");
-                    Visit(a.Type, b.Type, path + "Type");
+                    CheckTypeEquality(expected, actual, IEdmEntitySetBaseSubtypes, path);
+                    if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                    if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                    if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                    if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                    return false;
                 }
             }
         }
 
         readonly IList<Type> IEdmEntitySetBaseSubtypes = new[] { typeof(IEdmContainedEntitySet), typeof(IEdmEntitySet), typeof(IEdmUnknownEntitySet) };
 
-        public void Visit(IEdmUnknownEntitySet a, IEdmUnknownEntitySet b, PropertyPath path)
+        public bool IsDifferent(IEdmUnknownEntitySet expected, IEdmUnknownEntitySet actual, PropertyPath path)
         {
-            using (PushLocation(a, b))
+            using (PushLocation(expected, actual))
             {
-                if (IsReferenceCheckComplete(a, b, path)) return;
-                if (visited.Contains(a)) return;
-                visited.Add(a);
-                Visit(a.Name, b.Name, path + "Name");
-                VisitSeq(a.NavigationPropertyBindings, b.NavigationPropertyBindings, Visit, path + "NavigationPropertyBindings");
-                Visit(a.Path, b.Path, path + "Path");
-                Visit(a.Type, b.Type, path + "Type");
+                if (IsReferenceCheckComplete(expected, actual, path, out var areDifferent)) { return areDifferent; }
+                if (IsDuplicateVisit(expected)) { return false; }
+                if (IsDifferent(expected.Name, actual.Name, path + "Name")) { return true; }
+                if (IsDifferentSeq(expected.NavigationPropertyBindings, actual.NavigationPropertyBindings, IsDifferent, path + "NavigationPropertyBindings")) { return true; }
+                if (IsDifferent(expected.Path, actual.Path, path + "Path")) { return true; }
+                if (IsDifferent(expected.Type, actual.Type, path + "Type")) { return true; }
+                return false;
             }
         }
     }
