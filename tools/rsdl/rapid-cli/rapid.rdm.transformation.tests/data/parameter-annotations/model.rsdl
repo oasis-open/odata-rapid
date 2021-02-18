@@ -1,0 +1,15 @@
+
+type Type1
+{
+    key id: String
+
+    function fun1(
+        @Core.Description: "accepts an integer"   p1: Integer
+    ) : @Core.Description: "returns an integer"  Integer
+}
+
+
+service Service1
+{
+}
+
