@@ -30,7 +30,7 @@ type Company
 
 Our company has three properties; a stockSymbol, a name, and the date of incorporation.
 
-Properties in RAPID can be String, Integer, Boolean, Double, Decimal, Date, or DateTime primitive types. They can also be an [enum type](#defining-an-enums), a [declared type](#defining-a-structured-property), or a collection of any of the above.
+Properties in RAPID can be Integer, String, Boolean, DateTime, Date, Double, Decimal, TimeOfDay, Duration built-in types, an [enum type](#defining-an-enum), a [structured type](#defining-a-structured-type), or a collection of any of the former.
 
 ### Defining a Service
 
@@ -49,7 +49,7 @@ This allows us to make simple requests against our company:
 | GET [http://rapid-pro.org/company?select=stockSymbol,name](https://jetsons.azurewebsites.net/company?$select=stockSymbol,name) | get the stock symbol and name of the company |
 | PATCH http://rapid-pro.org/company <br/> { "name":"Spacely's Space Sprockets" }                                                | update the company name                      |
 
-### Defining a Structured Property
+### Defining a Structured Type Property
 
 Now let's say that we wanted to add employees to our company.
 
@@ -197,7 +197,7 @@ type Company
 }
 ```
 
-topEmployees takes a single integer parameter "num" and returns a collection of employees.
+topEmployees takes a single Integer parameter "num" and returns a collection of employees.
 
 Functions are invoked using a GET request. Function parameters are passed in the URL.
 

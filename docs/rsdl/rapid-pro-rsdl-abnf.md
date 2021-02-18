@@ -16,11 +16,15 @@ Note: to increase readability of the grammar, whitespace is not reflected
 
 ## Syntax rules
 
-- [Model](#model)
-- [Structured Type](#structured-type)
-- [Enumeration Type](#enumeration-type)
-- [Service](#service)
-- [Core Syntax Elements](#core-syntax-elements)
+- [RAPID Pro syntax](#rapid-pro-syntax)
+  - [Overview](#overview)
+  - [Syntax rules](#syntax-rules)
+    - [Model](#model)
+    - [Structured Type](#structured-type)
+    - [Enumeration Type](#enumeration-type)
+    - [Service](#service)
+    - [Annotations](#annotations)
+    - [Core Syntax Elements](#core-syntax-elements)
 
 ### Model
 
@@ -49,7 +53,7 @@ typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
 typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
-builtInType          = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
+builtInType          = %s"Integer" / %s"String" / %s"Boolean" / %s"DateTime" / %s"Date" / %s"Double" / %s"Decimal" / %s"TimeOfDay" / %s"Duration" 
 
 operation            = annotations [operationModifier] identifier
                        "(" [ parameter *("," parameter) ] ")"
