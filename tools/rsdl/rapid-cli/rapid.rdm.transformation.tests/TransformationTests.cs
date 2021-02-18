@@ -137,5 +137,40 @@ namespace rapid.rdm.tests
                 Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.DescriptionTerm,
                 prop01.VocabularyAnnotations(edm).Select(v => v.Term));
         }
+
+        [Theory]
+        [InlineData("Integer", EdmPrimitiveTypeKind.Int32)]
+        [InlineData("String", EdmPrimitiveTypeKind.String)]
+        [InlineData("Boolean", EdmPrimitiveTypeKind.Boolean)]
+        [InlineData("DateTime", EdmPrimitiveTypeKind.DateTimeOffset)]
+        [InlineData("Date", EdmPrimitiveTypeKind.Date)]
+        [InlineData("Double", EdmPrimitiveTypeKind.Double)]
+        [InlineData("Decimal", EdmPrimitiveTypeKind.Decimal)]
+        [InlineData("TimeOfDay", EdmPrimitiveTypeKind.TimeOfDay)]
+        [InlineData("Duration", EdmPrimitiveTypeKind.Duration)]
+        public void AllPrimitiveTypesGetTransformed(string typeName, EdmPrimitiveTypeKind expected)
+        {
+            // arrange
+            var text = $"type StructuredType1 {{ property1: {typeName} }}";
+
+            // act
+            IEdmModel edm = CreateEdmModelFromString(text);
+
+            // assert
+            var structuredType = edm.SchemaElements
+                .Where(e => e.Name == "StructuredType1")
+                .OfType<IEdmComplexType>()
+                .First();
+            var actual = structuredType.DeclaredProperties
+                    .Where(p => p.Name == "property1")
+                    .Select(p => p.Type)
+                    .OfType<IEdmPrimitiveTypeReference>()
+                    .Select(r => r.Definition)
+                    .OfType<IEdmPrimitiveType>()
+                    .Select(pt => pt.PrimitiveKind)
+                    .Single();
+
+            Assert.Equal(expected, actual);
+        }
     }
 }
