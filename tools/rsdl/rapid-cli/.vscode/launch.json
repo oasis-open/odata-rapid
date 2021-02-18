@@ -14,7 +14,9 @@
       "cwd": "${workspaceFolder}/rapid",
       "console": "internalConsole",
       "stopAtEntry": false,
-      "requireExactSource": true
+      "requireExactSource": true,
+      "justMyCode":false,
+      "suppressJITOptimizations": true
     },
     {
       "name": ".NET Core Attach",

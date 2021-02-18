@@ -45,19 +45,26 @@ namespace rapid.rdm.tests
 
         public static IEnumerable<object[]> TestFiles()
         {
-
             foreach (var path in Directory.GetDirectories("data"))
             {
                 // find file pairs with same name, one ending in .rsdl the other in .csdl.xml
-                if (!System.IO.Path.GetFileName(path).StartsWith("."))
+                if (System.IO.Path.GetFileName(path).StartsWith("."))
                 {
-                    var rsdl = Directory.GetFiles(path, "*.rsdl").FirstOrDefault();
-                    var csdl = Directory.GetFiles(path, "*.csdl.xml").FirstOrDefault();
+                    continue;
+                }
+
+                foreach (var rsdl in Directory.GetFiles(path, "*.rsdl"))
+                {
+                    var csdl = Directory
+                        .GetFiles(path, "*.csdl.xml")
+                        .Where(f => Path.GetFileName(f).StartsWith(Path.GetFileNameWithoutExtension(rsdl)))
+                        .FirstOrDefault();
                     if (csdl != null)
                     {
                         yield return new object[] { path, rsdl, csdl };
                     }
                 }
+
             }
         }
 

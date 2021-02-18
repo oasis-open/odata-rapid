@@ -28,13 +28,16 @@ namespace rapid.rdm
             {
                 if (!referencedModels.TryGetValue(reference.Alias, out var referencedRdmModel))
                 {
-                    logger.LogError($"unable to find referenced model for alias {reference.Alias}");
+                    logger.LogError($"unable to find referenced model for alias {reference.Alias}");                    
                 }
-                external[reference.Alias] = (
-                    referencedModels[reference.Alias].Namespace.NamespaceName,
-                    CreateExternalModel(referencedRdmModel),
-                    reference.Annotations
-                );
+                else
+                {
+                    external[reference.Alias] = (
+                        referencedRdmModel.Namespace.NamespaceName,
+                        CreateExternalModel(referencedRdmModel),
+                        reference.Annotations
+                    );
+                }
             }
         }
 
