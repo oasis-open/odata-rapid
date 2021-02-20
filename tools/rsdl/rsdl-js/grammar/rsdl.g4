@@ -30,8 +30,10 @@ builtInType:
 	| 'Datetime'
 	| 'Decimal'
 	| 'Double'
+	| 'Duration'
 	| 'Integer'
-	| 'String';
+	| 'String'
+	| 'TimeOfDay';
 
 operation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
