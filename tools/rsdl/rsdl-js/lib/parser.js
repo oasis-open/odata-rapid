@@ -9,10 +9,12 @@ const TYPENAMES = {
   Date: "Edm.Date",
   Datetime: "Edm.DateTimeOffset",
   Decimal: "Edm.Decimal",
+  Duration: "Edm.Duration",
   Double: "Edm.Double",
   Integer: "Edm.Int32",
   String: "Edm.String",
-  //TODO: other type shortnames, e.g. Guid/UUID, Time/TimeOfDay?
+  TimeOfDay: "Edm.TimeOfDay",
+  //TODO: other type shortnames, e.g. Guid/UUID?
 };
 
 class MyListener extends rsdlListener {
