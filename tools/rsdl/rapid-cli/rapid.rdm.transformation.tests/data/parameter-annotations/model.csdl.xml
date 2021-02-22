@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model"
+      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+      <EntityType Name="Type1" OpenType="true">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+
+      <Function Name="fun1" IsBound="true" IsComposable="true">
+        <Parameter Name="this" Type="Model.Type1" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="accepts an integer" />
+        </Parameter>
+        <ReturnType Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Description" String="returns an integer" />
+        </ReturnType>
+      </Function>
+
+      <EntityContainer Name="Service1">
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
