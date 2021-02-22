@@ -179,6 +179,8 @@ namespace rapid.rdm
             ["Date"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date),
             ["Double"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double),
             ["Decimal"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+            ["TimeOfDay"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay),
+            ["Duration"] = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration),
         };
     }
 }

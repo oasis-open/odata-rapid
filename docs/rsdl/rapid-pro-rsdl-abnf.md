@@ -53,7 +53,7 @@ typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
 typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
-builtInType          = %s"Boolean" / %s"Date" / %s"Datetime" / %s"Double" / %s"Integer" / %s"String"
+builtInType          = %s"Integer" / %s"String" / %s"Boolean" / %s"DateTime" / %s"Date" / %s"Double" / %s"Decimal" / %s"TimeOfDay" / %s"Duration" 
 
 operation            = annotations [operationModifier] identifier
                        "(" [ parameter *("," parameter) ] ")"
