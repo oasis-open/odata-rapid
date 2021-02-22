@@ -339,6 +339,7 @@ describe("Reference test cases", () => {
     { d: "inheritance" },
     { d: "named-service", n: "service" },
     { d: "operations" },
+    { d: "parameter-annotations", n: "model" },
     { d: "path-expressions" },
   ];
   files.forEach((f) => {
