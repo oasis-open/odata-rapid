@@ -4,8 +4,6 @@ const exec = require("child_process").exec;
 const fs = require("fs");
 const path = require("path");
 
-const { parse } = require("../lib/parser");
-
 describe("CLI", () => {
   it("Help", async () => {
     const result = await cmd(["-h"]);

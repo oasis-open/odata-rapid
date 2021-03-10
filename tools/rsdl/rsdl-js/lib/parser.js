@@ -2,7 +2,6 @@ const antlr4 = require("antlr4");
 const rsdlLexer = require("../grammar/parser/rsdlLexer").rsdlLexer;
 const rsdlParser = require("../grammar/parser/rsdlParser").rsdlParser;
 const rsdlListener = require("../grammar/parser/rsdlListener").rsdlListener;
-const path = require("path");
 
 const TYPENAMES = {
   Boolean: "Edm.Boolean",
@@ -61,7 +60,7 @@ class MyListener extends rsdlListener {
   }
 
   //TODO: construct annotation value
-  enterAnnotation(ctx) {
+  enterAnnotation(/*ctx*/) {
     this.annotation.unshift({});
   }
 
@@ -90,25 +89,25 @@ class MyListener extends rsdlListener {
     this.annotation[0].value = { $Path: ctx.getText().substring(2) };
   }
 
-  enterArr(ctx) {
+  enterArr(/*ctx*/) {
     this.annotation[0].value = [];
   }
 
-  enterItem(ctx) {
+  enterItem(/*ctx*/) {
     this.annotation.unshift({});
   }
 
-  exitItem(ctx) {
+  exitItem(/*ctx*/) {
     const value = this.annotation[0].value;
     this.annotation.shift();
     this.annotation[0].value.push(value);
   }
 
-  enterObj(ctx) {
+  enterObj(/*ctx*/) {
     this.annotation[0].value = {};
   }
 
-  enterPair(ctx) {
+  enterPair(/*ctx*/) {
     this.annotation.unshift({});
   }
 
@@ -144,7 +143,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.type);
   }
 
-  exitStructuredType(ctx) {
+  exitStructuredType(/*ctx*/) {
     delete this.current.type.$$Name;
     this.current.type = null;
     this.popAnnotatable();
@@ -167,7 +166,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.typedElement);
   }
 
-  exitProperty(ctx) {
+  exitProperty(/*ctx*/) {
     this.current.typedElement = null;
     this.popAnnotatable();
   }
@@ -209,7 +208,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.overload);
   }
 
-  exitOperation(ctx) {
+  exitOperation(/*ctx*/) {
     this.current.typedElement = null;
     this.popAnnotatable();
   }
@@ -223,18 +222,18 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.typedElement);
   }
 
-  exitParameter(ctx) {
+  exitParameter(/*ctx*/) {
     this.current.typedElement = null;
     this.popAnnotatable();
   }
 
-  enterReturnType(ctx) {
+  enterReturnType(/*ctx*/) {
     this.current.typedElement = {};
     this.current.overload.$ReturnType = this.current.typedElement;
     this.pushAnnotatable(this.current.typedElement);
   }
 
-  exitReturnType(ctx) {
+  exitReturnType(/*ctx*/) {
     this.current.typedElement = null;
     this.popAnnotatable();
   }
@@ -252,7 +251,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.type);
   }
 
-  exitEnumType(ctx) {
+  exitEnumType(/*ctx*/) {
     delete this.current.type.$$nextMemberNumber;
     delete this.current.type.$$enumKind;
     this.current.type = null;
@@ -270,7 +269,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.type, name);
   }
 
-  exitEnumMember(ctx) {
+  exitEnumMember(/*ctx*/) {
     this.popAnnotatable();
   }
 
@@ -281,7 +280,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.entityContainer);
   }
 
-  exitService(ctx) {
+  exitService(/*ctx*/) {
     this.popAnnotatable();
   }
 
@@ -294,7 +293,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(set);
   }
 
-  exitEntitySet(ctx) {
+  exitEntitySet(/*ctx*/) {
     this.popAnnotatable();
   }
 
@@ -307,7 +306,7 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(singleton);
   }
 
-  exitSingleton(ctx) {
+  exitSingleton(/*ctx*/) {
     this.popAnnotatable();
   }
 
@@ -326,11 +325,11 @@ class MyListener extends rsdlListener {
     this.pushAnnotatable(this.current.overload);
   }
 
-  exitServiceOperation(ctx) {
+  exitServiceOperation(/*ctx*/) {
     this.popAnnotatable();
   }
 
-  exitModel(ctx) {
+  exitModel(/*ctx*/) {
     this.csdl[this.namespace] = this.schema;
 
     // types referenced in entity sets or singletons are entity types
@@ -390,7 +389,7 @@ class ErrorListener extends antlr4.error.ErrorListener {
     this.errors = [];
   }
 
-  syntaxError(recognizer, symbol, line, column, message, payload) {
+  syntaxError(_recognizer, _symbol, line, column, message /*payload*/) {
     //TODO: include filename, also from included files, via includeReader (rename to fileReader?)
     this.errors.push({ message, target: `${line}:${column + 1}` });
   }
