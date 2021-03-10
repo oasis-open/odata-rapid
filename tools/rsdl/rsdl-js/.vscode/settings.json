@@ -16,5 +16,6 @@
   "editor.renderWhitespace": "trailing",
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true
+  "files.trimFinalNewlines": true,
+  "mochaExplorer.esmLoader": false
 }
