@@ -47,6 +47,14 @@
           "match": "\\b(key|abstract|extends)\\b"
         },
         {
+          "name": "storage.modifier.nullable",
+          "match": "(\\?)"
+        },
+        {
+          "name": "storage.modifier.collection",
+          "match": "(\\[|\\])"
+        },
+        {
           "include": "#comments"
         },
         {
