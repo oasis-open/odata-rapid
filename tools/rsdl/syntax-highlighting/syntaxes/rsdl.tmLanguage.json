@@ -10,7 +10,7 @@
       "include": "#strings"
     },
     {
-      "include": "#brace-declaration"
+      "include": "#brace-declarations"
     }
   ],
   "repository": {
@@ -26,24 +26,48 @@
           "match": "\\b(namespace|include|as)\\b"
         },
         {
-          "name": "storage.modifier",
-          "match": "\\b(key|function|action|abstract|extends)\\b"
+          "name": "meta.function",
+          "begin": "\\b(function|action)\\b",
+          "beginCaptures": {
+            "1": { "name": "storage.type.function" }
+          },
+          "end": "(?:\\()",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "name": "entity.name.function",
+              "match": "\\b([[:alpha:]][[:alnum:]]*)\\b"
+            }
+          ]
         },
         {
-          "name": "comment.line.hash.rsdl",
-          "match": "#.*$\n?"
+          "name": "storage.modifier",
+          "match": "\\b(key|abstract|extends)\\b"
+        },
+        {
+          "name": "storage.modifier.nullable",
+          "match": "(\\?)"
+        },
+        {
+          "name": "storage.modifier.collection",
+          "match": "(\\[|\\])"
+        },
+        {
+          "include": "#comments"
         },
         {
           "name": "entity.other.attribute-name",
-          "match": "@\\b([a-zA-Z]+)(\\.([a-zA-Z]+))*"
+          "match": "@\\b([a-zA-Z]+)(\\.([a-zA-Z]+))*\\b"
         },
         {
           "name": "support.type.builtin",
-          "match": "\\b(Integer|String|Boolean|Double|DateTime|Decimal|Float)\\b"
+          "match": "\\b(Integer|String|Boolean|Double|Date|DateTime|Decimal|Duration|TimeOfDay)\\b"
         },
         {
           "name": "storage.type.edm",
-          "match": "Edm\\.\\b([a-zA-z0-9]+)\\b"
+          "match": "\\b(Edm\\.[a-zA-z0-9]+)\\b"
         },
         {
           "name": "constant.language.boolean",
@@ -54,6 +78,10 @@
           "match": "\\b(null)\\b"
         }
       ]
+    },
+    "comments": {
+      "name": "comment.line.number-sign",
+      "match": "#.*$\n?"
     },
     "strings": {
       "name": "string.quoted.double.rsdl",
@@ -79,7 +107,18 @@
         "0": {
           "name": "punctuation.brace.close"
         }
-      }
+      },
+      "patterns": [
+        {
+          "include": "#rsdl"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#brace-declarations"
+        }
+      ]
     }
   }
 }
