@@ -19,27 +19,51 @@ namespace rapid.rsdl
                 head.GetPosition()
             );
 
+        #region type references
 
-        static readonly TokenListParser<RdmToken, string> EdmPrefix =
-            from pre in Token.EqualToValue(RdmToken.Identifier, "Edm")
-            from dot in Token.EqualTo(RdmToken.FullStop)
-            select pre.ToStringValue();
+
+        // "(" number "," number)
+        static readonly TokenListParser<RdmToken, (int Precision, int Scale)> DecimalFacetParameters =
+             from p in Token.EqualTo(RdmToken.Number)
+             from c in Token.EqualTo(RdmToken.Comma)
+             from s in Token.EqualTo(RdmToken.Number)
+             select (int.Parse(p.ToStringValue()), int.Parse(s.ToStringValue()));
+
+        static readonly TokenListParser<RdmToken, int> StringFacetParameters =
+            from l in Token.EqualTo(RdmToken.Number)
+            select int.Parse(l.ToStringValue());
+
+        static readonly TokenListParser<RdmToken, (string Name, RdmTypeReferenceFacets Facets, Position Position)> FacetedReference =
+            (
+                from id in Token.EqualToValue(RdmToken.Identifier, "String")
+                from ml in StringFacetParameters.Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+                select (id.ToStringValue(), new RdmTypeReferenceFacets { MaxLength = ml }, id.GetPosition())
+            ).Try().Or(
+                from id in Token.EqualToValue(RdmToken.Identifier, "Decimal")
+                from ps in DecimalFacetParameters.Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+                select (id.ToStringValue(), new RdmTypeReferenceFacets { Precision = ps.Precision, Scale = ps.Scale }, id.GetPosition())
+            ).Try().Or(
+                from qi in QualifiedIdentifier
+                select (qi.Name, RdmTypeReferenceFacets.None, qi.Position)
+            );
+
+        static readonly TokenListParser<RdmToken, (string Name, RdmTypeReferenceFacets Facets, Position Position)> NullableReference =
+            from @ref in FacetedReference
+            from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
+            select (@ref.Name, @ref.Facets with { IsNullable = opt != null }, @ref.Position);
 
         static readonly TokenListParser<RdmToken, rdm.RdmTypeReference> TypeReference =
             (
-                from type in (
-                    from name in QualifiedIdentifier
-                    from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
-                    select (name, opt)
-                ).Between(RdmToken.OpeningBracket, RdmToken.ClosingBracket)
-                select new rdm.RdmTypeReference(type.name.Name, type.opt != null, true, type.name.Position)
+                from @ref in NullableReference.Between(RdmToken.OpeningBracket, RdmToken.ClosingBracket)
+                select new rdm.RdmTypeReference(@ref.Name, @ref.Facets with { IsMultivalued = true }, @ref.Position)
             ).Or(
-                from name in QualifiedIdentifier
-                from opt in Token.EqualTo(RdmToken.QuestionMark).Optional()
-                select new rdm.RdmTypeReference(name.Name, opt != null, false, name.Position)
+                from @ref in NullableReference
+                select new rdm.RdmTypeReference(@ref.Name, @ref.Facets, @ref.Position)
             ).Named(
                 "type reference"
             );
+
+        #endregion // type references
 
         static readonly TokenListParser<RdmToken, rdm.Annotation> Annotation =
             from at in Token.EqualTo(RdmToken.AtSign)
@@ -116,15 +140,14 @@ namespace rapid.rsdl
                 nm.GetPosition()
             );
 
-        static readonly TokenListParser<RdmToken, rdm.RdmOperation> Operation =
-            (Function).Try().Or(Action);
-
-        // Type member have no common supertype since they are stored in two different collection properties
+        // Type members have no common supertype since they are stored in two different collection properties
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
-                Operation.Cast<RdmToken, RdmOperation, object>()
-            ).Try().Or(
                 Property.Cast<RdmToken, RdmProperty, object>()
+            ).Try().Or(
+                Function.Cast<RdmToken, RdmOperation, object>()
+            ).Try().Or(
+                Action.Cast<RdmToken, RdmOperation, object>()
             );
 
         static readonly TokenListParser<RdmToken, Superpower.Model.Token<RdmToken>> Extends =
@@ -186,9 +209,10 @@ namespace rapid.rsdl
             from nm in Token.EqualTo(RdmToken.Identifier)
             from dp in Token.EqualTo(RdmToken.Colon)
             from ty in (Single).Or(Multiple)
+            let re = new RdmTypeReference(ty.id, RdmTypeReferenceFacets.None)
             select ty.multivalue
-                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), new RdmTypeReference(ty.id), aa)
-                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), new RdmTypeReference(ty.id), aa);
+                ? (rdm.IRdmServiceElement)new rdm.RdmServiceCollection(nm.ToStringValue(), re, aa)
+                : (rdm.IRdmServiceElement)new rdm.RdmServiceSingleton(nm.ToStringValue(), re, aa);
 
         static readonly TokenListParser<RdmToken, rdm.IRdmServiceElement> UnboundFunction =
            Function.Cast<RdmToken, rdm.RdmOperation, rdm.IRdmServiceElement>();
@@ -235,7 +259,6 @@ namespace rapid.rsdl
                 Position = k1.GetPosition()
             };
 
-        // TODO: check for EOF
         public static readonly TokenListParser<RdmToken, rdm.RdmDataModel> DataModel =
            (
                 from nd in NamespaceDeclaration.OptionalOrDefault()

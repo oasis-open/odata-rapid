@@ -1,19 +1,24 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using rapid.rdm;
 
 namespace rapid.rsdl.tests
 {
-    public static class Assert2
+    public static class Diff
     {
 
-        public static string ObjectDifference(object a, object b, string path = null)
+        public static string GetFirstDifference(object a, object b, string path = null)
         {
-            if ((a == null || b == null) && a != b)
+            if (a == null || b == null)
             {
-                return $"different values at {path} {a} != {b}";
+                if (a != b)
+                {
+                    return $"different values at {path}: {a} != {b}";
+                }
+                else
+                {
+                    return null;
+                }
             }
             var aType = a.GetType();
             var bType = b.GetType();
@@ -32,13 +37,13 @@ namespace rapid.rsdl.tests
             {
                 var ae = ((IEnumerable)a).GetEnumerator();
                 var be = ((IEnumerable)b).GetEnumerator();
-                while (true)
+                for (int i = 0; ; i++)
                 {
                     var an = ae.MoveNext();
                     var bn = be.MoveNext();
                     if (an && bn)
                     {
-                        var e = ObjectDifference(ae.Current, be.Current, path);
+                        var e = GetFirstDifference(ae.Current, be.Current, Combine(path, i.ToString()));
                         if (e != null)
                             return e;
                     }
@@ -52,11 +57,22 @@ namespace rapid.rsdl.tests
                     }
                 }
             }
+            else if (aType.IsEnum && aType == bType)
+            {
+                if (a.Equals(b))
+                {
+                    return null;
+                }
+                else
+                {
+                    return $"different enum values at {path}: {a} != {b}";
+                }
+            }
             else if (aType.IsClass && aType == bType)
             {
                 foreach (var prop in aType.GetProperties().Where(p => p.Name != "Position"))
                 {
-                    var e = ObjectDifference(prop.GetValue(a), prop.GetValue(b), (string.IsNullOrEmpty(path) ? "" : path + ".") + prop.Name);
+                    var e = GetFirstDifference(prop.GetValue(a), prop.GetValue(b), Combine(path, prop.Name));
                     if (e != null)
                         return e;
                 }
@@ -73,12 +89,6 @@ namespace rapid.rsdl.tests
         }
 
 
-        public static IEnumerable<Type> EnumerableElementTypes(this Type type)
-        {
-            return
-                from i in type.GetInterfaces()
-                where i.IsInterface && i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
-                select i.GetGenericArguments()[0];
-        }
+        public static string Combine(string path, string component) => (string.IsNullOrEmpty(path) ? "" : path + ".") + component;
     }
 }
