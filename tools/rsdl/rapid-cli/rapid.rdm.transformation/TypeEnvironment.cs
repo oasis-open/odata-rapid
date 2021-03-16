@@ -59,12 +59,12 @@ namespace rapid.rdm
             // identifier refering to the current model. has precedence over predefined primitive types
             if (this.@internal.TryGetValue(typeRef.Name, out var edmType))
             {
-                return MakeTypeReference(edmType, typeRef.IsNullable);
+                return MakeTypeReference(edmType, typeRef.Facets.IsNullable);
             }
             // well known primitive type name
             else if (_primitiveTypes.TryGetValue(typeRef.Name, out var primitive))
             {
-                return MakeTypeReference(primitive, typeRef.IsNullable);
+                return MakeTypeReference(primitive, typeRef.Facets.IsNullable);
             }
             // is it known in the included models?
             else if (external.TryGetValue(typeRef.Prefix, out var entry))
@@ -76,12 +76,12 @@ namespace rapid.rdm
                     // TODO: internal error should not occur.
                     throw new TransformationException($"Can not resolve type reference {typeRef.Name}");
                 }
-                return MakeTypeReference(type, typeRef.IsNullable);
+                return MakeTypeReference(type, typeRef.Facets.IsNullable);
             }
             // starting with "Edm."
             else if (typeRef.Name.StartsWith("Edm."))
             {
-                return MakeTypeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.IsNullable);
+                return MakeTypeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.Facets.IsNullable);
             }
             else
             {

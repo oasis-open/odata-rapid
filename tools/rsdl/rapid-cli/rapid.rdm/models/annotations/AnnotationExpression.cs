@@ -87,9 +87,9 @@ namespace rapid.rdm
         public static AnnotationExpression Object(IEnumerable<ExpressionProperty> properties, Position position = default) =>
             new AnnotationExpression(AnnotationExpressionKind.Object, properties.ToReadOnlyList(), position);
 
-        public IReadOnlyList<ExpressionProperty> Properties => (IReadOnlyList<ExpressionProperty>)Value;
+        public IReadOnlyList<ExpressionProperty> Properties => this.Kind == AnnotationExpressionKind.Object ? (IReadOnlyList<ExpressionProperty>)Value : System.Array.Empty<ExpressionProperty>();
 
-        public IReadOnlyList<AnnotationExpression> Items => (IReadOnlyList<AnnotationExpression>)Value;
+        public IReadOnlyList<AnnotationExpression> Items => this.Kind == AnnotationExpressionKind.Array ? (IReadOnlyList<AnnotationExpression>)Value : System.Array.Empty<AnnotationExpression>();
 
 
         public static bool Equals(AnnotationExpression a, AnnotationExpression b)

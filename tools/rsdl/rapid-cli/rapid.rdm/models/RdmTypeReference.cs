@@ -2,20 +2,47 @@ using System;
 
 namespace rapid.rdm
 {
-    public class RdmTypeReference : IEquatable<RdmTypeReference>
+    public record RdmTypeReferenceFacets
     {
-        public RdmTypeReference(string name, bool isNullable = false, bool isMultivalued = false, Position position = default)
+        public bool IsNullable { get; init; }
+
+        public bool IsMultivalued { get; init; }
+
+        public int? MaxLength { get; init; }
+
+        public int? Precision { get; init; }
+
+        public int? Scale { get; init; }
+
+        public static RdmTypeReferenceFacets None = new RdmTypeReferenceFacets();
+    }
+
+    public sealed class RdmTypeReference : IEquatable<RdmTypeReference>
+    {
+        public RdmTypeReference(string name, RdmTypeReferenceFacets facets, Position position = default)
         {
             Name = name;
-            IsNullable = isNullable;
-            IsMultivalued = isMultivalued;
+            Facets = facets ?? RdmTypeReferenceFacets.None;
+            Position = position;
         }
 
-        public bool IsNullable { get; }
+        public RdmTypeReference(string name, bool isNullable, bool isMultivalued, Position position = default)
+        {
+            Name = name;
+            Facets = new RdmTypeReferenceFacets { IsNullable = isNullable, IsMultivalued = isMultivalued };
+            Position = position;
+        }
 
-        public bool IsMultivalued { get; }
+        public RdmTypeReference(string name, Position position = default)
+        {
+            Name = name;
+            Facets = new RdmTypeReferenceFacets { IsNullable = false, IsMultivalued = false };
+            Position = position;
+        }
 
         public string Name { get; }
+
+        public RdmTypeReferenceFacets Facets { get; }
 
         public Position Position { get; set; }
 
@@ -28,9 +55,9 @@ namespace rapid.rdm
         {
             return
                 string.Equals(one.Name, two.Name) &&
-                one.IsNullable == two.IsNullable &&
-                one.IsMultivalued == two.IsMultivalued;
+                one.Facets.Equals(two.Facets);
         }
+
         public bool Equals(RdmTypeReference other)
         {
             return Equals(this, other);
@@ -38,12 +65,12 @@ namespace rapid.rdm
 
         public override bool Equals(object other)
         {
-            return other is RdmTypeReference model && this.Equals(model);
+            return other is RdmTypeReference model && Equals(this, model);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, IsNullable, IsMultivalued);
+            return HashCode.Combine(Name, Facets);
         }
         #endregion
     }

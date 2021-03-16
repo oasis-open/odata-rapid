@@ -23,7 +23,7 @@ namespace rapid.rdm.tests
             env.AddReferences(main, new Dictionary<string, RdmDataModel> { ["common"] = incl });
 
             // act
-            var actual = env.ResolveTypeReference(new RdmTypeReference("common.EmploymentType", false));
+            var actual = env.ResolveTypeReference(new RdmTypeReference("common.EmploymentType"));
 
             // assert
             // note that the enumeration has zero members
