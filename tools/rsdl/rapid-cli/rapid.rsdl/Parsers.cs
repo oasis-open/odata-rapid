@@ -24,21 +24,23 @@ namespace rapid.rsdl
 
         // "(" number "," number)
         static readonly TokenListParser<RdmToken, (int Precision, int Scale)> DecimalFacetParameters =
-         (
              from p in Token.EqualTo(RdmToken.Number)
              from c in Token.EqualTo(RdmToken.Comma)
              from s in Token.EqualTo(RdmToken.Number)
-             select (int.Parse(p.ToStringValue()), int.Parse(s.ToStringValue()))
-        ).Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses);
+             select (int.Parse(p.ToStringValue()), int.Parse(s.ToStringValue()));
+
+        static readonly TokenListParser<RdmToken, int> StringFacetParameters =
+            from l in Token.EqualTo(RdmToken.Number)
+            select int.Parse(l.ToStringValue());
 
         static readonly TokenListParser<RdmToken, (string Name, RdmTypeReferenceFacets Facets, Position Position)> FacetedReference =
             (
                 from id in Token.EqualToValue(RdmToken.Identifier, "String")
-                from ml in Token.EqualTo(RdmToken.Number).Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
-                select (id.ToStringValue(), new RdmTypeReferenceFacets { MaxLength = int.Parse(ml.ToStringValue()) }, id.GetPosition())
+                from ml in StringFacetParameters.Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
+                select (id.ToStringValue(), new RdmTypeReferenceFacets { MaxLength = ml }, id.GetPosition())
             ).Try().Or(
                 from id in Token.EqualToValue(RdmToken.Identifier, "Decimal")
-                from ps in DecimalFacetParameters
+                from ps in DecimalFacetParameters.Between(RdmToken.OpeningParentheses, RdmToken.ClosingParentheses)
                 select (id.ToStringValue(), new RdmTypeReferenceFacets { Precision = ps.Precision, Scale = ps.Scale }, id.GetPosition())
             ).Try().Or(
                 from qi in QualifiedIdentifier
@@ -73,7 +75,7 @@ namespace rapid.rsdl
         #region structured types
         static readonly TokenListParser<RdmToken, rdm.RdmProperty> Property =
             from annotations in Annotation.Many()
-            from key in Keyword("key").OptionalOrDefault() //.Try()
+            from key in Keyword("key").OptionalOrDefault().Try()
             from name in Token.EqualTo(RdmToken.Identifier)
             from colon in Token.EqualTo(RdmToken.Colon)
             from propType in TypeReference
@@ -142,9 +144,9 @@ namespace rapid.rsdl
         static readonly TokenListParser<RdmToken, object> TypeMember =
             (
                 Property.Cast<RdmToken, RdmProperty, object>()
-            ).Or(
+            ).Try().Or(
                 Function.Cast<RdmToken, RdmOperation, object>()
-            ).Or(
+            ).Try().Or(
                 Action.Cast<RdmToken, RdmOperation, object>()
             );
 
@@ -159,8 +161,7 @@ namespace rapid.rsdl
             from kw in Token.EqualToValue(RdmToken.Identifier, "type")
             from nm in Token.EqualTo(RdmToken.Identifier)
             from ih in Extends.Optional().Try()
-                // from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
-            from ps in Property.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
+            from ps in TypeMember.Many().Between(Token.EqualTo(RdmToken.OpeningBrace), Token.EqualTo(RdmToken.ClosingBrace))
             select new rdm.RdmStructuredType(
                 nm.ToStringValue(),
                 ih.HasValue ? ih.Value.ToStringValue() : null,
