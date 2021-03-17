@@ -89,7 +89,7 @@ serviceMember        = entitySet / singleton / serviceOperation
 
 entitySet            = identifier ":" "[" qualifiedName "]"
 
-singleton            = identifier ":" qualifiedName      
+singleton            = identifier ":" qualifiedName
 
 serviceOperation     = operationKind identifier
                        "(" [ parameter *("," parameter) ] ")"
@@ -101,7 +101,7 @@ serviceOperation     = operationKind identifier
 ```ABNF
 annotations      = 1*annotation
 
-annotation       = "@" qualifiedName       ":" annotationValue
+annotation       = "@" qualifiedName ":" annotationValue
 
 annotationValue  = %s"true"
                  / %s"false"
