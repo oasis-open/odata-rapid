@@ -87,7 +87,7 @@ service              = %s"service" "{" 1*serviceMember "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 
-entitySet            = identifier ":" "[" qualifiedName       "]"
+entitySet            = identifier ":" "[" qualifiedName "]"
 
 singleton            = identifier ":" qualifiedName      
 
