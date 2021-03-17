@@ -8,16 +8,6 @@
         </Key>
         <Property Name="prop1" Type="Edm.String" Nullable="false" />
         <Property Name="prop2" Type="Edm.Int32" Nullable="false" />
-        <Annotation Term="Org.OData.Capabilities.V1.CountRestrictions">
-          <Record>
-            <PropertyValue Property="Countable" Bool="true" />
-            <PropertyValue Property="NonCountableProperties">
-              <Collection>
-                <Path>prop2</Path>
-              </Collection>
-            </PropertyValue>
-          </Record>
-        </Annotation>
       </EntityType>
       <EntityContainer Name="Service1">
         <EntitySet Name="set1" EntityType="Model.Type1">
