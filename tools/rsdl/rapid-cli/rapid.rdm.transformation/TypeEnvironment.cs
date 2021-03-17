@@ -59,12 +59,12 @@ namespace rapid.rdm
             // identifier refering to the current model. has precedence over predefined primitive types
             if (this.@internal.TryGetValue(typeRef.Name, out var edmType))
             {
-                return MakeTypeReference(edmType, typeRef.Facets.IsNullable);
+                return MakeTypeReference(edmType, typeRef.Facets);
             }
             // well known primitive type name
             else if (_primitiveTypes.TryGetValue(typeRef.Name, out var primitive))
             {
-                return MakeTypeReference(primitive, typeRef.Facets.IsNullable);
+                return MakeTypeReference(primitive, typeRef.Facets);
             }
             // is it known in the included models?
             else if (external.TryGetValue(typeRef.Prefix, out var entry))
@@ -76,12 +76,12 @@ namespace rapid.rdm
                     // TODO: internal error should not occur.
                     throw new TransformationException($"Can not resolve type reference {typeRef.Name}");
                 }
-                return MakeTypeReference(type, typeRef.Facets.IsNullable);
+                return MakeTypeReference(type, typeRef.Facets);
             }
             // starting with "Edm."
             else if (typeRef.Name.StartsWith("Edm."))
             {
-                return MakeTypeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.Facets.IsNullable);
+                return MakeTypeReference(EdmCoreModel.Instance.FindType(typeRef.Name), typeRef.Facets);
             }
             else
             {
@@ -92,9 +92,22 @@ namespace rapid.rdm
             }
         }
 
-
-        private static IEdmTypeReference MakeTypeReference(IEdmType type, bool nullable)
+        private static IEdmTypeReference MakeTypeReference(IEdmType type, RdmTypeReferenceFacets facets)
         {
+            var single = MakeTypeReferenceSingle(type, facets);
+            if (facets.IsMultivalued)
+            {
+                return new EdmCollectionTypeReference(new EdmCollectionType(single));
+            }
+            else
+            {
+                return single;
+            }
+        }
+
+        private static IEdmTypeReference MakeTypeReferenceSingle(IEdmType type, RdmTypeReferenceFacets facets)
+        {
+            bool nullable = facets.IsNullable;
             switch (type)
             {
                 case IEdmComplexType complex:
@@ -107,7 +120,9 @@ namespace rapid.rdm
                     switch (primitive.PrimitiveKind)
                     {
                         case EdmPrimitiveTypeKind.String:
-                            return new EdmStringTypeReference(primitive, nullable, false, null, true);
+                            return new EdmStringTypeReference(primitive, nullable, false, facets.MaxLength, true);
+                        case EdmPrimitiveTypeKind.Decimal:
+                            return new EdmDecimalTypeReference(primitive, nullable, facets.Precision, facets.Scale);
                         default:
                             return new EdmPrimitiveTypeReference(primitive, nullable);
                     }
@@ -117,7 +132,7 @@ namespace rapid.rdm
 
                 default:
                     throw new NotSupportedException("MakeTypeReference: unknown implementation of IEdmType");
-            }
+            };
         }
 
 
