@@ -31,7 +31,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ```ABNF
 model        = [ namespace ] *include *modelElement
 
-namespace    = %s"namespace" qualifiedIdentifier
+namespace    = %s"namespace" qualifiedName      
 
 include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
 
@@ -41,7 +41,7 @@ modelElement = structuredType / enumType / service
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" ]  %s"type" identifier [ %"extends" qualifiedIdentifier ] "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" ]  %s"type" identifier [ %"extends" qualifiedName       ] "{" *structuredTypeMember "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
@@ -51,7 +51,7 @@ propertyModifier     = %s"key"
 
 typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName             = builtInType / %s"Edm" "." identifier / qualifiedIdentifier
+typeName             = builtInType / %s"Edm" "." identifier / qualifiedName      
 
 builtInType          = %s"Boolean"
                      / %s"Date"
@@ -87,9 +87,9 @@ service              = %s"service" "{" 1*serviceMember "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 
-entitySet            = identifier ":" "[" qualifiedIdentifier "]"
+entitySet            = identifier ":" "[" qualifiedName       "]"
 
-singleton            = identifier ":" qualifiedIdentifier
+singleton            = identifier ":" qualifiedName      
 
 serviceOperation     = operationKind identifier
                        "(" [ parameter *("," parameter) ] ")"
@@ -101,7 +101,7 @@ serviceOperation     = operationKind identifier
 ```ABNF
 annotations      = 1*annotation
 
-annotation       = "@" qualifiedIdentifier ":" annotationValue
+annotation       = "@" qualifiedName       ":" annotationValue
 
 annotationValue  = %s"true"
                  / %s"false"
@@ -120,7 +120,7 @@ propertyName     = identifier / DQUOTE 1*CHAR DQUOTE
 ### Core Syntax Elements
 
 ```ABNF
-qualifiedIdentifier = identifier *( "." identifier )
+qualifiedName       = identifier *( "." identifier )
 
 identifier          = identInitial *identSubsequent
 
@@ -128,9 +128,9 @@ identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
 identSubsequent     = identInitial / DIGIT
 
-number              = DIGIT *DIGIT ["." *DIGIT ]
+number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
-integer             = DIGIT *DIGIT
+integer             = [ "-" ] DIGIT *DIGIT
 
 ALPHA               = %x41-5A / %x61-7A
 
