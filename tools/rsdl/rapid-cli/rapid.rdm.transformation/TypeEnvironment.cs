@@ -122,7 +122,14 @@ namespace rapid.rdm
                         case EdmPrimitiveTypeKind.String:
                             return new EdmStringTypeReference(primitive, nullable, false, facets.MaxLength, true);
                         case EdmPrimitiveTypeKind.Decimal:
-                            return new EdmDecimalTypeReference(primitive, nullable, facets.Precision, facets.Scale);
+                            if (facets.Precision.HasValue && facets.Scale.HasValue)
+                            {
+                                return new EdmDecimalTypeReference(primitive, nullable, facets.Precision, facets.Scale);
+                            }
+                            else
+                            {
+                                return new EdmDecimalTypeReference(primitive, nullable);
+                            }
                         default:
                             return new EdmPrimitiveTypeReference(primitive, nullable);
                     }
