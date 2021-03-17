@@ -41,7 +41,7 @@ modelElement = structuredType / enumType / service
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" ]  %s"type" identifier [ ":" qualifiedIdentifier ] "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" ]  %s"type" identifier [ %"extends" qualifiedIdentifier ] "{" *structuredTypeMember "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
