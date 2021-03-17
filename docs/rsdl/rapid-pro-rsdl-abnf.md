@@ -110,6 +110,7 @@ annotationValue  = %s"true"
                  / DQUOTE 1*CHAR DQUOTE
                  / "[" annotationValue *( [","] annotationValue ) [","] "]"
                  / "{" property *( [","] property ) [","] "}"
+                 / "." *( "/"  identifier )
 
 property         = propertyName ":" annotationValue
 
