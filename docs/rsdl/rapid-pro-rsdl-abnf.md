@@ -51,7 +51,7 @@ propertyModifier     = %s"key"
 
 typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName             = builtInType / %s"Edm" "." identifier / qualifiedName      
+typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
 builtInType          = %s"Boolean"
                      / %s"Date"
