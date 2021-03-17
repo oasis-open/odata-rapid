@@ -57,6 +57,8 @@ describe("Parse correct RSDL", () => {
                key dat: Date
                dbl: Double
                dec: Decimal
+               d42: Decimal(4,2)
+               s42: String(42) 
                tsp: Datetime
                tim: TimeOfDay
                dur: Duration
@@ -75,6 +77,8 @@ describe("Parse correct RSDL", () => {
             dat: { $Type: "Edm.Date" },
             dbl: { $Type: "Edm.Double" },
             dec: { $Type: "Edm.Decimal" },
+            d42: { $Type: "Edm.Decimal", $Precision: 4, $Scale: 2 },
+            s42: { $MaxLength: 42 },
             tsp: { $Type: "Edm.DateTimeOffset" },
             tim: { $Type: "Edm.TimeOfDay" },
             dur: { $Type: "Edm.Duration" },

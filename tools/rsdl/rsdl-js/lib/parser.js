@@ -173,10 +173,21 @@ class MyListener extends rsdlListener {
 
   enterTypeName(ctx) {
     if (!this.current.typedElement) return;
-    let name = ctx.getText();
+    const typeParts = ctx.getText().split(/[(,)]/);
+    let name = typeParts[0]; //ctx.getText();
     name = TYPENAMES[name] || name;
     if (!name.includes(".")) name = `${this.namespace}.${name}`;
-    if (name !== "Edm.String") this.current.typedElement.$Type = name;
+    if (name === "Edm.String") {
+      if (typeParts.length > 1) {
+        this.current.typedElement.$MaxLength = parseInt(typeParts[1], 10);
+      }
+    } else {
+      this.current.typedElement.$Type = name;
+      if (name === "Edm.Decimal" && typeParts.length > 2) {
+        this.current.typedElement.$Precision = parseInt(typeParts[1], 10);
+        this.current.typedElement.$Scale = parseInt(typeParts[2], 10);
+      }
+    }
   }
 
   enterSingle(ctx) {
