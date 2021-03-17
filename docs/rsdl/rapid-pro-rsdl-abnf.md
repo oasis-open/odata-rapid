@@ -31,7 +31,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ```ABNF
 model        = [ namespace ] *include *modelElement
 
-namespace    = %s"namespace" qualifiedName      
+namespace    = %s"namespace" qualifiedName
 
 include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
 
