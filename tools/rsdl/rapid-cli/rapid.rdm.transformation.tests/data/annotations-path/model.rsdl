@@ -1,0 +1,14 @@
+
+type Type1
+{    
+    key prop1: String
+    prop2 : Edm.Int32
+}
+
+service Service1
+{
+
+    @Capabilities.CountRestrictions: { Countable: true, NonCountableProperties: [ ./prop2 ]}
+    set1: [Type1]
+}
+

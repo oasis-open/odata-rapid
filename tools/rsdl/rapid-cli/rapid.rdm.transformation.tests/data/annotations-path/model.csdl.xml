@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Type1" OpenType="true">
+        <Key>
+          <PropertyRef Name="prop1" />
+        </Key>
+        <Property Name="prop1" Type="Edm.String" Nullable="false" />
+        <Property Name="prop2" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="Service1">
+        <EntitySet Name="set1" EntityType="Model.Type1">
+          <Annotation Term="Org.OData.Capabilities.V1.CountRestrictions">
+            <Record>
+              <PropertyValue Property="Countable" Bool="true" />
+              <PropertyValue Property="NonCountableProperties">
+                <Collection>
+                  <Path>prop2</Path>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
