@@ -23,7 +23,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
     - [Structured Type](#structured-type)
     - [Enumeration Type](#enumeration-type)
     - [Service](#service)
-    - [Annotations](#annotations)
+    - [Annotations and annotation values](#annotations-and-annotation-values)
     - [Core Syntax Elements](#core-syntax-elements)
 
 ### Model
@@ -96,25 +96,29 @@ serviceOperation     = operationKind identifier
                        [ ":" typeReference ]
 ```
 
-### Annotations
+### Annotations and annotation values
 
 ```ABNF
-annotations      = 1*annotation
+annotations         = 1*annotation
 
-annotation       = "@" qualifiedName ":" annotationValue
+annotation          = "@" qualifiedName ":" annotationValue
 
-annotationValue  = %s"true"
-                 / %s"false"
-                 / %s"null"
-                 / number
-                 / DQUOTE 1*CHAR DQUOTE
-                 / "[" annotationValue *( [","] annotationValue ) [","] "]"
-                 / "{" property *( [","] property ) [","] "}"
-                 / "." *( "/"  identifier )
+annotationValue     = %s"true"
+                    / %s"false"
+                    / %s"null"
+                    / number
+                    / DQUOTE 1*CHAR DQUOTE
+                    / "[" annotationValue *( [","] annotationValue ) [","] "]"
+                    / "{" annotationProperty *( [","] annotationProperty ) [","] "}"
+                    / "." *( "/"  identifier )
 
-property         = propertyName ":" annotationValue
+number              = [ "-" ] int [ frac ] [ exp ]
+int                 = "0" / ( DIGIT1-9 *DIGIT )
+frac                = "." 1*DIGIT
+exp                 = "e" [ "-" / "+" ] 1*DIGIT
 
-propertyName     = identifier / DQUOTE 1*CHAR DQUOTE
+annotationProperty  = propertyName ":" annotationValue
+propertyName        = identifier / DQUOTE 1*CHAR DQUOTE
 ```
 
 ### Core Syntax Elements
@@ -128,13 +132,14 @@ identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
 identSubsequent     = identInitial / DIGIT
 
-number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
-
 integer             = [ "-" ] DIGIT *DIGIT
+
 
 ALPHA               = %x41-5A / %x61-7A
 
 DIGIT               = %x30-39
+
+DIGIT1-9            = %x31-39
 
 CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
                     / ESCAPE ESCAPE

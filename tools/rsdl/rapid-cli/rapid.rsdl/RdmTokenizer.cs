@@ -48,13 +48,12 @@ namespace rapid.rsdl
                     } while (next.HasValue && char.IsLetterOrDigit(next.Value));
 
                     yield return Result.Value(RdmToken.Identifier, keywordStart, next.Location);
-
                 }
-                else if (char.IsDigit(next.Value))
+                else if (char.IsDigit(next.Value) || next.Value == '-')
                 {
-                    var integer = Numerics.Integer(next.Location);
-                    yield return Result.Value(RdmToken.Number, next.Location, integer.Remainder);
-                    next = integer.Remainder.ConsumeChar();
+                    var number = ExpressionTextParsers.Scientific(next.Location);
+                    yield return Result.Value(RdmToken.Number, next.Location, number.Remainder);
+                    next = number.Remainder.ConsumeChar();
                 }
                 else if (_operators.TryGetValue(next.Value, out var @operator))
                 {

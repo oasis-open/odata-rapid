@@ -372,6 +372,38 @@ type Company { something: other.Something }";
                     )
                 }
             );
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void NumbersInAnnotation()
+        {
+            var content = @" @Core.Description: [ 0, 1, -1, -01, -0.1, 1e5 , 1e-5, -1e-5 ] type Foo {   }";
+            var actual = parser.Parse(content, "test");
+
+            var expr = AnnotationExpression.Array(new[] {
+                AnnotationExpression.Integer(0),
+                AnnotationExpression.Integer(1),
+                AnnotationExpression.Integer(-1),
+                AnnotationExpression.Integer(-01),
+                AnnotationExpression.Float(-0.1),
+                AnnotationExpression.Float(1e5),
+                AnnotationExpression.Float(1e-5),
+                AnnotationExpression.Float(-1e-5),
+            });
+            var expected = new RdmDataModel(
+                null,
+                new[] {
+                    new RdmStructuredType("Foo", null,
+                        new RdmProperty[0],
+                        null,
+                        false,
+                        new [] {
+                            new Annotation( "Core.Description", expr)
+                        }
+                    )
+                }
+            );
             Assert.Null(Diff.GetFirstDifference(expected, actual));
             Assert.Equal(expected, actual);
         }
