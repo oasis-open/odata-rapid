@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Model"
+      xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="A" OpenType="true">
+        <Property Name="prop00" Type="Edm.String" Nullable="false" />
+        <Property Name="prop01" Type="Edm.String" Nullable="false" MaxLength="9" />
+        <Property Name="prop02" Type="Edm.String" MaxLength="9" />
+        <Property Name="prop03" Type="Collection(Edm.String)" Nullable="false" MaxLength="9" />
+        <Property Name="prop04" Type="Collection(Edm.String)" MaxLength="9" />
+        <Property Name="prop05" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+        <Property Name="prop06" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="2" />
+        <Property Name="prop07" Type="Edm.Decimal" Precision="9" Scale="2" />
+        <Property Name="prop08" Type="Collection(Edm.Decimal)" Nullable="false" Precision="9" Scale="2" />
+        <Property Name="prop09" Type="Collection(Edm.Decimal)" Precision="9" Scale="2" />
+        <Property Name="prop10" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

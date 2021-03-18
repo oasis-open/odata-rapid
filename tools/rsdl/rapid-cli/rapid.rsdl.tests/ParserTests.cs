@@ -55,7 +55,6 @@ namespace rapid.rsdl.tests
                 })
             });
 
-            // Assert.Null(Assert2.ObjectDifference(expected, actual));
             Assert.Equal(expected, actual);
         }
 
@@ -191,7 +190,6 @@ type Company { something: other.Something }";
                 }
             );
 
-            Assert.Equal(((RdmEnumType)expected.Items[0]).Members[0], ((RdmEnumType)actual.Items[0]).Members[0]);
             Assert.Equal(expected, actual);
         }
 
@@ -215,7 +213,6 @@ type Company { something: other.Something }";
                     })
                 }
             );
-
 
             Assert.Equal(expected, actual);
         }
@@ -375,7 +372,7 @@ type Company { something: other.Something }";
                     )
                 }
             );
-            Assert.Equal(null, Diff.GetFirstDifference(expected, actual));
+            Assert.Null(Diff.GetFirstDifference(expected, actual));
             Assert.Equal(expected, actual);
         }
     }
