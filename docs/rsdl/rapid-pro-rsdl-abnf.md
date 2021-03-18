@@ -130,7 +130,7 @@ identSubsequent     = identInitial / DIGIT
 
 number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
-integer             = [ "+" / "-" ] DIGIT *DIGIT
+integer             = [ "-" ] DIGIT *DIGIT
 
 ALPHA               = %x41-5A / %x61-7A
 
