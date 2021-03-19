@@ -59,7 +59,8 @@ describe("Parse correct RSDL", () => {
                dec: Decimal
                d42: Decimal(4,2)
                s42: String(42) 
-               tsp: Datetime
+               s4a: [String(4)?]
+               tsp: DateTime
                tim: TimeOfDay
                dur: Duration
                geo: Edm.GeographyPoint
@@ -79,7 +80,8 @@ describe("Parse correct RSDL", () => {
             dec: { $Type: "Edm.Decimal" },
             d42: { $Type: "Edm.Decimal", $Precision: 4, $Scale: 2 },
             s42: { $MaxLength: 42 },
-            tsp: { $Type: "Edm.DateTimeOffset" },
+            s4a: { $Collection: true, $MaxLength: 4, $Nullable: true },
+            tsp: { $Type: "Edm.DateTimeOffset", $Precision: 0 },
             tim: { $Type: "Edm.TimeOfDay" },
             dur: { $Type: "Edm.Duration" },
             geo: { $Type: "Edm.GeographyPoint" },
@@ -340,11 +342,13 @@ describe("Reference test cases", () => {
     { d: "abstract" },
     { d: "annotations" },
     { d: "annotations2", n: "model" },
+    // { d: "annotations-path", n: "model" },
     { d: "inheritance" },
     { d: "named-service", n: "service" },
     { d: "operations" },
     { d: "parameter-annotations", n: "model" },
     { d: "path-expressions" },
+    { d: "type-facets" },
   ];
   files.forEach((f) => {
     it(f.d, function () {

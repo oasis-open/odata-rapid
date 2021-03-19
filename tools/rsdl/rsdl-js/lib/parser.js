@@ -6,7 +6,7 @@ const rsdlListener = require("../grammar/parser/rsdlListener").rsdlListener;
 const TYPENAMES = {
   Boolean: "Edm.Boolean",
   Date: "Edm.Date",
-  Datetime: "Edm.DateTimeOffset",
+  DateTime: "Edm.DateTimeOffset",
   Decimal: "Edm.Decimal",
   Duration: "Edm.Duration",
   Double: "Edm.Double",
@@ -186,6 +186,10 @@ class MyListener extends rsdlListener {
       if (name === "Edm.Decimal" && typeParts.length > 2) {
         this.current.typedElement.$Precision = parseInt(typeParts[1], 10);
         this.current.typedElement.$Scale = parseInt(typeParts[2], 10);
+      }
+      //TODO: allow facet for DateTime
+      if (name === "Edm.DateTimeOffset") {
+        this.current.typedElement.$Precision = 0;
       }
     }
   }
