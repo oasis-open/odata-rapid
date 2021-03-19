@@ -1,0 +1,18 @@
+
+type A
+{
+
+    prop00: String
+    prop01: String(9)
+    prop02: String(9)?
+    prop03: [String(9)]
+    prop04: [String(9)?]
+
+    prop05: Decimal
+    prop06: Decimal(9, 2)
+    prop07: Decimal(9, 2)?
+    prop08: [Decimal(9, 2)]
+    prop09: [Decimal(9, 2)?]
+
+    prop10: DateTime
+}

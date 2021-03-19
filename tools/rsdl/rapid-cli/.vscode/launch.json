@@ -9,9 +9,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/rapid/bin/Debug/netcoreapp3.1/rapid.dll",
-      "args": ["samples/annotations/sample.rsdl", "--verbose"],
-      "cwd": "${workspaceFolder}/rapid",
+      "program": "${workspaceFolder}/rapid/bin/Debug/net5.0/rapid.dll",
+      "args": ["rapid.rdm.transformation.tests/data/type-facets/sample.rsdl", "--format", "XML"],
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": false
     },

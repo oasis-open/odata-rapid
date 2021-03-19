@@ -41,7 +41,7 @@ modelElement = structuredType / enumType / service
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations %s"type" identifier "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" ] %s"type" identifier [ %"extends" qualifiedName ] "{" *structuredTypeMember "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
@@ -53,13 +53,21 @@ typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
 typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
-builtInType          = %s"Integer" / %s"String" / %s"Boolean" / %s"DateTime" / %s"Date" / %s"Double" / %s"Decimal" / %s"TimeOfDay" / %s"Duration" 
+builtInType          = %s"Boolean"
+                     / %s"Date"
+                     / %s"DateTime"
+                     / %s"Decimal" [ "(" integer "," integer ")"]
+                     / %s"Double"
+                     / %s"Duration"
+                     / %s"Integer"
+                     / %s"String" [ "(" integer ")" ]
+                     / %s"TimeOfDay"
 
-operation            = annotations [operationModifier] identifier
+operation            = annotations operationKind identifier
                        "(" [ parameter *("," parameter) ] ")"
                        [ ":" annotations typeReference ]
 
-operationModifier    = %s"action" / %s"function"
+operationKind        = %s"action" / %s"function"
 
 parameter            = annotations identifier ":" typeReference
 ```
@@ -83,7 +91,7 @@ entitySet            = identifier ":" "[" qualifiedName "]"
 
 singleton            = identifier ":" qualifiedName
 
-serviceOperation     = [ operationModifier ] identifier
+serviceOperation     = operationKind identifier
                        "(" [ parameter *("," parameter) ] ")"
                        [ ":" typeReference ]
 ```
@@ -95,13 +103,14 @@ annotations      = 1*annotation
 
 annotation       = "@" qualifiedName ":" annotationValue
 
-annotationValue  = "true"
-                 / "false"
-                 / "null"
+annotationValue  = %s"true"
+                 / %s"false"
+                 / %s"null"
                  / number
                  / DQUOTE 1*CHAR DQUOTE
                  / "[" annotationValue *( [","] annotationValue ) [","] "]"
                  / "{" property *( [","] property ) [","] "}"
+                 / "." *( "/"  identifier )
 
 property         = propertyName ":" annotationValue
 
@@ -111,25 +120,27 @@ propertyName     = identifier / DQUOTE 1*CHAR DQUOTE
 ### Core Syntax Elements
 
 ```ABNF
-qualifiedName   = identifier *( "." identifier )
+qualifiedName       = identifier *( "." identifier )
 
-identifier      = identInitial *identSubsequent
+identifier          = identInitial *identSubsequent
 
-identInitial    = ALPHA / "_" ; Note: actually all Unicode letters
+identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
-identSubsequent = identInitial / DIGIT
+identSubsequent     = identInitial / DIGIT
 
-number          = DIGIT *DIGIT ["." *DIGIT ]
+number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
-ALPHA  = %x41-5A / %x61-7A
+integer             = [ "-" ] DIGIT *DIGIT
 
-DIGIT  = %x30-39
+ALPHA               = %x41-5A / %x61-7A
 
-CHAR   = %x20-21 / %x23-5B / %x5D-10FFFF
-       / ESCAPE ESCAPE
-       / ESCAPE DQUOTE
+DIGIT               = %x30-39
 
-DQUOTE = %x22              ; "
+CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
+                    / ESCAPE ESCAPE
+                    / ESCAPE DQUOTE
 
-ESCAPE = %x5C              ; \
+DQUOTE              = %x22              ; "
+
+ESCAPE              = %x5C              ; \
 ```
