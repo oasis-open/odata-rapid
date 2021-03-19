@@ -342,7 +342,7 @@ describe("Reference test cases", () => {
     { d: "abstract" },
     { d: "annotations" },
     { d: "annotations2", n: "model" },
-    // { d: "annotations-path", n: "model" },
+    { d: "annotations-path", n: "model" },
     { d: "inheritance" },
     { d: "named-service", n: "service" },
     { d: "operations" },

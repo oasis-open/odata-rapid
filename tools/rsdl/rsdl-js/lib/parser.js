@@ -80,6 +80,7 @@ class MyListener extends rsdlListener {
   normalizeTermName(name) {
     //TODO: clean up
     return name
+      .replace(/^Capabilities./, "Org.OData.Capabilities.V1.")
       .replace(/^Core./, "Org.OData.Core.V1.")
       .replace(/^Validation./, "Org.OData.Validation.V1.");
   }
