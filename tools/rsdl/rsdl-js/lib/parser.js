@@ -6,7 +6,7 @@ const rsdlListener = require("../grammar/parser/rsdlListener").rsdlListener;
 const TYPENAMES = {
   Boolean: "Edm.Boolean",
   Date: "Edm.Date",
-  Datetime: "Edm.DateTimeOffset",
+  DateTime: "Edm.DateTimeOffset",
   Decimal: "Edm.Decimal",
   Duration: "Edm.Duration",
   Double: "Edm.Double",
@@ -80,6 +80,7 @@ class MyListener extends rsdlListener {
   normalizeTermName(name) {
     //TODO: clean up
     return name
+      .replace(/^Capabilities./, "Org.OData.Capabilities.V1.")
       .replace(/^Core./, "Org.OData.Core.V1.")
       .replace(/^Validation./, "Org.OData.Validation.V1.");
   }
@@ -173,10 +174,25 @@ class MyListener extends rsdlListener {
 
   enterTypeName(ctx) {
     if (!this.current.typedElement) return;
-    let name = ctx.getText();
+    const typeParts = ctx.getText().split(/[(,)]/);
+    let name = typeParts[0]; //ctx.getText();
     name = TYPENAMES[name] || name;
     if (!name.includes(".")) name = `${this.namespace}.${name}`;
-    if (name !== "Edm.String") this.current.typedElement.$Type = name;
+    if (name === "Edm.String") {
+      if (typeParts.length > 1) {
+        this.current.typedElement.$MaxLength = parseInt(typeParts[1], 10);
+      }
+    } else {
+      this.current.typedElement.$Type = name;
+      if (name === "Edm.Decimal" && typeParts.length > 2) {
+        this.current.typedElement.$Precision = parseInt(typeParts[1], 10);
+        this.current.typedElement.$Scale = parseInt(typeParts[2], 10);
+      }
+      //TODO: allow facet for DateTime
+      if (name === "Edm.DateTimeOffset") {
+        this.current.typedElement.$Precision = 0;
+      }
+    }
   }
 
   enterSingle(ctx) {

@@ -28,11 +28,11 @@ builtInType:
 	'Boolean'
 	| 'Date'
 	| 'Datetime'
-	| 'Decimal'
+	| 'Decimal' ('(' NUMBER ',' NUMBER ')')?
 	| 'Double'
 	| 'Duration'
 	| 'Integer'
-	| 'String'
+	| 'String' ('(' NUMBER ')')?
 	| 'TimeOfDay';
 
 operation:
