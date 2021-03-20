@@ -6,7 +6,7 @@ title: RAPID SDL ABNF
 # RAPID Pro syntax
 
 > DRAFT
-> December 2020
+> March 2021
 
 ## Overview
 
@@ -83,7 +83,7 @@ enumMember           = identifier
 ### Service
 
 ```ABNF
-service              = %s"service" "{" 1*serviceMember "}"
+service              = %s"service" [ identifier ] "{" 1*serviceMember "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 
