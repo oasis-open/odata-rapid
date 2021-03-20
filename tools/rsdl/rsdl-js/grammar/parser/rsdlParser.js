@@ -310,7 +310,7 @@ var sharedContextCache = new antlr4.PredictionContextCache();
 
 var literalNames = [ null, "'namespace'", "'.'", "'include'", "'as'", "'type'", 
                      "'{'", "'}'", "':'", "'extends'", "'['", "']'", "'Boolean'", 
-                     "'Date'", "'Datetime'", "'Decimal'", "'('", "','", 
+                     "'Date'", "'DateTime'", "'Decimal'", "'('", "','", 
                      "')'", "'Double'", "'Duration'", "'Integer'", "'String'", 
                      "'TimeOfDay'", "'enum'", "'flags'", "'service'", "'@'", 
                      "'true'", "'false'", "'null'", "'/'", "'abstract'", 

@@ -27,7 +27,7 @@ typeName: builtInType | qualifiedName;
 builtInType:
 	'Boolean'
 	| 'Date'
-	| 'Datetime'
+	| 'DateTime'
 	| 'Decimal' ('(' NUMBER ',' NUMBER ')')?
 	| 'Double'
 	| 'Duration'
@@ -42,12 +42,10 @@ operation:
 parameter: annotation* ID ':' typeReference;
 returnType: ':' annotation* typeReference;
 
-//TODO: flags
 enumType: annotation* enumKind ID '{' enumMember* '}';
 enumKind: 'enum' | 'flags';
 enumMember: annotation* ID;
 
-//TODO: do we really want to allow service names?
 service: annotation* 'service' ID? '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;
 entitySet: annotation* ID ':' '[' qualifiedName ']';
