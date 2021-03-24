@@ -1,50 +1,32 @@
-
-type company
+type Company
 {
-    key stockSymbol: string
-    name: string
-    incorporated: dateTime
-    employees: [employee]
+    key stockSymbol: String
+    name: String
+    incorporated: DateTime
+    employees: [Employee]
 
-    test: [integer]
-    ceo: employee
+    test: [Integer]
+    ceo: Employee
 }
 
-type employee
+type Employee
 {
-    key id: integer 
-    key: boolean
+    key id: Integer 
+    key: Boolean
     name : name    
-    title: string
-
-    // a CSDL action  with an optional parameter
-    // action fire(date?: dateTimeOffset) 
-        
-    // a CSDL action with an required parameter that can be null
-    // action fire(date: dateTimeOffset?) 
-    
-    // promote() : integer     // a CSDL function
+    title: String
 }
 
-type name
+type Name
 {
-    firstName : string
-    middleInitial: string?
-    lastName: string
-    title: string?
+    firstName : String
+    middleInitial: String?
+    lastName: String
+    title: String?
 }
-
-// function resetDataSource() 
-
 
 service
 {
-    // unbound, "global" action
-    // resetDataSource
-
-    // entitySet http://host/competitors
-    competitors: [company]
-
-    // singelton http://host/company
-    company: company
+    competitors: [Company]
+    company: Company
 }
