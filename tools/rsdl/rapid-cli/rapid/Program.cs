@@ -24,9 +24,8 @@ namespace rapid
         {
             var logger = new ConsoleLogger(options.Verbose ? LogLevel.Information : LogLevel.Error);
             var converter = new RsdlConverter(logger);
-            var result = converter.Convert(options.InputPath, options.Format);
+            var result = converter.Convert(options.InputPath, options.Format).Result;
             return result ? 0 : 1;
-
         }
 
         private static int ReturnError(IEnumerable<Error> errors)

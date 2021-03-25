@@ -19,7 +19,7 @@ namespace rapid.rdm
 
         public ModelTransformer(ILogger logger)
         {
-            this.logger = logger;
+            this.logger = logger ?? NullLogger.Instance;
         }
 
         // public IEdmModel Transform(RdmDataModel model, IDictionary<string, RdmDataModel> referencedModels)
