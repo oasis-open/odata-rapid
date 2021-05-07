@@ -8,6 +8,7 @@ import styles from './styles.module.css';
 // Temporary bug in docusaurus
 // import Rocket from '@site/static/img/rocket.svg';
 // import animateRapidSpaceMan from '../components/rocket/animation'
+import RabbitSvg from '@site/static/img/rabbit.svg';
 
 const features = [
   {
@@ -66,7 +67,8 @@ function Home() {
         <div className="container">
           <div className="row">
             <div className={classnames('col col--5 col--offset-1')}>
-              <h1 className="hero__title">{siteConfig.title}</h1>
+              {/* <h1 className="hero__title">{siteConfig.title}</h1> */}
+                <RabbitSvg/>
               <p className="hero__subtitle">{siteConfig.tagline}</p>
               <div className={styles.buttons}>
                 <Link
@@ -79,8 +81,8 @@ function Home() {
                 </Link>
               </div>
             </div>
-            <div className={classnames('col col--5')}>
-              {/* <Rocket></Rocket> */}
+            <div className={classnames('col col--5')}>       
+             
             </div>
           </div>
         </div>

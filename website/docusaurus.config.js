@@ -10,7 +10,7 @@ module.exports = {
     navbar: {
       title: 'RAPID',
       logo: {
-        alt: 'Logo',
+        alt: 'RAPID Logo',
         src: 'img/logo.svg',
       },
       items: [
