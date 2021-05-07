@@ -36,10 +36,3 @@
 .rabbitSVG {
     background-color: white;
 }
-
-.rabbitSvgContainer {
-    display: flex;
-    align-items: center;
-    align-content: center;
-    height: 100%;
-}
