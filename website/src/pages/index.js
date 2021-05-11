@@ -34,7 +34,7 @@ const features = [
     //   imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Rapid is an Open Specification build by OASIS members and the community.
+        Rapid is an Open Specification built by OASIS members and the community.
         Rapid is based on existing standards like OData, OpenAPI, and GraphQL
       </>
     ),
