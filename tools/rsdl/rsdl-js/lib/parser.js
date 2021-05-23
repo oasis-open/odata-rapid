@@ -66,7 +66,7 @@ class MyListener extends rsdlListener {
 
   exitAnnotation(ctx) {
     if (this.annotatable.length === 0) {
-      console.log("Panic: no annotatable!!!");
+      console.error("Panic: no annotatable!!!");
     }
 
     const term = this.normalizeTermName(ctx.qualifiedName().getText());
@@ -352,10 +352,10 @@ class MyListener extends rsdlListener {
     for (const [name, child] of Object.entries(this.entityContainer || {})) {
       if (!this.isIdentifier(name) || !child.$Type) continue;
       const type = this.modelElement(child.$Type);
-      if (!["ComplexType", "EntityType"].includes(type.$Kind)) {
-        //TODO: Error if entity set or singleton does not reference a structured type
-        continue;
-      }
+      //TODO: Error if entity set or singleton does not reference a structured type
+      // if (!["ComplexType", "EntityType"].includes(type.$Kind)) {
+      //   ...
+      // }
       type.$Kind = "EntityType";
       //TODO: entity types used in entity sets must have a key
     }
