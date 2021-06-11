@@ -191,6 +191,15 @@ rsdlListener.prototype.exitEnumMember = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#typeDefinition.
+rsdlListener.prototype.enterTypeDefinition = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#typeDefinition.
+rsdlListener.prototype.exitTypeDefinition = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#service.
 rsdlListener.prototype.enterService = function(ctx) {
 };
