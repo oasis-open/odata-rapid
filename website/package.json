@@ -10,8 +10,8 @@
     "lintDocs": "prettier ../docs/spec/**.md ../docs/related/**.md --write"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.75",
-    "@docusaurus/preset-classic": "2.0.0-alpha.75",
+    "@docusaurus/core": "^2.0.0-beta.0",
+    "@docusaurus/preset-classic": "^2.0.0-beta.0",
     "classnames": "^2.2.6",
     "prettier": "2.0.5",
     "react": "^16.8.4",

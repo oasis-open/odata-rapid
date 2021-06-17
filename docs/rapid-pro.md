@@ -1,5 +1,6 @@
 ---
 id: gettingstarted
+slug: /
 title: Rest API Design (RAPID) Profile
 sidebar_label: Getting Started
 ---
