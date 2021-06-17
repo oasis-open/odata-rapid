@@ -343,6 +343,43 @@ describe("Parse correct RSDL", () => {
     );
   });
 
+  it("Type definitions", () => {
+    assert.deepStrictEqual(
+      parse(
+        `@Core.Description: "Monetary Amount"
+         typedef Amount: Decimal(23,5)
+
+         @Core.Description: "ISO or custom currency"
+         typedef Currency: String(5)
+         
+         type Money { amount: Amount currency: Currency }`
+      ),
+      {
+        $Version: "4.0",
+        Model: {
+          Amount: {
+            "@Org.OData.Core.V1.Description": "Monetary Amount",
+            $Kind: "TypeDefinition",
+            $Type: "Edm.Decimal",
+            $Precision: 23,
+            $Scale: 5,
+          },
+          Currency: {
+            "@Org.OData.Core.V1.Description": "ISO or custom currency",
+            $Kind: "TypeDefinition",
+            $MaxLength: 5,
+          },
+          Money: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            amount: { $Type: "Model.Amount" },
+            currency: { $Type: "Model.Currency" },
+          },
+        },
+      }
+    );
+  });
+
   it("Comments", () => {
     assert.deepStrictEqual(
       parse(`type foo { 

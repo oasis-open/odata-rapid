@@ -220,6 +220,10 @@ type Foo {
   test2: Integer?
   test3: [Integer]
   test4: [Integer?]
+  test5: String
+  test6: String(80)
+  test7: Decimal
+  test8: Decimal(15,2)
 }
 ```
 
@@ -239,7 +243,11 @@ type Foo {
   "test1": {  "$Type": "Edm.Int32" },
   "test2": { "$Nullable": true, "$Type": "Edm.Int32" },
   "test3": { "$Collection": true, "$Type": "Edm.Int32" },
-  "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" }
+  "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" },
+  "test5": { },
+  "test6": {  "$MaxLength": 80 },
+  "test7": {  "$Type": "Edm.Decimal", "$Scale": "variable" },
+  "test8": {  "$Type": "Edm.Decimal", "$Precision": 15, "$Scale": 2 },
 }
 ```
 
@@ -252,6 +260,10 @@ type Foo {
   <Property Name="test2" Type="Edm.Int32" Nullable="true" />
   <Property Name="test3" Type="Collection(Edm.Int32)" Nullable="false"/>
   <Property Name="test4" Type="Collection(Edm.Int32)" Nullable="true"/>
+  <Property Name="test5" Type="Edm.String" Nullable="false" />
+  <Property Name="test6" Type="Edm.String" Nullable="false" MaxLength="80" />
+  <Property Name="test7" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+  <Property Name="test8" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="2" />
 </EntityType>
 ```
 

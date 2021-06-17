@@ -8,7 +8,11 @@ qualifiedName: ID ('.' ID)*;
 
 include: 'include' STRING 'as' ID;
 
-modelElement: structuredType | enumType | service;
+modelElement:
+	structuredType
+	| enumType
+	| typeDefinition
+	| service;
 
 structuredType:
 	annotation* ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
@@ -45,6 +49,8 @@ returnType: ':' annotation* typeReference;
 enumType: annotation* enumKind ID '{' enumMember* '}';
 enumKind: 'enum' | 'flags';
 enumMember: annotation* ID;
+
+typeDefinition: annotation* 'typedef' ID ':' typeName;
 
 service: annotation* 'service' ID? '{' serviceMember* '}';
 serviceMember: entitySet | singleton | serviceOperation;

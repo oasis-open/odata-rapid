@@ -22,6 +22,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
     - [Model](#model)
     - [Structured Type](#structured-type)
     - [Enumeration Type](#enumeration-type)
+    - [Type Definition](#type-definition)
     - [Service](#service)
     - [Annotations](#annotations)
     - [Core Syntax Elements](#core-syntax-elements)
@@ -35,7 +36,7 @@ namespace    = %s"namespace" qualifiedName
 
 include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
 
-modelElement = structuredType / enumType / service
+modelElement = structuredType / enumType / typeDefinition / service
 ```
 
 ### Structured Type
@@ -56,11 +57,11 @@ typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 builtInType          = %s"Boolean"
                      / %s"Date"
                      / %s"DateTime"
-                     / %s"Decimal" [ "(" integer "," integer ")"]
+                     / %s"Decimal" [ "(" precision "," scale ")"]
                      / %s"Double"
                      / %s"Duration"
                      / %s"Integer"
-                     / %s"String" [ "(" integer ")" ]
+                     / %s"String" [ "(" maxLength ")" ]
                      / %s"TimeOfDay"
 
 operation            = annotations operationKind identifier
@@ -78,6 +79,12 @@ parameter            = annotations identifier ":" typeReference
 enumType             = annotations ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
 
 enumMember           = identifier
+```
+
+### Type Definition
+
+```ABNF
+typeDefinition       = annotations %s"typedef" identifier ":" ( builtInType / %s"Edm" "." identifier )
 ```
 
 ### Service
@@ -131,6 +138,12 @@ identSubsequent     = identInitial / DIGIT
 number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
 integer             = [ "-" ] DIGIT *DIGIT
+
+precision           = integer
+
+scale               = integer
+
+maxLength           = integer
 
 ALPHA               = %x41-5A / %x61-7A
 

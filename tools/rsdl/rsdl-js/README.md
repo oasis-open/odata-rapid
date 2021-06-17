@@ -60,7 +60,7 @@ Install
 - VS Code
 - [ANTLR4 grammar syntax support](https://marketplace.visualstudio.com/items?itemName=mike-lischke.vscode-antlr4&ssr=false#overview) (workspace recommendation)
 
-## TODO
+## Done
 
 - [x] create grammar
 - [x] create listener that produces CSDL
@@ -71,7 +71,11 @@ Install
 - [x] flags enumerations
 - [x] create error listener for syntactically incorrect "files"
 - [x] log errors from CLI
-- [ ] type definitions
+- [x] type definitions
+
+## TODO
+
+- [ ] Model validation
 - [ ] Option `-a` for compiling all files in a folder?
 - [ ] Option `-r` for recursive compilation?
 - [ ] Update to ANTLR 4.9.x
