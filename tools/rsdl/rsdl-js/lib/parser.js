@@ -289,6 +289,25 @@ class MyListener extends rsdlListener {
     this.popAnnotatable();
   }
 
+  enterTypeDefinition(ctx) {
+    const name = ctx.ID().getText();
+    this.current.type = {
+      $Kind: "TypeDefinition",
+      $$Name: name,
+    };
+    this.schema[name] = this.current.type;
+    this.pushAnnotatable(this.current.type);
+    this.current.typedElement = this.current.type;
+  }
+
+  exitTypeDefinition(/*ctx*/) {
+    //TODO: check whether $Type is undefined or starts with 'Edm.'
+    delete this.current.type.$$Name;
+    this.current.type = null;
+    this.current.typedElement = null;
+    this.popAnnotatable();
+  }
+
   enterService(ctx) {
     const name = (ctx.ID() && ctx.ID().getText()) || "Service";
     this.csdl.$EntityContainer = `${this.namespace}.${name}`;
