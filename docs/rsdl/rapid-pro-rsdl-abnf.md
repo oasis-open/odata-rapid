@@ -57,11 +57,11 @@ typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 builtInType          = %s"Boolean"
                      / %s"Date"
                      / %s"DateTime"
-                     / %s"Decimal" [ "(" integer "," integer ")"]
+                     / %s"Decimal" [ "(" precision "," scale ")"]
                      / %s"Double"
                      / %s"Duration"
                      / %s"Integer"
-                     / %s"String" [ "(" integer ")" ]
+                     / %s"String" [ "(" maxLength ")" ]
                      / %s"TimeOfDay"
 
 operation            = annotations operationKind identifier
@@ -138,6 +138,12 @@ identSubsequent     = identInitial / DIGIT
 number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
 integer             = [ "-" ] DIGIT *DIGIT
+
+precision           = integer
+
+scale               = integer
+
+maxLength           = integer
 
 ALPHA               = %x41-5A / %x61-7A
 
