@@ -33,5 +33,5 @@ https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html
 | Schema                | Schema                                                          | :question:         | schema version, default namespace       |
 | Singleton             | Singleton                                                       | :heavy_check_mark: |                                         |
 | Term                  | Term                                                            | :x:,               | not in RSDL                             |
-| TypeDefinition        | Type Definition                                                 | :heavy_plus_sign:  | once we add them                        |
+| TypeDefinition        | Type Definition                                                 | :heavy_plus_sign:  |                                         |
 | UrlRef                | UrlRef annotation expression                                    | :x:                |                                         |
