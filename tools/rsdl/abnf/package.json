@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oasis-open/odata-rapid.git#master"
+    "url": "git+https://github.com/oasis-open/odata-rapid.git"
   },
   "keywords": [
     "RSDL",
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/oasis-open/odata-rapid/issues"
   },
-  "homepage": "https://github.com/oasis-open/odata-rapid/tree/master#readme",
+  "homepage": "https://github.com/oasis-open/odata-rapid#readme",
   "dependencies": {
     "apg-js": "^4.1.1"
   }
