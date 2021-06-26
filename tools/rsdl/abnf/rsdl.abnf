@@ -97,8 +97,8 @@ annotationValue      = %s"true"
                      / %s"null"
                      / number
                      / DQUOTE 1*CHAR DQUOTE
-                     / "[" annotationValue *( [","] annotationValue ) [","] "]"
-                     / "{" annotationProperty *( [","] annotationProperty ) [","] "}"
+                     / "[" annotationValue *( [ "," ] annotationValue ) [ "," ] "]"
+                     / "{" annotationProperty *( [ "," ] annotationProperty ) [ "," ] "}"
                      / "." *( "/"  identifier )
 
 annotationProperty   = propertyName ":" annotationValue
@@ -110,32 +110,32 @@ propertyName         = identifier / DQUOTE 1*CHAR DQUOTE
 ;  Core Syntax Elements
 ;----------------------------
 
-qualifiedName        = identifier *( "." identifier )
+qualifiedName       = identifier *( "." identifier )
 
-identifier           = identInitial *identSubsequent
+identifier          = identInitial *identSubsequent
 
-identInitial         = ALPHA / "_" ; Note: actually all Unicode letters
+identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
-identSubsequent      = identInitial / DIGIT
+identSubsequent     = identInitial / DIGIT
 
-number               = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
+number              = [ "-" ] DIGIT *DIGIT ["." *DIGIT ]
 
-integer              = [ "-" ] DIGIT *DIGIT
+integer             = [ "-" ] DIGIT *DIGIT
 
-precision            = integer
+precision           = integer
 
-scale                = integer
+scale               = integer
 
-maxLength            = integer
+maxLength           = integer
 
-ALPHA                = %x41-5A / %x61-7A
+ALPHA               = %x41-5A / %x61-7A
 
-DIGIT                = %x30-39
+DIGIT               = %x30-39
 
-CHAR                 = %x20-21 / %x23-5B / %x5D-10FFFF
-                     / ESCAPE ESCAPE
-                     / ESCAPE DQUOTE
+CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
+                    / ESCAPE ESCAPE
+                    / ESCAPE DQUOTE
 
-DQUOTE               = %x22              ; "
+DQUOTE              = %x22              ; "
 
-ESCAPE               = %x5C              ; \
+ESCAPE              = %x5C              ; \

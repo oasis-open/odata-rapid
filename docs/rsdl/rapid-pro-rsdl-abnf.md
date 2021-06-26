@@ -30,19 +30,19 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ### Model
 
 ```ABNF
-model        = [ namespace ] *include *modelElement
+model                = [ namespace ] *include *modelElement
 
-namespace    = %s"namespace" qualifiedName
+namespace            = %s"namespace" qualifiedName
 
-include      = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
+include              = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
 
-modelElement = structuredType / enumType / typeDefinition / service
+modelElement         = structuredType / enumType / typeDefinition / service
 ```
 
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" ] %s"type" identifier [ %"extends" qualifiedName ] "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" ] %s"type" identifier [ %s"extends" qualifiedName ] "{" *structuredTypeMember "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
@@ -76,7 +76,7 @@ parameter            = annotations identifier ":" typeReference
 ### Enumeration Type
 
 ```ABNF
-enumType             = annotations ( %s"enum" / $s"flags" ) identifier "{" 1*enumMember "}"
+enumType             = annotations ( %s"enum" / %s"flags" ) identifier "{" 1*enumMember "}"
 
 enumMember           = identifier
 ```
@@ -106,22 +106,22 @@ serviceOperation     = operationKind identifier
 ### Annotations
 
 ```ABNF
-annotations      = 1*annotation
+annotations          = 1*annotation
 
-annotation       = "@" qualifiedName ":" annotationValue
+annotation           = "@" qualifiedName ":" annotationValue
 
-annotationValue  = %s"true"
-                 / %s"false"
-                 / %s"null"
-                 / number
-                 / DQUOTE 1*CHAR DQUOTE
-                 / "[" annotationValue *( [","] annotationValue ) [","] "]"
-                 / "{" property *( [","] property ) [","] "}"
-                 / "." *( "/"  identifier )
+annotationValue      = %s"true"
+                     / %s"false"
+                     / %s"null"
+                     / number
+                     / DQUOTE 1*CHAR DQUOTE
+                     / "[" annotationValue *( [ "," ] annotationValue ) [ "," ] "]"
+                     / "{" annotationProperty *( [ "," ] annotationProperty ) [ "," ] "}"
+                     / "." *( "/"  identifier )
 
-property         = propertyName ":" annotationValue
+annotationProperty   = propertyName ":" annotationValue
 
-propertyName     = identifier / DQUOTE 1*CHAR DQUOTE
+propertyName         = identifier / DQUOTE 1*CHAR DQUOTE
 ```
 
 ### Core Syntax Elements
