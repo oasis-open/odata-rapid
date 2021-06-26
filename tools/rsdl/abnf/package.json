@@ -1,0 +1,30 @@
+{
+  "name": "rsdl-abnf",
+  "version": "0.0.0",
+  "description": "RSDL ABNF Grammar",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "node lib/extract.js",
+    "test": "node node_modules/apg-js/bin/apg.sh -i ./rsdl.abnf -o lib/parser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oasis-open/odata-rapid.git#master"
+  },
+  "keywords": [
+    "RSDL",
+    "ABNF",
+    "OData"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oasis-open/odata-rapid/issues"
+  },
+  "homepage": "https://github.com/oasis-open/odata-rapid/tree/master#readme",
+  "dependencies": {
+    "apg-js": "^4.1.1"
+  }
+}
