@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "node lib/extract.js",
-    "test": "node node_modules/apg-js/bin/apg.sh -i ./rsdl.abnf -o lib/parser.js"
+    "test": "node node_modules/apg-js/bin/apg.sh -i ./rsdl.abnf -o lib/grammar.js"
   },
   "repository": {
     "type": "git",
