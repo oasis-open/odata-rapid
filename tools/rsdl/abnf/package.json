@@ -6,8 +6,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "node lib/extract.js",
-    "test": "node node_modules/apg-js/bin/apg.sh -i ./rsdl.abnf -o lib/grammar.js"
+    "extract-abnf": "node lib/extract.js",
+    "generate-grammar": "node node_modules/apg-js/bin/apg.sh -i ./rsdl.abnf -o lib/grammar.js",
+    "parse-testcases": "node lib/parse.js",
+    "test": "npm run extract-abnf && npm run generate-grammar && npm run parse-testcases"
   },
   "repository": {
     "type": "git",
