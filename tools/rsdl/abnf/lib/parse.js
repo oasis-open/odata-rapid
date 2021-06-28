@@ -1,5 +1,6 @@
 const fs = require("fs");
 const YAML = require("yaml");
+const colors = require("colors/safe");
 const { apgLib } = require("apg-js");
 const { parser: Parser, ast: AST, utils, trace: Trace } = apgLib;
 const Grammar = require("./grammar");
@@ -23,7 +24,7 @@ function parse(inputString, failAt) {
   const result = parser.parse(grammar, 0, inputCharacterCodes);
 
   if (result.success && failAt == null) {
-    console.log(`OK: ${inputString}`);
+    console.log(`${colors.green("OK:")} ${inputString}`);
 
     //TODO: check parse result
     // const foo = {};
@@ -33,7 +34,11 @@ function parse(inputString, failAt) {
   }
 
   if (!result.success && result.maxMatched == failAt) {
-    console.log(`OK: ${inputString} fails at ${failAt}`);
+    console.log(
+      `${colors.green("OK:")} ${inputString} ${colors.green(
+        `fails at ${failAt}`
+      )}`
+    );
     return true;
   }
 
@@ -46,10 +51,12 @@ function parse(inputString, failAt) {
     Number.isInteger(failAt) && result.maxMatched != failAt
       ? ` instead of ${failAt}`
       : "";
-  console.error(
-    `KO: ${inputString.substr(0, result.maxMatched)}-->${inputString.substr(
-      result.maxMatched
-    )} fails at ${result.maxMatched}${instead}`
+  console.log(
+    `${colors.red(
+      `KO, fails at ${result.maxMatched}${instead}:`
+    )} ${inputString.substr(0, result.maxMatched)}${colors.red(
+      inputString.substr(result.maxMatched, 1)
+    )}${inputString.substr(result.maxMatched + 1)}`
   );
   return false;
 }
@@ -63,8 +70,12 @@ for (const tc of testCases) {
 }
 
 if (successes === testCases.length) {
-  console.log(`\nSuccess: all ${testCases.length} test cases passed`);
+  console.log(
+    colors.green(`\nSuccess: all ${testCases.length} test cases passed`)
+  );
 } else {
   const failed = testCases.length - successes;
-  console.log(`\nFailed: ${failed} test case${failed == 1 ? "" : "s"} failed`);
+  console.log(
+    colors.red(`\nFailed: ${failed} test case${failed == 1 ? "" : "s"} failed`)
+  );
 }

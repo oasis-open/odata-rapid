@@ -28,6 +28,7 @@
   "homepage": "https://github.com/oasis-open/odata-rapid#readme",
   "dependencies": {
     "apg-js": "^4.1.1",
+    "colors": "^1.4.0",
     "yaml": "^1.10.2"
   }
 }

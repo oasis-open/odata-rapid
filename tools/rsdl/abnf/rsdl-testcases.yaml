@@ -4,6 +4,6 @@
   failAt: 7 # intentionally invalid input
 - input: "service x { foo : bar }"
 - input: |
-    servicex { 
+    service x { 
       foo: bar
     }
