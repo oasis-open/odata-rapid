@@ -47,11 +47,9 @@ function parse(inputString, failAt, expect) {
   if (result.success && failAt == null) {
     console.log(`${colors.green("OK:")} ${inputString}`);
 
-    //TODO: check parse result
     if (expect) {
       const data = [];
       ast.translate(data);
-      // console.dir(data);
       try {
         assert.deepStrictEqual(data, expect);
       } catch (e) {
