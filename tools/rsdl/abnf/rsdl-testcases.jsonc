@@ -1,0 +1,6 @@
+// test cases for rsdl.abnf
+[
+  { "input": "service{foo:bar}" },
+  { "input": "servicex{foo:bar}", "failAt": 7 }, // intentionally invalid input
+  { "input": "service x { foo : bar }" }
+]

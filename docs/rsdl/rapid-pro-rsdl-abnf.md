@@ -90,17 +90,17 @@ typeDefinition       = annotations %s"typedef" identifier ":" ( builtInType / %s
 ### Service
 
 ```ABNF
-service              = %s"service" [ identifier ] "{" 1*serviceMember "}"
+service              = %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}" OWS
 
 serviceMember        = entitySet / singleton / serviceOperation
 
-entitySet            = identifier ":" "[" qualifiedName "]"
+entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
 
-singleton            = identifier ":" qualifiedName
+singleton            = identifier OWS ":" OWS qualifiedName
 
-serviceOperation     = operationKind identifier
-                       "(" [ parameter *("," parameter) ] ")"
-                       [ ":" typeReference ]
+serviceOperation     = operationKind RWS identifier
+                       OWS "(" OWS [ parameter *(OWS "," OWS parameter) ] OWS ")" OWS
+                       [ OWS ":" OWS typeReference ]
 ```
 
 ### Annotations
@@ -156,4 +156,8 @@ CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
 DQUOTE              = %x22              ; "
 
 ESCAPE              = %x5C              ; \
+
+OWS                 = *WS
+RWS                 = 1*WS
+WS                  = %x08 / %x10 / %x13 / %x20 ; TAB, LF, CR, SPACE
 ```

@@ -5,16 +5,16 @@
 module.exports = function grammar(){
   // ```
   // SUMMARY
-  //      rules = 41
+  //      rules = 44
   //       udts = 0
-  //    opcodes = 284
+  //    opcodes = 315
   //        ---   ABNF original opcodes
-  //        ALT = 15
-  //        CAT = 46
-  //        REP = 39
-  //        RNM = 99
+  //        ALT = 16
+  //        CAT = 48
+  //        REP = 41
+  //        RNM = 121
   //        TLS = 50
-  //        TBS = 29
+  //        TBS = 33
   //        TRG = 6
   //        ---   SABNF superset opcodes
   //        UDT = 0
@@ -25,7 +25,7 @@ module.exports = function grammar(){
   //        BKR = 0
   //        ABG = 0
   //        AEN = 0
-  // characters = [32 - 1114111]
+  // characters = [8 - 1114111]
   // ```
   /* OBJECT IDENTIFIER (for internal parser use) */
   this.grammarObject = 'grammarObject';
@@ -73,6 +73,9 @@ module.exports = function grammar(){
   this.rules[38] = {name: 'CHAR', lower: 'char', index: 38, isBkr: false};
   this.rules[39] = {name: 'DQUOTE', lower: 'dquote', index: 39, isBkr: false};
   this.rules[40] = {name: 'ESCAPE', lower: 'escape', index: 40, isBkr: false};
+  this.rules[41] = {name: 'OWS', lower: 'ows', index: 41, isBkr: false};
+  this.rules[42] = {name: 'RWS', lower: 'rws', index: 42, isBkr: false};
+  this.rules[43] = {name: 'WS', lower: 'ws', index: 43, isBkr: false};
 
   /* UDTS */
   this.udts = [];
@@ -269,14 +272,23 @@ module.exports = function grammar(){
 
   /* service */
   this.rules[17].opcodes = [];
-  this.rules[17].opcodes[0] = {type: 2, children: [1,2,4,5,7]};// CAT
+  this.rules[17].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,10,14,15,16]};// CAT
   this.rules[17].opcodes[1] = {type: 6, string: [115,101,114,118,105,99,101]};// TBS
   this.rules[17].opcodes[2] = {type: 3, min: 0, max: 1};// REP
-  this.rules[17].opcodes[3] = {type: 4, index: 28};// RNM(identifier)
-  this.rules[17].opcodes[4] = {type: 7, string: [123]};// TLS
-  this.rules[17].opcodes[5] = {type: 3, min: 1, max: Infinity};// REP
-  this.rules[17].opcodes[6] = {type: 4, index: 18};// RNM(serviceMember)
-  this.rules[17].opcodes[7] = {type: 7, string: [125]};// TLS
+  this.rules[17].opcodes[3] = {type: 2, children: [4,5]};// CAT
+  this.rules[17].opcodes[4] = {type: 4, index: 42};// RNM(RWS)
+  this.rules[17].opcodes[5] = {type: 4, index: 28};// RNM(identifier)
+  this.rules[17].opcodes[6] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[17].opcodes[7] = {type: 7, string: [123]};// TLS
+  this.rules[17].opcodes[8] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[17].opcodes[9] = {type: 4, index: 18};// RNM(serviceMember)
+  this.rules[17].opcodes[10] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[17].opcodes[11] = {type: 2, children: [12,13]};// CAT
+  this.rules[17].opcodes[12] = {type: 4, index: 42};// RNM(RWS)
+  this.rules[17].opcodes[13] = {type: 4, index: 18};// RNM(serviceMember)
+  this.rules[17].opcodes[14] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[17].opcodes[15] = {type: 7, string: [125]};// TLS
+  this.rules[17].opcodes[16] = {type: 4, index: 41};// RNM(OWS)
 
   /* serviceMember */
   this.rules[18].opcodes = [];
@@ -287,38 +299,51 @@ module.exports = function grammar(){
 
   /* entitySet */
   this.rules[19].opcodes = [];
-  this.rules[19].opcodes[0] = {type: 2, children: [1,2,3,4,5]};// CAT
+  this.rules[19].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7]};// CAT
   this.rules[19].opcodes[1] = {type: 4, index: 28};// RNM(identifier)
-  this.rules[19].opcodes[2] = {type: 7, string: [58]};// TLS
-  this.rules[19].opcodes[3] = {type: 7, string: [91]};// TLS
-  this.rules[19].opcodes[4] = {type: 4, index: 27};// RNM(qualifiedName)
-  this.rules[19].opcodes[5] = {type: 7, string: [93]};// TLS
+  this.rules[19].opcodes[2] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[19].opcodes[3] = {type: 7, string: [58]};// TLS
+  this.rules[19].opcodes[4] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[19].opcodes[5] = {type: 7, string: [91]};// TLS
+  this.rules[19].opcodes[6] = {type: 4, index: 27};// RNM(qualifiedName)
+  this.rules[19].opcodes[7] = {type: 7, string: [93]};// TLS
 
   /* singleton */
   this.rules[20].opcodes = [];
-  this.rules[20].opcodes[0] = {type: 2, children: [1,2,3]};// CAT
+  this.rules[20].opcodes[0] = {type: 2, children: [1,2,3,4,5]};// CAT
   this.rules[20].opcodes[1] = {type: 4, index: 28};// RNM(identifier)
-  this.rules[20].opcodes[2] = {type: 7, string: [58]};// TLS
-  this.rules[20].opcodes[3] = {type: 4, index: 27};// RNM(qualifiedName)
+  this.rules[20].opcodes[2] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[20].opcodes[3] = {type: 7, string: [58]};// TLS
+  this.rules[20].opcodes[4] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[20].opcodes[5] = {type: 4, index: 27};// RNM(qualifiedName)
 
   /* serviceOperation */
   this.rules[21].opcodes = [];
-  this.rules[21].opcodes[0] = {type: 2, children: [1,2,3,4,11,12]};// CAT
+  this.rules[21].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7,16,17,18,19]};// CAT
   this.rules[21].opcodes[1] = {type: 4, index: 12};// RNM(operationKind)
-  this.rules[21].opcodes[2] = {type: 4, index: 28};// RNM(identifier)
-  this.rules[21].opcodes[3] = {type: 7, string: [40]};// TLS
-  this.rules[21].opcodes[4] = {type: 3, min: 0, max: 1};// REP
-  this.rules[21].opcodes[5] = {type: 2, children: [6,7]};// CAT
-  this.rules[21].opcodes[6] = {type: 4, index: 13};// RNM(parameter)
-  this.rules[21].opcodes[7] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[21].opcodes[2] = {type: 4, index: 42};// RNM(RWS)
+  this.rules[21].opcodes[3] = {type: 4, index: 28};// RNM(identifier)
+  this.rules[21].opcodes[4] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[5] = {type: 7, string: [40]};// TLS
+  this.rules[21].opcodes[6] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[7] = {type: 3, min: 0, max: 1};// REP
   this.rules[21].opcodes[8] = {type: 2, children: [9,10]};// CAT
-  this.rules[21].opcodes[9] = {type: 7, string: [44]};// TLS
-  this.rules[21].opcodes[10] = {type: 4, index: 13};// RNM(parameter)
-  this.rules[21].opcodes[11] = {type: 7, string: [41]};// TLS
-  this.rules[21].opcodes[12] = {type: 3, min: 0, max: 1};// REP
-  this.rules[21].opcodes[13] = {type: 2, children: [14,15]};// CAT
-  this.rules[21].opcodes[14] = {type: 7, string: [58]};// TLS
-  this.rules[21].opcodes[15] = {type: 4, index: 8};// RNM(typeReference)
+  this.rules[21].opcodes[9] = {type: 4, index: 13};// RNM(parameter)
+  this.rules[21].opcodes[10] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[21].opcodes[11] = {type: 2, children: [12,13,14,15]};// CAT
+  this.rules[21].opcodes[12] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[13] = {type: 7, string: [44]};// TLS
+  this.rules[21].opcodes[14] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[15] = {type: 4, index: 13};// RNM(parameter)
+  this.rules[21].opcodes[16] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[17] = {type: 7, string: [41]};// TLS
+  this.rules[21].opcodes[18] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[19] = {type: 3, min: 0, max: 1};// REP
+  this.rules[21].opcodes[20] = {type: 2, children: [21,22,23,24]};// CAT
+  this.rules[21].opcodes[21] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[22] = {type: 7, string: [58]};// TLS
+  this.rules[21].opcodes[23] = {type: 4, index: 41};// RNM(OWS)
+  this.rules[21].opcodes[24] = {type: 4, index: 8};// RNM(typeReference)
 
   /* annotations */
   this.rules[22].opcodes = [];
@@ -485,6 +510,24 @@ module.exports = function grammar(){
   this.rules[40].opcodes = [];
   this.rules[40].opcodes[0] = {type: 6, string: [92]};// TBS
 
+  /* OWS */
+  this.rules[41].opcodes = [];
+  this.rules[41].opcodes[0] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[41].opcodes[1] = {type: 4, index: 43};// RNM(WS)
+
+  /* RWS */
+  this.rules[42].opcodes = [];
+  this.rules[42].opcodes[0] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[42].opcodes[1] = {type: 4, index: 43};// RNM(WS)
+
+  /* WS */
+  this.rules[43].opcodes = [];
+  this.rules[43].opcodes[0] = {type: 1, children: [1,2,3,4]};// ALT
+  this.rules[43].opcodes[1] = {type: 6, string: [8]};// TBS
+  this.rules[43].opcodes[2] = {type: 6, string: [16]};// TBS
+  this.rules[43].opcodes[3] = {type: 6, string: [19]};// TBS
+  this.rules[43].opcodes[4] = {type: 6, string: [32]};// TBS
+
   // The `toString()` function will display the original grammar file(s) that produced these opcodes.
   this.toString = function toString(){
     let str = "";
@@ -561,17 +604,17 @@ module.exports = function grammar(){
     str += ";  Service\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "service              = %s\"service\" [ identifier ] \"{\" 1*serviceMember \"}\"\r\n";
+    str += "service              = %s\"service\" [ RWS identifier ] OWS \"{\" OWS serviceMember *( RWS serviceMember ) OWS \"}\" OWS\r\n";
     str += "\r\n";
     str += "serviceMember        = entitySet / singleton / serviceOperation\r\n";
     str += "\r\n";
-    str += "entitySet            = identifier \":\" \"[\" qualifiedName \"]\"\r\n";
+    str += "entitySet            = identifier OWS \":\" OWS \"[\" qualifiedName \"]\"\r\n";
     str += "\r\n";
-    str += "singleton            = identifier \":\" qualifiedName\r\n";
+    str += "singleton            = identifier OWS \":\" OWS qualifiedName\r\n";
     str += "\r\n";
-    str += "serviceOperation     = operationKind identifier\r\n";
-    str += "                       \"(\" [ parameter *(\",\" parameter) ] \")\"\r\n";
-    str += "                       [ \":\" typeReference ]\r\n";
+    str += "serviceOperation     = operationKind RWS identifier\r\n";
+    str += "                       OWS \"(\" OWS [ parameter *(OWS \",\" OWS parameter) ] OWS \")\" OWS\r\n";
+    str += "                       [ OWS \":\" OWS typeReference ]\r\n";
     str += "\r\n";
     str += "\r\n";
     str += ";----------------------------\r\n";
@@ -629,6 +672,10 @@ module.exports = function grammar(){
     str += "DQUOTE              = %x22              ; \"\r\n";
     str += "\r\n";
     str += "ESCAPE              = %x5C              ; \\\r\n";
+    str += "\r\n";
+    str += "OWS                 = *WS\r\n";
+    str += "RWS                 = 1*WS\r\n";
+    str += "WS                  = %x08 / %x10 / %x13 / %x20 ; TAB, LF, CR, SPACE\r\n";
     return str;
   }
 }
