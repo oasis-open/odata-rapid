@@ -36,13 +36,13 @@ npm run test
 
 ## TODO
 
-- [ ] Decide whether to stop here, or continue
+- [ ] Decide how to continue
 
 Options
 
 - [ ] keep ABNF as is, without whitespace definition as a "logical" grammar
-- [ ] make it a "full"" grammar by sprinkling it with RWS (required whitespace) and OWS (optional whitespace), and accept decreased readability
+- [ ] make it a full grammar by sprinkling it with RWS (required whitespace) and OWS (optional whitespace), and accept decreased readability
 - [ ] Generate AST-like representation from input text to further test semantic correctness of grammar, which could be
   - "pretty-printed" input - easy to read and write
-  - some tbd JSON or YAML representation - easy to compare, or
+  - some tbd JSON or YAML representation - easy to compare
   - CSDL JSON or XML, in which case we have built another RSDL parser
