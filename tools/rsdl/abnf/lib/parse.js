@@ -2,8 +2,9 @@ const fs = require("fs");
 const YAML = require("yaml");
 const colors = require("colors/safe");
 const { apgLib } = require("apg-js");
-const { parser: Parser, ast: AST, utils, trace: Trace } = apgLib;
+const { parser: Parser, ast: AST, ids, utils, trace: Trace } = apgLib;
 const Grammar = require("./grammar");
+const assert = require("assert");
 
 const parser = new Parser();
 const grammar = new Grammar();
@@ -14,11 +15,31 @@ const grammar = new Grammar();
 // trace.filter.rules["<ALL>"] = true;
 // trace.filter.operators["<ALL>"] = true;
 
-// const ast = new AST();
-// parser.ast = ast;
+const ast = new AST();
+parser.ast = ast;
 // define callbacks, see https://github.com/ldthomas/apg-js2-examples/blob/61a36fd963ba544c0630a533c053f60d18d878d2/ast/setup.js#L29-L74
+function rulenameCB(rulename) {
+  return (state, chars, phraseIndex, phraseLength, data) => {
+    if (state === ids.SEM_PRE) data.push(rulename);
+    return ids.SEM_OK;
+  };
+}
+function defaultCB(state, chars, phraseIndex, phraseLength, data) {
+  if (state === ids.SEM_PRE)
+    data.push(utils.charsToString(chars, phraseIndex, phraseLength));
+  return ids.SEM_OK;
+}
+function skipCB(state, chars, phraseIndex, phraseLength, data) {
+  if (state === ids.SEM_PRE)
+    data.push(utils.charsToString(chars, phraseIndex, phraseLength));
+  return ids.SEM_SKIP;
+}
+parser.ast.callbacks["service"] = rulenameCB("service");
+parser.ast.callbacks["singleton"] = rulenameCB("singleton");
+parser.ast.callbacks["identifier"] = skipCB;
+parser.ast.callbacks["qualifiedName"] = skipCB;
 
-function parse(inputString, failAt) {
+function parse(inputString, failAt, expect) {
   inputCharacterCodes = utils.stringToChars(inputString);
 
   const result = parser.parse(grammar, 0, inputCharacterCodes);
@@ -27,9 +48,22 @@ function parse(inputString, failAt) {
     console.log(`${colors.green("OK:")} ${inputString}`);
 
     //TODO: check parse result
-    // const foo = {};
-    // ast.translate(foo);
-    // console.dir(foo);
+    if (expect) {
+      const data = [];
+      ast.translate(data);
+      // console.dir(data);
+      try {
+        assert.deepStrictEqual(data, expect);
+      } catch (e) {
+        console.log(
+          e.message.replace(
+            /^Expected values to be strictly deep-equal/,
+            colors.red("Unexpected tokens")
+          )
+        );
+        return false;
+      }
+    }
     return true;
   }
 
@@ -66,7 +100,8 @@ const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 
 let successes = 0;
 for (const tc of testCases) {
-  if (parse(tc.input, tc.failAt)) successes++;
+  //TODO: just pass tc?
+  if (parse(tc.input, tc.failAt, tc.expect)) successes++;
 }
 
 if (successes === testCases.length) {
