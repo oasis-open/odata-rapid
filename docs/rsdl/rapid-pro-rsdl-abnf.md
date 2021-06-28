@@ -159,5 +159,5 @@ ESCAPE              = %x5C              ; \
 
 OWS                 = *WS
 RWS                 = 1*WS
-WS                  = %x08 / %x10 / %x13 / %x20 ; TAB, LF, CR, SPACE
+WS                  = %x8 / %xA / %xD / %x20 ; TAB, LF, CR, SPACE
 ```

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const YAML = require("yaml");
 const { apgLib } = require("apg-js");
 const { parser: Parser, ast: AST, utils, trace: Trace } = apgLib;
 const Grammar = require("./grammar");
@@ -45,15 +46,16 @@ function parse(inputString, failAt) {
     Number.isInteger(failAt) && result.maxMatched != failAt
       ? ` instead of ${failAt}`
       : "";
-  console.error(`KO: ${inputString} fails at ${result.maxMatched}${instead}`);
-  console.error(`    ${" ".repeat(result.maxMatched)}^`);
+  console.error(
+    `KO: ${inputString.substr(0, result.maxMatched)}-->${inputString.substr(
+      result.maxMatched
+    )} fails at ${result.maxMatched}${instead}`
+  );
   return false;
 }
 
 //TODO: parameterize
-const testCaseData = fs.readFileSync("./rsdl-testcases.jsonc", "utf8");
-const noComment = new RegExp("//(.*)", "g");
-const testCases = JSON.parse(testCaseData.replace(noComment, ""));
+const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 
 let successes = 0;
 for (const tc of testCases) {

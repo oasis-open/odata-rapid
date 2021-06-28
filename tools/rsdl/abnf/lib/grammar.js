@@ -524,8 +524,8 @@ module.exports = function grammar(){
   this.rules[43].opcodes = [];
   this.rules[43].opcodes[0] = {type: 1, children: [1,2,3,4]};// ALT
   this.rules[43].opcodes[1] = {type: 6, string: [8]};// TBS
-  this.rules[43].opcodes[2] = {type: 6, string: [16]};// TBS
-  this.rules[43].opcodes[3] = {type: 6, string: [19]};// TBS
+  this.rules[43].opcodes[2] = {type: 6, string: [10]};// TBS
+  this.rules[43].opcodes[3] = {type: 6, string: [13]};// TBS
   this.rules[43].opcodes[4] = {type: 6, string: [32]};// TBS
 
   // The `toString()` function will display the original grammar file(s) that produced these opcodes.
@@ -675,7 +675,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "OWS                 = *WS\r\n";
     str += "RWS                 = 1*WS\r\n";
-    str += "WS                  = %x08 / %x10 / %x13 / %x20 ; TAB, LF, CR, SPACE\r\n";
+    str += "WS                  = %x8 / %xA / %xD / %x20 ; TAB, LF, CR, SPACE\r\n";
     return str;
   }
 }
