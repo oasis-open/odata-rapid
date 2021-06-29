@@ -5,7 +5,7 @@ sidebar_label: Actions and Functions
 ---
 
 Although a pure REST service would perform operations through manipulating the state of resources, 
-we have found many services require the ability to encapsulate complex processing logic into atomic operations. 
+we have found that many services require the ability to encapsulate complex processing logic into atomic operations. 
 Rather than requiring services to expose a separate endpoint for such business logic,
 RAPID allows services to support Operations. 
 Operations are exposed as resources at the root of the service or "bound" to the resource on which they operate.
@@ -18,7 +18,7 @@ Operations include Actions and Functions.
 
 ## Actions
 
-Actions may have side-affects, are invoked using `POST`, and have parameters specified in the body.
+Actions may have side effects, are invoked using `POST`, and have parameters specified in the body.
 
 | Template | POST {resource-path}/{actionName}                       |
 | -------- | :------------------------------------------------------- |
@@ -34,7 +34,7 @@ Actions may have side-affects, are invoked using `POST`, and have parameters spe
 
 ## Functions
 
-Functions are invoked using `GET` and must be non-side affecting. 
+Functions are invoked using `GET` and must have no side effects. 
 Parameters are passed to functions as query options:
 
 | Template | GET {resource-path}/{functionName}?{@param=value...}                 |
