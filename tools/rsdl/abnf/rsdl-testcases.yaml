@@ -2,6 +2,10 @@
 - source: "namespace foo\n" # whitespace required after namespace identifier
   tokens: [namespace, foo]
 - source: |
+    include "./foo" as foo
+    include "../b\\a\"r.rsdl" as bar
+  tokens: [include, foo, include, bar] # TODO: included filename as token? --> filename rule
+- source: |
     enum color{red green blue}
     flags CRUD { C R  U   D }
   tokens: [enumType, color, red, green, blue, enumType, CRUD, C, R, U, D]
