@@ -59,7 +59,7 @@ service {
 }
 ```
 
-For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md)
+For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md).
 
 This simple design time syntax is converted to a runtime service description that client applications and tooling can use to interact with the service.
 
@@ -94,13 +94,15 @@ RAPID uses standard GET, POST, PATCH, and DELETE requests to retrieve and update
 
 ### Retrieving a Resource
 
-RAPID services support retrieving a resource using the GET method:
+RAPID services support retrieving a resource using the GET method.
 
 | Template    | GET {resource-path}                                                             |
 | ----------- | :------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company) |
 
 RAPID services return individual resources as a json object.
+
+**Body:**
 
 ```json
 {
@@ -143,12 +145,12 @@ For details on modifying data in RAPID, see [Modifying Resources in RAPID](./rap
 
 ## Optional Features
 
-Although RAPID services can be very simple, because they follow core patterns they can be extended using optional Features,
-as appropriate, to support more advanced scenarios such as those described in [RAPID Features](./spec/rapid-pro-features.md).
+Although RAPID services can be very simple because they follow core patterns, they can be extended using optional Features
+to support more advanced scenarios such as those described in [RAPID Features](./spec/rapid-pro-features.md).
 
 ## RAPID and OpenAPI
 
-OpenAPI is an extremely popular specification for documenting a REST API. 
+[OpenAPI](https://www.openapis.org/) is an extremely popular specification for documenting a REST API. 
 Because the RAPID profile builds upon REST, it is natural and encouraged for RAPID services to support OpenAPI.
 
 As the RAPID service description defines a superset of what a service might want to document through OpenAPI, 
@@ -163,6 +165,6 @@ A RAPID service can easily support generic OData V4 clients by:
 - Supporting OData calling conventions
 - Following OData JSON conventions for OData V4 Clients
 
-RAPID services MAY support any additional conventions defined in the OData specification as appropriate to the service.
+RAPID services _may_ support any additional conventions defined in the OData specification as appropriate to the service.
 
-For more information on how RAPID works with OData services, see [RAPID and OData](./related/rapid-pro-odata.md)
+For more information on how RAPID works with OData services, see [RAPID and OData](./related/rapid-pro-odata.md).
