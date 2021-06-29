@@ -50,6 +50,7 @@ Negative test cases fail if `source` _can_ be parsed, or if it cannot be parsed 
 
 ## TODO
 
+- [x] measure rule coverage
+- [ ] cover all rules
 - [ ] ABNF: add `RWS` (required whitespace) where necessary, and `OWS` (optional whitespace) where desired
 - [ ] tokens array: add all necessary keywords, identifiers, ...
-- [ ] measure rule coverage

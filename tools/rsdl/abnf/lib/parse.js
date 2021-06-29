@@ -9,6 +9,16 @@ const assert = require("assert");
 const parser = new Parser();
 const grammar = new Grammar();
 
+// set a call back for every rule to measure rule coverage
+function touchedCB(result, chars, phraseIndex, data) {
+  if (result.state === ids.MATCH) data.rulesTouched[result.ruleIndex] = true;
+}
+const rulesTouched = [];
+rulesTouched.length = grammar.rules.length;
+grammar.rules.forEach((rule) => {
+  parser.callbacks[rule.lower] = touchedCB;
+});
+
 // const trace = new Trace();
 // parser.trace = trace;
 // /* trace all rules and operators */
@@ -46,7 +56,9 @@ function skipCB(state, chars, phraseIndex, phraseLength, data) {
 function parse(inputString, failAt, expect) {
   inputCharacterCodes = utils.stringToChars(inputString);
 
-  const result = parser.parse(grammar, 0, inputCharacterCodes);
+  const result = parser.parse(grammar, 0, inputCharacterCodes, {
+    rulesTouched,
+  });
 
   if (result.success && failAt == null) {
     console.log(`${colors.green("OK:")} ${inputString}`);
@@ -102,14 +114,32 @@ const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 
 let successes = 0;
 for (const tc of testCases) {
-  //TODO: just pass tc?
   if (parse(tc.source, tc.failAt, tc.tokens)) successes++;
 }
 
 if (successes === testCases.length) {
+  let touched = 0;
+  const untouched = [];
+  for (const [i, t] of rulesTouched.entries()) {
+    if (t) ++touched;
+    else untouched.push(grammar.rules[i].name);
+  }
+  const touchedText =
+    touched == grammar.rules.length
+      ? `all`
+      : `${touched} of ${grammar.rules.length}`;
+
   console.log(
-    colors.green(`\nSuccess: all ${testCases.length} test cases passed`)
+    colors.green(
+      `\nSuccess: all ${testCases.length} test cases passed, touched ${touchedText} rules`
+    )
   );
+
+  if (touched < grammar.rules.length) {
+    console.log(
+      colors.yellow(`\nUntouched rules:\n - ${untouched.join("\n - ")}`)
+    );
+  }
 } else {
   const failed = testCases.length - successes;
   console.log(
