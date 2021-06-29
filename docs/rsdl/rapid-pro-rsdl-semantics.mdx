@@ -61,47 +61,7 @@ The model's
 A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType) or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType).
 
 A structured type with one or more properties marked with `key` is mapped to an entity type.
-And respectively a structured type without `key` properties is mapped to a complex type.
-
-### Structured Types without `key` Properties
-
-```
-type Name {
-  firstName : String
-  lastName: String
-}
-```
-
-<Tabs
-  defaultValue="json"
-  groupId="csdl"
-  values={[
-    { label: 'JSON', value: 'json', },
-    { label: 'XML', value: 'xml', },
-  ]
-}>
-<TabItem value="json">
-
-```json
-"Name": {
-  "$Kind": "ComplexType",
-  "firstName": { "$Type": "Edm.String" },
-  "lastName": { "$Type": "Edm.String" }
-}
-```
-
-</TabItem>
-<TabItem value="xml">
-
-```xml
-<ComplexType Name="Name">
-  <Property Name="firstName" Type="Edm.String" Nullable="false" />
-  <Property Name="lastName" Type="Edm.String" Nullable="false" />
-</ComplexType>
-```
-
-</TabItem>
-</Tabs>
+Correspondingly, a structured type without `key` properties is mapped to a complex type.
 
 ### Structured Types with `key` Properties
 
@@ -147,11 +107,51 @@ type Employee {
 </TabItem>
 </Tabs>
 
+### Structured Types without `key` Properties
+
+```
+type Name {
+  firstName : String
+  lastName: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Name": {
+  "$Kind": "ComplexType",
+  "firstName": { "$Type": "Edm.String" },
+  "lastName": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Name">
+  <Property Name="firstName" Type="Edm.String" Nullable="false" />
+  <Property Name="lastName" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
 ### Properties
 
 The properties of a type definition are mapped to either a Property or a NavigationProperty depending on the property's type.
 
-In the following example lets assume, name is mapped to a complete type and employee is mapped to a entity type.
+In the following example, let's assume name is mapped to a complex type and employee is mapped to a entity type.
 
 ```
 type Company {
@@ -205,8 +205,8 @@ type Company {
 
 The type of a property is one of:
 
-- one of the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
-- any of the primitive EDM type listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
+- the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
+- the primitive EDM types listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
 - the structured or enumeration types defined in the model
 
 Each of these named types can be marked as
@@ -319,7 +319,7 @@ type Employee {
 </TabItem>
 </Tabs>
 
-#### Function Return Type
+#### Function Return Types
 
 The return type of a function is mapped similar to a property type with the same semantic for `[` `]` and `?`.
 
@@ -434,7 +434,7 @@ type Employee {
 
 ## Enumeration Types
 
-A [Enumeration Type](./rapid-pro-rsdl-abnf.md#enumeration-type) is mapped to an CSDL EnumType. The enumeration members values are automatically assigned.
+An [Enumeration Type](./rapid-pro-rsdl-abnf.md#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
 
 ```json
 enum employmentType { salaried hourly }
@@ -473,8 +473,8 @@ enum employmentType { salaried hourly }
 
 ## Flag Types
 
-A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`
-The members values are automatically assigned to powers of 2.
+A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
+The members' values are automatically assigned to powers of 2.
 
 ```json
 flags PhoneService { LandLine Cell Fax Internet Other }
@@ -594,7 +594,7 @@ service {
 
 If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL),
 the appropriate navigation property bindings get created.
-In below example, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
+In the example below, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
 The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
 
 ```
@@ -642,7 +642,7 @@ service {
 </TabItem>
 </Tabs>
 
-### Single-valued Service Member
+### Single-Valued Service Member
 
 A service member of a single-value type gets mapped to a CSDL singleton.
 
