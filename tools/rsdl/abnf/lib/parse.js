@@ -24,9 +24,7 @@ function rulenameCB(rulename) {
     return ids.SEM_OK;
   };
 }
-function defaultCB(state, chars, phraseIndex, phraseLength, data) {
-  if (state === ids.SEM_PRE)
-    data.push(utils.charsToString(chars, phraseIndex, phraseLength));
+function noopCB(state, chars, phraseIndex, phraseLength, data) {
   return ids.SEM_OK;
 }
 function skipCB(state, chars, phraseIndex, phraseLength, data) {
@@ -34,10 +32,16 @@ function skipCB(state, chars, phraseIndex, phraseLength, data) {
     data.push(utils.charsToString(chars, phraseIndex, phraseLength));
   return ids.SEM_SKIP;
 }
-parser.ast.callbacks["service"] = rulenameCB("service");
-parser.ast.callbacks["singleton"] = rulenameCB("singleton");
-parser.ast.callbacks["identifier"] = skipCB;
-parser.ast.callbacks["qualifiedName"] = skipCB;
+//TODO: move these arrays to a config file
+["service", "entitySet", "singleton"].forEach(
+  (ruleName) => (ast.callbacks[ruleName] = rulenameCB(ruleName))
+);
+["identifier", "qualifiedName", "operationKind", "typeReference"].forEach(
+  (ruleName) => (ast.callbacks[ruleName] = skipCB)
+);
+// ["typeReference"].forEach(
+//   (ruleName) => (parser.ast.callbacks[ruleName] = noopCB)
+// );
 
 function parse(inputString, failAt, expect) {
   inputCharacterCodes = utils.stringToChars(inputString);
@@ -99,7 +103,7 @@ const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 let successes = 0;
 for (const tc of testCases) {
   //TODO: just pass tc?
-  if (parse(tc.input, tc.failAt, tc.expect)) successes++;
+  if (parse(tc.source, tc.failAt, tc.tokens)) successes++;
 }
 
 if (successes === testCases.length) {

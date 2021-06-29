@@ -22,7 +22,7 @@ Run [JavaScript APG](https://github.com/ldthomas/apg-js) parser generator - test
 npm run generate-grammar
 ```
 
-Run parser on test input - tests the semantic correctness of our grammar to some extent
+Run parser on [test cases](./rsdl-testcases.yaml) - tests the semantic correctness of [`rsdl.abnf`](./rsdl.abnf) (to some extent)
 
 ```sh
 npm run parse-testcases
@@ -34,15 +34,22 @@ Run all of the above
 npm run test
 ```
 
+## Test case format
+
+Test cases are defined in [`rsdl-testcases.yaml`](./rsdl-testcases.yaml). The file is an array of objects, each defining a test case.
+
+A test case consists of
+
+- `source` - the source text to parse, can be multi-line
+- `tokens` (optional) - an array of tokens to be produced by the parser for a positive test case
+- `failAt` (optional) - the position at which the parser should fail for a negative test case
+
+Positive test cases fail if `source` cannot be parsed, or if the produced list of tokens differs from the provided `tokens`.
+
+Negative test cases fail if `source` _can_ be parsed, or if it cannot be parsed and fails at a position other than `failAt`.
+
 ## TODO
 
-- [ ] Decide how to continue
-
-Options
-
-- [ ] keep ABNF as is, without whitespace definition as a "logical" grammar
-- [ ] make it a full grammar by sprinkling it with RWS (required whitespace) and OWS (optional whitespace), and accept decreased readability
-- [ ] Generate AST-like representation from input text to further test semantic correctness of grammar, which could be
-  - "pretty-printed" input - easy to read and write
-  - some tbd JSON or YAML representation - easy to compare
-  - CSDL JSON or XML, in which case we have built another RSDL parser
+- [ ] ABNF: add `RWS` (required whitespace) where necessary, and `OWS` (optional whitespace) where desired
+- [ ] tokens array: add all necessary keywords, identifiers, ...
+- [ ] measure rule coverage

@@ -32,21 +32,21 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ```ABNF
 model                = [ namespace ] *include *modelElement
 
-namespace            = %s"namespace" qualifiedName
+namespace            = %s"namespace" RWS qualifiedName
 
-include              = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
+include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier
 
-modelElement         = structuredType / enumType / typeDefinition / service
+modelElement         = ( structuredType / enumType / typeDefinition / service )
 ```
 
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" ] %s"type" identifier [ %s"extends" qualifiedName ] "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" OWS *structuredTypeMember OWS "}" OWS
 
 structuredTypeMember = property / operation ; property, action, or function
 
-property             = annotations [propertyModifier] identifier ":" typeReference
+property             = annotations [propertyModifier RWS] identifier OWS ":" OWS typeReference
 
 propertyModifier     = %s"key"
 
@@ -55,8 +55,8 @@ typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
 
 builtInType          = %s"Boolean"
-                     / %s"Date"
                      / %s"DateTime"
+                     / %s"Date"
                      / %s"Decimal" [ "(" precision "," scale ")"]
                      / %s"Double"
                      / %s"Duration"
@@ -70,7 +70,7 @@ operation            = annotations operationKind identifier
 
 operationKind        = %s"action" / %s"function"
 
-parameter            = annotations identifier ":" typeReference
+parameter            = annotations identifier OWS ":" OWS typeReference
 ```
 
 ### Enumeration Type
@@ -99,14 +99,14 @@ entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
 singleton            = identifier OWS ":" OWS qualifiedName
 
 serviceOperation     = operationKind RWS identifier
-                       OWS "(" OWS [ parameter *(OWS "," OWS parameter) ] OWS ")" OWS
+                       OWS "(" OWS [ parameter *(OWS "," OWS parameter) OWS ] ")"
                        [ OWS ":" OWS typeReference ]
 ```
 
 ### Annotations
 
 ```ABNF
-annotations          = 1*annotation
+annotations          = *annotation
 
 annotation           = "@" qualifiedName ":" annotationValue
 
