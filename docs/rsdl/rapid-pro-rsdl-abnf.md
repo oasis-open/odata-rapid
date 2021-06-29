@@ -52,7 +52,7 @@ propertyModifier     = %s"key"
 
 typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
+typeName             = builtInType / edmType / qualifiedName
 
 builtInType          = %s"Boolean"
                      / %s"DateTime"
@@ -63,6 +63,8 @@ builtInType          = %s"Boolean"
                      / %s"Integer"
                      / %s"String" [ "(" maxLength ")" ]
                      / %s"TimeOfDay"
+
+edmType              = %s"Edm" "." identifier
 
 operation            = annotations operationKind identifier
                        "(" [ parameter *("," parameter) ] ")"
@@ -84,7 +86,7 @@ enumMember           = identifier
 ### Type Definition
 
 ```ABNF
-typeDefinition       = annotations %s"typedef" identifier ":" ( builtInType / %s"Edm" "." identifier )
+typeDefinition       = annotations %s"typedef" RWS identifier OWS ":" OWS ( builtInType / edmType )
 ```
 
 ### Service

@@ -43,12 +43,17 @@ function skipCB(state, chars, phraseIndex, phraseLength, data) {
   return ids.SEM_SKIP;
 }
 //TODO: move these arrays to a config file
-["service", "entitySet", "singleton"].forEach(
+["entitySet", "service", "singleton", "typeDefinition"].forEach(
   (ruleName) => (ast.callbacks[ruleName] = rulenameCB(ruleName))
 );
-["identifier", "qualifiedName", "operationKind", "typeReference"].forEach(
-  (ruleName) => (ast.callbacks[ruleName] = skipCB)
-);
+[
+  "builtInType",
+  "edmType",
+  "identifier",
+  "operationKind",
+  "qualifiedName",
+  "typeReference",
+].forEach((ruleName) => (ast.callbacks[ruleName] = skipCB));
 // ["typeReference"].forEach(
 //   (ruleName) => (parser.ast.callbacks[ruleName] = noopCB)
 // );

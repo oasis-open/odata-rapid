@@ -1,6 +1,10 @@
 # test cases for rsdl.abnf
+- source: "typedef foo:String(10)"
+  tokens: [typeDefinition, foo, "String(10)"] # parsed tokens
+- source: "typedef foo:Edm.Byte"
+  tokens: [typeDefinition, foo, "Edm.Byte"] # parsed tokens
 - source: "service{foo:bar}"
-  tokens: [service, singleton, foo, bar] # parsed tokens
+  tokens: [service, singleton, foo, bar]
 - source: "servicex{foo:bar}"
   failAt: 7 # whitespace required before service identifier
 - source: "service x { foo : bar }"
