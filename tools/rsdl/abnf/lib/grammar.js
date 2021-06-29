@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 45
   //       udts = 0
-  //    opcodes = 343
+  //    opcodes = 346
   //        ---   ABNF original opcodes
   //        ALT = 16
-  //        CAT = 52
+  //        CAT = 53
   //        REP = 42
-  //        RNM = 146
+  //        RNM = 148
   //        TLS = 49
   //        TBS = 32
   //        TRG = 6
@@ -84,20 +84,22 @@ module.exports = function grammar(){
   /* OPCODES */
   /* model */
   this.rules[0].opcodes = [];
-  this.rules[0].opcodes[0] = {type: 2, children: [1,2,4,6,13]};// CAT
+  this.rules[0].opcodes[0] = {type: 2, children: [1,2,6,8,15]};// CAT
   this.rules[0].opcodes[1] = {type: 4, index: 42};// RNM(OWS)
   this.rules[0].opcodes[2] = {type: 3, min: 0, max: 1};// REP
-  this.rules[0].opcodes[3] = {type: 4, index: 1};// RNM(namespace)
-  this.rules[0].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[0].opcodes[5] = {type: 4, index: 2};// RNM(include)
-  this.rules[0].opcodes[6] = {type: 3, min: 0, max: 1};// REP
-  this.rules[0].opcodes[7] = {type: 2, children: [8,9]};// CAT
-  this.rules[0].opcodes[8] = {type: 4, index: 3};// RNM(modelElement)
-  this.rules[0].opcodes[9] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[0].opcodes[10] = {type: 2, children: [11,12]};// CAT
-  this.rules[0].opcodes[11] = {type: 4, index: 43};// RNM(RWS)
-  this.rules[0].opcodes[12] = {type: 4, index: 3};// RNM(modelElement)
-  this.rules[0].opcodes[13] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[0].opcodes[3] = {type: 2, children: [4,5]};// CAT
+  this.rules[0].opcodes[4] = {type: 4, index: 1};// RNM(namespace)
+  this.rules[0].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[0].opcodes[6] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[0].opcodes[7] = {type: 4, index: 2};// RNM(include)
+  this.rules[0].opcodes[8] = {type: 3, min: 0, max: 1};// REP
+  this.rules[0].opcodes[9] = {type: 2, children: [10,11]};// CAT
+  this.rules[0].opcodes[10] = {type: 4, index: 3};// RNM(modelElement)
+  this.rules[0].opcodes[11] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[0].opcodes[12] = {type: 2, children: [13,14]};// CAT
+  this.rules[0].opcodes[13] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[0].opcodes[14] = {type: 4, index: 3};// RNM(modelElement)
+  this.rules[0].opcodes[15] = {type: 4, index: 42};// RNM(OWS)
 
   /* namespace */
   this.rules[1].opcodes = [];
@@ -108,7 +110,7 @@ module.exports = function grammar(){
 
   /* include */
   this.rules[2].opcodes = [];
-  this.rules[2].opcodes[0] = {type: 2, children: [1,2,3,4,6,7,8,9,10]};// CAT
+  this.rules[2].opcodes[0] = {type: 2, children: [1,2,3,4,6,7,8,9,10,11]};// CAT
   this.rules[2].opcodes[1] = {type: 6, string: [105,110,99,108,117,100,101]};// TBS
   this.rules[2].opcodes[2] = {type: 4, index: 43};// RNM(RWS)
   this.rules[2].opcodes[3] = {type: 4, index: 40};// RNM(DQUOTE)
@@ -119,6 +121,7 @@ module.exports = function grammar(){
   this.rules[2].opcodes[8] = {type: 6, string: [97,115]};// TBS
   this.rules[2].opcodes[9] = {type: 4, index: 43};// RNM(RWS)
   this.rules[2].opcodes[10] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[2].opcodes[11] = {type: 4, index: 43};// RNM(RWS)
 
   /* modelElement */
   this.rules[3].opcodes = [];
@@ -572,11 +575,11 @@ module.exports = function grammar(){
     str += ";  Model\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "model                = OWS [ namespace ] *include [ modelElement *( RWS modelElement ) ] OWS\r\n";
+    str += "model                = OWS [ namespace RWS ] *include [ modelElement *( RWS modelElement ) ] OWS\r\n";
     str += "\r\n";
     str += "namespace            = %s\"namespace\" RWS qualifiedName\r\n";
     str += "\r\n";
-    str += "include              = %s\"include\" RWS DQUOTE 1*CHAR DQUOTE RWS %s\"as\" RWS identifier\r\n";
+    str += "include              = %s\"include\" RWS DQUOTE 1*CHAR DQUOTE RWS %s\"as\" RWS identifier RWS\r\n";
     str += "\r\n";
     str += "modelElement         = ( structuredType / enumType / typeDefinition / service )\r\n";
     str += "\r\n";

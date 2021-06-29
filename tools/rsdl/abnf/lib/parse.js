@@ -46,6 +46,7 @@ function skipCB(state, chars, phraseIndex, phraseLength, data) {
 [
   "entitySet",
   "enumType",
+  "namespace",
   "service",
   "singleton",
   "structuredType",

@@ -30,11 +30,11 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ### Model
 
 ```ABNF
-model                = OWS [ namespace ] *include [ modelElement *( RWS modelElement ) ] OWS
+model                = OWS [ namespace RWS ] *include [ modelElement *( RWS modelElement ) ] OWS
 
 namespace            = %s"namespace" RWS qualifiedName
 
-include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier
+include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier RWS
 
 modelElement         = ( structuredType / enumType / typeDefinition / service )
 ```
