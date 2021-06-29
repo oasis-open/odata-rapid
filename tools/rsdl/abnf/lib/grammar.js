@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 45
   //       udts = 0
-  //    opcodes = 346
+  //    opcodes = 355
   //        ---   ABNF original opcodes
   //        ALT = 16
-  //        CAT = 53
+  //        CAT = 54
   //        REP = 42
-  //        RNM = 148
+  //        RNM = 156
   //        TLS = 49
   //        TBS = 32
   //        TRG = 6
@@ -133,7 +133,7 @@ module.exports = function grammar(){
 
   /* structuredType */
   this.rules[4].opcodes = [];
-  this.rules[4].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,14,15,16,17,19,20]};// CAT
+  this.rules[4].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,14,15,16,20,21]};// CAT
   this.rules[4].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[4].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[4].opcodes[3] = {type: 2, children: [4,5]};// CAT
@@ -149,11 +149,12 @@ module.exports = function grammar(){
   this.rules[4].opcodes[13] = {type: 4, index: 28};// RNM(qualifiedName)
   this.rules[4].opcodes[14] = {type: 4, index: 42};// RNM(OWS)
   this.rules[4].opcodes[15] = {type: 7, string: [123]};// TLS
-  this.rules[4].opcodes[16] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[4].opcodes[17] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[4].opcodes[18] = {type: 4, index: 5};// RNM(structuredTypeMember)
-  this.rules[4].opcodes[19] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[4].opcodes[20] = {type: 7, string: [125]};// TLS
+  this.rules[4].opcodes[16] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[4].opcodes[17] = {type: 2, children: [18,19]};// CAT
+  this.rules[4].opcodes[18] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[4].opcodes[19] = {type: 4, index: 5};// RNM(structuredTypeMember)
+  this.rules[4].opcodes[20] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[4].opcodes[21] = {type: 7, string: [125]};// TLS
 
   /* structuredTypeMember */
   this.rules[5].opcodes = [];
@@ -236,24 +237,32 @@ module.exports = function grammar(){
 
   /* operation */
   this.rules[12].opcodes = [];
-  this.rules[12].opcodes[0] = {type: 2, children: [1,2,3,4,5,12,13]};// CAT
+  this.rules[12].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7,8,18,19]};// CAT
   this.rules[12].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[12].opcodes[2] = {type: 4, index: 13};// RNM(operationKind)
-  this.rules[12].opcodes[3] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[12].opcodes[4] = {type: 7, string: [40]};// TLS
-  this.rules[12].opcodes[5] = {type: 3, min: 0, max: 1};// REP
-  this.rules[12].opcodes[6] = {type: 2, children: [7,8]};// CAT
-  this.rules[12].opcodes[7] = {type: 4, index: 14};// RNM(parameter)
-  this.rules[12].opcodes[8] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[12].opcodes[9] = {type: 2, children: [10,11]};// CAT
-  this.rules[12].opcodes[10] = {type: 7, string: [44]};// TLS
-  this.rules[12].opcodes[11] = {type: 4, index: 14};// RNM(parameter)
-  this.rules[12].opcodes[12] = {type: 7, string: [41]};// TLS
-  this.rules[12].opcodes[13] = {type: 3, min: 0, max: 1};// REP
-  this.rules[12].opcodes[14] = {type: 2, children: [15,16,17]};// CAT
-  this.rules[12].opcodes[15] = {type: 7, string: [58]};// TLS
-  this.rules[12].opcodes[16] = {type: 4, index: 23};// RNM(annotations)
-  this.rules[12].opcodes[17] = {type: 4, index: 8};// RNM(typeReference)
+  this.rules[12].opcodes[3] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[12].opcodes[4] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[12].opcodes[5] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[6] = {type: 7, string: [40]};// TLS
+  this.rules[12].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[8] = {type: 3, min: 0, max: 1};// REP
+  this.rules[12].opcodes[9] = {type: 2, children: [10,11,17]};// CAT
+  this.rules[12].opcodes[10] = {type: 4, index: 14};// RNM(parameter)
+  this.rules[12].opcodes[11] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[12].opcodes[12] = {type: 2, children: [13,14,15,16]};// CAT
+  this.rules[12].opcodes[13] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[14] = {type: 7, string: [44]};// TLS
+  this.rules[12].opcodes[15] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[16] = {type: 4, index: 14};// RNM(parameter)
+  this.rules[12].opcodes[17] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[18] = {type: 7, string: [41]};// TLS
+  this.rules[12].opcodes[19] = {type: 3, min: 0, max: 1};// REP
+  this.rules[12].opcodes[20] = {type: 2, children: [21,22,23,24,25]};// CAT
+  this.rules[12].opcodes[21] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[22] = {type: 7, string: [58]};// TLS
+  this.rules[12].opcodes[23] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[24] = {type: 4, index: 23};// RNM(annotations)
+  this.rules[12].opcodes[25] = {type: 4, index: 8};// RNM(typeReference)
 
   /* operationKind */
   this.rules[13].opcodes = [];
@@ -588,7 +597,7 @@ module.exports = function grammar(){
     str += ";  Structured Type\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "structuredType       = annotations [ %s\"abstract\" RWS ] %s\"type\" RWS identifier [ %s\"extends\" RWS qualifiedName ] OWS \"{\" OWS *structuredTypeMember OWS \"}\"\r\n";
+    str += "structuredType       = annotations [ %s\"abstract\" RWS ] %s\"type\" RWS identifier [ %s\"extends\" RWS qualifiedName ] OWS \"{\" *( OWS structuredTypeMember ) OWS \"}\"\r\n";
     str += "\r\n";
     str += "structuredTypeMember = property / operation ; property, action, or function\r\n";
     str += "\r\n";
@@ -612,9 +621,9 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "edmType              = %s\"Edm\" \".\" identifier\r\n";
     str += "\r\n";
-    str += "operation            = annotations operationKind identifier\r\n";
-    str += "                       \"(\" [ parameter *(\",\" parameter) ] \")\"\r\n";
-    str += "                       [ \":\" annotations typeReference ]\r\n";
+    str += "operation            = annotations operationKind RWS identifier OWS\r\n";
+    str += "                       \"(\" OWS [ parameter *( OWS \",\" OWS parameter) OWS ] \")\"\r\n";
+    str += "                       [ OWS \":\" OWS annotations typeReference ]\r\n";
     str += "\r\n";
     str += "operationKind        = %s\"action\" / %s\"function\"\r\n";
     str += "\r\n";

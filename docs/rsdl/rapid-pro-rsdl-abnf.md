@@ -42,7 +42,7 @@ modelElement         = ( structuredType / enumType / typeDefinition / service )
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" OWS *structuredTypeMember OWS "}"
+structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" *( OWS structuredTypeMember ) OWS "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
@@ -66,9 +66,9 @@ builtInType          = %s"Boolean"
 
 edmType              = %s"Edm" "." identifier
 
-operation            = annotations operationKind identifier
-                       "(" [ parameter *("," parameter) ] ")"
-                       [ ":" annotations typeReference ]
+operation            = annotations operationKind RWS identifier OWS
+                       "(" OWS [ parameter *( OWS "," OWS parameter) OWS ] ")"
+                       [ OWS ":" OWS annotations typeReference ]
 
 operationKind        = %s"action" / %s"function"
 

@@ -138,7 +138,7 @@ if (successes === testCases.length) {
   }
   const touchedText =
     touched == grammar.rules.length
-      ? `all`
+      ? `all ${grammar.rules.length}`
       : `${touched} of ${grammar.rules.length}`;
 
   console.log(

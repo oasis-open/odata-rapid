@@ -5,6 +5,20 @@
     include "./foo" as foo
     include "../b\\a\"r.rsdl" as bar
   tokens: [include, foo, include, bar] # TODO: included filename as token? --> filename rule
+- source: "type foo{bar:baz}"
+  tokens: [structuredType, foo, bar, baz]
+- source: |
+    type foo {
+      key bar : Integer
+          baz : TimeOfDay
+    }
+  tokens: [structuredType, foo, bar, Integer, baz, TimeOfDay] # TODO: include key?
+- source: |
+    type foo {
+      action a()
+      function f(g:h) : TimeOfDay
+    }
+  tokens: [structuredType, foo, action, a, function, f, g, h, TimeOfDay] # TODO: include key?
 - source: |
     enum color{red green blue}
     flags CRUD { C R  U   D }
