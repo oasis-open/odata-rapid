@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 45
   //       udts = 0
-  //    opcodes = 333
+  //    opcodes = 343
   //        ---   ABNF original opcodes
   //        ALT = 16
-  //        CAT = 49
-  //        REP = 41
-  //        RNM = 140
+  //        CAT = 52
+  //        REP = 42
+  //        RNM = 146
   //        TLS = 49
   //        TBS = 32
   //        TRG = 6
@@ -84,13 +84,20 @@ module.exports = function grammar(){
   /* OPCODES */
   /* model */
   this.rules[0].opcodes = [];
-  this.rules[0].opcodes[0] = {type: 2, children: [1,3,5]};// CAT
-  this.rules[0].opcodes[1] = {type: 3, min: 0, max: 1};// REP
-  this.rules[0].opcodes[2] = {type: 4, index: 1};// RNM(namespace)
-  this.rules[0].opcodes[3] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[0].opcodes[4] = {type: 4, index: 2};// RNM(include)
-  this.rules[0].opcodes[5] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[0].opcodes[6] = {type: 4, index: 3};// RNM(modelElement)
+  this.rules[0].opcodes[0] = {type: 2, children: [1,2,4,6,13]};// CAT
+  this.rules[0].opcodes[1] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[0].opcodes[2] = {type: 3, min: 0, max: 1};// REP
+  this.rules[0].opcodes[3] = {type: 4, index: 1};// RNM(namespace)
+  this.rules[0].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[0].opcodes[5] = {type: 4, index: 2};// RNM(include)
+  this.rules[0].opcodes[6] = {type: 3, min: 0, max: 1};// REP
+  this.rules[0].opcodes[7] = {type: 2, children: [8,9]};// CAT
+  this.rules[0].opcodes[8] = {type: 4, index: 3};// RNM(modelElement)
+  this.rules[0].opcodes[9] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[0].opcodes[10] = {type: 2, children: [11,12]};// CAT
+  this.rules[0].opcodes[11] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[0].opcodes[12] = {type: 4, index: 3};// RNM(modelElement)
+  this.rules[0].opcodes[13] = {type: 4, index: 42};// RNM(OWS)
 
   /* namespace */
   this.rules[1].opcodes = [];
@@ -123,7 +130,7 @@ module.exports = function grammar(){
 
   /* structuredType */
   this.rules[4].opcodes = [];
-  this.rules[4].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,14,15,16,17,19,20,21]};// CAT
+  this.rules[4].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,14,15,16,17,19,20]};// CAT
   this.rules[4].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[4].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[4].opcodes[3] = {type: 2, children: [4,5]};// CAT
@@ -144,7 +151,6 @@ module.exports = function grammar(){
   this.rules[4].opcodes[18] = {type: 4, index: 5};// RNM(structuredTypeMember)
   this.rules[4].opcodes[19] = {type: 4, index: 42};// RNM(OWS)
   this.rules[4].opcodes[20] = {type: 7, string: [125]};// TLS
-  this.rules[4].opcodes[21] = {type: 4, index: 42};// RNM(OWS)
 
   /* structuredTypeMember */
   this.rules[5].opcodes = [];
@@ -264,20 +270,25 @@ module.exports = function grammar(){
 
   /* enumType */
   this.rules[15].opcodes = [];
-  this.rules[15].opcodes[0] = {type: 2, children: [1,2,5,6,7,9]};// CAT
+  this.rules[15].opcodes[0] = {type: 2, children: [1,2,5,6,7,8,9,10,12]};// CAT
   this.rules[15].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[15].opcodes[2] = {type: 1, children: [3,4]};// ALT
   this.rules[15].opcodes[3] = {type: 6, string: [101,110,117,109]};// TBS
   this.rules[15].opcodes[4] = {type: 6, string: [102,108,97,103,115]};// TBS
-  this.rules[15].opcodes[5] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[15].opcodes[6] = {type: 7, string: [123]};// TLS
-  this.rules[15].opcodes[7] = {type: 3, min: 1, max: Infinity};// REP
-  this.rules[15].opcodes[8] = {type: 4, index: 16};// RNM(enumMember)
-  this.rules[15].opcodes[9] = {type: 7, string: [125]};// TLS
+  this.rules[15].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[15].opcodes[6] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[15].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[15].opcodes[8] = {type: 7, string: [123]};// TLS
+  this.rules[15].opcodes[9] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[15].opcodes[10] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[15].opcodes[11] = {type: 4, index: 16};// RNM(enumMember)
+  this.rules[15].opcodes[12] = {type: 7, string: [125]};// TLS
 
   /* enumMember */
   this.rules[16].opcodes = [];
-  this.rules[16].opcodes[0] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[16].opcodes[0] = {type: 2, children: [1,2]};// CAT
+  this.rules[16].opcodes[1] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[16].opcodes[2] = {type: 4, index: 42};// RNM(OWS)
 
   /* typeDefinition */
   this.rules[17].opcodes = [];
@@ -295,7 +306,7 @@ module.exports = function grammar(){
 
   /* service */
   this.rules[18].opcodes = [];
-  this.rules[18].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,10,14,15,16]};// CAT
+  this.rules[18].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,10,14,15]};// CAT
   this.rules[18].opcodes[1] = {type: 6, string: [115,101,114,118,105,99,101]};// TBS
   this.rules[18].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[18].opcodes[3] = {type: 2, children: [4,5]};// CAT
@@ -311,7 +322,6 @@ module.exports = function grammar(){
   this.rules[18].opcodes[13] = {type: 4, index: 19};// RNM(serviceMember)
   this.rules[18].opcodes[14] = {type: 4, index: 42};// RNM(OWS)
   this.rules[18].opcodes[15] = {type: 7, string: [125]};// TLS
-  this.rules[18].opcodes[16] = {type: 4, index: 42};// RNM(OWS)
 
   /* serviceMember */
   this.rules[19].opcodes = [];
@@ -562,7 +572,7 @@ module.exports = function grammar(){
     str += ";  Model\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "model                = [ namespace ] *include *modelElement\r\n";
+    str += "model                = OWS [ namespace ] *include [ modelElement *( RWS modelElement ) ] OWS\r\n";
     str += "\r\n";
     str += "namespace            = %s\"namespace\" RWS qualifiedName\r\n";
     str += "\r\n";
@@ -575,7 +585,7 @@ module.exports = function grammar(){
     str += ";  Structured Type\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "structuredType       = annotations [ %s\"abstract\" RWS ] %s\"type\" RWS identifier [ %s\"extends\" RWS qualifiedName ] OWS \"{\" OWS *structuredTypeMember OWS \"}\" OWS\r\n";
+    str += "structuredType       = annotations [ %s\"abstract\" RWS ] %s\"type\" RWS identifier [ %s\"extends\" RWS qualifiedName ] OWS \"{\" OWS *structuredTypeMember OWS \"}\"\r\n";
     str += "\r\n";
     str += "structuredTypeMember = property / operation ; property, action, or function\r\n";
     str += "\r\n";
@@ -612,9 +622,9 @@ module.exports = function grammar(){
     str += ";  Enumeration Type\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "enumType             = annotations ( %s\"enum\" / %s\"flags\" ) identifier \"{\" 1*enumMember \"}\"\r\n";
+    str += "enumType             = annotations ( %s\"enum\" / %s\"flags\" ) RWS identifier OWS \"{\" OWS 1*enumMember \"}\"\r\n";
     str += "\r\n";
-    str += "enumMember           = identifier\r\n";
+    str += "enumMember           = identifier OWS\r\n";
     str += "\r\n";
     str += "\r\n";
     str += ";----------------------------\r\n";
@@ -628,7 +638,7 @@ module.exports = function grammar(){
     str += ";  Service\r\n";
     str += ";----------------------------\r\n";
     str += "\r\n";
-    str += "service              = %s\"service\" [ RWS identifier ] OWS \"{\" OWS serviceMember *( RWS serviceMember ) OWS \"}\" OWS\r\n";
+    str += "service              = %s\"service\" [ RWS identifier ] OWS \"{\" OWS serviceMember *( RWS serviceMember ) OWS \"}\"\r\n";
     str += "\r\n";
     str += "serviceMember        = entitySet / singleton / serviceOperation\r\n";
     str += "\r\n";

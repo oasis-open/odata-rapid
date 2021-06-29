@@ -30,7 +30,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 ### Model
 
 ```ABNF
-model                = [ namespace ] *include *modelElement
+model                = OWS [ namespace ] *include [ modelElement *( RWS modelElement ) ] OWS
 
 namespace            = %s"namespace" RWS qualifiedName
 
@@ -42,7 +42,7 @@ modelElement         = ( structuredType / enumType / typeDefinition / service )
 ### Structured Type
 
 ```ABNF
-structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" OWS *structuredTypeMember OWS "}" OWS
+structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" OWS *structuredTypeMember OWS "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
@@ -78,9 +78,9 @@ parameter            = annotations identifier OWS ":" OWS typeReference
 ### Enumeration Type
 
 ```ABNF
-enumType             = annotations ( %s"enum" / %s"flags" ) identifier "{" 1*enumMember "}"
+enumType             = annotations ( %s"enum" / %s"flags" ) RWS identifier OWS "{" OWS 1*enumMember "}"
 
-enumMember           = identifier
+enumMember           = identifier OWS
 ```
 
 ### Type Definition
@@ -92,7 +92,7 @@ typeDefinition       = annotations %s"typedef" RWS identifier OWS ":" OWS ( buil
 ### Service
 
 ```ABNF
-service              = %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}" OWS
+service              = %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 

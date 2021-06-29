@@ -1,8 +1,12 @@
 # test cases for rsdl.abnf
+- source: |
+    enum color{red green blue}
+    flags CRUD { C R  U   D }
+  tokens: [enumType, color, red, green, blue, enumType, CRUD, C, R, U, D]
 - source: "typedef foo:String(10)"
-  tokens: [typeDefinition, foo, "String(10)"] # parsed tokens
+  tokens: [typeDefinition, foo, "String(10)"]
 - source: "typedef foo:Edm.Byte"
-  tokens: [typeDefinition, foo, "Edm.Byte"] # parsed tokens
+  tokens: [typeDefinition, foo, "Edm.Byte"]
 - source: "service{foo:bar}"
   tokens: [service, singleton, foo, bar]
 - source: "servicex{foo:bar}"
