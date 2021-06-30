@@ -12,13 +12,13 @@
       key bar : Integer
           baz : TimeOfDay
     }
-  tokens: [structuredType, foo, bar, Integer, baz, TimeOfDay] # TODO: include key?
+  tokens: [structuredType, foo, key, bar, Integer, baz, TimeOfDay]
 - source: |
     type foo {
       action a()
       function f(g:h) : TimeOfDay
     }
-  tokens: [structuredType, foo, action, a, function, f, g, h, TimeOfDay] # TODO: include key?
+  tokens: [structuredType, foo, action, a, function, f, g, h, TimeOfDay]
 - source: |
     enum color{red green blue}
     flags CRUD { C R  U   D }

@@ -1,13 +1,17 @@
+const assert = require("assert");
+const colors = require("colors/safe");
 const fs = require("fs");
 const YAML = require("yaml");
-const colors = require("colors/safe");
 const { apgLib } = require("apg-js");
 const { parser: Parser, ast: AST, ids, utils, trace: Trace } = apgLib;
 const Grammar = require("./grammar");
-const assert = require("assert");
 
 const parser = new Parser();
 const grammar = new Grammar();
+
+//TODO: parameterize
+const config = YAML.parse(fs.readFileSync("./config.yaml", "utf8"));
+const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 
 // set a call back for every rule to measure rule coverage
 function touchedCB(result, chars, phraseIndex, data) {
@@ -28,42 +32,23 @@ grammar.rules.forEach((rule) => {
 const ast = new AST();
 parser.ast = ast;
 // define callbacks, see https://github.com/ldthomas/apg-js2-examples/blob/61a36fd963ba544c0630a533c053f60d18d878d2/ast/setup.js#L29-L74
-function rulenameCB(rulename) {
+function rulenameTokenCB(rulename) {
   return (state, chars, phraseIndex, phraseLength, data) => {
     if (state === ids.SEM_PRE) data.push(rulename);
     return ids.SEM_OK;
   };
 }
-function noopCB(state, chars, phraseIndex, phraseLength, data) {
-  return ids.SEM_OK;
-}
-function skipCB(state, chars, phraseIndex, phraseLength, data) {
+function matchTokenCB(state, chars, phraseIndex, phraseLength, data) {
   if (state === ids.SEM_PRE)
     data.push(utils.charsToString(chars, phraseIndex, phraseLength));
   return ids.SEM_SKIP;
 }
-//TODO: move these arrays to a config file
-[
-  "entitySet",
-  "enumType",
-  "include",
-  "namespace",
-  "service",
-  "singleton",
-  "structuredType",
-  "typeDefinition",
-].forEach((ruleName) => (ast.callbacks[ruleName] = rulenameCB(ruleName)));
-[
-  "builtInType",
-  "edmType",
-  "identifier",
-  "operationKind",
-  "qualifiedName",
-  "typeReference",
-].forEach((ruleName) => (ast.callbacks[ruleName] = skipCB));
-// ["typeReference"].forEach(
-//   (ruleName) => (parser.ast.callbacks[ruleName] = noopCB)
-// );
+config.rulenameTokens.forEach(
+  (ruleName) => (ast.callbacks[ruleName] = rulenameTokenCB(ruleName))
+);
+config.matchTokens.forEach(
+  (ruleName) => (ast.callbacks[ruleName] = matchTokenCB)
+);
 
 function parse(inputString, failAt, expect) {
   inputCharacterCodes = utils.stringToChars(inputString);
@@ -120,9 +105,6 @@ function parse(inputString, failAt, expect) {
   );
   return false;
 }
-
-//TODO: parameterize
-const testCases = YAML.parse(fs.readFileSync("./rsdl-testcases.yaml", "utf8"));
 
 let successes = 0;
 for (const tc of testCases) {
