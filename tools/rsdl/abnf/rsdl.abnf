@@ -7,34 +7,34 @@
 ;  Model
 ;----------------------------
 
-model                = [ namespace ] *include *modelElement
+model                = OWS [ namespace RWS ] *include [ modelElement *( RWS modelElement ) ] OWS
 
-namespace            = %s"namespace" qualifiedName
+namespace            = %s"namespace" RWS qualifiedName
 
-include              = %s"include" DQUOTE 1*CHAR DQUOTE %s"as" identifier
+include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier RWS
 
-modelElement         = structuredType / enumType / typeDefinition / service
+modelElement         = ( structuredType / enumType / typeDefinition / service )
 
 
 ;----------------------------
 ;  Structured Type
 ;----------------------------
 
-structuredType       = annotations [ %s"abstract" ] %s"type" identifier [ %s"extends" qualifiedName ] "{" *structuredTypeMember "}"
+structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier [ %s"extends" RWS qualifiedName ] OWS "{" *( OWS structuredTypeMember ) OWS "}"
 
 structuredTypeMember = property / operation ; property, action, or function
 
-property             = annotations [propertyModifier] identifier ":" typeReference
+property             = annotations [propertyModifier RWS] identifier OWS ":" OWS typeReference
 
 propertyModifier     = %s"key"
 
 typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
 
-typeName             = builtInType / %s"Edm" "." identifier / qualifiedName
+typeName             = builtInType / edmType / qualifiedName
 
 builtInType          = %s"Boolean"
-                     / %s"Date"
                      / %s"DateTime"
+                     / %s"Date"
                      / %s"Decimal" [ "(" precision "," scale ")"]
                      / %s"Double"
                      / %s"Duration"
@@ -42,53 +42,55 @@ builtInType          = %s"Boolean"
                      / %s"String" [ "(" maxLength ")" ]
                      / %s"TimeOfDay"
 
-operation            = annotations operationKind identifier
-                       "(" [ parameter *("," parameter) ] ")"
-                       [ ":" annotations typeReference ]
+edmType              = %s"Edm" "." identifier
+
+operation            = annotations operationKind RWS identifier OWS
+                       "(" OWS [ parameter *( OWS "," OWS parameter) OWS ] ")"
+                       [ OWS ":" OWS annotations typeReference ]
 
 operationKind        = %s"action" / %s"function"
 
-parameter            = annotations identifier ":" typeReference
+parameter            = annotations identifier OWS ":" OWS typeReference
 
 
 ;----------------------------
 ;  Enumeration Type
 ;----------------------------
 
-enumType             = annotations ( %s"enum" / %s"flags" ) identifier "{" 1*enumMember "}"
+enumType             = annotations ( %s"enum" / %s"flags" ) RWS identifier OWS "{" OWS 1*enumMember "}"
 
-enumMember           = identifier
+enumMember           = identifier OWS
 
 
 ;----------------------------
 ;  Type Definition
 ;----------------------------
 
-typeDefinition       = annotations %s"typedef" identifier ":" ( builtInType / %s"Edm" "." identifier )
+typeDefinition       = annotations %s"typedef" RWS identifier OWS ":" OWS ( builtInType / edmType )
 
 
 ;----------------------------
 ;  Service
 ;----------------------------
 
-service              = %s"service" [ identifier ] "{" 1*serviceMember "}"
+service              = %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 
-entitySet            = identifier ":" "[" qualifiedName "]"
+entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
 
-singleton            = identifier ":" qualifiedName
+singleton            = identifier OWS ":" OWS qualifiedName
 
-serviceOperation     = operationKind identifier
-                       "(" [ parameter *("," parameter) ] ")"
-                       [ ":" typeReference ]
+serviceOperation     = operationKind RWS identifier
+                       OWS "(" OWS [ parameter *(OWS "," OWS parameter) OWS ] ")"
+                       [ OWS ":" OWS typeReference ]
 
 
 ;----------------------------
 ;  Annotations
 ;----------------------------
 
-annotations          = 1*annotation
+annotations          = *annotation
 
 annotation           = "@" qualifiedName ":" annotationValue
 
@@ -139,3 +141,7 @@ CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
 DQUOTE              = %x22              ; "
 
 ESCAPE              = %x5C              ; \
+
+OWS                 = *WS
+RWS                 = 1*WS
+WS                  = %x8 / %xA / %xD / %x20 ; TAB, LF, CR, SPACE

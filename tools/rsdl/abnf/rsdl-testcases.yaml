@@ -1,0 +1,70 @@
+# test cases for rsdl.abnf
+- source: "namespace foo\n" # whitespace required after namespace identifier
+  tokens: [namespace, foo]
+- source: |
+    include "./foo" as foo
+    include "../b\\a\"r.rsdl" as bar
+  tokens: [include, foo, include, bar] # TODO: included filename as token? --> filename rule
+- source: "type foo{bar:baz}"
+  tokens: [structuredType, foo, bar, baz]
+- source: |
+    type foo {
+      key bar : Integer
+          baz : TimeOfDay
+    }
+  tokens: [structuredType, foo, key, bar, Integer, baz, TimeOfDay]
+- source: |
+    type foo {
+      action a()
+      function f(g:h) : TimeOfDay
+    }
+  tokens: [structuredType, foo, action, a, function, f, g, h, TimeOfDay]
+- source: |
+    enum color{red green blue}
+    flags CRUD { C R  U   D }
+  tokens: [enumType, color, red, green, blue, enumType, CRUD, C, R, U, D]
+- source: "typedef foo:String(10)"
+  tokens: [typeDefinition, foo, "String(10)"]
+- source: "typedef foo:Edm.Byte"
+  tokens: [typeDefinition, foo, "Edm.Byte"]
+- source: "service{foo:bar}"
+  tokens: [service, singleton, foo, bar]
+- source: "servicex{foo:bar}"
+  failAt: 7 # whitespace required before service identifier
+- source: "service x { foo : bar }"
+  tokens: [service, x, singleton, foo, bar]
+- source: |
+    service { 
+      foo: bar
+      baz: [qux]
+    }
+  tokens: [service, singleton, foo, bar, entitySet, baz, qux]
+- source: |
+    service { 
+      function f():Boolean
+      action a()
+      action b(c:Date):[String?]
+    }
+  tokens:
+    [service, function, f, Boolean, action, a, action, b, c, Date, "[String?]"]
+- source: |
+    service { 
+      function f(g: DateTime): Decimal?
+      action a( b :Decimal(5,2), d : Double ) : [Duration]
+    }
+  tokens:
+    [
+      service,
+      function,
+      f,
+      g,
+      DateTime,
+      Decimal?,
+      action,
+      a,
+      b,
+      "Decimal(5,2)",
+      d,
+      Double,
+      "[Duration]",
+    ]
