@@ -59,7 +59,7 @@ parameter            = annotations identifier OWS ":" OWS typeReference
 
 enumType             = annotations ( %s"enum" / %s"flags" ) RWS identifier OWS "{" OWS 1*enumMember "}"
 
-enumMember           = identifier OWS
+enumMember           = annotations identifier OWS
 
 
 ;----------------------------
@@ -73,7 +73,7 @@ typeDefinition       = annotations %s"typedef" RWS identifier OWS ":" OWS ( buil
 ;  Service
 ;----------------------------
 
-service              = %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}"
+service              = annotations %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}"
 
 serviceMember        = entitySet / singleton / serviceOperation
 
@@ -90,20 +90,20 @@ serviceOperation     = operationKind RWS identifier
 ;  Annotations
 ;----------------------------
 
-annotations          = *annotation
+annotations          = *( annotation RWS )
 
-annotation           = "@" qualifiedName ":" annotationValue
+annotation           = "@" qualifiedName OWS ":" OWS annotationValue
 
 annotationValue      = %s"true"
                      / %s"false"
                      / %s"null"
                      / number
                      / DQUOTE 1*CHAR DQUOTE
-                     / "[" annotationValue *( [ "," ] annotationValue ) [ "," ] "]"
-                     / "{" annotationProperty *( [ "," ] annotationProperty ) [ "," ] "}"
+                     / "[" OWS [ annotationValue *( ( OWS "," OWS / RWS ) annotationValue ) OWS [ "," OWS ] ] "]"
+                     / "{" OWS [ annotationProperty *( ( OWS "," OWS /RWS ) annotationProperty ) OWS [ "," OWS ] ] "}"
                      / "." *( "/"  identifier )
 
-annotationProperty   = propertyName ":" annotationValue
+annotationProperty   = propertyName OWS ":" OWS annotationValue
 
 propertyName         = identifier / DQUOTE 1*CHAR DQUOTE
 

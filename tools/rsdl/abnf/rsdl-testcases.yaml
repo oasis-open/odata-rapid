@@ -68,3 +68,27 @@
       Double,
       "[Duration]",
     ]
+- source: |
+    @a.b:7
+    type foo {
+      @x.y : { a : true b:false , c:{}, }
+      key bar : Integer
+          @e.f : [ null , [], ]
+          baz : TimeOfDay
+    }
+  tokens:
+    [
+      structuredType,
+      "@a.b:7",
+      foo,
+      "@x.y : { a : true b:false , c:{}, }",
+      key,
+      bar,
+      Integer,
+      "@e.f : [ null , [], ]",
+      baz,
+      TimeOfDay,
+    ]
+- source: |
+    @a.b:./c enum color{@a.b:0 red green @a.b:1 blue}
+  tokens: [enumType, "@a.b:./c", color, "@a.b:0", red, green, "@a.b:1", blue]
