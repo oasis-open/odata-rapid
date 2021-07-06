@@ -145,7 +145,7 @@ For details on modifying data in RAPID, see [Modifying Resources in RAPID](./rap
 
 ## Optional Features
 
-Although RAPID services can be very simple because they follow core patterns, they can be extended using optional Features
+Although RAPID services can be very simple because they follow core patterns, they can be extended using optional features
 to support more advanced scenarios such as those described in [RAPID Features](./spec/rapid-pro-features.md).
 
 ## RAPID and OpenAPI
