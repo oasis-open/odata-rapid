@@ -94,7 +94,7 @@ typeDefinition       = annotations %s"typedef" RWS identifier OWS ":" OWS ( buil
 ```ABNF
 service              = annotations %s"service" [ RWS identifier ] OWS "{" OWS serviceMember *( RWS serviceMember ) OWS "}"
 
-serviceMember        = entitySet / singleton / serviceOperation
+serviceMember        = annotations ( entitySet / singleton / serviceOperation )
 
 entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
 
@@ -102,7 +102,7 @@ singleton            = identifier OWS ":" OWS qualifiedName
 
 serviceOperation     = operationKind RWS identifier
                        OWS "(" OWS [ parameter *(OWS "," OWS parameter) OWS ] ")"
-                       [ OWS ":" OWS typeReference ]
+                       [ OWS ":" OWS annotations typeReference ]
 ```
 
 ### Annotations
@@ -110,20 +110,20 @@ serviceOperation     = operationKind RWS identifier
 ```ABNF
 annotations          = *( annotation RWS )
 
-annotation           = "@" qualifiedName OWS ":" OWS annotationValue
+annotation           = "@" qualifiedName [ "#" identifier ] OWS ":" OWS annotationValue
 
 annotationValue      = %s"true"
                      / %s"false"
                      / %s"null"
                      / number
-                     / DQUOTE 1*CHAR DQUOTE
+                     / DQUOTE *CHAR DQUOTE
                      / "[" OWS [ annotationValue *( ( OWS "," OWS / RWS ) annotationValue ) OWS [ "," OWS ] ] "]"
                      / "{" OWS [ annotationProperty *( ( OWS "," OWS /RWS ) annotationProperty ) OWS [ "," OWS ] ] "}"
                      / "." *( "/"  identifier )
 
 annotationProperty   = propertyName OWS ":" OWS annotationValue
 
-propertyName         = identifier / DQUOTE 1*CHAR DQUOTE
+propertyName         = identifier / DQUOTE 1*CHAR DQUOTE / "@" qualifiedName [ "#" identifier ]
 ```
 
 ### Core Syntax Elements
