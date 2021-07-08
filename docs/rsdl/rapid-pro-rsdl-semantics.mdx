@@ -147,6 +147,82 @@ type Name {
 </TabItem>
 </Tabs>
 
+### Abstract Structured Types
+
+```
+abstract type Base {
+  ...
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Base": {
+  "$Kind": "ComplexType",
+  "$Abstract": true,
+  ...
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Base" Abstract="true">
+  ...
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Structured Type Inheritance
+
+```
+type Foo extends Base {
+  ...
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Foo": {
+  "$Kind": "ComplexType",
+  "$BaseType": "Model.Base",
+  ...
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Foo" BaseType="Model.Base">
+  ...
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
 ### Properties
 
 The properties of a type definition are mapped to either a Property or a NavigationProperty depending on the property's type.
