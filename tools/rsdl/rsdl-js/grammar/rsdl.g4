@@ -1,10 +1,10 @@
 grammar rsdl;
 
+// Model
+
 model: namespace? include* modelElement* EOF;
 
 namespace: 'namespace' qualifiedName;
-
-qualifiedName: QID | ID;
 
 include: 'include' STRING 'as' ID;
 
@@ -14,19 +14,24 @@ modelElement:
 	| typeDefinition
 	| service;
 
+// Structured Type
+
 structuredType:
 	annotation* ABSTRACT? 'type' ID baseType? '{' typeMember* '}';
-typeMember: property | operation;
-property: annotation* KEY? propertyName ':' typeReference;
-propertyName: ID | KEY;
 
 baseType: 'extends' ID;
+
+typeMember: property | operation;
+
+property: annotation* KEY? propertyName ':' typeReference;
+
+propertyName: ID | KEY; // "key" is also a valid property name
 
 typeReference:
 	typeName NULLABLE?				# single
 	| '[' typeName NULLABLE? ']'	# array;
 
-typeName: builtInType | qualifiedName;
+typeName: builtInType | edmType | qualifiedName;
 
 builtInType:
 	'Boolean'
@@ -39,42 +44,69 @@ builtInType:
 	| 'String' ('(' NUMBER ')')?
 	| 'TimeOfDay';
 
+edmType: EDM;
+
 operation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
 	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
+
 parameter: annotation* ID ':' typeReference;
+
 returnType: ':' annotation* typeReference;
 
-enumType: annotation* enumKind ID '{' enumMember* '}';
+// Enumeration Type
+
+enumType: annotation* enumKind ID '{' enumMember+ '}';
+
 enumKind: 'enum' | 'flags';
+
 enumMember: annotation* ID;
 
-typeDefinition: annotation* 'typedef' ID ':' typeName;
+// Type Definition
+
+typeDefinition:
+	annotation* 'typedef' ID ':' typeName; //TODO: (builtInType|edmType);
+
+// Service
 
 service: annotation* 'service' ID? '{' serviceMember* '}';
+
 serviceMember: entitySet | singleton | serviceOperation;
+
 entitySet: annotation* ID ':' '[' qualifiedName ']';
+
 singleton: annotation* ID ':' qualifiedName;
+
 serviceOperation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
 	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 
+// Annotations
+
 annotation: TID ':' value;
+
 value:
-	path
-	| STRING
-	| NUMBER
-	| obj
-	| arr
-	| 'true'
+	'true'
 	| 'false'
-	| 'null';
-path: '.' ('/' ID)+;
-obj: '{' pair (',' pair)* '}' | '{' '}';
-//TODO: pair can also be an annotation
-pair: ( ID | TID) ':' value;
+	| 'null'
+	| NUMBER
+	| STRING
+	| arr
+	| obj
+	| path;
+
 arr: '[' item (',' item)* ']' | '[' ']';
 item: value;
+
+obj: '{' pair (',' pair)* '}' | '{' '}';
+pair: name ':' value;
+name: ID | STRING | TID;
+
+path: '.' ('/' ID)+;
+
+// Core Syntax Elements
+
+qualifiedName: QID | ID;
 
 ABSTRACT: 'abstract';
 ACTION: 'action';
@@ -92,6 +124,7 @@ fragment UNICODE: 'u' HEX HEX HEX HEX;
 fragment HEX: [0-9a-fA-F];
 fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 
+EDM: 'Edm.' SIMPLE;
 ID: SIMPLE;
 QID: SIMPLE ('.' SIMPLE)+;
 TID: '@' SIMPLE ('.' SIMPLE)+ ('#' SIMPLE)?;
