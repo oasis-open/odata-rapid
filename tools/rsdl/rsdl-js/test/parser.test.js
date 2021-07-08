@@ -170,7 +170,6 @@ describe("Parse correct RSDL", () => {
   });
 
   it("Namespace", () => {
-    //TODO: fix grammar, add negative test case for this?
     assert.deepStrictEqual(parse("namespace here.we.go type foo { }"), {
       $Version: "4.0",
       "here.we.go": { foo: { $Kind: "ComplexType", $OpenType: true } },
