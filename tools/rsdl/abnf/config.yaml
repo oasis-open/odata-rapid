@@ -2,6 +2,7 @@
 
 # ABNF rule names whose matching input is added to tokens array, AST subtree is skipped
 matchTokens:
+  - annotation
   - builtInType
   - edmType
   - identifier
