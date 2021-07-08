@@ -170,6 +170,7 @@ describe("Parse correct RSDL", () => {
   });
 
   it("Namespace", () => {
+    //TODO: fix grammar, add negative test case for this?
     assert.deepStrictEqual(parse("namespace here.we.go type foo { }"), {
       $Version: "4.0",
       "here.we.go": { foo: { $Kind: "ComplexType", $OpenType: true } },
@@ -346,7 +347,7 @@ describe("Parse correct RSDL", () => {
   it("Type definitions", () => {
     assert.deepStrictEqual(
       parse(
-        `@Core.Description: "Monetary Amount"
+        `@Core.Description#foo: "Monetary Amount"
          typedef Amount: Decimal(23,5)
 
          @Core.Description: "ISO or custom currency"
@@ -358,7 +359,7 @@ describe("Parse correct RSDL", () => {
         $Version: "4.0",
         Model: {
           Amount: {
-            "@Org.OData.Core.V1.Description": "Monetary Amount",
+            "@Org.OData.Core.V1.Description#foo": "Monetary Amount",
             $Kind: "TypeDefinition",
             $Type: "Edm.Decimal",
             $Precision: 23,

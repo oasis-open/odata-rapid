@@ -4,7 +4,7 @@ model: namespace? include* modelElement* EOF;
 
 namespace: 'namespace' qualifiedName;
 
-qualifiedName: ID ('.' ID)*;
+qualifiedName: QID | ID;
 
 include: 'include' STRING 'as' ID;
 
@@ -42,7 +42,6 @@ builtInType:
 operation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
 	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
-//TODO: optional parameters
 parameter: annotation* ID ':' typeReference;
 returnType: ':' annotation* typeReference;
 
@@ -60,7 +59,7 @@ serviceOperation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
 	| annotation* FUNCTION ID '(' (parameter (',' parameter)*)? ')' returnType;
 
-annotation: '@' qualifiedName ':' value;
+annotation: TID ':' value;
 value:
 	path
 	| STRING
@@ -73,7 +72,7 @@ value:
 path: '.' ('/' ID)+;
 obj: '{' pair (',' pair)* '}' | '{' '}';
 //TODO: pair can also be an annotation
-pair: ID ':' value;
+pair: ( ID | TID) ':' value;
 arr: '[' item (',' item)* ']' | '[' ']';
 item: value;
 
@@ -93,8 +92,11 @@ fragment UNICODE: 'u' HEX HEX HEX HEX;
 fragment HEX: [0-9a-fA-F];
 fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 
+ID: SIMPLE;
+QID: SIMPLE ('.' SIMPLE)+;
+TID: '@' SIMPLE ('.' SIMPLE)+ ('#' SIMPLE)?;
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
-ID: [a-zA-Z_][a-zA-Z_0-9]*;
+fragment SIMPLE: [a-zA-Z_][a-zA-Z_0-9]*;
 
 LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 

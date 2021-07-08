@@ -69,9 +69,9 @@ class MyListener extends rsdlListener {
       console.error("Panic: no annotatable!!!");
     }
 
-    const term = this.normalizeTermName(ctx.qualifiedName().getText());
+    const term = this.normalizeTermName(ctx.TID().getText());
     this.annotatable[0].target[
-      `${this.annotatable[0].prefix}@${term}`
+      `${this.annotatable[0].prefix}${term}`
       //TODO: parse annotation value
     ] = this.annotation[0].value;
     this.annotation.shift();
@@ -80,9 +80,9 @@ class MyListener extends rsdlListener {
   normalizeTermName(name) {
     //TODO: clean up
     return name
-      .replace(/^Capabilities./, "Org.OData.Capabilities.V1.")
-      .replace(/^Core./, "Org.OData.Core.V1.")
-      .replace(/^Validation./, "Org.OData.Validation.V1.");
+      .replace(/^@Capabilities./, "@Org.OData.Capabilities.V1.")
+      .replace(/^@Core./, "@Org.OData.Core.V1.")
+      .replace(/^@Validation./, "@Org.OData.Validation.V1.");
   }
 
   exitPath(ctx) {
