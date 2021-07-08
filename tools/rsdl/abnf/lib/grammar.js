@@ -7,15 +7,15 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 45
   //       udts = 0
-  //    opcodes = 397
+  //    opcodes = 405
   //        ---   ABNF original opcodes
-  //        ALT = 18
-  //        CAT = 65
-  //        REP = 44
-  //        RNM = 180
-  //        TLS = 52
-  //        TBS = 32
-  //        TRG = 6
+  //        ALT = 20
+  //        CAT = 67
+  //        REP = 45
+  //        RNM = 179
+  //        TLS = 54
+  //        TBS = 33
+  //        TRG = 7
   //        ---   SABNF superset opcodes
   //        UDT = 0
   //        AND = 0
@@ -532,26 +532,34 @@ module.exports = function grammar(){
 
   /* number */
   this.rules[32].opcodes = [];
-  this.rules[32].opcodes[0] = {type: 2, children: [1,3,4,6]};// CAT
-  this.rules[32].opcodes[1] = {type: 3, min: 0, max: 1};// REP
-  this.rules[32].opcodes[2] = {type: 7, string: [45]};// TLS
-  this.rules[32].opcodes[3] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[32].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[32].opcodes[5] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[32].opcodes[6] = {type: 3, min: 0, max: 1};// REP
-  this.rules[32].opcodes[7] = {type: 2, children: [8,9]};// CAT
-  this.rules[32].opcodes[8] = {type: 7, string: [46]};// TLS
-  this.rules[32].opcodes[9] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[32].opcodes[10] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[32].opcodes[0] = {type: 2, children: [1,2,7]};// CAT
+  this.rules[32].opcodes[1] = {type: 4, index: 33};// RNM(integer)
+  this.rules[32].opcodes[2] = {type: 3, min: 0, max: 1};// REP
+  this.rules[32].opcodes[3] = {type: 2, children: [4,5]};// CAT
+  this.rules[32].opcodes[4] = {type: 7, string: [46]};// TLS
+  this.rules[32].opcodes[5] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[32].opcodes[6] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[32].opcodes[7] = {type: 3, min: 0, max: 1};// REP
+  this.rules[32].opcodes[8] = {type: 2, children: [9,10,14]};// CAT
+  this.rules[32].opcodes[9] = {type: 7, string: [101]};// TLS
+  this.rules[32].opcodes[10] = {type: 3, min: 0, max: 1};// REP
+  this.rules[32].opcodes[11] = {type: 1, children: [12,13]};// ALT
+  this.rules[32].opcodes[12] = {type: 7, string: [43]};// TLS
+  this.rules[32].opcodes[13] = {type: 7, string: [45]};// TLS
+  this.rules[32].opcodes[14] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[32].opcodes[15] = {type: 4, index: 38};// RNM(DIGIT)
 
   /* integer */
   this.rules[33].opcodes = [];
-  this.rules[33].opcodes[0] = {type: 2, children: [1,3,4]};// CAT
+  this.rules[33].opcodes[0] = {type: 2, children: [1,3]};// CAT
   this.rules[33].opcodes[1] = {type: 3, min: 0, max: 1};// REP
   this.rules[33].opcodes[2] = {type: 7, string: [45]};// TLS
-  this.rules[33].opcodes[3] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[33].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[33].opcodes[5] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[33].opcodes[3] = {type: 1, children: [4,5]};// ALT
+  this.rules[33].opcodes[4] = {type: 6, string: [48]};// TBS
+  this.rules[33].opcodes[5] = {type: 2, children: [6,7]};// CAT
+  this.rules[33].opcodes[6] = {type: 5, min: 49, max: 57};// TRG
+  this.rules[33].opcodes[7] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[33].opcodes[8] = {type: 4, index: 38};// RNM(DIGIT)
 
   /* precision */
   this.rules[34].opcodes = [];
@@ -739,9 +747,9 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "identSubsequent     = identInitial / DIGIT\r\n";
     str += "\r\n";
-    str += "number              = [ \"-\" ] DIGIT *DIGIT [\".\" *DIGIT ]\r\n";
+    str += "number              = integer [ \".\" 1*DIGIT ] [ \"e\" [ \"+\" / \"-\" ] 1*DIGIT ]\r\n";
     str += "\r\n";
-    str += "integer             = [ \"-\" ] DIGIT *DIGIT\r\n";
+    str += "integer             = [ \"-\" ] ( %x30 / %x31-39 *DIGIT )\r\n";
     str += "\r\n";
     str += "precision           = integer\r\n";
     str += "\r\n";
