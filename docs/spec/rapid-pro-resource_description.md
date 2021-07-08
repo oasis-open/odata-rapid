@@ -68,7 +68,7 @@ Because the `employee` type is used in a collection,
 it defines a property (`id`) as the key value for referencing instances within the collection.
 
 The `company` type has a property for navigating to a collection of employees.
-The employees are contained by the company; that is, they do not exist in a separate top-level collection.
+The employees are contained within the company; that is, they do not exist in a separate top-level collection.
 
 Resources can also include properties not advertised in metadata.
 These "dynamic" properties can be referenced in query options and included in result payloads,

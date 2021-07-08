@@ -7,7 +7,7 @@ title: RAPID SDL intro
 
 RAPID Schema Definition Language (RSDL) is a language to define Web APIs.
 
-RSDL is based on the [RAPID PROfile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
+RSDL is based on the [RAPID Profile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
 [OData](https://en.wikipedia.org/wiki/Open_Data_Protocol) specification. RAPID provides an easy way
 to envision, create, and consume a Web API that is compatible with the OData Standard and can evolve over time to support more advanced scenarios.
 
@@ -28,9 +28,9 @@ type Company
 }
 ```
 
-Our company has three properties; a stockSymbol, a name, and the date of incorporation.
+Our company has three properties: a stockSymbol, a name, and the date of incorporation.
 
-Properties in RAPID can be Integer, String, Boolean, DateTime, Date, Double, Decimal, TimeOfDay, Duration built-in types, an [enum type](#defining-an-enum), a [structured type](#defining-a-structured-type), or a collection of any of the former.
+A property in RAPID can be an Integer, String, Boolean, DateTime, Date, Double, Decimal, TimeOfDay, Duration built-in types, an [enum type](#defining-an-enum), a [structured type](#defining-a-structured-type), or a collection of any of the former.
 
 ### Defining a Service
 
@@ -182,7 +182,7 @@ type Employee
 
 RAPID supports functions and actions.
 
-A function takes zero or more input parameters, and returns a value. Functions must not have side-affects.
+A function takes zero or more input parameters, and returns a value. Functions must not have side effects.
 
 We can define a "topEmployees" function on our company:
 

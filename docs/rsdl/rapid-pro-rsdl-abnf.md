@@ -3,7 +3,7 @@ id: rsdl-abnf
 title: RAPID SDL ABNF
 ---
 
-# RAPID Pro syntax
+# RAPID Pro Syntax
 
 > DRAFT
 > March 2021

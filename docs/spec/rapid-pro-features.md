@@ -9,7 +9,7 @@ and because they follow core patterns they can be extended with optional feature
 
 For an overview of RAPID, see [Getting Started](../rapid-pro.md).
 
-The following sections provide more detailed information and walkthroughs for key aspects of RAPID.
+The following sections provide more detailed information and walkthroughs for key aspects of RAPID:
 
 - [RAPID Schema Definition Language](../rsdl/rapid-pro-rsdl-intro.md)
 - [Data Retrieval](../rapid-pro-read.md)

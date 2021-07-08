@@ -67,7 +67,7 @@ Requests and responses are correlated via an `id` for each individual request.
 }
 ```
 
-## Error handling
+## Error Handling
 
 Batch requests return `200 OK` even if some or all of the individual requests in the batch fail.
 Batch requests only return `4xx` if the batch request body is malformed,
@@ -75,7 +75,7 @@ the client is not authenticated or lacks authorization for the `/$batch` resourc
 or other reasons not related to individual requests in the batch.
 
 If an individual request fails, processing continues with the next request.
-Individual tequests can be processed in any order,
+Individual requests can be processed in any order,
 not necessarily in the sequence they appear in the batch request.
 
 **Body:**
