@@ -78,6 +78,15 @@ function parse(inputString, failAt, expect) {
     return true;
   }
 
+  if (result.success && failAt != null) {
+    console.log(
+      `${colors.red(
+        `KO, succeeds instead of failing at ${failAt}:`
+      )} ${inputString}`
+    );
+    return false;
+  }
+
   if (!result.success && result.maxMatched == failAt) {
     console.log(
       `${colors.green("OK:")} ${inputString} ${colors.green(

@@ -102,7 +102,7 @@
       @a.b:"\""
       function f( @b.c:0 g: DateTime ): @a.b:0 Decimal?
       @a.b:"\\"
-      action a( b :Decimal(5,2), @b.c:1 d : Double ) : [Duration]
+      action a( b :Decimal(5,2), @b.c:-1.2e3 d : Double ) : [Duration]
     }
   tokens:
     [
@@ -129,7 +129,7 @@
       a,
       b,
       "Decimal(5,2)",
-      "@b.c:1",
+      "@b.c:-1.2e3",
       d,
       Double,
       "[Duration]",
@@ -170,3 +170,7 @@
       "@a.b:6",
       TimeOfDay,
     ]
+- source: "@a.b:00 type foo{}"
+  failAt: 6 # 00 is not an integer
+- source: "@a.b:-01 type foo{}"
+  failAt: 7 # -01 is not an integer
