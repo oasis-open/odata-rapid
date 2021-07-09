@@ -398,6 +398,56 @@ describe("Parse correct RSDL", () => {
       }
     );
   });
+
+  it("Documentation comments", () => {
+    assert.deepStrictEqual(
+      parse(`## good type
+             type foo {
+               ## nice property
+               bar: String
+               ## cool action
+               action baz( 
+                 ## action parameter
+                 quux: Integer 
+               ) : ## a string
+                   String
+               # just a normal comment, ignore
+               qux: String # ignore
+             }
+             `),
+      {
+        $Version: "4.0",
+        Model: {
+          foo: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            "@Org.OData.Core.V1.Documentation": "good type",
+            bar: { "@Org.OData.Core.V1.Documentation": "nice property" },
+            qux: {},
+          },
+          baz: [
+            {
+              $IsBound: true,
+              $Kind: "Action",
+              "@Org.OData.Core.V1.Documentation": "cool action",
+              $Parameter: [
+                {
+                  $Name: "this",
+                  $Type: "Model.foo",
+                },
+                {
+                  $Name: "quux",
+                  $Type: "Edm.Int32",
+                  "@Org.OData.Core.V1.Documentation": "action parameter",
+                },
+              ],
+              $ReturnType: { "@Org.OData.Core.V1.Documentation": "a string" },
+            },
+          ],
+        },
+      }
+    );
+  });
 });
 
 describe("Reference test cases", () => {

@@ -69,7 +69,15 @@ class MyListener extends rsdlListener {
       console.error("Panic: no annotatable!!!");
     }
 
-    const term = this.normalizeTermName(ctx.TID().getText());
+    const docComment = ctx.DOC_COMMENT();
+    let term;
+    if (docComment) {
+      term = "@Org.OData.Core.V1.Documentation";
+      this.annotation[0].value = docComment.getText().substring(2).trim();
+    } else {
+      term = this.normalizeTermName(ctx.TID().getText());
+    }
+
     this.annotatable[0].target[
       `${this.annotatable[0].prefix}${term}`
       //TODO: parse annotation value
