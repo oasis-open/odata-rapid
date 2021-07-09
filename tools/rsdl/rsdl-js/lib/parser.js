@@ -69,9 +69,9 @@ class MyListener extends rsdlListener {
       console.error("Panic: no annotatable!!!");
     }
 
-    const term = this.normalizeTermName(ctx.qualifiedName().getText());
+    const term = this.normalizeTermName(ctx.TID().getText());
     this.annotatable[0].target[
-      `${this.annotatable[0].prefix}@${term}`
+      `${this.annotatable[0].prefix}${term}`
       //TODO: parse annotation value
     ] = this.annotation[0].value;
     this.annotation.shift();
@@ -80,9 +80,9 @@ class MyListener extends rsdlListener {
   normalizeTermName(name) {
     //TODO: clean up
     return name
-      .replace(/^Capabilities./, "Org.OData.Capabilities.V1.")
-      .replace(/^Core./, "Org.OData.Core.V1.")
-      .replace(/^Validation./, "Org.OData.Validation.V1.");
+      .replace(/^@Capabilities./, "@Org.OData.Capabilities.V1.")
+      .replace(/^@Core./, "@Org.OData.Core.V1.")
+      .replace(/^@Validation./, "@Org.OData.Validation.V1.");
   }
 
   exitPath(ctx) {
@@ -113,9 +113,11 @@ class MyListener extends rsdlListener {
   }
 
   exitPair(ctx) {
+    let name = ctx.name().getText();
+    if (name.startsWith('"')) name = name.substring(1, name.length - 1);
     const value = this.annotation[0].value;
     this.annotation.shift();
-    this.annotation[0].value[ctx.ID().getText()] = value;
+    this.annotation[0].value[name] = value;
   }
 
   exitValue(ctx) {
@@ -175,7 +177,7 @@ class MyListener extends rsdlListener {
   enterTypeName(ctx) {
     if (!this.current.typedElement) return;
     const typeParts = ctx.getText().split(/[(,)]/);
-    let name = typeParts[0]; //ctx.getText();
+    let name = typeParts[0];
     name = TYPENAMES[name] || name;
     if (!name.includes(".")) name = `${this.namespace}.${name}`;
     if (name === "Edm.String") {
