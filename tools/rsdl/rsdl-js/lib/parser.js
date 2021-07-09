@@ -70,18 +70,19 @@ class MyListener extends rsdlListener {
     }
 
     const docComment = ctx.DOC_COMMENT();
-    let term;
     if (docComment) {
-      term = "@Org.OData.Core.V1.Documentation";
-      this.annotation[0].value = docComment.getText().substring(2).trim();
+      const name = `${this.annotatable[0].prefix}@Org.OData.Core.V1.Documentation`;
+      const newText = docComment.getText().substring(2).trim();
+      const oldText = this.annotatable[0].target[name];
+      this.annotatable[0].target[name] = oldText
+        ? `${oldText}\n${newText}`
+        : newText;
     } else {
-      term = this.normalizeTermName(ctx.TID().getText());
+      const term = this.normalizeTermName(ctx.TID().getText());
+      this.annotatable[0].target[`${this.annotatable[0].prefix}${term}`] =
+        this.annotation[0].value;
     }
 
-    this.annotatable[0].target[
-      `${this.annotatable[0].prefix}${term}`
-      //TODO: parse annotation value
-    ] = this.annotation[0].value;
     this.annotation.shift();
   }
 

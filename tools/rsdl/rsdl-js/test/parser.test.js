@@ -402,10 +402,14 @@ describe("Parse correct RSDL", () => {
   it("Documentation comments", () => {
     assert.deepStrictEqual(
       parse(`## good type
+             ##
+             ## has nice properties
+             ## and a cool action
              type foo {
                ## nice property
                bar: String
                ## cool action
+               ## does something
                action baz( 
                  ## action parameter
                  quux: Integer 
@@ -414,6 +418,15 @@ describe("Parse correct RSDL", () => {
                # just a normal comment, ignore
                qux: String # ignore
              }
+
+             ## colors make stuff look nicer
+             enum colors {
+               ## tomatoes
+               red 
+               ## mozzarella
+               white 
+               ## basil
+               green}
              `),
       {
         $Version: "4.0",
@@ -421,15 +434,26 @@ describe("Parse correct RSDL", () => {
           foo: {
             $Kind: "ComplexType",
             $OpenType: true,
-            "@Org.OData.Core.V1.Documentation": "good type",
+            "@Org.OData.Core.V1.Documentation":
+              "good type\n\nhas nice properties\nand a cool action",
             bar: { "@Org.OData.Core.V1.Documentation": "nice property" },
             qux: {},
+          },
+          colors: {
+            $Kind: "EnumType",
+            "@Org.OData.Core.V1.Documentation": "colors make stuff look nicer",
+            red: 0,
+            "red@Org.OData.Core.V1.Documentation": "tomatoes",
+            white: 1,
+            "white@Org.OData.Core.V1.Documentation": "mozzarella",
+            green: 2,
+            "green@Org.OData.Core.V1.Documentation": "basil",
           },
           baz: [
             {
               $IsBound: true,
               $Kind: "Action",
-              "@Org.OData.Core.V1.Documentation": "cool action",
+              "@Org.OData.Core.V1.Documentation": "cool action\ndoes something",
               $Parameter: [
                 {
                   $Name: "this",
