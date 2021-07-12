@@ -57,4 +57,4 @@ function initRsdlEditor(domElement: HTMLElement, onRsdlUpdated: RsdlUpdatedCallb
         getContent
     };
 }
-export { initRsdlEditor };
+export { initRsdlEditor, RsdlUpdatedCallback };

@@ -1,4 +1,5 @@
 import { Text } from '@codemirror/text';
+import { parse } from "rsdl-js/lib/parser";
 
 export function getDocContent(doc: Text): string {
     const lines = [];
@@ -8,4 +9,23 @@ export function getDocContent(doc: Text): string {
 
     const text = lines.join('\n');
     return text;
+}
+
+export function includeReader(source) {
+    return () => {
+        return source;
+    };
+}
+
+export function convertToCsdl(rsdl: string): Record<string, any> {
+    const json = parse(rsdl, includeReader(rsdl));
+
+    // TODO: proper error handling
+    if (json.$$errors) {
+        json.$$errors.map((error) =>
+            console.error(`source:${error.target} ${error.message}`)
+        );
+    }
+
+    return json;
 }
