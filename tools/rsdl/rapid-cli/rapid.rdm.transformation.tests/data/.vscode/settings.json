@@ -1,0 +1,12 @@
+{
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "comment.block.documentation",
+        "settings": {
+          "fontStyle": "italic bold"
+        }
+      }
+    ]
+  },
+}
