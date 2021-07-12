@@ -72,6 +72,7 @@ Install
 - [x] create error listener for syntactically incorrect "files"
 - [x] log errors from CLI
 - [x] type definitions
+- [x] doc comments
 
 ## TODO
 

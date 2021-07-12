@@ -3,13 +3,13 @@ type C extends B
 {    
 }
 
-enum I { }
+enum I { i }
 
 type B extends A
 {    
 }
 
-enum J { }
+enum J { j }
 
 abstract type A
 {    
