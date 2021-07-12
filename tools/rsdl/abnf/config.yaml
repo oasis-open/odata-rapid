@@ -1,0 +1,23 @@
+# Configuration for lib/parse.js
+
+# ABNF rule names whose matching input is added to tokens array, AST subtree is skipped
+matchTokens:
+  - annotation
+  - builtInType
+  - edmType
+  - identifier
+  - operationKind
+  - propertyModifier
+  - qualifiedName
+  - typeReference
+
+# ABNF rule names whose name is added to tokens array, AST subtree is processed
+rulenameTokens:
+  - entitySet
+  - enumType
+  - include
+  - namespace
+  - service
+  - singleton
+  - structuredType
+  - typeDefinition

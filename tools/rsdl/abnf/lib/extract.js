@@ -36,4 +36,4 @@ for (const line of markdown) {
 
 abnf.push("");
 
-fs.writeFileSync(abnfFile, abnf.join("\n"));
+fs.writeFileSync(abnfFile, abnf.join("\r\n"));
