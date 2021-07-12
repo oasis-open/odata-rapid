@@ -30,7 +30,9 @@ abstract type Animal
 
     # plain comment
     function a(): Integer
+
     ## doc comment
+    ## describing this action
     action b(): Integer
 }
 
