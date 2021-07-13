@@ -149,9 +149,9 @@ type Name {
 
 ### Properties
 
-The properties of a type definition are mapped to either a Property or a NavigationProperty depending on the property's type.
+The properties of a structured type are mapped to either a Property or a NavigationProperty depending on the property's type.
 
-In the following example, let's assume name is mapped to a complex type and employee is mapped to a entity type.
+In the following example, let's assume `name` is mapped to a complex type and `employee` is mapped to an entity type.
 
 ```
 type Company {
@@ -175,12 +175,13 @@ type Company {
 "Company": {
   "$Kind": "EntityType",
   "$Key": [ "stockSymbol" ],
-  "stockSymbol": { "$Type": "Edm.String" },
-  "name": { "$Type": "Edm.String" },
+  "stockSymbol": {},
+  "name": {},
   "employees": {
     "$Kind": "NavigationProperty",
     "$Type": "Model.Employee",
-    "$Collection": true
+    "$Collection": true,
+    "$ContainsTarget": true
   }
 }
 ```
@@ -193,8 +194,9 @@ type Company {
   <Key>
     <PropertyRef Name="stockSymbol" />
   </Key>
+  <Property Name="stockSymbol" Type="Edm.String" Nullable="false" />
   <Property Name="name" Type="Edm.String" Nullable="false" />
-  <NavigationProperty Name="ceo" Type="Model.Employee" Nullable="false" />
+  <NavigationProperty Name="employees" Type="Collection(Model.Employee)" ContainsTarget="true" />
 </EntityType>
 ```
 
@@ -206,7 +208,7 @@ type Company {
 The type of a property is one of:
 
 - the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
-- the primitive EDM types listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
+- the primitive EDM types listed in [OData CSDL JSON Representation](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html#sec_PrimitiveTypes) and [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
 - the structured or enumeration types defined in the model
 
 Each of these named types can be marked as
@@ -244,7 +246,7 @@ type Foo {
   "test2": { "$Nullable": true, "$Type": "Edm.Int32" },
   "test3": { "$Collection": true, "$Type": "Edm.Int32" },
   "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" },
-  "test5": { },
+  "test5": {},
   "test6": {  "$MaxLength": 80 },
   "test7": {  "$Type": "Edm.Decimal", "$Scale": "variable" },
   "test8": {  "$Type": "Edm.Decimal", "$Precision": 15, "$Scale": 2 },
@@ -592,9 +594,9 @@ service {
 </TabItem>
 </Tabs>
 
-If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL),
+If the type is used as a type on a multi-value and as the type of a property of a structured type (i.e. a navigation property in CSDL),
 the appropriate navigation property bindings get created.
-In the example below, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
+The `Company` type from the [Properties section](#properties) has an `employees` property of the same type `Employee`.
 The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
 
 ```
@@ -620,7 +622,6 @@ service {
     "$Collection": true,
     "$Type": "Model.Company",
     "$NavigationPropertyBinding": {
-      "ceo": "employees",
       "employees": "employees"
     }
   }
@@ -633,7 +634,6 @@ service {
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="competitors" EntityType="Model.Company">
-    <NavigationPropertyBinding Path="ceo" Target="employees" />
     <NavigationPropertyBinding Path="employees" Target="employees" />
   </EntitySet>
 </EntityContainer>
