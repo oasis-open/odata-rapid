@@ -170,3 +170,41 @@
       "@a.b:6",
       TimeOfDay,
     ]
+
+- source: |
+    type foo {
+      key key : Integer
+          containsZeroOrOne : bar?
+          containsOne : bar
+          containsMany : [bar]
+          referencesZeroOrOne: *bar?
+          referencesOne: *bar
+          referencesMany: [*bar]
+    }
+
+    type bar {
+      key id: String
+    }
+  tokens:
+    - structuredType
+    - foo
+    - key
+    - key
+    - Integer
+    - containsZeroOrOne
+    - bar?
+    - containsOne
+    - bar
+    - containsMany
+    - "[bar]"
+    - referencesZeroOrOne
+    - "*bar?"
+    - referencesOne
+    - "*bar"
+    - referencesMany
+    - "[*bar]"
+    - structuredType
+    - bar
+    - key
+    - id
+    - String

@@ -7,13 +7,13 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 45
   //       udts = 0
-  //    opcodes = 397
+  //    opcodes = 401
   //        ---   ABNF original opcodes
   //        ALT = 18
   //        CAT = 65
-  //        REP = 44
+  //        REP = 46
   //        RNM = 180
-  //        TLS = 52
+  //        TLS = 54
   //        TBS = 32
   //        TRG = 6
   //        ---   SABNF superset opcodes
@@ -182,17 +182,21 @@ module.exports = function grammar(){
 
   /* typeReference */
   this.rules[8].opcodes = [];
-  this.rules[8].opcodes[0] = {type: 1, children: [1,5]};// ALT
-  this.rules[8].opcodes[1] = {type: 2, children: [2,3]};// CAT
-  this.rules[8].opcodes[2] = {type: 4, index: 9};// RNM(typeName)
-  this.rules[8].opcodes[3] = {type: 3, min: 0, max: 1};// REP
-  this.rules[8].opcodes[4] = {type: 7, string: [63]};// TLS
-  this.rules[8].opcodes[5] = {type: 2, children: [6,7,8,10]};// CAT
-  this.rules[8].opcodes[6] = {type: 7, string: [91]};// TLS
-  this.rules[8].opcodes[7] = {type: 4, index: 9};// RNM(typeName)
-  this.rules[8].opcodes[8] = {type: 3, min: 0, max: 1};// REP
-  this.rules[8].opcodes[9] = {type: 7, string: [63]};// TLS
-  this.rules[8].opcodes[10] = {type: 7, string: [93]};// TLS
+  this.rules[8].opcodes[0] = {type: 1, children: [1,7]};// ALT
+  this.rules[8].opcodes[1] = {type: 2, children: [2,4,5]};// CAT
+  this.rules[8].opcodes[2] = {type: 3, min: 0, max: 1};// REP
+  this.rules[8].opcodes[3] = {type: 7, string: [42]};// TLS
+  this.rules[8].opcodes[4] = {type: 4, index: 9};// RNM(typeName)
+  this.rules[8].opcodes[5] = {type: 3, min: 0, max: 1};// REP
+  this.rules[8].opcodes[6] = {type: 7, string: [63]};// TLS
+  this.rules[8].opcodes[7] = {type: 2, children: [8,9,11,12,14]};// CAT
+  this.rules[8].opcodes[8] = {type: 7, string: [91]};// TLS
+  this.rules[8].opcodes[9] = {type: 3, min: 0, max: 1};// REP
+  this.rules[8].opcodes[10] = {type: 7, string: [42]};// TLS
+  this.rules[8].opcodes[11] = {type: 4, index: 9};// RNM(typeName)
+  this.rules[8].opcodes[12] = {type: 3, min: 0, max: 1};// REP
+  this.rules[8].opcodes[13] = {type: 7, string: [63]};// TLS
+  this.rules[8].opcodes[14] = {type: 7, string: [93]};// TLS
 
   /* typeName */
   this.rules[9].opcodes = [];
@@ -647,7 +651,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "propertyModifier     = %s\"key\"\r\n";
     str += "\r\n";
-    str += "typeReference        = typeName [ \"?\" ] / \"[\" typeName [ \"?\" ] \"]\"\r\n";
+    str += "typeReference        = [ \"*\" ] typeName [ \"?\" ] / \"[\" [ \"*\" ] typeName [ \"?\" ] \"]\"\r\n";
     str += "\r\n";
     str += "typeName             = builtInType / edmType / qualifiedName\r\n";
     str += "\r\n";
