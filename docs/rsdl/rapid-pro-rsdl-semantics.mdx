@@ -594,14 +594,22 @@ service {
 </TabItem>
 </Tabs>
 
-If the type is used as a type on a multi-value and as the type of a property of a structured type (i.e. a navigation property in CSDL),
+If the same type is used as a type on a multi-value and - prefixed with a `*` - as the type of a property of a structured type (i.e. a navigation property in CSDL),
 the appropriate navigation property bindings get created.
-The `Company` type from the [Properties section](#properties) has an `employees` property of the same type `Employee`.
+The `Company` type in the following example has properties `ceo` and `employees` of the same type `Employee`, marked as a "reference" by prefixing the type with a `*`.
 The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
 
 ```
 service {
   competitors: [Company]
+  employees: [Employee]
+}
+
+type Company {
+  key stockSymbol: String
+  name: Name
+  ceo: *Employee?
+  employees: [*Employee]
 }
 ```
 
@@ -622,8 +630,27 @@ service {
     "$Collection": true,
     "$Type": "Model.Company",
     "$NavigationPropertyBinding": {
+      "ceo": "employees",
       "employees": "employees"
     }
+  },
+  "employees": { "$Collection": true, "$Type": "Model.Employee" }
+},
+
+"Company": {
+  "$Kind": "EntityType",
+  "$Key": [ "stockSymbol" ],
+  "stockSymbol": {},
+  "name": {},
+  "ceo": {
+    "$Kind": "NavigationProperty",
+    "$Type": "Model.Employee",
+    "$Nullable": true
+  },
+  "employees": {
+    "$Kind": "NavigationProperty",
+    "$Type": "Model.Employee",
+    "$Collection": true
   }
 }
 ```
@@ -634,9 +661,21 @@ service {
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="competitors" EntityType="Model.Company">
+    <NavigationPropertyBinding Path="ceo" Target="employees" />
     <NavigationPropertyBinding Path="employees" Target="employees" />
   </EntitySet>
+  <EntitySet Name="employees" EntityType="Model.Employee" />
 </EntityContainer>
+
+<EntityType Name="Company">
+  <Key>
+    <PropertyRef Name="stockSymbol" />
+  </Key>
+  <Property Name="stockSymbol" Type="Edm.String" Nullable="false" />
+  <Property Name="name" Type="Edm.String" Nullable="false" />
+   <NavigationProperty Name="ceo" Type="Model.Employee" />
+   <NavigationProperty Name="employees" Type="Collection(Model.Employee)" />
+</EntityType>
 ```
 
 </TabItem>
