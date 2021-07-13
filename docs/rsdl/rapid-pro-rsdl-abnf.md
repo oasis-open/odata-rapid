@@ -50,7 +50,7 @@ property             = annotations [propertyModifier RWS] identifier OWS ":" OWS
 
 propertyModifier     = %s"key"
 
-typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
+typeReference        = [ "*" ] typeName [ "?" ] / "[" [ "*" ] typeName [ "?" ] "]"
 
 typeName             = builtInType / edmType / qualifiedName
 
