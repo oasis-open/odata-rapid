@@ -1,44 +1,57 @@
 # test cases for rsdl.abnf
+
 - source: "namespace foo\n" # whitespace required after namespace identifier
   tokens: [namespace, foo]
+
 - source: |
     include "./foo" as foo
     include "../b\\a\"r.rsdl" as bar
   tokens: [include, foo, include, bar] # TODO: included filename as token? --> filename rule
+
 - source: "type foo{bar:baz}"
   tokens: [structuredType, foo, bar, baz]
+
 - source: |
     type foo {
       key bar : Integer
           baz : TimeOfDay
     }
   tokens: [structuredType, foo, key, bar, Integer, baz, TimeOfDay]
+
 - source: |
     type foo {
       action a()
       function f(g:h) : TimeOfDay
     }
   tokens: [structuredType, foo, action, a, function, f, g, h, TimeOfDay]
+
 - source: |
     enum color{red green blue}
     flags CRUD { C R  U   D }
   tokens: [enumType, color, red, green, blue, enumType, CRUD, C, R, U, D]
+
 - source: "typedef foo:String(10)"
   tokens: [typeDefinition, foo, "String(10)"]
+
 - source: "@a.b:0 typedef foo:Edm.Byte"
   tokens: [typeDefinition, "@a.b:0", foo, "Edm.Byte"]
+
 - source: "service{foo:bar}"
   tokens: [service, singleton, foo, bar]
+
 - source: "servicex{foo:bar}"
   failAt: 7 # whitespace required before service identifier
+
 - source: "service x { foo : bar }"
   tokens: [service, x, singleton, foo, bar]
+
 - source: |
     service { 
       foo: bar
       baz: [qux]
     }
   tokens: [service, singleton, foo, bar, entitySet, baz, qux]
+
 - source: |
     service { 
       function f():Boolean
@@ -47,27 +60,27 @@
     }
   tokens:
     [service, function, f, Boolean, action, a, action, b, c, Date, "[String?]"]
+
 - source: |
     service { 
       function f(g: DateTime): Decimal?
       action a( b :Decimal(5,2), d : Double ) : [Duration]
     }
   tokens:
-    [
-      service,
-      function,
-      f,
-      g,
-      DateTime,
-      Decimal?,
-      action,
-      a,
-      b,
-      "Decimal(5,2)",
-      d,
-      Double,
-      "[Duration]",
-    ]
+    - service
+    - function
+    - f
+    - g
+    - DateTime
+    - Decimal?
+    - action
+    - a
+    - b
+    - "Decimal(5,2)"
+    - d
+    - Double
+    - "[Duration]"
+
 - source: |
     @a.b#qualifier:7
     type foo {
@@ -77,21 +90,21 @@
           baz : TimeOfDay
     }
   tokens:
-    [
-      structuredType,
-      "@a.b#qualifier:7",
-      foo,
-      '@x.y : { a : true b:false , "c":{}, @a.b#c :0, }',
-      key,
-      bar,
-      Integer,
-      "@e.f : [ null , [], ]",
-      baz,
-      TimeOfDay,
-    ]
+    - structuredType
+    - "@a.b#qualifier:7"
+    - foo
+    - '@x.y : { a : true b:false , "c":{}, @a.b#c :0, }'
+    - key
+    - bar
+    - Integer
+    - "@e.f : [ null , [], ]"
+    - baz
+    - TimeOfDay
+
 - source: |
     @a.b:./c enum color{@a.b:0 red green @a.b:1 blue}
   tokens: [enumType, "@a.b:./c", color, "@a.b:0", red, green, "@a.b:1", blue]
+
 - source: |
     @aa.bb.cc:42
     service { 
@@ -105,35 +118,34 @@
       action a( b :Decimal(5,2), @b.c:-1.2e3 d : Double ) : [Duration]
     }
   tokens:
-    [
-      service,
-      "@aa.bb.cc:42",
-      '@a.b:""',
-      singleton,
-      foo,
-      bar,
-      '@a.b:" "',
-      entitySet,
-      baz,
-      qux,
-      '@a.b:"\""',
-      function,
-      f,
-      "@b.c:0",
-      g,
-      DateTime,
-      "@a.b:0",
-      Decimal?,
-      '@a.b:"\\"',
-      action,
-      a,
-      b,
-      "Decimal(5,2)",
-      "@b.c:-1.2e3",
-      d,
-      Double,
-      "[Duration]",
-    ]
+    - service
+    - "@aa.bb.cc:42"
+    - '@a.b:""'
+    - singleton
+    - foo
+    - bar
+    - '@a.b:" "'
+    - entitySet
+    - baz
+    - qux
+    - '@a.b:"\""'
+    - function
+    - f
+    - "@b.c:0"
+    - g
+    - DateTime
+    - "@a.b:0"
+    - Decimal?
+    - '@a.b:"\\"'
+    - action
+    - a
+    - b
+    - "Decimal(5,2)"
+    - "@b.c:-1.2e3"
+    - d
+    - Double
+    - "[Duration]"
+
 - source: |
     @a.b:0
     type foo {
@@ -147,30 +159,24 @@
       function f(@a.b:5 g:h) : @a.b:6 TimeOfDay
     }
   tokens:
-    [
-      structuredType,
-      "@a.b:0",
-      foo,
-      "@a.b:1",
-      key,
-      bar,
-      Integer,
-      "@a.b:2",
-      baz,
-      TimeOfDay,
-      "@a.b:3",
-      action,
-      a,
-      "@a.b:4",
-      function,
-      f,
-      "@a.b:5",
-      g,
-      h,
-      "@a.b:6",
-      TimeOfDay,
-    ]
-- source: "@a.b:00 type foo{}"
-  failAt: 6 # 00 is not an integer
-- source: "@a.b:-01 type foo{}"
-  failAt: 7 # -01 is not an integer
+    - structuredType
+    - "@a.b:0"
+    - foo
+    - "@a.b:1"
+    - key
+    - bar
+    - Integer
+    - "@a.b:2"
+    - baz
+    - TimeOfDay
+    - "@a.b:3"
+    - action
+    - a
+    - "@a.b:4"
+    - function
+    - f
+    - "@a.b:5"
+    - g
+    - h
+    - "@a.b:6"
+    - TimeOfDay
