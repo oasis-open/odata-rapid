@@ -4,6 +4,8 @@ title: Reading Resources
 sidebar_label: Reading Resources
 ---
 
+import InteractiveQuerying from '../website/src/components/InteractiveQuerying.js';
+
 ## Retrieving a Resource
 
 RAPID services support retrieving a resource using the GET method:
@@ -11,6 +13,8 @@ RAPID services support retrieving a resource using the GET method:
 | Template    | GET {resource-path}                                                             |
 | ----------- | :------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company) |
+
+<InteractiveQuerying defaultQuery="company" id="1" />
 
 RAPID services return individual resources as a json object.
 
@@ -39,6 +43,8 @@ The client can select individual properties of the resource using the `select` o
 | Template    | GET {resource-path}?select={propertyName,…}                                                                                     |
 | ----------- | :------------------------------------------------------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?$select=name,stockSymbol) |
+
+<InteractiveQuerying defaultQuery="company?$select=name,stockSymbol" id="2" />
 
 **Result:**
 
