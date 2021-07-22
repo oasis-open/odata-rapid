@@ -117,12 +117,24 @@ class Query extends Component {
 class Results extends Component {
   render() {
     return (
-      <>
+      <div style={{
+                "padding-top": "1rem", 
+                "padding-bottom": "1rem"
+            }}>
       <h3>Results</h3>
-      <div>
+      <div style={{
+                "height": "120px",
+                "borderRadius": "0.4rem",
+                "overflow": "hidden",
+                "overflow-y": "scroll",
+                "color": "black",
+                "width": "100%",
+                "background": "#eee",
+                "padding": "1rem"
+            }}>
         {this.props.results}
       </div>
-      </>
+      </div>
     );
   }
 }
