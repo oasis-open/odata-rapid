@@ -62,7 +62,8 @@ class InteractiveQuerying extends Component {
   /// </summary>
   /// <param name="query">Query on the Jetsons API.</param>
   fetchResults(query) {
-    fetch("https://jetsons.azurewebsites.net/" + query)
+    let formattedQuery = this.formatQuery(query);
+    fetch("https://jetsons.azurewebsites.net/" + formattedQuery)
     .then (res => res.text())
     .then(
       (result) => {
@@ -74,6 +75,20 @@ class InteractiveQuerying extends Component {
     ).catch(function(err) {
       console.error(err);
     });
+  }
+
+  formatQuery(query) {
+    let queryPieces = query.split("?");
+    let formattedQuery = queryPieces[0];
+    for (let i = 1; i < queryPieces.length; i++) {
+      let piece = queryPieces[i];
+      if (!piece.startsWith('$')) {
+        formattedQuery += "?$" + piece;
+      } else {
+        formattedQuery += "?" + piece;
+      }
+    }
+    return formattedQuery;
   }
 
   render() {
@@ -126,7 +141,7 @@ class Results extends Component {
                 "height": "120px",
                 "borderRadius": "0.4rem",
                 "overflow": "hidden",
-                "overflow-y": "scroll",
+                "overflowY": "scroll",
                 "color": "black",
                 "width": "100%",
                 "background": "#eee",
