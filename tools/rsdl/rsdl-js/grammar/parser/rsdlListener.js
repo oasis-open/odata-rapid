@@ -128,6 +128,15 @@ rsdlListener.prototype.exitBuiltInType = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#edmType.
+rsdlListener.prototype.enterEdmType = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#edmType.
+rsdlListener.prototype.exitEdmType = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#operation.
 rsdlListener.prototype.enterOperation = function(ctx) {
 };

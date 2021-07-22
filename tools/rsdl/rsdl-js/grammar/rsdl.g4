@@ -31,7 +31,7 @@ typeReference:
 	typeName NULLABLE?				# single
 	| '[' typeName NULLABLE? ']'	# array;
 
-typeName: builtInType | qualifiedName;
+typeName: builtInType | edmType | qualifiedName;
 
 builtInType:
 	'Boolean'
@@ -43,6 +43,8 @@ builtInType:
 	| 'Integer'
 	| 'String' ('(' NUMBER ')')?
 	| 'TimeOfDay';
+
+edmType: EDM;
 
 operation:
 	annotation* ACTION ID '(' (parameter (',' parameter)*)? ')' returnType?
@@ -104,7 +106,7 @@ path: '.' ('/' ID)+;
 
 // Core Syntax Elements
 
-qualifiedName: ID ('.' ID)*;
+qualifiedName: QID | ID;
 
 ABSTRACT: 'abstract';
 ACTION: 'action';
@@ -122,7 +124,9 @@ fragment UNICODE: 'u' HEX HEX HEX HEX;
 fragment HEX: [0-9a-fA-F];
 fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 
+EDM: 'Edm.' SIMPLE;
 ID: SIMPLE;
+QID: SIMPLE ('.' SIMPLE)+;
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 fragment SIMPLE: [a-zA-Z_][a-zA-Z_0-9]*;
 
