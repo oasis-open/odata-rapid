@@ -58,12 +58,17 @@ The model's
 
 ## Structured Types
 
-A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType) or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType).
+A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either 
+an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType) 
+or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType) 
+when converting from RSDL to CSDL.
 
 A structured type with one or more properties marked with `key` is mapped to an entity type.
 Correspondingly, a structured type without `key` properties is mapped to a complex type.
 
 ### Structured Types with `key` Properties
+
+Here, we can see an example of how an RSDL structured type with a `key` id property maps to a CSDL entity type.
 
 ```
 type Employee {
@@ -108,6 +113,9 @@ type Employee {
 </Tabs>
 
 ### Structured Types without `key` Properties
+
+On the other hand, an RSDL structured type without a `key` property maps to a CSDL complex type.
+Such types don't have keys because they are intended for organizing related properties into a group that is non-unique and does not stand on its own.
 
 ```
 type Name {
