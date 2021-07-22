@@ -183,32 +183,11 @@ Grouping these properties together keeps them organized and makes them easy to u
 
 ### Defining Methods
 
-RAPID supports functions and actions.
+RAPID supports actions and functions.
 
-A function takes zero or more input parameters, and returns a value. Functions must not have side effects.
+#### Actions
 
-We can define a "topEmployees" function on our company:
-
-```rsdl
-type Company
-{
-    key stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
-    topEmployees(num: Integer) : [Employee]
-}
-```
-
-topEmployees takes a single Integer parameter "num" and returns a collection of employees.
-
-Functions are invoked using a GET request. Function parameters are passed in the URL.
-
-| Request                                                                                                                                 | Comment                            |
-| :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
-| GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
-
-An action takes zero or more input parameters and may or may not return a value. Actions may have side-affects.
+An action takes zero or more input parameters and may or may not return a value. Actions may have side effects.
 
 We can define a "youAreFired" action on our company that takes a string parameter "reason":
 
@@ -245,3 +224,28 @@ service {
 | Request                                                                                                                                  | Comment                               |
 | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------ |
 | GET [http://rapid-pro.org/currentStockPrice?stockSymbol=cgswl](<https://jetsons.azurewebsites.net/currentStockPrice(stockSymbol=cgswl)>) | get the current stock price for cgswl |
+
+#### Functions
+
+A function takes zero or more input parameters, and returns a value. Functions must not have side effects.
+
+We can define a "topEmployees" function on our company:
+
+```rsdl
+type Company
+{
+    key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
+    topEmployees(num: Integer) : [Employee]
+}
+```
+
+topEmployees takes a single Integer parameter "num" and returns a collection of employees.
+
+Functions are invoked using a GET request. Function parameters are passed in the URL.
+
+| Request                                                                                                                                 | Comment                            |
+| :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
+| GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
