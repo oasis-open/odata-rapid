@@ -323,7 +323,7 @@ describe("Parse correct RSDL", () => {
       parse(`type foo { 
                @Validation.Maximum: 1e3
                @Validation.Minimum: 1e-2
-               @a.b: { c: true, d: [], @e.f: {}, "g":./h }
+               @a.b: { c: true, d: [], @e.f: {}, "g":./h}
                bar: Double
              }
              `),
@@ -337,7 +337,12 @@ describe("Parse correct RSDL", () => {
               $Type: "Edm.Double",
               "@Org.OData.Validation.V1.Maximum": 1000,
               "@Org.OData.Validation.V1.Minimum": 0.01,
-              "@a.b": { c: true, d: [], "@e.f": {}, g: { $Path: "h" } },
+              "@a.b": {
+                c: true,
+                d: [],
+                "@e.f": {},
+                g: { $Path: "h" },
+              },
             },
           },
         },

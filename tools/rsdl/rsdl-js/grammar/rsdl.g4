@@ -127,7 +127,7 @@ fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 EDM: 'Edm.' SIMPLE;
 ID: SIMPLE;
 QID: SIMPLE ('.' SIMPLE)+;
-TID: '@' SIMPLE ('.' SIMPLE)* ('#' SIMPLE)?;
+TID: '@' SIMPLE ('.' SIMPLE)+ ('#' SIMPLE)?;
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 fragment SIMPLE: [a-zA-Z_][a-zA-Z_0-9]*;
 
