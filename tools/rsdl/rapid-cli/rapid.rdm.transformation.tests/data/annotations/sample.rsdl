@@ -28,11 +28,8 @@ abstract type Animal
     @Validation.MultipleOf: 2
     numberOfLegs: Integer
 
-    # plain comment
     function a(): Integer
 
-    ## doc comment
-    ## describing this action
     action b(): Integer
 }
 
