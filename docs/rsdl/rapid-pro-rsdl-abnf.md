@@ -137,9 +137,9 @@ identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
 identSubsequent     = identInitial / DIGIT
 
-number              = integer [ "." 1*DIGIT ] [ "e" [ "+" / "-" ] 1*DIGIT ]
+number              = integer [ "." 1*DIGIT ] [ "e" integer ]
 
-integer             = [ "-" ] ( %x30 / %x31-39 *DIGIT )
+integer             = [ "+" / "-" ] ( %x30 / %x31-39 *DIGIT )
 
 precision           = integer
 
