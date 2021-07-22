@@ -175,8 +175,8 @@ type Company {
 "Company": {
   "$Kind": "EntityType",
   "$Key": [ "stockSymbol" ],
-  "stockSymbol": {},
-  "name": {},
+  "stockSymbol": { "$Type": "Edm.String" },
+  "name": { "$Type": "Edm.String" },
   "employees": {
     "$Kind": "NavigationProperty",
     "$Type": "Model.Employee",
