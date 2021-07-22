@@ -12,7 +12,7 @@ A RAPID service can easily support generic OData V4 clients by:
 RAPID services MAY support any additional conventions defined in the OData specification.
 RAPID services SHOULD
 
-- Describe the supported level of query functionality, if any, through [Capabilities annotations](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md)
+- Describe the supported level of query functionality, if any, through [Capabilities annotations](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md)
 
 ## Support OData canonical key syntax
 
