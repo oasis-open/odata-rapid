@@ -50,6 +50,8 @@
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Function>
       <Action Name="b" IsBound="true">
+        <Annotation Term="Org.OData.Core.V1.Description" String="doc comment
+describing this action" />
         <Parameter Name="this" Type="Model.Animal" Nullable="false" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>

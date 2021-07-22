@@ -434,26 +434,26 @@ describe("Parse correct RSDL", () => {
           foo: {
             $Kind: "ComplexType",
             $OpenType: true,
-            "@Org.OData.Core.V1.Documentation":
+            "@Org.OData.Core.V1.Description":
               "good type\n\nhas nice properties\nand a cool action",
-            bar: { "@Org.OData.Core.V1.Documentation": "nice property" },
+            bar: { "@Org.OData.Core.V1.Description": "nice property" },
             qux: {},
           },
           colors: {
             $Kind: "EnumType",
-            "@Org.OData.Core.V1.Documentation": "colors make stuff look nicer",
+            "@Org.OData.Core.V1.Description": "colors make stuff look nicer",
             red: 0,
-            "red@Org.OData.Core.V1.Documentation": "tomatoes",
+            "red@Org.OData.Core.V1.Description": "tomatoes",
             white: 1,
-            "white@Org.OData.Core.V1.Documentation": "mozzarella",
+            "white@Org.OData.Core.V1.Description": "mozzarella",
             green: 2,
-            "green@Org.OData.Core.V1.Documentation": "basil",
+            "green@Org.OData.Core.V1.Description": "basil",
           },
           baz: [
             {
               $IsBound: true,
               $Kind: "Action",
-              "@Org.OData.Core.V1.Documentation": "cool action\ndoes something",
+              "@Org.OData.Core.V1.Description": "cool action\ndoes something",
               $Parameter: [
                 {
                   $Name: "this",
@@ -462,10 +462,10 @@ describe("Parse correct RSDL", () => {
                 {
                   $Name: "quux",
                   $Type: "Edm.Int32",
-                  "@Org.OData.Core.V1.Documentation": "action parameter",
+                  "@Org.OData.Core.V1.Description": "action parameter",
                 },
               ],
-              $ReturnType: { "@Org.OData.Core.V1.Documentation": "a string" },
+              $ReturnType: { "@Org.OData.Core.V1.Description": "a string" },
             },
           ],
         },
