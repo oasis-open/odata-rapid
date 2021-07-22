@@ -402,7 +402,9 @@ describe("Parse correct RSDL", () => {
   it("Documentation comments", () => {
     assert.deepStrictEqual(
       parse(`## good type
+      
              ##
+             # this is ignored and does not add a line break
              ## has nice properties
              ## and a cool action
              type foo {
