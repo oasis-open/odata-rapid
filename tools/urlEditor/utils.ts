@@ -1,5 +1,5 @@
 import { Text } from '@codemirror/text';
-import { parse } from "rsdl-js/lib/parser";
+import { parse } from "rsdl-js";
 
 export function getDocContent(doc: Text): string {
     const lines = [];
