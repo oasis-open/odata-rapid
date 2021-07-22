@@ -108,9 +108,9 @@ function parse(inputString, failAt, expect) {
   console.log(
     `${colors.red(
       `KO, fails at ${result.maxMatched}${instead}:`
-    )} ${inputString.substr(0, result.maxMatched)}${colors.red(
-      inputString.substr(result.maxMatched, 1)
-    )}${inputString.substr(result.maxMatched + 1)}`
+    )} ${inputString.substr(0, result.maxMatched)}${colors.yellow(
+      inputString.substr(result.maxMatched)
+    )}`
   );
   return false;
 }
