@@ -14,8 +14,6 @@ RAPID services support retrieving a resource using the GET method:
 | ----------- | :------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company) |
 
-<InteractiveQuerying defaultQuery="company" id="1" />
-
 RAPID services return individual resources as a json object.
 
 ```json
@@ -26,6 +24,8 @@ RAPID services return individual resources as a json object.
     "stockSymbol": "spcly"
 }
 ```
+
+<InteractiveQuerying defaultQuery="company" id="1" />
 
 RAPID responses are self-describing. 
 The first line says that the response is described by the `company` singleton defined in the `$metadata` resource. 
@@ -44,8 +44,6 @@ The client can select individual properties of the resource using the `select` o
 | ----------- | :------------------------------------------------------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company?select=name,stockSymbol`](https://jetsons.azurewebsites.net/company?$select=name,stockSymbol) |
 
-<InteractiveQuerying defaultQuery="company?$select=name,stockSymbol" id="2" />
-
 **Result:**
 
 ```json
@@ -55,6 +53,8 @@ The client can select individual properties of the resource using the `select` o
     "stockSymbol": "spcly"
 }
 ```
+
+<InteractiveQuerying defaultQuery="company?select=name,stockSymbol" id="2" />
 
 The first line says that only the `name` and `stockSymbol` properties are selected to be returned from the `company` resource.
 
@@ -92,6 +92,8 @@ Related resources can be retrieved as nested resources through the `expand` quer
 }
 ```
 
+<InteractiveQuerying defaultQuery="company?expand=employees" id="3" />
+
 The context property specifies that the `employees` are expanded within the `company`. 
 Because the next link refers to the nested `employees` property, the `nextLink` property is prefixed with the name of the nested property.
 
@@ -121,6 +123,8 @@ you can express the same options for the related resource that you can for any o
     "employees@nextLink": "company/employees?select=firstName&skiptoken=xyz"
 }
 ```
+
+<InteractiveQuerying defaultQuery="company?expand=employees(select=firstName)" id="4" />
 
 ## Retrieving a Collection of Resources
 
@@ -153,6 +157,8 @@ RAPID services return collections of resources as a JSON array:
 }
 ```
 
+<InteractiveQuerying defaultQuery="company/employees" id="5" />
+
 If the result is large, the service may include a next link to tell the client that there are more items in the collection.
 The value of the next link is an opaque URL that the client can use to retrieve the next set of resources from the collection. 
 The absence of the next link signals the client that they have retrieved all of the resources in the collection.
@@ -176,6 +182,8 @@ Individual members of a collection can be identified by appending the key to the
     "title": "Digital Index Operator"
 }
 ```
+
+<InteractiveQuerying defaultQuery="company/employees/2" id="6" />
 
 Here the context property specifies that the result is an individual resource within the `employees` collection of the `company`.
 
@@ -205,6 +213,8 @@ http://rapid-pro.org/company/employees?select=lastName
     "@nextLink":  "company/employees?select=lastName&skiptoken=xyz"
 }
 ```
+
+<InteractiveQuerying defaultQuery="company/employees?select=lastName" id="7" />
 
 ### Requesting a Range of Members
 
@@ -237,6 +247,8 @@ They can use the `count` query option to request the count of all resources in t
     ]
 }
 ```
+
+<InteractiveQuerying defaultQuery="company/employees?skip=1&top=2&count=true" id="8" />
 
 The result skips the first member and returns the next two.
 The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`. 
@@ -279,6 +291,8 @@ The client can use the `orderby` query option to order the results returned with
 }
 ```
 
+<InteractiveQuerying defaultQuery="company/employees?orderby=lastName asc, id desc" id="9" />
+
 Null values sort before non-null values in ascending order and after non-null values in descending order.
 
 If `asc` or `desc` is not specified, the default ordering is ascending.
@@ -313,6 +327,8 @@ The client can use the `filter` query option to filter the results returned from
 }
 ```
 
+<InteractiveQuerying defaultQuery="company/employees?filter=lastName eq 'Jetson'" id="10" />
+
 In this case, there is no next link since all of the resources matching the filter predicate were returned inline.
 
 There is a full expression language to describe what the client can express in the filter. 
@@ -345,6 +361,8 @@ The order of query options is not significant.
     ]
 }
 ```
+F
+<InteractiveQuerying defaultQuery="/company?select=name&expand=employees(select=firstName;filter=lastName eq 'Jetson')" id="11" />
 
 ## Passing Query Strings in the Body
 
