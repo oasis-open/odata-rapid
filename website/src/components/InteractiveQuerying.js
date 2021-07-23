@@ -85,41 +85,20 @@ class InteractiveQuerying extends Component {
     });
   }
 
-  // select, expand, filter, skip, top, count, orderby
+  /// <summary>Adds '$' before commands if missing, AKA after '?', '(', '&', and ';'.</summary>
+  /// <param name="query">Query to reformat.</param>
+  /// <returns>The reformatted query (unchanged if no '$' are missing).</returns>
   formatQuery(query) {
-    /*let formattedQuery = query.replace(/select/g, "$select");
-    formattedQuery = formattedQuery.replace(/expand/g, "$expand");
-    formattedQuery = formattedQuery.replace(/filter/g, "$filter");
-    formattedQuery = formattedQuery.replace(/skip/g, "$skip");
-    formattedQuery = formattedQuery.replace(/top/g, "$top");
-    formattedQuery = formattedQuery.replace(/count/g, "$count");
-    formattedQuery = formattedQuery.replace(/orderby/g, "$orderby");
-    formattedQuery = formattedQuery.replace(/$$/g, "$");
-    formattedQuery = formattedQuery.substring(0, formattedQuery.length - 1);*/
-
     let formattedQuery = "";
     for (let i = 0; i < query.length - 1; i++) {
       let currChar = query.charAt(i);
       formattedQuery += currChar;
-
       if ((currChar == '?' || currChar == '(' || currChar == '&' || currChar == ';')
           && query.charAt(i+1) != '$') {
         formattedQuery += '$';
       }
     }
     formattedQuery += query.charAt(query.length - 1);
-
-    /*let queryPieces = query.split("?");
-    let formattedQuery = queryPieces[0];
-    for (let i = 1; i < queryPieces.length; i++) {
-      let piece = queryPieces[i];
-      if (!piece.startsWith('$')) {
-        formattedQuery += "?$" + piece;
-      } else {
-        formattedQuery += "?" + piece;
-      }
-    }*/
-
     return formattedQuery;
   }
 
