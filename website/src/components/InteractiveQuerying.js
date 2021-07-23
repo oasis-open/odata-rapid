@@ -4,11 +4,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Component} from 'react';
+import CodeBlock from "@theme/CodeBlock";
 
-/* Next Steps:
- - Make results a scrollable, static-size box / code-like box
- - Distinguish two kinds of results
-*/
 
 /// <summary>Tool to allow a user to make a query on the Jetsons API and see the results.</summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
@@ -26,7 +23,7 @@ class InteractiveQuerying extends Component {
 
     this.state = {
       queryUrl: this.props.defaultQuery,
-      responseElement: <p></p>,
+      responseElement: <CodeBlock className="language-json">[Loading]</CodeBlock>,
       controller: newController,
       signal: newController.signal
     }
@@ -77,8 +74,11 @@ class InteractiveQuerying extends Component {
       (result) => {
         if (result === "The page cannot be displayed because an internal server error has occurred.") {
           result = "This query is not valid; please try a different query."
+        } else {
+          result = this.formatJson(result);
         }
-        this.setState({responseElement: <p>{result}</p>})
+        let newResponse = <CodeBlock className="language-json">{result}</CodeBlock>
+        this.setState({responseElement: newResponse})
       }
     ).catch(function(err) {
       console.error(err);
@@ -102,10 +102,48 @@ class InteractiveQuerying extends Component {
     return formattedQuery;
   }
 
+  formatJson(json) {
+    let formattedJson = "";
+    let tabLevel = 0;
+    let inQuote = false;
+    for (let i = 0; i < json.length; i++) {
+      let currChar = json.charAt(i);
+      if (currChar == '{' || currChar == '[') {
+        tabLevel++;
+        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
+      } else if (currChar == ',' && !inQuote) {
+        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
+      } else if (currChar == '}' || currChar == ']') {
+        tabLevel--;
+        formattedJson += '\n' + this.getTabSpaces(tabLevel) + currChar;
+      } else if (currChar == ':') {
+        formattedJson += currChar + " ";
+      } else {
+        if (currChar == '\"') {
+          inQuote = !inQuote;
+        }
+        formattedJson += currChar;
+      }
+    }
+    return formattedJson;
+  }
+
+  getTabSpaces(tabLevel) {
+    let spaces = "";
+    for (let i = 1; i <= tabLevel; i++) {
+      spaces += "    ";
+    }
+    return spaces;
+  }
+
   render() {
     return (
       <div>
-        <Query updateQueryResults={this.updateQueryResults} setToDefault={this.setToDefault} id={this.props.id}/>
+        <Query 
+          updateQueryResults={this.updateQueryResults} 
+          setToDefault={this.setToDefault} 
+          id={this.props.id}
+        />
         <Results results={this.state.responseElement} />
       </div>
     );
@@ -119,7 +157,7 @@ class Query extends Component {
   render() {
     return (
       <>
-      <h3>Query</h3>
+      <p><strong>Query:</strong></p>
       <InputGroup>
         <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
         <FormControl
@@ -147,19 +185,8 @@ class Results extends Component {
                 "paddingTop": "1rem", 
                 "paddingBottom": "1rem"
             }}>
-      <h3>Results</h3>
-      <div style={{
-                "height": "120px",
-                "borderRadius": "0.4rem",
-                "overflow": "hidden",
-                "overflowY": "scroll",
-                "color": "black",
-                "width": "100%",
-                "background": "#eee",
-                "padding": "1rem"
-            }}>
+        <p><strong>Result:</strong></p>
         {this.props.results}
-      </div>
       </div>
     );
   }
