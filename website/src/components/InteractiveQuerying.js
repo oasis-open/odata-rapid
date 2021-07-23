@@ -87,7 +87,7 @@ class InteractiveQuerying extends Component {
 
   // select, expand, filter, skip, top, count, orderby
   formatQuery(query) {
-    let formattedQuery = query.replace(/select/g, "$select");
+    /*let formattedQuery = query.replace(/select/g, "$select");
     formattedQuery = formattedQuery.replace(/expand/g, "$expand");
     formattedQuery = formattedQuery.replace(/filter/g, "$filter");
     formattedQuery = formattedQuery.replace(/skip/g, "$skip");
@@ -95,7 +95,19 @@ class InteractiveQuerying extends Component {
     formattedQuery = formattedQuery.replace(/count/g, "$count");
     formattedQuery = formattedQuery.replace(/orderby/g, "$orderby");
     formattedQuery = formattedQuery.replace(/$$/g, "$");
-    formattedQuery = formattedQuery.substring(0, formattedQuery.length - 1);
+    formattedQuery = formattedQuery.substring(0, formattedQuery.length - 1);*/
+
+    let formattedQuery = "";
+    for (let i = 0; i < query.length - 1; i++) {
+      let currChar = query.charAt(i);
+      formattedQuery += currChar;
+
+      if ((currChar == '?' || currChar == '(' || currChar == '&' || currChar == ';')
+          && query.charAt(i+1) != '$') {
+        formattedQuery += '$';
+      }
+    }
+    formattedQuery += query.charAt(query.length - 1);
 
     /*let queryPieces = query.split("?");
     let formattedQuery = queryPieces[0];
