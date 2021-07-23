@@ -22,18 +22,25 @@ import {Component} from 'react';
 class InteractiveQuerying extends Component {
   constructor(props) {
     super(props);
+    let newController = new AbortController();
 
     this.state = {
       queryUrl: this.props.defaultQuery,
-      responseElement: <p></p>
+      responseElement: <p></p>,
+      controller: newController,
+      signal: newController.signal
     }
   }
 
   /// <summary>Start with results displayed.</summary>
-  /// <remarks>Optional</remarks>
   componentDidMount() {
     document.getElementById(this.props.id).value = this.props.defaultQuery;
     this.fetchResults(this.props.defaultQuery);
+  }
+  
+  /// <summary>Abandon fetch request before component unmounts.</summary>
+  componentWillUnmount() {
+    this.state.controller.abort();
   }
 
   /// <summary>Gets the results for the query entered by the user.</summary>
@@ -63,7 +70,8 @@ class InteractiveQuerying extends Component {
   /// <param name="query">Query on the Jetsons API.</param>
   fetchResults(query) {
     let formattedQuery = this.formatQuery(query);
-    fetch("https://jetsons.azurewebsites.net/" + formattedQuery)
+    let signal = this.state.signal;
+    fetch("https://jetsons.azurewebsites.net/" + formattedQuery, {signal})
     .then (res => res.text())
     .then(
       (result) => {
@@ -77,8 +85,19 @@ class InteractiveQuerying extends Component {
     });
   }
 
+  // select, expand, filter, skip, top, count, orderby
   formatQuery(query) {
-    let queryPieces = query.split("?");
+    let formattedQuery = query.replace(/select/g, "$select");
+    formattedQuery = formattedQuery.replace(/expand/g, "$expand");
+    formattedQuery = formattedQuery.replace(/filter/g, "$filter");
+    formattedQuery = formattedQuery.replace(/skip/g, "$skip");
+    formattedQuery = formattedQuery.replace(/top/g, "$top");
+    formattedQuery = formattedQuery.replace(/count/g, "$count");
+    formattedQuery = formattedQuery.replace(/orderby/g, "$orderby");
+    formattedQuery = formattedQuery.replace(/$$/g, "$");
+    formattedQuery = formattedQuery.substring(0, formattedQuery.length - 1);
+
+    /*let queryPieces = query.split("?");
     let formattedQuery = queryPieces[0];
     for (let i = 1; i < queryPieces.length; i++) {
       let piece = queryPieces[i];
@@ -87,7 +106,8 @@ class InteractiveQuerying extends Component {
       } else {
         formattedQuery += "?" + piece;
       }
-    }
+    }*/
+
     return formattedQuery;
   }
 
@@ -133,8 +153,8 @@ class Results extends Component {
   render() {
     return (
       <div style={{
-                "padding-top": "1rem", 
-                "padding-bottom": "1rem"
+                "paddingTop": "1rem", 
+                "paddingBottom": "1rem"
             }}>
       <h3>Results</h3>
       <div style={{
