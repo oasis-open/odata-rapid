@@ -56,7 +56,7 @@ returnType: ':' annotation* typeReference;
 
 // Enumeration Type
 
-enumType: annotation* enumKind ID '{' enumMember* '}';
+enumType: annotation* enumKind ID '{' enumMember+ '}';
 
 enumKind: 'enum' | 'flags';
 
@@ -83,7 +83,7 @@ serviceOperation:
 
 // Annotations
 
-annotation: '@' qualifiedName ':' value;
+annotation: TID ':' value;
 
 value:
 	'true'
@@ -99,8 +99,8 @@ arr: '[' item (',' item)* ']' | '[' ']';
 item: value;
 
 obj: '{' pair (',' pair)* '}' | '{' '}';
-//TODO: pair can also be an annotation
-pair: ID ':' value;
+pair: name ':' value;
+name: ID | STRING | TID;
 
 path: '.' ('/' ID)+;
 
@@ -127,6 +127,7 @@ fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 EDM: 'Edm.' SIMPLE;
 ID: SIMPLE;
 QID: SIMPLE ('.' SIMPLE)+;
+TID: '@' SIMPLE ('.' SIMPLE)+ ('#' SIMPLE)?;
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 fragment SIMPLE: [a-zA-Z_][a-zA-Z_0-9]*;
 
