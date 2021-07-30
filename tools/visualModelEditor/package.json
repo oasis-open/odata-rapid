@@ -1,0 +1,16 @@
+{
+  "name": "visualmodeleditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "handlebars": "^4.7.7",
+    "mermaid": "^8.10.2",
+    "rsdl-js": "^0.2.0"
+  }
+}

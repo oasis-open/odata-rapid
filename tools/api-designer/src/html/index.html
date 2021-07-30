@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>Rapid Rocks</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Rapid Rocks</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+    <main id="contentArea" role="main" class="container-fluid">
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <ul class="nav nav-tabs" id="editorTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link active"
+                id="rsdl-editor-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#rsdl-editor"
+                role="tab"
+                aria-controls="rsdl-editor"
+                aria-selected="true"
+              >
+                RSDL editor
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link"
+                id="rsdl-editor-gui-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#rsdl-editor-gui"
+                role="tab"
+                aria-controls="rsdl-editor-gui"
+                aria-selected="false"
+              >
+                Visualize
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="editorTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="rsdl-editor"
+              role="tabpanel"
+              aria-labelledby="swagger-ui-tab"
+            >
+              <div id="editor" class="mirror-editor"></div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="rsdl-editor-gui"
+              role="tabpanel"
+              aria-labelledby="swagger-ui-tab"
+            >
+              <div id="rsdl-editor-gui-content"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm">
+                <label id="portLabel" for="portField" class="input-group-text"
+                  >Port</label
+                >
+                <input
+                  type="number"
+                  id="portField"
+                  class="form-control"
+                  value="8080"
+                  aria-labelledby="portLabel"
+                />
+                <button
+                  type="button"
+                  id="build-service-button"
+                  class="btn btn-primary"
+                >
+                  Build Your Service
+                </button>
+                <button
+                  type="button"
+                  id="stop-service-button"
+                  class="btn btn-danger"
+                >
+                  Stop Service
+                </button>
+              </div>
+            </div>
+            <div class="col-auto">
+              <span id="service-status" class="badge"></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link active"
+                id="swagger-ui-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#swagger-ui"
+                role="tab"
+                aria-controls="swagger-ui"
+                aria-selected="true"
+              >
+                Swagger UI
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link"
+                id="csdl-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#csdl"
+                role="tab"
+                aria-controls="csdl"
+                aria-selected="false"
+              >
+                Csdl
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link"
+                id="open-api-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#open-api"
+                role="tab"
+                aria-controls="open-api"
+                aria-selected="false"
+              >
+                Open API
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="swagger-ui"
+              role="tabpanel"
+              aria-labelledby="swagger-ui-tab"
+            >
+              <div>
+                <div id="swagger-ui-desc"></div>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="csdl"
+              role="tabpanel"
+              aria-labelledby="csdl-tab"
+            >
+              <pre><code id="csdl-desc" class="language-json"></code></pre>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="open-api"
+              role="tabpanel"
+              aria-labelledby="open-api-tab"
+            >
+              <pre><code id="open-api-desc" class="language-json"></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-3">
+        <label for="uri-editor" class="form-label">
+          Generate a request here
+        </label>
+        <div class="input-group">
+          <div id="uri-editor" type="text" class="form-control"></div>
+          <button id="send-button" class="btn btn-primary" type="button">
+            Send
+          </button>
+        </div>
+      </div>
+      <div class="">
+        <label for="results">Results</label>
+        <pre><code id="results" class="language-json"></code></pre>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="dropdown">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="exportBtn"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Export
+            </button>
+            <ul
+              id="export-dropdown"
+              class="dropdown-menu"
+              aria-labelledby="exportBtn"
+            >
+              <li>
+                <a id="export-rsdl" class="dropdown-item" href="#">RSDL</a>
+              </li>
+              <li>
+                <a id="export-csdl" class="dropdown-item" href="#">CSDL</a>
+              </li>
+              <li>
+                <a id="export-open-api" class="dropdown-item" href="#"
+                  >Open API</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <a href="http://rapid.rocks/" target="_blank"
+            ><img
+              src="../images/rapid-mascot.png"
+              height="50px"
+              alt="Rapid mascot"
+          /></a>
+        </div>
+      </div>
+    </main>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html>
