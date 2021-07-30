@@ -630,7 +630,6 @@ type Company {
     "$Collection": true,
     "$Type": "Model.Company",
     "$NavigationPropertyBinding": {
-      "ceo": "employees",
       "employees": "employees"
     }
   },
@@ -661,7 +660,6 @@ type Company {
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="competitors" EntityType="Model.Company">
-    <NavigationPropertyBinding Path="ceo" Target="employees" />
     <NavigationPropertyBinding Path="employees" Target="employees" />
   </EntitySet>
   <EntitySet Name="employees" EntityType="Model.Employee" />

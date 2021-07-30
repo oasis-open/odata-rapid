@@ -323,6 +323,7 @@ describe("Parse correct RSDL", () => {
       parse(`type foo { 
                @Validation.Maximum: 1e3
                @Validation.Minimum: 1e-2
+               @a.b: { c: true, d: [], @e.f: {}, "g":./h}
                bar: Double
              }
              `),
@@ -336,6 +337,12 @@ describe("Parse correct RSDL", () => {
               $Type: "Edm.Double",
               "@Org.OData.Validation.V1.Maximum": 1000,
               "@Org.OData.Validation.V1.Minimum": 0.01,
+              "@a.b": {
+                c: true,
+                d: [],
+                "@e.f": {},
+                g: { $Path: "h" },
+              },
             },
           },
         },
@@ -346,7 +353,7 @@ describe("Parse correct RSDL", () => {
   it("Type definitions", () => {
     assert.deepStrictEqual(
       parse(
-        `@Core.Description: "Monetary Amount"
+        `@Core.Description#foo: "Monetary Amount"
          typedef Amount: Decimal(23,5)
 
          @Core.Description: "ISO or custom currency"
@@ -358,7 +365,7 @@ describe("Parse correct RSDL", () => {
         $Version: "4.0",
         Model: {
           Amount: {
-            "@Org.OData.Core.V1.Description": "Monetary Amount",
+            "@Org.OData.Core.V1.Description#foo": "Monetary Amount",
             $Kind: "TypeDefinition",
             $Type: "Edm.Decimal",
             $Precision: 23,
