@@ -58,14 +58,13 @@ function parse(inputString, failAt, expect) {
   });
 
   if (result.success && failAt == null) {
-    console.log(`${colors.green("OK:")} ${inputString}`);
-
     if (expect) {
       const data = [];
       ast.translate(data);
       try {
         assert.deepStrictEqual(data, expect);
       } catch (e) {
+        console.log(`${colors.green("OK:")} ${inputString}`);
         console.log(
           e.message.replace(
             /^Expected values to be strictly deep-equal/,
@@ -88,11 +87,11 @@ function parse(inputString, failAt, expect) {
   }
 
   if (!result.success && result.maxMatched == failAt) {
-    console.log(
-      `${colors.green("OK:")} ${inputString} ${colors.green(
-        `fails at ${failAt}`
-      )}`
-    );
+    // console.log(
+    //   `${colors.green("OK:")} ${inputString} ${colors.green(
+    //     `fails at ${failAt}`
+    //   )}`
+    // );
     return true;
   }
 

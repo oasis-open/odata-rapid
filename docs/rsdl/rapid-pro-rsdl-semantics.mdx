@@ -681,6 +681,54 @@ service {
 </TabItem>
 </Tabs>
 
+## Descriptions and Comments
+
+All elements of a model can be described by lines starting with `##` preceding the model element.
+These descriptions are mapped to annotations with term [Core.Description](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md#Description) in the corresponding CSDL construct.
+
+In addition anything after a single `#` character will be treated as a comment and ignored when mapping to CSDL.
+
+```
+## The Employees Service
+# still needs some work
+service {
+  ## List of all employees
+  employees: [Employee]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer",
+  "@Core.Description": "The Employees Service",
+  "employees": { "$Collection": true, "$Type": "Model.Employee", "@Core.Description": "List of all employees" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+  <Annotation Term="Core.Description" String="The Employees Service" />
+  <EntitySet Name="employees" EntityType="Model.Employee">
+    <Annotation Term="Core.Description" String="List of all employees" />
+  </EntitySet>
+</EntityContainer>
+```
+
+</TabItem>
+</Tabs>
 ## Appendix
 
 ### References
