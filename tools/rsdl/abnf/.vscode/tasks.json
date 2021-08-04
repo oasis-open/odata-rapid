@@ -1,0 +1,35 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Check ABNF",
+      "type": "shell",
+      "command": "./lib/check-abnf.ps1",
+      "options": {
+        "cwd": "."
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Check ABNF & watch",
+      "type": "shell",
+      "command": "./lib/check-abnf.ps1 -watch",
+      "options": {
+        "cwd": "."
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

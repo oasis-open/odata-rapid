@@ -1,0 +1,6 @@
+SLASH=1
+LEFT_PAREN=2
+RIGHT_PAREN=3
+'/'=1
+'('=2
+')'=3

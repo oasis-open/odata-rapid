@@ -1,0 +1,30 @@
+#contentArea .tab-content .tab-pane {
+  height: 560px;
+  overflow: auto;
+
+  #editor.mirror-editor {
+    .cm-content,
+    .cm-gutter {
+      min-height: 550px;
+    }
+    .cm-gutters {
+      margin: 1px;
+    }
+    .cm-scroller {
+      overflow: auto;
+    }
+    .cm-wrap {
+      border: 1px solid #282c34;
+    }
+  }
+
+  code.hljs {
+    background: #fff;
+  }
+
+  #swagger-ui-desc {
+    .information-container.wrapper, .scheme-container {
+      display: none;
+    }    
+  }
+}
