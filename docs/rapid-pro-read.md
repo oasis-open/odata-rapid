@@ -202,7 +202,7 @@ http://rapid-pro.org/company/employees?select=lastName
 
 ### Requesting a Range of Members
 
-The client can use `top` and/or `skip` query options to select a range of resources within a collection. 
+The client can use `skip` and/or `top` query options to select a range of resources within a collection.
 They can use the `count` query option to request the count of all resources in the collection.
 
 | Template    | GET {collection-resource-path}?skip={int}<br/>GET {collection-resource-path}?top={int}<br/>GET {collection-resource-path}?count=true                  |
@@ -232,7 +232,8 @@ They can use the `count` query option to request the count of all resources in t
 }
 ```
 
-The result skips the first member and returns the next two.
+The `skip` option is used to specify how many members at the beginning of a collection to ignore; `top` refers to how many members to return from the beginning of the remaining collection. Therefore, in this example, the result skips the first member and returns the next two.
+
 The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`. 
 There is no next link because all two of the requested resources are returned.
 
