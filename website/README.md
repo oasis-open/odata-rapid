@@ -14,6 +14,10 @@ yarn build
 
 ### Installation
 
+Build the required [urlEditor](../tools/urlEditor) package.
+
+Then:
+
 ```
 $ yarn
 ```

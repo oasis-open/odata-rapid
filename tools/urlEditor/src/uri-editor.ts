@@ -1,7 +1,6 @@
 import { basicSetup, EditorState, EditorView } from "@codemirror/basic-setup";
 import { autocompletion, CompletionSource } from '@codemirror/autocomplete';
 import { linter, Diagnostic } from '@codemirror/lint';
-// TODO: This should be imported from the odataUri library once it's turned into a package
 import { AutoCompleteManager } from "odata-uri";
 import { getDocContent, convertToCsdl } from "./utils";
 
@@ -79,7 +78,11 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
         manager.updateSchema(jsonCsdl);
     };
 
-    return { updateSchema };
+    function getUrl() {
+        return getDocContent(editor.state.doc);
+    }
+
+    return { updateSchema, getUrl };
 }
 
 export { initUrlEditor };
