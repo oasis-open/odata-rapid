@@ -1,0 +1,129 @@
+@top Program { expression* }
+
+@skip { space | LineComment }
+
+expression {
+  Identifier |
+  TypeDefinition |
+  ServiceDefinition |
+  Application { "(" expression* ")" }
+}
+
+@tokens {
+  Identifier { $[a-z_$] $[a-zA-Z0-9_$]* }
+
+  Digits { $[0-9]+ }
+
+  CapitalIdentifier { $[A-Z] $[a-zA-Z0-9_$]* }
+
+  LineComment { "#" ![\n]* }
+
+  space { $[ \t\n\r]+ }
+
+  StringLiteral { "\"" (![\\"\n] | "\\" (![\n] | "\n"))* "\"" }
+
+  "{" "}"
+
+  ":"
+}
+
+kw<term> { @specialize[@name={term}]<Identifier, term> }
+
+VariableName { Identifier }
+
+DefinitionName { Identifier }
+
+TypeRefName {
+  Identifier ("." (Identifier | CapitalIdentifier))* |
+  CapitalIdentifier
+}
+
+TypeDefinition {
+  kw<"type"> DefinitionName "{" TypeBodyDefinition "}"
+}
+
+ServiceDefinition {
+  kw<"service"> DefinitionName? "{" ServiceBodyDefinition "}"
+}
+
+ServiceBodyDefinition {
+  TypeBodyDefinition |
+  EnumDefinition |
+}
+
+TypeBodyDefinition {
+  FieldDefinition |
+  FunctionDefinition |
+  ActionDefinition |
+  AnnotationDefinition
+}
+
+FieldDefinition {
+  kw<"key">? VariableName ":" FieldType
+}
+
+FieldType {
+  RequiredType |
+  OptionalType |
+  MultiValuedType
+}
+
+RequiredType {
+  TypeRefName
+}
+
+MultiValuedType {
+  "[" RequiredType "]" |
+  "[" OptionalType "]"
+}
+
+OptionalType {
+  TypeRefName "?"
+}
+
+FunctionDefinition {
+  kw<"function"> Identifier FormalParameters ":" FieldType 
+}
+
+ActionDefinition {
+  kw<"action"> Identifier FormalParameters
+}
+
+FormalParameters {
+  "(" CommaSepParams<FormalParameter> ")"
+}
+
+CommaSepParams<expression> { (expression ("," expression)*)? }
+
+FormalParameter {
+  VariableName ":" FieldType
+}
+
+EnumDefinition {
+  kw<"enum"> DefinitionName "{" SpaceSepIds<Identifier> "}" |
+  kw<"flags"> DefinitionName "{" SpaceSepIds<Identifier> "}"
+}
+
+SpaceSepIds<Identifier> { (Identifier (Identifier)*)? }
+
+NumberLiteral {
+  Digits "."? Digits+
+}
+
+Literal {
+  kw<"true"> | 
+  kw<"false"> |
+  kw<"null"> |
+  NumberLiteral |
+  StringLiteral
+}
+
+AnnotationValue { Literal }
+
+CommaSepAnnotationValues { (AnnotationValue ("," AnnotationValue)*)? }
+
+AnnotationDefinition {
+  "@" TypeRefName ":" (AnnotationValue | "[" CommaSepAnnotationValues "]")
+}
+
+@detectDelim
