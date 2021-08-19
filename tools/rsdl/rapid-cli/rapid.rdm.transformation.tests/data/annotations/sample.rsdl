@@ -25,11 +25,11 @@ abstract type Animal
 {
     key name: String
 
-
     @Validation.MultipleOf: 2
     numberOfLegs: Integer
 
     function a(): Integer
+
     action b(): Integer
 }
 

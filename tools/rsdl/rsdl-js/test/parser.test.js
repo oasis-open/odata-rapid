@@ -323,7 +323,7 @@ describe("Parse correct RSDL", () => {
       parse(`type foo { 
                @Validation.Maximum: 1e3
                @Validation.Minimum: 1e-2
-               @a.b: { c: true, d: [], @e.f: {}, "g":./h}
+               @a.b: { c: true, d: [], @e.f: {}, "g":./h }
                bar: Double
              }
              `),
@@ -337,12 +337,7 @@ describe("Parse correct RSDL", () => {
               $Type: "Edm.Double",
               "@Org.OData.Validation.V1.Maximum": 1000,
               "@Org.OData.Validation.V1.Minimum": 0.01,
-              "@a.b": {
-                c: true,
-                d: [],
-                "@e.f": {},
-                g: { $Path: "h" },
-              },
+              "@a.b": { c: true, d: [], "@e.f": {}, g: { $Path: "h" } },
             },
           },
         },
@@ -399,6 +394,82 @@ describe("Parse correct RSDL", () => {
         $Version: "4.0",
         Model: {
           foo: { $Kind: "ComplexType", $OpenType: true, bar: {}, baz: {} },
+        },
+      }
+    );
+  });
+
+  it("Documentation comments", () => {
+    assert.deepStrictEqual(
+      parse(`## good type
+      
+             ##
+             # this is ignored and does not add a line break
+             ## has nice properties
+             ## and a cool action
+             type foo {
+               ## nice property
+               bar: String
+               ## cool action
+               ## does something
+               action baz( 
+                 ## action parameter
+                 quux: Integer 
+               ) : ## a string
+                   String
+               # just a normal comment, ignore
+               qux: String # ignore
+             }
+
+             ## colors make stuff look nicer
+             enum colors {
+               ## tomatoes
+               red 
+               ## mozzarella
+               white 
+               ## basil
+               green}
+             `),
+      {
+        $Version: "4.0",
+        Model: {
+          foo: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            "@Org.OData.Core.V1.Description":
+              "good type\n\nhas nice properties\nand a cool action",
+            bar: { "@Org.OData.Core.V1.Description": "nice property" },
+            qux: {},
+          },
+          colors: {
+            $Kind: "EnumType",
+            "@Org.OData.Core.V1.Description": "colors make stuff look nicer",
+            red: 0,
+            "red@Org.OData.Core.V1.Description": "tomatoes",
+            white: 1,
+            "white@Org.OData.Core.V1.Description": "mozzarella",
+            green: 2,
+            "green@Org.OData.Core.V1.Description": "basil",
+          },
+          baz: [
+            {
+              $IsBound: true,
+              $Kind: "Action",
+              "@Org.OData.Core.V1.Description": "cool action\ndoes something",
+              $Parameter: [
+                {
+                  $Name: "this",
+                  $Type: "Model.foo",
+                },
+                {
+                  $Name: "quux",
+                  $Type: "Edm.Int32",
+                  "@Org.OData.Core.V1.Description": "action parameter",
+                },
+              ],
+              $ReturnType: { "@Org.OData.Core.V1.Description": "a string" },
+            },
+          ],
         },
       }
     );

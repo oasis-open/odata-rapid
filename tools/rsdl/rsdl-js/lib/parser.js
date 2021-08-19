@@ -69,11 +69,20 @@ class MyListener extends rsdlListener {
       console.error("Panic: no annotatable!!!");
     }
 
-    const term = this.normalizeTermName(ctx.TID().getText());
-    this.annotatable[0].target[
-      `${this.annotatable[0].prefix}${term}`
-      //TODO: parse annotation value
-    ] = this.annotation[0].value;
+    const docComment = ctx.DOC_COMMENT();
+    if (docComment) {
+      const name = `${this.annotatable[0].prefix}@Org.OData.Core.V1.Description`;
+      const newText = docComment.getText().substring(2).trim();
+      const oldText = this.annotatable[0].target[name];
+      this.annotatable[0].target[name] = oldText
+        ? `${oldText}\n${newText}`
+        : newText;
+    } else {
+      const term = this.normalizeTermName(ctx.TID().getText());
+      this.annotatable[0].target[`${this.annotatable[0].prefix}${term}`] =
+        this.annotation[0].value;
+    }
+
     this.annotation.shift();
   }
 
