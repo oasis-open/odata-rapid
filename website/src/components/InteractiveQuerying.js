@@ -184,7 +184,7 @@ class Query extends Component {
   render() {
     return (
       <>
-      <p><strong>Query:</strong></p>
+      <p><strong>Example Query:</strong></p>
       <div>
       <InputGroup style={{"alignItems":"center"}}>
         <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
@@ -197,7 +197,7 @@ class Query extends Component {
         />*/}
         <div style={{"flexGrow":"1"}} id={this.props.id}/>
         <Button variant="outline-primary" onClick={() => this.props.updateQueryResults()}>
-          Get Results
+          Get Result
         </Button>
         <Button variant="outline-secondary" onClick={() => this.props.setToDefault()}>Revert</Button>
       </InputGroup>
