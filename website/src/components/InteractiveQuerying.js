@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
-
+import { initUrlEditor } from "odata-uri-editor";
 
 /// <summary>Tool to allow a user to make a query on the Jetsons API and see the results.</summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
@@ -20,6 +20,7 @@ class InteractiveQuerying extends Component {
   constructor(props) {
     super(props);
     let newController = new AbortController();
+    this.editor = null;
 
     this.state = {
       queryUrl: this.props.defaultQuery,
@@ -31,7 +32,31 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Start with results displayed.</summary>
   componentDidMount() {
-    document.getElementById(this.props.id).value = this.props.defaultQuery;
+    //document.getElementById(this.props.id).value = this.props.defaultQuery;
+    this.editor = initUrlEditor(document.getElementById(this.props.id));
+    this.editor.setUrl(this.props.defaultQuery);
+    let schema = `
+    type Company
+    {
+        stockSymbol: String
+        name: String
+        incorporated: Date
+        employees: [Employee]
+    }
+
+    type Employee
+    {
+        key id: Integer
+        firstName: String
+        lastName: String
+        title: String
+    }
+    
+    service {
+        company: Company
+        competitors: [Company]
+    }`
+    this.editor.updateSchema(schema);
     this.fetchResults(this.props.defaultQuery);
   }
   
@@ -42,7 +67,8 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Gets the results for the query entered by the user.</summary>
   updateQueryResults = () => {
-    let newQuery = document.getElementById(this.props.id).value;
+    //let newQuery = document.getElementById(this.props.id).value;
+    let newQuery = this.editor.getUrl();
     if (newQuery !== "") {
       this.setState({queryUrl: newQuery});
       this.fetchResults(newQuery);
@@ -56,7 +82,8 @@ class InteractiveQuerying extends Component {
   ///   Sets the query/results to the default given from <propref name="defaultQuery"/>.
   /// </summary>
   setToDefault = () => {
-    document.getElementById(this.props.id).value = this.props.defaultQuery;
+    // document.getElementById(this.props.id).value = this.props.defaultQuery;
+    this.editor.setUrl(this.props.defaultQuery);
     this.setState({queryUrl: this.props.defaultQuery});
     this.fetchResults(this.props.defaultQuery);
   }
@@ -158,19 +185,23 @@ class Query extends Component {
     return (
       <>
       <p><strong>Query:</strong></p>
-      <InputGroup>
+      <div>
+      <InputGroup style={{"alignItems":"center"}}>
         <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
-        <FormControl
+        {/*font: droid sans mono pro*/}
+        {/*<FormControl
           id={this.props.id}
-          /* For error checking: isInvalid="true" isValid="true" */
+          //For error checking: isInvalid="true" isValid="true"
           placeholder="URL Query"
           aria-label="URL Query with buttons to revert and get results"
-        />          
+        />*/}
+        <div style={{"flexGrow":"1"}} id={this.props.id}/>
         <Button variant="outline-primary" onClick={() => this.props.updateQueryResults()}>
           Get Results
         </Button>
         <Button variant="outline-secondary" onClick={() => this.props.setToDefault()}>Revert</Button>
       </InputGroup>
+      </div>
       </>
     );
   }

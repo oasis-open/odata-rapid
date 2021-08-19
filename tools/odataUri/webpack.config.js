@@ -30,8 +30,8 @@ module.exports = {
         globalObject: 'this',
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        new webpack.ProvidePlugin({
+            process: "process/browser"
         })
     ],
     mode: "production"
