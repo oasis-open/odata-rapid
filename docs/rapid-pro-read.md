@@ -4,13 +4,11 @@ title: Reading Resources
 sidebar_label: Reading Resources
 ---
 
-import InteractiveQuerying from '../website/src/components/InteractiveQuerying.js';
+import InteractiveQuerying from '../website/src/components/documentation-queries/InteractiveQuerying.js';
 
-import TemplateRequest from '../website/src/components/TemplateRequest.js';
+import TemplateRequest from '../website/src/components/documentation-queries/TemplateRequest.js';
 
-import Request from '../website/src/components/Request.js';
-
-import InputGroup from 'react-bootstrap/InputGroup';
+import Request from '../website/src/components/documentation-queries/Request.js';
 
 ## Retrieving a Resource
 

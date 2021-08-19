@@ -1,8 +1,8 @@
 import React from "react";
 import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './InteractiveQuerying.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
 import { initUrlEditor } from "odata-uri-editor";
@@ -186,7 +186,7 @@ class Query extends Component {
       <>
       <p><strong>Example Query:</strong></p>
       <div>
-      <InputGroup style={{"alignItems":"center"}}>
+      <InputGroup>
         <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
         {/*font: droid sans mono pro*/}
         {/*<FormControl
