@@ -6,7 +6,7 @@
   "publisher": "oasis-open",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oasis-open/odata-rapid/tree/master/tools/rsdl/syntax-highlighting"
+    "url": "https://github.com/oasis-open/odata-rapid/tree/main/tools/rsdl/syntax-highlighting"
   },
   "license": "Apache-2.0",
   "engines": {

@@ -11,7 +11,7 @@ repository projects.  Participation is expected to be consistent with the
 the [LICENSE](https://www.oasis-open.org/sites/www.oasis-open.org/files/Apache-LICENSE-2.0.txt) 
 designated for this particular repository (Apache License v 2.0), and the requirement for 
 an [Individual Contributor License Agreement](https://www.oasis-open.org/resources/open-repositories/cla/individual-cla). 
-Please see the repository [README](https://github.com/oasis-open/odata-rapid/blob/master/README.md) 
+Please see the repository [README](https://github.com/oasis-open/odata-rapid/blob/main/README.md) 
 document for other details.
 
 ## Governance Distinct from OASIS TC Process
@@ -33,7 +33,7 @@ as referenced in the
 Because different licenses apply to the OASIS TC's specification work, and this TC Open Repository, 
 there is no guarantee that the licensure of specific repository material will be compatible with 
 licensing requirements of an implementation of a TC's specification.  Please refer to the 
-[LICENSE](https://github.com/oasis-open/odata-rapid/blob/master/LICENSE) file for the terms 
+[LICENSE](https://github.com/oasis-open/odata-rapid/blob/main/LICENSE) file for the terms 
 of this material, and to the OASIS IPR Policy for 
 [the terms applicable](https://www.oasis-open.org/policies-guidelines/ipr#RF-on-RAND-Mode) 
 to the TC's specifications, including any applicable 
@@ -45,7 +45,7 @@ to the TC's specifications, including any applicable
 
 Formally, "contribution" to this TC Open Repository refers to content merged into the "Code" repository 
 (repository changes represented by code 
-[commits](https://github.com/oasis-open/odata-rapid/commits/master)), following the 
+[commits](https://github.com/oasis-open/odata-rapid/commits/main)), following the 
 GitHub definition of [contributor](https://help.github.com/articles/github-glossary/#contributor): 
 "someone who has contributed to a project by having a pull request merged but does not have collaborator 
 [i.e. direct write] access." Anyone who signs the TC Open Repository 
@@ -81,7 +81,7 @@ by the repository [Maintainers](https://www.oasis-open.org/resources/open-reposi
 
 Questions or comments about this TC Open Repository's activities should be composed as GitHub issues or 
 comments. If use of an issue/comment is not possible or appropriate, questions may be directed by email 
-to the [Maintainers](https://github.com/oasis-open/odata-rapid/blob/master/README.md#maintainers).  
+to the [Maintainers](https://github.com/oasis-open/odata-rapid/blob/main/README.md#maintainers).  
 Please send general questions about TC Open Repository participation to OASIS Staff at 
 mailto:repository-admin@oasis-open.org and any specific CLA-related questions to 
 mailto:repository-cla@oasis-open.org.
