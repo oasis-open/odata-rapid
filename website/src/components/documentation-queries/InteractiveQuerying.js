@@ -98,7 +98,7 @@ class InteractiveQuerying extends Component {
         if (result === "The page cannot be displayed because an internal server error has occurred.") {
           result = "This query is not valid; please try a different query."
         } else {
-          result = this.formatJson(result);
+          result = JSON.parse(result);
         }
         let newResponse = <CodeBlock className="language-json">{result}</CodeBlock>
         this.setState({responseElement: newResponse})
@@ -123,45 +123,6 @@ class InteractiveQuerying extends Component {
     }
     formattedQuery += query.charAt(query.length - 1);
     return formattedQuery;
-  }
-
-  /// <summary>Adds spacing to match JSON conventions.</summary>
-  /// <param name="json">JSON to reformat.</json>
-  formatJson(json) {
-    let formattedJson = "";
-    let tabLevel = 0;
-    let inQuote = false;
-    for (let i = 0; i < json.length; i++) {
-      let currChar = json.charAt(i);
-      if (currChar == '{' || currChar == '[') {
-        tabLevel++;
-        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
-      } else if (currChar == ',' && !inQuote) {
-        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
-      } else if (currChar == '}' || currChar == ']') {
-        tabLevel--;
-        formattedJson += '\n' + this.getTabSpaces(tabLevel) + currChar;
-      } else if (currChar == ':') {
-        formattedJson += currChar + " ";
-      } else {
-        if (currChar == '\"') {
-          inQuote = !inQuote;
-        }
-        formattedJson += currChar;
-      }
-    }
-    return formattedJson;
-  }
-
-  /// <summary>Generates spaces for a given number of tabs.</summary>
-  /// <param name="tabLevel">Number of tabs.</param>
-  /// <returns>String of spaces.</returns>
-  getTabSpaces(tabLevel) {
-    let spaces = "";
-    for (let i = 1; i <= tabLevel; i++) {
-      spaces += "    ";
-    }
-    return spaces;
   }
 
   render() {
