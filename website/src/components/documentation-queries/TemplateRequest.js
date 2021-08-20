@@ -5,7 +5,7 @@ import Request from './Request.js';
 class TemplateRequest extends Component {
   render() {
     return (
-      <div class="test">
+      <div>
         <p><strong>Template:</strong></p>
         <Request command={this.props.command} query={this.props.query}/>
       </div>

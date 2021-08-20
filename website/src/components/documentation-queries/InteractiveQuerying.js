@@ -32,7 +32,6 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Start with results displayed.</summary>
   componentDidMount() {
-    //document.getElementById(this.props.id).value = this.props.defaultQuery;
     this.editor = initUrlEditor(document.getElementById(this.props.id));
     this.editor.setUrl(this.props.defaultQuery);
     let schema = `
@@ -60,21 +59,19 @@ class InteractiveQuerying extends Component {
     this.fetchResults(this.props.defaultQuery);
   }
   
-  /// <summary>Abandon fetch request before component unmounts.</summary>
+  /// <summary>Abandons fetch request before component unmounts.</summary>
   componentWillUnmount() {
     this.state.controller.abort();
   }
 
   /// <summary>Gets the results for the query entered by the user.</summary>
   updateQueryResults = () => {
-    //let newQuery = document.getElementById(this.props.id).value;
     let newQuery = this.editor.getUrl();
     if (newQuery !== "") {
       this.setState({queryUrl: newQuery});
       this.fetchResults(newQuery);
     } else {
       this.setToDefault();
-      //this.setState({responseElement: <p></p>})
     }
   }
 
@@ -82,7 +79,6 @@ class InteractiveQuerying extends Component {
   ///   Sets the query/results to the default given from <propref name="defaultQuery"/>.
   /// </summary>
   setToDefault = () => {
-    // document.getElementById(this.props.id).value = this.props.defaultQuery;
     this.editor.setUrl(this.props.defaultQuery);
     this.setState({queryUrl: this.props.defaultQuery});
     this.fetchResults(this.props.defaultQuery);
@@ -129,6 +125,8 @@ class InteractiveQuerying extends Component {
     return formattedQuery;
   }
 
+  /// <summary>Adds spacing to match JSON conventions.</summary>
+  /// <param name="json">JSON to reformat.</json>
   formatJson(json) {
     let formattedJson = "";
     let tabLevel = 0;
@@ -155,6 +153,9 @@ class InteractiveQuerying extends Component {
     return formattedJson;
   }
 
+  /// <summary>Generates spaces for a given number of tabs.</summary>
+  /// <param name="tabLevel">Number of tabs.</param>
+  /// <returns>String of spaces.</returns>
   getTabSpaces(tabLevel) {
     let spaces = "";
     for (let i = 1; i <= tabLevel; i++) {
@@ -185,23 +186,16 @@ class Query extends Component {
     return (
       <>
       <p><strong>Example Query:</strong></p>
-      <div>
       <InputGroup>
-        <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
-        {/*font: droid sans mono pro*/}
-        {/*<FormControl
-          id={this.props.id}
-          //For error checking: isInvalid="true" isValid="true"
-          placeholder="URL Query"
-          aria-label="URL Query with buttons to revert and get results"
-        />*/}
-        <div style={{"flexGrow":"1"}} id={this.props.id}/>
+        <InputGroup.Text style={{"paddingRight":"0"}}>GET /</InputGroup.Text>
+        <div className="query-editor" id={this.props.id}/>
         <Button variant="outline-primary" onClick={() => this.props.updateQueryResults()}>
           Get Result
         </Button>
-        <Button variant="outline-secondary" onClick={() => this.props.setToDefault()}>Revert</Button>
+        <Button style={{"borderLeft":"none"}} variant="outline-secondary" onClick={() => this.props.setToDefault()}>
+          Revert
+        </Button>
       </InputGroup>
-      </div>
       </>
     );
   }
