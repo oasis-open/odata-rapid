@@ -99,6 +99,7 @@ class InteractiveQuerying extends Component {
           result = "This query is not valid; please try a different query."
         } else {
           result = JSON.parse(result);
+          result = JSON.stringify(result, null, 4);
         }
         let newResponse = <CodeBlock className="language-json">{result}</CodeBlock>
         this.setState({responseElement: newResponse})
