@@ -76,7 +76,6 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
 
     const updateSchema = (rsdl: string) => {
         const jsonCsdl = convertToCsdl(rsdl);
-        console.log(jsonCsdl);
         manager.updateSchema(jsonCsdl);
     };
 
