@@ -1,11 +1,11 @@
 import React from "react";
 import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './InteractiveQuerying.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
-
+import { initUrlEditor } from "odata-uri-editor";
 
 /// <summary>Tool to allow a user to make a query on the Jetsons API and see the results.</summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
@@ -20,6 +20,7 @@ class InteractiveQuerying extends Component {
   constructor(props) {
     super(props);
     let newController = new AbortController();
+    this.editor = null;
 
     this.state = {
       queryUrl: this.props.defaultQuery,
@@ -31,24 +32,46 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Start with results displayed.</summary>
   componentDidMount() {
-    document.getElementById(this.props.id).value = this.props.defaultQuery;
+    this.editor = initUrlEditor(document.getElementById(this.props.id));
+    this.editor.setUrl(this.props.defaultQuery);
+    let schema = `
+    type Company
+    {
+        stockSymbol: String
+        name: String
+        incorporated: Date
+        employees: [Employee]
+    }
+
+    type Employee
+    {
+        key id: Integer
+        firstName: String
+        lastName: String
+        title: String
+    }
+    
+    service {
+        company: Company
+        competitors: [Company]
+    }`
+    this.editor.updateSchema(schema);
     this.fetchResults(this.props.defaultQuery);
   }
   
-  /// <summary>Abandon fetch request before component unmounts.</summary>
+  /// <summary>Abandons fetch request before component unmounts.</summary>
   componentWillUnmount() {
     this.state.controller.abort();
   }
 
   /// <summary>Gets the results for the query entered by the user.</summary>
   updateQueryResults = () => {
-    let newQuery = document.getElementById(this.props.id).value;
+    let newQuery = this.editor.getUrl();
     if (newQuery !== "") {
       this.setState({queryUrl: newQuery});
       this.fetchResults(newQuery);
     } else {
       this.setToDefault();
-      //this.setState({responseElement: <p></p>})
     }
   }
 
@@ -56,7 +79,7 @@ class InteractiveQuerying extends Component {
   ///   Sets the query/results to the default given from <propref name="defaultQuery"/>.
   /// </summary>
   setToDefault = () => {
-    document.getElementById(this.props.id).value = this.props.defaultQuery;
+    this.editor.setUrl(this.props.defaultQuery);
     this.setState({queryUrl: this.props.defaultQuery});
     this.fetchResults(this.props.defaultQuery);
   }
@@ -75,7 +98,8 @@ class InteractiveQuerying extends Component {
         if (result === "The page cannot be displayed because an internal server error has occurred.") {
           result = "This query is not valid; please try a different query."
         } else {
-          result = this.formatJson(result);
+          result = JSON.parse(result);
+          result = JSON.stringify(result, null, 4);
         }
         let newResponse = <CodeBlock className="language-json">{result}</CodeBlock>
         this.setState({responseElement: newResponse})
@@ -102,40 +126,6 @@ class InteractiveQuerying extends Component {
     return formattedQuery;
   }
 
-  formatJson(json) {
-    let formattedJson = "";
-    let tabLevel = 0;
-    let inQuote = false;
-    for (let i = 0; i < json.length; i++) {
-      let currChar = json.charAt(i);
-      if (currChar == '{' || currChar == '[') {
-        tabLevel++;
-        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
-      } else if (currChar == ',' && !inQuote) {
-        formattedJson += currChar + '\n' + this.getTabSpaces(tabLevel);
-      } else if (currChar == '}' || currChar == ']') {
-        tabLevel--;
-        formattedJson += '\n' + this.getTabSpaces(tabLevel) + currChar;
-      } else if (currChar == ':') {
-        formattedJson += currChar + " ";
-      } else {
-        if (currChar == '\"') {
-          inQuote = !inQuote;
-        }
-        formattedJson += currChar;
-      }
-    }
-    return formattedJson;
-  }
-
-  getTabSpaces(tabLevel) {
-    let spaces = "";
-    for (let i = 1; i <= tabLevel; i++) {
-      spaces += "    ";
-    }
-    return spaces;
-  }
-
   render() {
     return (
       <div>
@@ -157,19 +147,16 @@ class Query extends Component {
   render() {
     return (
       <>
-      <p><strong>Query:</strong></p>
+      <p><strong>Example Query:</strong></p>
       <InputGroup>
-        <InputGroup.Text>GET http://rapid-pro.org/</InputGroup.Text>
-        <FormControl
-          id={this.props.id}
-          /* For error checking: isInvalid="true" isValid="true" */
-          placeholder="URL Query"
-          aria-label="URL Query with buttons to revert and get results"
-        />          
+        <InputGroup.Text style={{"paddingRight":"0"}}>GET /</InputGroup.Text>
+        <div className="query-editor" id={this.props.id}/>
         <Button variant="outline-primary" onClick={() => this.props.updateQueryResults()}>
-          Get Results
+          Get Result
         </Button>
-        <Button variant="outline-secondary" onClick={() => this.props.setToDefault()}>Revert</Button>
+        <Button style={{"borderLeft":"none"}} variant="outline-secondary" onClick={() => this.props.setToDefault()}>
+          Revert
+        </Button>
       </InputGroup>
       </>
     );

@@ -1,7 +1,8 @@
 import { basicSetup, EditorState, EditorView } from "@codemirror/basic-setup";
 import { autocompletion, CompletionSource } from '@codemirror/autocomplete';
 import { linter, Diagnostic } from '@codemirror/lint';
-import { AutoCompleteManager } from "odata-uri";
+// import { AutoCompleteManager } from "odata-uri";
+import { AutoCompleteManager } from "../../odataUri/src/autocomplete-manager";
 import { getDocContent, convertToCsdl } from "./utils";
 
 type UrlUpdatedCallback = (url: string) => any;
@@ -82,7 +83,12 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
         return getDocContent(editor.state.doc);
     }
 
-    return { updateSchema, getUrl };
+    function setUrl(url: string) {
+        const transaction = editor.state.update({ changes: { from: 0, to: editor.state.doc.length, insert: url }});
+        editor.dispatch(transaction);
+    }
+
+    return { updateSchema, getUrl, setUrl };
 }
 
 export { initUrlEditor };

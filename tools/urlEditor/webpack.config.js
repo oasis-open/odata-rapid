@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
     entry: "./src/index.ts",
@@ -28,5 +29,10 @@ module.exports = {
             type: "umd"
         }
     },
+    plugins: [
+        new webpack.ProvidePlugin({
+            process: "process/browser"
+        })
+    ],
     mode: "development"
 }
