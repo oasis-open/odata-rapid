@@ -1,6 +1,6 @@
 # OData URI tools
 
-This package contains a URI parsers that provides autocomplete suggestions and error validation.
+This package contains a URI parser that provides autocomplete suggestions and error validation.
 
 ## How to build
 
