@@ -55,10 +55,10 @@ service {
 The amount of potential URLs that the service needs to support is large. Just to name some of the more important ones:
 
 - /skus
-- /skus/{id?}
+- /skus/{id}
 - /orders
 - /orders/{id}
-- /orders/{id}items
+- /orders/{id}/items
 - /orders/{id}/items/{id}
 - /orders/{id}/items/{id}/skus
 - /orders/{id}/items/{id}/skus/{id}
