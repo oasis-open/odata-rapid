@@ -6,7 +6,7 @@ sidebar_label: Capabilities
 
 # Path Centric Service Capabilities. 
 
-The previous sections go into detail how to define the format of the request and response bodies based on types and their relationships. This structure also implies which URLs are valid in the service: starting with the service properties and following properties of a structured type. For example in the service below, `orders` is a service property which allows access via the `/orders` URL. Since an order has multiple order items via the `items` property, the URL `/orders/<order id>/items` and `/orders/<order id>/items<item id>` are also a valid URLs.
+The previous sections go into detail how to define the format of the request and response bodies based on types and their relationships. This structure also implies which URLs are valid in the service: starting with the service properties and following properties of a structured type. For example in the service below, `orders` is a service property which allows access via the `/orders` URL. Since an order has multiple order items via the `items` property, the URL `/orders/<order id>/items` and `/orders/<order id>/items/<item id>` are also a valid URLs.
 
 Without further constraints this would allow a huge number of URLs that a service would need to support. And it is important not just to specify which paths are allowed, but also to specify different functionality and behaviors supported for different paths.
 
