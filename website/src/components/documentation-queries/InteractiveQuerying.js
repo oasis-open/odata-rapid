@@ -67,12 +67,8 @@ class InteractiveQuerying extends Component {
   /// <summary>Gets the results for the query entered by the user.</summary>
   updateQueryResults = () => {
     let newQuery = this.editor.getUrl();
-    if (newQuery !== "") {
-      this.setState({queryUrl: newQuery});
-      this.fetchResults(newQuery);
-    } else {
-      this.setToDefault();
-    }
+    this.setState({queryUrl: newQuery});
+    this.fetchResults(newQuery);
   }
 
   /// <summary>
