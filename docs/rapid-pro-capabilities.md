@@ -93,9 +93,9 @@ path `/skus` {
 ```
 The effect of this declaration is that for each URL and HTTP method combination the service is expected to return data, data in the form as specified by the corresponding type. The service is free to respond with success messages for other combinations but these ones are required.
 
-The `...` is used to declare which query options are supported by the service. FOr example a GET capability lists that certain $filter options are allow of that paging is supported via the $top, $skip options. More details in the next sections
+The `...` is used to declare which query options are supported by the service. For example a GET capability lists that certain $filter options are allowed or that paging is supported via the $top, $skip options. More details in the next sections.
 
-The specific capabilities that can be used in the HTTP capabilities section instead of the `...` in teh example above can vary by HTTP method. Here is an overview 
+The specific capabilities that can be used in the HTTP capabilities section instead of the `...` in the example above can vary by HTTP method. Here is an overview 
 
 |        | select | filter | expand | paging | count | create | update | delete |   |
 |--------|--------|--------|--------|--------|-------|--------|--------|--------|---|
