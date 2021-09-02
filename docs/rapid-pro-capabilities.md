@@ -26,7 +26,9 @@ type Order
 }
 
 enum OrderStatus {
-    Open, Archived, Canceled 
+    Open
+    Archived
+    Canceled 
 }
 
 type OrderItem
@@ -45,7 +47,7 @@ type SKU
 }
 
 service {
-    orders: [Order]    
+    orders: [Order]
     skus: [SKU]
 }
 ```
