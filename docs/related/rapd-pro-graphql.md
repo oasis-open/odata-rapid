@@ -17,7 +17,7 @@ GraphQL defines a simple syntax for defining the shape of a service.
 
 In a GraphQL query, the developer describes the properties to be retrieved, and depth traversed, through a JSON-like structure.
 
-In a RAPID query, the developer describes the properties to be retrieved through a [projection](..\rapid-pro-read.md#selecting-individual-properties-of-a-resource),
+In a RAPID query, the developer describes the properties to be retrieved through a [projection](rapid-read#selecting-individual-properties-of-a-resource),
 and the depth traversed through an [expansion](..\rapid-pro-read.md#including-related-resources) operator.
 
 ## Filter

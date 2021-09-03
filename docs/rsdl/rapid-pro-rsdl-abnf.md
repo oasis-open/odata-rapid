@@ -1,6 +1,6 @@
 ---
 id: rsdl-abnf
-title: RAPID SDL ABNF
+title: RSDL ABNF
 ---
 
 # RAPID Pro Syntax
@@ -16,7 +16,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 
 ## Syntax rules
 
-- [RAPID Pro syntax](#rapid-pro-syntax)
+- [RAPID Pro Syntax](#rapid-pro-syntax)
   - [Overview](#overview)
   - [Syntax rules](#syntax-rules)
     - [Model](#model)

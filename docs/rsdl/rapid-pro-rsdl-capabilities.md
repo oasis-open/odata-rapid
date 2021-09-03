@@ -1,7 +1,7 @@
 ---
-id: rapid-pro-capabilities
+id: rsdl-capabilities
 title: Path centric service capabilities.
-sidebar_label: Capabilities
+sidebar_label: RSDL Capabilities
 ---
 
 # Path Centric Service Capabilities. 
@@ -12,11 +12,11 @@ Without further constraints this would allow a huge number of URLs that a servic
 
 The following sections introduce the notion of paths and descriptions of capabilities that the service provides per path.
 
-# Example service
+## Example service
 
 for the following examples we assume the following type definitions for a service that has a top level orders entity set together with and their (contained) order items. Each item references a SKU, that is also available via a top level entity set. 
 
-```
+```rsdl
 type Order
 {
     key id: String
@@ -66,88 +66,80 @@ The amount of potential URLs that the service needs to support is large. Just to
 The path-centric view in RSDL now allows to enumerate the allowed requests (URL + verb)
  and which query options are supported for these requests
 
-
+## HTTP capabilities
 The first level of this (i.e. URL + verb ) looks for example like the following
 
-```
-path `/orders` {
+```rsdl
+path /orders {
     GET { ... }
     POST { ... }
 }
 
-path `/orders/{id}` {
+path /orders/{id} {
     GET { ... }
     PATCH { ... }
     DELETE { ... }
 }
 
-path `/orders/{id}/items/{id}` {
+path /orders/{id}/items/{id} {
     GET { ... }
     DELETE { ... }
 }
 
-path `/skus` {
+path /skus {
     GET { ... }
 }
 
 ```
 The effect of this declaration is that for each URL and HTTP method combination the service is expected to return data, data in the form as specified by the corresponding type. The service is free to respond with success messages for other combinations but these ones are required.
 
-The `...` is used to declare which query options are supported by the service. For example a GET capability lists that certain $filter options are allowed or that paging is supported via the $top, $skip options. More details in the next sections.
+The placeholders `...` are used to declare which query options are supported by the service. For example a GET capability lists that certain $filter options are allowed or that paging is supported via the $top, $skip options. More details in the next sections.
 
 The specific capabilities that can be used in the HTTP capabilities section instead of the `...` in the example above can vary by HTTP method. Here is an overview 
 
-|        | select | filter | expand | paging | count | create | update | delete |   |
-|--------|--------|--------|--------|--------|-------|--------|--------|--------|---|
-| GET    |    x   |    x   |    x   |    x   |   x   |        |        |        |   |
-| POST   |        |        |        |        |       |    x   |        |        |   |
-| PATCH  |        |        |        |        |       |        |    x   |        |   |
-| DELETE |        |    x   |        |        |       |        |        |    x   |   |
+|        | filter | expand | paging | count | read-model | write-model
+|--------|:------:|:------:|:------:|:-----:|----- | --- |
+| GET    |   x    |   x    |   x    |   x   | 
+| POST   |        |        |        |       | 
+| PATCH  |        |        |        |       |
+| PUT    |        |        |        |       |
+| DELETE |   x    |        |        |       |
 
+## Individual Query capabilities
 
-### select capabilities
+### Filter capabilities
 
-The select capability allows to specify which properties can be used in the `$select` query parameter. 
+The filter capability allows to specify which property can be used in which filter expression. There is a vast amount of possible filter expressions (see [odata abnf](https://github.com/oasis-tcs/odata-abnf/blob/main/abnf/odata-abnf-construction-rules.txt#L502)). Therefore, the filter capabilities allow to specify a few well-known but restrictive expressions or allow any expression.
 
-It's format is just a sequence of names of the properties that are allowed to be specified in the `$select` system query options.
-
-```
-select { prop1, prop2, ... } 
-```
-
-### filter capabilities
-
-The filter capability allows to specify which property can be used in conjunction to which operator.
-
-It's format is a sequence of pairs of property name and a list of allowed, so called operator groups. An operator group is constraining the form of the expression allowed in the $filter system query option. (see [odata abnf]([y](https://github.com/oasis-tcs/odata-abnf/blob/main/abnf/odata-abnf-construction-rules.txt#L502)) for reference. )
+The format for filter capabilities is a sequence of pairs of a so called operator group and a list of property names. An operator group is constraining the form of the expression allowed in the $filter system query option.
 
 | operator group | comment                                                                                                     |
 |----------------|-------------------------------------------------------------------------------------------------------------|
-| eq             | `<property> eq <literal>` or `<property> in (<literal1>, <literal2>, ... ) `                                |
-| range          | `<literal> <= <property> and <property> <= <literal>`                                                       |
+| eq             | `<property> eq <literal>` or <br/> `<property> in (<literal1>, <literal2>, ... ) `                                |
+| range          | `<literal> le <property> and <property> le <literal>` <br/> or equivalent with `ge`, `gt`, `lt`                                                      |
 | ranges         | a disjunction of the `range` expressions                                                                    |
-| prefix         | `<property> startswith <literal>`                                                                           |
-| text           | `<property> <string op> <literal>`, where `<string op>` is one of `startswith`, `endswith`, `contains`      |
-| any            | any expression including expressions combined with `and` and `or`                                           |
+| prefix         | `startswith(<property>, <literal>)`                                                                           |
+| text           | `<string op>(<property>  <literal>)`, <br/>where `<string op>` is one of `startswith`, `endswith`, `contains`      |
+| any            | any expression including expressions combined with `not`, `and`, and `or`                                           |
 
 In RSDL this 
 
-```
+```rsdl
 filter { 
-    id:              [eq], 
-    createdDate:     [range, eq], 
-    description:     [eq, text], 
-    fulfillmentDate: [range, ranges]
+    eq     { id name description createdDate fulfillmentDate }
+    ranges { createdDate description }
+    prefix { name }
+    text   { description }                   
 }
 ```
 
-### expand capabilities
+### Expand capabilities
 
 The expand capability allows to specify which property can be used in `$expand` query parameter. 
 
 The format is a sequence of properties together with a description how they can be expanded. The expand capability introduces a nesting of capabilities since the type od the  expandable property type can allow for select, filter, and expand.
 
-```RSDL
+```rsdl
 
 expand {
     items { 
@@ -161,17 +153,26 @@ expand {
 }
 ```
 
-### create capabilities
-### update capabilities
-### delete capabilities
 
-### paging capabilities
+### Paging capabilities
 
-### count capabilities
+### Count capabilities
 
-# Syntax
+### Select capabilities
 
-``` ABNF
+
+```rsdl
+select { 
+    read-only { createdDate, lastUpdateDate, fulfillmentDate }
+    write-only { password attachment }
+}
+```
+
+## Extensibility
+
+## Syntax
+
+``` abnf
 path-capability       = "path" path "{" 
         [ get-capabilities ]
         [ post-capabilities ]

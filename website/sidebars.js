@@ -24,6 +24,7 @@ module.exports = {
             label: 'RAPID Schema Definition Language (RSDL)',
             items: [
                 'rsdl/rsdl-intro',
+                'rsdl/rsdl-capabilities',
                 'rsdl/rsdl-semantics',
                 'rsdl/rsdl-abnf',
             ]

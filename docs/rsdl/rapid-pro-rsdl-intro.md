@@ -1,6 +1,7 @@
 ---
 id: rsdl-intro
 title: RAPID SDL intro
+sidebar_label: RSDL Intro
 ---
 
 # Introduction to RAPID Schema Definition Language (RSDL)
