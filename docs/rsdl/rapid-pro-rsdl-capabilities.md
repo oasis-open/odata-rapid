@@ -187,11 +187,11 @@ patch-capabilities    = "PATCH" "{" "}"
 delete-capabilities   = "DELETE" "{" [ filter-capabilities ] "}"
 
 expand-capabilities   = "expand" ["{" *( property-name "{" esf-capabilities "}" ) "}"] 
-select-capabilities   = "select" ["{" *( property-name ) "}"] 
-filter-capabilities   = "filter" ["{" *( property-name ) [ *filter-operator-group ] "}"] 
-filter-operator-group = "eq" / "in" / "range" / "ranges" / "strings"
 
-paging-capabilities   = "paging" ["{" "}"] 
+filter-capabilities   = "filter" ["{" *( operator-group ) [ *operator-group ] "}"] 
+operator-group        = "eq" / "in" / "range" / "ranges" / "strings"
+operator-group-filter = operator-group "{"  "}"
+paging-capabilities   = "paging" ["{" property-name* "}"] 
 
 
 property-name         = identifier
