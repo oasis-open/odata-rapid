@@ -5,7 +5,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './InteractiveQuerying.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
-import { initUrlEditor } from "odata-uri-editor";
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+/// <summary>
+/// Tool to allow a user to make a query on the Jetsons API and see the results
+/// that is safe for deployment online.
+/// </summary>
+/// <prop name="defaultQuery">Default query to start with filled in.</prop>
+/// <prop name="id">
+///   ID to identify a specific component instance - must be unique; 
+///   otherwise, setting the default query can impact other instances.
+/// </prop>
+/// <remarks>
+///   ID is required to isolate a specific InteractiveQuerying instance for the default query.
+/// </remarks>
+const InteractiveQuerying = (props) => {
+  return (
+    <BrowserOnly>
+      {() => {
+        const initUrlEditor = require("odata-uri-editor").initUrlEditor;
+        return <InteractiveQueryingInternal {...props} initUrlEditor={initUrlEditor} />;
+      }}
+    </BrowserOnly>
+  )
+}
 
 /// <summary>Tool to allow a user to make a query on the Jetsons API and see the results.</summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
@@ -16,7 +39,7 @@ import { initUrlEditor } from "odata-uri-editor";
 /// <remarks>
 ///   ID is required to isolate a specific InteractiveQuerying instance for the default query.
 /// </remarks>
-class InteractiveQuerying extends Component {
+class InteractiveQueryingInternal extends Component {
   constructor(props) {
     super(props);
     let newController = new AbortController();
@@ -32,7 +55,7 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Start with results displayed.</summary>
   componentDidMount() {
-    this.editor = initUrlEditor(document.getElementById(this.props.id));
+    this.editor = this.props.initUrlEditor(document.getElementById(this.props.id));
     this.editor.setUrl(this.props.defaultQuery);
     let schema = `
     type Company
