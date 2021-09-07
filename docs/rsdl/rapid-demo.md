@@ -13,6 +13,7 @@ abstract type Entity
     key id: String
 }
 
+@Edm.Description: "the company entity"
 type Company extends Entity
 {
     stockSymbol: String
@@ -20,9 +21,7 @@ type Company extends Entity
     incorporated: Date
 }
 
-@description: true
-@description: 1.23e-3
-@description: "hello world"
+## an enumeration
 enum { a b c d }
 
 
