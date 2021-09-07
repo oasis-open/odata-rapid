@@ -7,6 +7,9 @@ module.exports = {
   organizationName: 'oasis-open', // Usually your GitHub org/user name.
   projectName: 'odata-rapid', // Usually your repo name.
   themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/oceanicNext'),
+    },
     navbar: {
       title: 'RAPID',
       logo: {
