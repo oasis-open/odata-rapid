@@ -16,16 +16,18 @@ const features = [
     // imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Rapid provides a fast and robust approach for building your REST-based APIs
+        Rapid provides a fast and robust approach for building your REST-based
+        APIs
       </>
     ),
   },
   {
     title: <>Focus on What Matters</>,
-     //  imageUrl: 'img/undraw_docusaurus_tree.svg',
+    //  imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Rapid allows you to focus on your API's resource model and rely on well-established conventions for the nitty-gritty details
+        Rapid allows you to focus on your API's resource model and rely on
+        well-established conventions for the nitty-gritty details
       </>
     ),
   },
@@ -41,7 +43,7 @@ const features = [
   },
 ];
 
-function Feature({imageUrl, title, description}) {
+function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={classnames('col col--4', styles.feature)}>
@@ -58,17 +60,18 @@ function Feature({imageUrl, title, description}) {
 
 function Home() {
   const context = useDocusaurusContext();
-  const {siteConfig = {}} = context;
+  const { siteConfig = {} } = context;
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="Description will go into a meta tag in <head />"
+    >
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <div className="row">
-            <div className={classnames('col col--5 col--offset-1')}>
+            <div className={classnames('col')}>
               {/* <h1 className="hero__title">{siteConfig.title}</h1> */}
-                <RabbitSvg/>
+              <RabbitSvg />
               <p className="hero__subtitle">{siteConfig.tagline}</p>
               <div className={styles.buttons}>
                 <Link
@@ -76,13 +79,11 @@ function Home() {
                     'button button--outline button--secondary button--lg',
                     styles.getStarted,
                   )}
-                  to={useBaseUrl('docs/')}>
+                  to={useBaseUrl('docs/')}
+                >
                   Get Started
                 </Link>
               </div>
-            </div>
-            <div className={classnames('col col--5')}>       
-             
             </div>
           </div>
         </div>
@@ -107,4 +108,3 @@ function Home() {
 // setTimeout(animateRapidSpaceMan, 1000)
 
 export default Home;
-

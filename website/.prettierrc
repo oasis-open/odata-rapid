@@ -8,8 +8,5 @@
         "parser": "typescript"
       }
     }
-  ],
-  "proseWrap": "preserve",
-  "tabWidth": 4,
-  "printWidth": 80
+  ]
 }
