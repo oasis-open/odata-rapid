@@ -83,7 +83,7 @@ serviceOperation:
 
 // Annotations
 
-annotation: TID ':' value;
+annotation: TID ':' value | DOC_COMMENT;
 
 value:
 	'true'
@@ -131,6 +131,7 @@ TID: '@' SIMPLE ('.' SIMPLE)+ ('#' SIMPLE)?;
 //TODO: JavaScript identifier pattern, or do we intentionally restrict allowed characters?
 fragment SIMPLE: [a-zA-Z_][a-zA-Z_0-9]*;
 
+DOC_COMMENT: '##' .*? '\r'? '\n';
 LINE_COMMENT: '#' .*? '\r'? '\n' -> skip;
 
 //TODO: include comma here?

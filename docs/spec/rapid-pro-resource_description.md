@@ -52,17 +52,27 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
 }
 ```
 
+## Types
+
 Types are defined within a namespace. The namespace defined for this service is `jetsons`.
 
 Within the `jetsons` namespace two types are defined: `company` and `employee`.
 
+## Properties
+
+### Meta Properties
+
 Properties representing meta information about the model, such as key, type, kind, collection, contains target,
 and entity container, are prefixed with a dollar sign (`$`).
+
+#### Types
 
 By default, properties are strings.
 The `$Type` property specifies the type for the core `Edm.String`, `Edm.Int32`,
 `Edm.Double`, `Edm.Boolean`, `Edm.Date`, `Edm.Time`, and `Edm.DateTimeOffset` properties.
 More advanced services may define stream, binary, geography, or geometry types.
+
+#### Collections
 
 Because the `employee` type is used in a collection,
 it defines a property (`id`) as the key value for referencing instances within the collection.
@@ -70,9 +80,13 @@ it defines a property (`id`) as the key value for referencing instances within t
 The `company` type has a property for navigating to a collection of employees.
 The employees are contained within the company; that is, they do not exist in a separate top-level collection.
 
+### Dynamic Properties
+
 Resources can also include properties not advertised in metadata.
 These "dynamic" properties can be referenced in query options and included in result payloads,
 just like normal declared properties.
+
+## Service Entity Container
 
 The last line defines the `Service` entity container as the root of the service. Its members are top-level resources exposed by the service;
 `company` is a single instance of the `company` type, and `competitors` is a collection of companies.

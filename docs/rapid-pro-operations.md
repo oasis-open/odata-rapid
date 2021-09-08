@@ -18,7 +18,7 @@ Operations include Actions and Functions.
 
 ## Actions
 
-Actions may have side effects, are invoked using `POST`, and have parameters specified in the body.
+Actions have effects on resources, are invoked using `POST`, and have parameters specified in the body.
 
 | Template | POST {resource-path}/{actionName}                       |
 | -------- | :------------------------------------------------------- |
@@ -35,7 +35,7 @@ Actions may have side effects, are invoked using `POST`, and have parameters spe
 ## Functions
 
 Functions are invoked using `GET` and must have no side effects. 
-Parameters are passed to functions as query options:
+Parameters are passed to functions as query options.
 
 | Template | GET {resource-path}/{functionName}?{@param=value...}                 |
 | -------- | :------------------------------------------------------------------- |

@@ -27,6 +27,7 @@ vsce package
 
 # Sources
 
+- https://www.sublimetext.com/docs/scope_naming.html
 - https://macromates.com/manual/en/regular_expressions
 - https://www.apeth.com/nonblog/stories/textmatebundle.html
 - https://github.com/microsoft/vscode-textmate/blob/main/test-cases/themes/syntaxes/JavaScript.tmLanguage.json
