@@ -1,22 +1,22 @@
 ---
 id: rsdl-semantics
-title: RAPID Schema Definition Language Semantics
+title: RSDL Semantics
 ---
 
 > DRAFT
 > Initial Draft. July 2020
 
 The semantic of RSDL (RAPID Schema Definition Language) can be described by mapping
-syntactical constructs described in [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
+syntactical constructs described in [rapid-pro-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
 
-Please refer to [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) for the syntactical constructs of RSDL.
+Please refer to [rapid-pro-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 ## Model
 
-A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
+A [model](rsdl-abnf#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
 
 <Tabs
   defaultValue="json"
@@ -52,13 +52,13 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
 </Tabs>
 
 The model's
-[service](./rapid-pro-rsdl-abnf.md#service),
-[structured types](./rapid-pro-rsdl-abnf.md#structured-type), and
-[enumeration types](./rapid-pro-rsdl-abnf.md#enumeration-type) are mapped to the respective constructs below and added to the schema (or container respectively)
+[service](rsdl-abnf#service),
+[structured types](rsdl-abnf#structured-type), and
+[enumeration types](rsdl-abnf#enumeration-type) are mapped to the respective constructs below and added to the schema (or container respectively)
 
 ## Structured Types
 
-A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either
+A [structured type](rsdl-abnf#structured-type) is mapped to either
 an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType)
 or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType)
 when converting from RSDL to CSDL.
@@ -215,7 +215,7 @@ type Company {
 
 The type of a property is one of:
 
-- the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
+- the built-in types defined in the [`builtInType`](rsdl-abnf/#structured-type) syntax rule
 - the primitive EDM types listed in [OData CSDL JSON Representation](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html#sec_PrimitiveTypes) and [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
 - the structured or enumeration types defined in the model
 
@@ -444,7 +444,7 @@ type Employee {
 
 ## Enumeration Types
 
-An [Enumeration Type](./rapid-pro-rsdl-abnf.md#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
+An [Enumeration Type](rsdl-abnf#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
 
 ```json
 enum employmentType { salaried hourly }
@@ -483,7 +483,7 @@ enum employmentType { salaried hourly }
 
 ## Flag Types
 
-A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
+A [Flags Type](rsdl-abnf#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
 The members' values are automatically assigned to powers of 2.
 
 ```json

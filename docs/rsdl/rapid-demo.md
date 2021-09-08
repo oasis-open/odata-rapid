@@ -1,6 +1,6 @@
 ---
 id: rsdl-demo
-title: RAPID SDL demo
+title: RSDL syntax highlighting demo
 ---
 
 # Demo
