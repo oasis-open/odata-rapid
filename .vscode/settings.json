@@ -1,7 +1,7 @@
 {
   "cSpell.words": [
     "abnf",
-    "capabiliti",
+    "capability",
     "CSDL",
     "dotnet",
     "eset",
@@ -11,10 +11,10 @@
     "odata",
     "rapid",
     "rsdl",
-    "Spacely",
-    "Spacely's",
+    "Spacely",    
     "svel",
     "tools",
+    "writeonly",
     "xunit"
   ],
   "dotnet-test-explorer.testProjectPath": "**/*tests.@(csproj|vbproj|fsproj)"

@@ -5,10 +5,10 @@ Prism.languages.rsdl = {
             pattern: /\b(?:type|enum|service|abstract|open|key|extends|path)\b/,
         },
         {
-            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count)\b/,
+            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count|select|readonly|writeonly|traits)\b/,
         },
         {
-            pattern: /\b(?:eq|range|prefix|text|any)\b/,
+            pattern: /\b(?:eq|range|ranges|prefix|text|any)\b/,
         }
     ],
     'property': [
