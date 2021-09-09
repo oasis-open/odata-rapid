@@ -6,6 +6,7 @@ module.exports = {
   favicon: 'img/rest.svg',
   organizationName: 'oasis-open', // Usually your GitHub org/user name.
   projectName: 'odata-rapid', // Usually your repo name.
+  trailingSlash :true,
   themeConfig: {
     prism: {
       theme: require('prism-react-renderer/themes/oceanicNext'),

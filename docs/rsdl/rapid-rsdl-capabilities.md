@@ -1,20 +1,20 @@
 ---
 id: rsdl-capabilities
-title: Path Centric Service Capabilities.
+title: Capabilities
 sidebar_label: RSDL Capabilities
 ---
 
-# Path Centric Service Capabilities. 
+# Path Centric Service Capabilities 
 
-The previous sections go into detail how to define the format of the request and response bodies based on types and their relationships. This structure also implies which URLs are valid in the service: starting with the service properties and following properties of a structured type. For example in the service below, `orders` is a service property which allows access via the `/orders` URL. Since an order has multiple order items via the `items` property, the URL `/orders/<order id>/items` and `/orders/<order id>/items/<item id>` are also a valid URLs.
+The previous sections described how to define the format of the request and response bodies based on types and their relationships. These structures also imply which URL paths are valid in the service: starting with the service properties and following properties of the structured types. For example in the service below, `orders` is a service property which allows access via the `/orders` URL. Since an order has multiple order items via the `items` property, the URL `/orders/<order id>/items` and `/orders/<order id>/items/<item id>` are also a valid URLs.
 
 Without further constraints this would allow a huge number of URLs that a service would need to support. And it is important not just to specify which paths are allowed, but also to specify different functionality and behaviors supported for different paths.
 
-The following sections introduce the notion of paths and descriptions of capabilities that the service provides per path.
+The following sections introduce the notion of paths and capabilities that the service provides per path.
 
 ## Example service
 
-For the following examples we assume the following type definitions for a service that has a top level orders entity set together with their (contained) order items. Each item references a SKU, that can be accessed via the top level entity set. 
+For the examples in the section of this document, we assume the following type definitions. This is a simplified service that provides a top level orders collection together with their (contained) order items. Each item references a SKU, that can be accessed via the top level entity set. 
 
 ```rsdl
 type Order {
@@ -49,16 +49,12 @@ service {
 }
 ```
 
-The amount of potential URLs that the service needs to support is large. Just to name some of the more important ones:
+The amount of potential URLs that the service may support is large - in larger services potentially unbounded. Just to name a few of the more important ones:
 
-- /skus
-- /skus/{id}
-- /orders
-- /orders/{id}
-- /orders/{id}/items
-- /orders/{id}/items/{id}
-- /orders/{id}/items/{id}/skus
-- /orders/{id}/items/{id}/skus/{id}
+``` http
+/skus, /skus/{id}, /orders, /orders/{id}, /orders/{id}/items, /orders/{id}/items/{id},
+/orders/{id}/items/{id}/skus, /orders/{id}/items/{id}/skus/{id}, ...
+```
 
 The path-centric view in RSDL allows to enumerate the allowed requests and specify which  query options are supported for these requests.
 
@@ -100,18 +96,16 @@ The placeholders `...` are used to declare which query options are supported by 
 
 The specific capabilities that can be used in the HTTP capabilities section instead of the `...` in the example above can vary by HTTP method. Here is an overview 
 
-|        |    filter     |    expand     |    paging     |     count     |
-|--------|:-------------:|:-------------:|:-------------:|:-------------:|
-| GET    |       x       |       x       |       x       |       x       |
-| POST   | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> |
-| PATCH  | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> |
-| PUT    | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> | x<sup>1</sup> |
-| DELETE | x<sup>2</sup> |               |               |               |
+|        |        filter        |        expand        |        paging        |        count         |
+|--------|:--------------------:|:--------------------:|:--------------------:|:--------------------:|
+| GET    |       &#x2713;       |       &#x2713;       |       &#x2713;       |       &#x2713;       |
+| POST   | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
+| PATCH  | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
+| PUT    | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
+| DELETE | &#x2713;<sup>2</sup> |                      |                      |                      |
 
-<p >
-[<sup>1</sup>] to shape the POST/PATCH/PUT response. Rarely used but supported<br/>
-[<sup>2</sup>] deleting multiple items. Rarely used but supported<br/>
-</p>
+[1] to shape the POST/PATCH/PUT response. Rarely used but supported<br/>
+[2] deleting multiple items. Rarely used but supported<br/>
 
 ## Individual Query capabilities
 
@@ -133,11 +127,15 @@ The format for filter capabilities is a sequence of pairs of a so called operato
 In RSDL this 
 
 ```rsdl
-filter { 
-    eq     { id name description createdDate fulfillmentDate }
-    ranges { createdDate description }
-    prefix { name }
-    text   { description }                   
+path /orders {
+    GET { 
+        filter { 
+            eq     { id name description createdDate fulfillmentDate }
+            ranges { createdDate description }
+            prefix { name }
+            text   { description }                   
+        }
+    }
 }
 ```
 
@@ -208,7 +206,7 @@ path /orders {
 
 The count capability is typically seen in a GET capability but can also be nested in an expand capability.
 
-### Select capabilities (DRAFT)
+### Select capabilities
 
 The select capability allows to specify if a response contains certain properties. To be precise, it specifies the properties that are not returned in a request or response respectively.
 
@@ -251,25 +249,34 @@ path /orders {
 
 ``` abnf
 path-capability       = "path" path "{" 
-        [ get-capabilities ]
-        [ post-capabilities ]
-        [ patch-capabilities ]
-        [ delete-capabilities ]
-    "}"
+                            [ get-capabilities ]
+                            [ post-capabilities ]
+                            [ patch-capabilities ]
+                            [ delete-capabilities ]
+                        "}"
 
-esf-capabilities      = [ expand-capabilities ] [ select-capabilities ] [ filter-capabilities ]
-get-capabilities      = "GET" "{" [ esf-capabilities ] [ paging-capabilities ] "}"
+query-capabilities    = [ expand-capabilities ] / 
+                        [ filter-capabilities ] / [ select-capabilities ] /
+                        [ paging-capabilities ] / [ count-capabilities ] /
+
+get-capabilities      = "GET" "{" [ query-capabilities ] "}"
+
 post-capabilities     = "POST" "{" "}"
+
 patch-capabilities    = "PATCH" "{" "}"
+
 delete-capabilities   = "DELETE" "{" [ filter-capabilities ] "}"
 
-expand-capabilities   = "expand" ["{" *( property-name "{" esf-capabilities "}" ) "}"] 
+expand-capabilities   = "expand" ["{" 
+                           *( property-name "{" query-capabilities "}" ) 
+                        "}"] 
 
-filter-capabilities   = "filter" ["{" *( operator-group ) [ *operator-group ] "}"] 
-operator-group        = "eq" / "in" / "range" / "ranges" / "strings"
-operator-group-filter = operator-group "{"  "}"
-paging-capabilities   = "paging" ["{" property-name* "}"] 
+filter-capabilities   = "filter" ["{" operator-filter "}"] 
+operator-filter       = operator-group "{" *property-name  "}"
+operator-group        = "eq" / "range" / "ranges" / "prefix" / "strings" / "any"
 
+paging-capabilities   = "paging" ["{" "}"] 
+count-capabilities    = "count" ["{" "}"] 
 
 property-name         = identifier
 path                  = "`" *( "/" identifier ) "`"  
