@@ -157,9 +157,11 @@ type Name {
 
 ### Abstract Structured Types
 
-```
-abstract type Base {
-  ...
+A type may be defined as `abstract`. An abstract type cannot be instantiated, but can be used as a base type for other type definitions. 
+
+```rsdl
+abstract type Robot {
+  model: String
 }
 ```
 
@@ -174,10 +176,10 @@ abstract type Base {
 <TabItem value="json">
 
 ```json
-"Base": {
+"Robot": {
   "$Kind": "ComplexType",
   "$Abstract": true,
-  ...
+  "model": { "$Type": "Edm.String" }
 }
 ```
 
@@ -185,8 +187,8 @@ abstract type Base {
 <TabItem value="xml">
 
 ```xml
-<ComplexType Name="Base" Abstract="true">
-  ...
+<ComplexType Name="Robot" Abstract="true">
+  <Property Name="model" Type="Edm.String" Nullable="false" />
 </ComplexType>
 ```
 
@@ -195,9 +197,12 @@ abstract type Base {
 
 ### Structured Type Inheritance
 
+Types may extend other types through inheritance. 
+The type derived from the base type inherits all properties, relationships, and operations bound to the base type (type inheritance) and can be used anywhere the base type is used (polymorphism).
+
 ```
-type Foo extends Base {
-  ...
+type Android extends Robot {
+  name: String
 }
 ```
 
@@ -212,10 +217,10 @@ type Foo extends Base {
 <TabItem value="json">
 
 ```json
-"Foo": {
+"Android": {
   "$Kind": "ComplexType",
-  "$BaseType": "Model.Base",
-  ...
+  "$BaseType": "Model.Robot",
+  "name": { "$Type": "Edm.String" }
 }
 ```
 
@@ -223,8 +228,8 @@ type Foo extends Base {
 <TabItem value="xml">
 
 ```xml
-<ComplexType Name="Foo" BaseType="Model.Base">
-  ...
+<ComplexType Name="Android" BaseType="Model.Robot">
+  <Property Name="name" Type="Edm.String" Nullable="false" />
 </ComplexType>
 ```
 
