@@ -1,6 +1,6 @@
 # RSDL ABNF
 
-Extract [`rsdl.abnf`](./rsdl.abnf) from the [RSDL documentation](../../../docs/rsdl/rapid-pro-rsdl-abnf.md), generate a parser with [JavaScript APG](https://github.com/ldthomas/apg-js), and run it on test input.
+Extract [`rsdl.abnf`](./rsdl.abnf) from the [RSDL documentation](../../../docs/rsdl/rapid-rsdl-abnf.md), generate a parser with [JavaScript APG](https://github.com/ldthomas/apg-js), and run it on test input.
 
 ## Install
 
@@ -10,7 +10,7 @@ npm install
 
 ## Use
 
-Extract [`rsdl.abnf`](./rsdl.abnf) from the [RSDL documentation](../../../docs/rsdl/rapid-pro-rsdl-abnf.md)
+Extract [`rsdl.abnf`](./rsdl.abnf) from the [RSDL documentation](../../../docs/rsdl/rapid-rsdl-abnf.md)
 
 ```sh
 npm run extract
