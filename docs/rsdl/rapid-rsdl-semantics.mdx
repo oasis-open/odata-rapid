@@ -7,9 +7,9 @@ title: RSDL Semantics
 > Initial Draft. July 2020
 
 The semantic of RSDL (RAPID Schema Definition Language) can be described by mapping
-syntactical constructs described in [rapid-pro-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
+syntactical constructs described in [rapid-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
 
-Please refer to [rapid-pro-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
+Please refer to [rapid-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
@@ -157,7 +157,7 @@ type Name {
 
 ### Abstract Structured Types
 
-A type may be defined as `abstract`. An abstract type cannot be instantiated, but can be used as a base type for other type definitions. 
+A type may be defined as `abstract`. An abstract type cannot be instantiated, but can be used as a base type for other type definitions.
 
 ```rsdl
 abstract type Robot {
@@ -197,7 +197,7 @@ abstract type Robot {
 
 ### Structured Type Inheritance
 
-Types may extend other types through inheritance. 
+Types may extend other types through inheritance.
 The type derived from the base type inherits all properties, relationships, and operations bound to the base type (type inheritance) and can be used anywhere the base type is used (polymorphism).
 
 ```

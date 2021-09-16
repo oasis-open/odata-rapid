@@ -12,7 +12,7 @@ param (
  
 
 function CompileAndCheck {
-    if ((get-item "rsdl.abnf").LastWriteTime -lt (get-item "../../../docs/rsdl/rapid-pro-rsdl-abnf.md").LastWriteTime ) {
+    if ((get-item "rsdl.abnf").LastWriteTime -lt (get-item "../../../docs/rsdl/rapid-rsdl-abnf.md").LastWriteTime ) {
         Write-Output "Extract ABNF..."
         node.exe lib/extract.js
 

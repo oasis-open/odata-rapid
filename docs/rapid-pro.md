@@ -59,7 +59,7 @@ service {
 }
 ```
 
-For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md).
+For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rsdl-intro).
 
 This simple design time syntax is converted to a runtime service description that client applications and tooling can use to interact with the service.
 
