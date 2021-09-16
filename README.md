@@ -11,7 +11,7 @@ development of open source resources related to Technical Committee work.
 
 While this TC Open Repository remains associated with the sponsor TC, its development priorities, 
 leadership, intellectual property terms, participation rules, and other matters of governance 
-are [separate and distinct](https://github.com/oasis-open/odata-rapid/blob/master/CONTRIBUTING.md#governance-distinct-from-oasis-tc-process) 
+are [separate and distinct](https://github.com/oasis-open/odata-rapid/blob/main/CONTRIBUTING.md#governance-distinct-from-oasis-tc-process) 
 from the OASIS TC Process and related policies.
 
 All contributions made to this TC Open Repository are subject to open source license terms 
@@ -20,12 +20,12 @@ That license was selected as the declared
 [applicable license](https://www.oasis-open.org/resources/open-repositories/licenses) when 
 the TC Open Repository was created.
 
-As documented in [Public Participation Invited](https://github.com/oasis-open/odata-rapid/blob/master/CONTRIBUTING.md#public-participation-invited), 
+As documented in [Public Participation Invited](https://github.com/oasis-open/odata-rapid/blob/main/CONTRIBUTING.md#public-participation-invited), 
 contributions to this OASIS TC Open Repository are invited from all parties, whether affiliated 
 with OASIS or not. Participants must have a GitHub account, but no fees or OASIS membership 
 obligations are required. Participation is expected to be consistent with the 
 [OASIS TC Open Repository Guidelines and Procedures](https://www.oasis-open.org/policies-guidelines/open-repositories), 
-the open source [LICENSE](https://github.com/oasis-open/odata-rapid/blob/master/LICENSE) designated 
+the open source [LICENSE](https://github.com/oasis-open/odata-rapid/blob/main/LICENSE) designated 
 for this particular repository, and the requirement for an 
 [Individual Contributor License Agreement](https://www.oasis-open.org/resources/open-repositories/cla/individual-cla) 
 that governs intellectual property.
@@ -44,7 +44,7 @@ releases, modifications to statement of purpose, etc.
 
 TC Open Repository [Maintainers](https://www.oasis-open.org/resources/open-repositories/maintainers-guide) 
 are responsible for oversight of this project's community development activities, including evaluation 
-of GitHub [pull requests](https://github.com/oasis-open/odata-rapid/blob/master/CONTRIBUTING.md#fork-and-pull-collaboration-model) 
+of GitHub [pull requests](https://github.com/oasis-open/odata-rapid/blob/main/CONTRIBUTING.md#fork-and-pull-collaboration-model) 
 and [preserving](https://www.oasis-open.org/policies-guidelines/open-repositories#repositoryManagement) 
 open source principles of openness and fairness. Maintainers are recognized and trusted experts 
 who serve to implement community goals and consensus design preferences.

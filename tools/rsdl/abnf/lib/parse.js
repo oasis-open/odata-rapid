@@ -58,14 +58,13 @@ function parse(inputString, failAt, expect) {
   });
 
   if (result.success && failAt == null) {
-    console.log(`${colors.green("OK:")} ${inputString}`);
-
     if (expect) {
       const data = [];
       ast.translate(data);
       try {
         assert.deepStrictEqual(data, expect);
       } catch (e) {
+        console.log(`${colors.green("OK:")} ${inputString}`);
         console.log(
           e.message.replace(
             /^Expected values to be strictly deep-equal/,
@@ -78,12 +77,21 @@ function parse(inputString, failAt, expect) {
     return true;
   }
 
-  if (!result.success && result.maxMatched == failAt) {
+  if (result.success && failAt != null) {
     console.log(
-      `${colors.green("OK:")} ${inputString} ${colors.green(
-        `fails at ${failAt}`
-      )}`
+      `${colors.red(
+        `KO, succeeds instead of failing at ${failAt}:`
+      )} ${inputString}`
     );
+    return false;
+  }
+
+  if (!result.success && result.maxMatched == failAt) {
+    // console.log(
+    //   `${colors.green("OK:")} ${inputString} ${colors.green(
+    //     `fails at ${failAt}`
+    //   )}`
+    // );
     return true;
   }
 
@@ -99,9 +107,9 @@ function parse(inputString, failAt, expect) {
   console.log(
     `${colors.red(
       `KO, fails at ${result.maxMatched}${instead}:`
-    )} ${inputString.substr(0, result.maxMatched)}${colors.red(
-      inputString.substr(result.maxMatched, 1)
-    )}${inputString.substr(result.maxMatched + 1)}`
+    )} ${inputString.substr(0, result.maxMatched)}${colors.yellow(
+      inputString.substr(result.maxMatched)
+    )}`
   );
   return false;
 }

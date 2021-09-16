@@ -29,15 +29,6 @@ rsdlListener.prototype.exitNamespace = function(ctx) {
 };
 
 
-// Enter a parse tree produced by rsdlParser#qualifiedName.
-rsdlListener.prototype.enterQualifiedName = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#qualifiedName.
-rsdlListener.prototype.exitQualifiedName = function(ctx) {
-};
-
-
 // Enter a parse tree produced by rsdlParser#include.
 rsdlListener.prototype.enterInclude = function(ctx) {
 };
@@ -65,6 +56,15 @@ rsdlListener.prototype.exitStructuredType = function(ctx) {
 };
 
 
+// Enter a parse tree produced by rsdlParser#baseType.
+rsdlListener.prototype.enterBaseType = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#baseType.
+rsdlListener.prototype.exitBaseType = function(ctx) {
+};
+
+
 // Enter a parse tree produced by rsdlParser#typeMember.
 rsdlListener.prototype.enterTypeMember = function(ctx) {
 };
@@ -89,15 +89,6 @@ rsdlListener.prototype.enterPropertyName = function(ctx) {
 
 // Exit a parse tree produced by rsdlParser#propertyName.
 rsdlListener.prototype.exitPropertyName = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#baseType.
-rsdlListener.prototype.enterBaseType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#baseType.
-rsdlListener.prototype.exitBaseType = function(ctx) {
 };
 
 
@@ -134,6 +125,15 @@ rsdlListener.prototype.enterBuiltInType = function(ctx) {
 
 // Exit a parse tree produced by rsdlParser#builtInType.
 rsdlListener.prototype.exitBuiltInType = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#edmType.
+rsdlListener.prototype.enterEdmType = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#edmType.
+rsdlListener.prototype.exitEdmType = function(ctx) {
 };
 
 
@@ -263,12 +263,21 @@ rsdlListener.prototype.exitValue = function(ctx) {
 };
 
 
-// Enter a parse tree produced by rsdlParser#path.
-rsdlListener.prototype.enterPath = function(ctx) {
+// Enter a parse tree produced by rsdlParser#arr.
+rsdlListener.prototype.enterArr = function(ctx) {
 };
 
-// Exit a parse tree produced by rsdlParser#path.
-rsdlListener.prototype.exitPath = function(ctx) {
+// Exit a parse tree produced by rsdlParser#arr.
+rsdlListener.prototype.exitArr = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#item.
+rsdlListener.prototype.enterItem = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#item.
+rsdlListener.prototype.exitItem = function(ctx) {
 };
 
 
@@ -290,21 +299,30 @@ rsdlListener.prototype.exitPair = function(ctx) {
 };
 
 
-// Enter a parse tree produced by rsdlParser#arr.
-rsdlListener.prototype.enterArr = function(ctx) {
+// Enter a parse tree produced by rsdlParser#name.
+rsdlListener.prototype.enterName = function(ctx) {
 };
 
-// Exit a parse tree produced by rsdlParser#arr.
-rsdlListener.prototype.exitArr = function(ctx) {
+// Exit a parse tree produced by rsdlParser#name.
+rsdlListener.prototype.exitName = function(ctx) {
 };
 
 
-// Enter a parse tree produced by rsdlParser#item.
-rsdlListener.prototype.enterItem = function(ctx) {
+// Enter a parse tree produced by rsdlParser#path.
+rsdlListener.prototype.enterPath = function(ctx) {
 };
 
-// Exit a parse tree produced by rsdlParser#item.
-rsdlListener.prototype.exitItem = function(ctx) {
+// Exit a parse tree produced by rsdlParser#path.
+rsdlListener.prototype.exitPath = function(ctx) {
+};
+
+
+// Enter a parse tree produced by rsdlParser#qualifiedName.
+rsdlListener.prototype.enterQualifiedName = function(ctx) {
+};
+
+// Exit a parse tree produced by rsdlParser#qualifiedName.
+rsdlListener.prototype.exitQualifiedName = function(ctx) {
 };
 
 

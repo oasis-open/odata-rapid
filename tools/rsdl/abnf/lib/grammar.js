@@ -5,17 +5,17 @@
 module.exports = function grammar(){
   // ```
   // SUMMARY
-  //      rules = 45
+  //      rules = 46
   //       udts = 0
-  //    opcodes = 397
+  //    opcodes = 411
   //        ---   ABNF original opcodes
-  //        ALT = 18
-  //        CAT = 65
+  //        ALT = 22
+  //        CAT = 68
   //        REP = 44
   //        RNM = 180
-  //        TLS = 52
-  //        TBS = 32
-  //        TRG = 6
+  //        TLS = 54
+  //        TBS = 33
+  //        TRG = 10
   //        ---   SABNF superset opcodes
   //        UDT = 0
   //        AND = 0
@@ -25,7 +25,7 @@ module.exports = function grammar(){
   //        BKR = 0
   //        ABG = 0
   //        AEN = 0
-  // characters = [8 - 1114111]
+  // characters = [0 - 1114111]
   // ```
   /* OBJECT IDENTIFIER (for internal parser use) */
   this.grammarObject = 'grammarObject';
@@ -69,14 +69,15 @@ module.exports = function grammar(){
   this.rules[34] = {name: 'precision', lower: 'precision', index: 34, isBkr: false};
   this.rules[35] = {name: 'scale', lower: 'scale', index: 35, isBkr: false};
   this.rules[36] = {name: 'maxLength', lower: 'maxlength', index: 36, isBkr: false};
-  this.rules[37] = {name: 'ALPHA', lower: 'alpha', index: 37, isBkr: false};
-  this.rules[38] = {name: 'DIGIT', lower: 'digit', index: 38, isBkr: false};
-  this.rules[39] = {name: 'CHAR', lower: 'char', index: 39, isBkr: false};
-  this.rules[40] = {name: 'DQUOTE', lower: 'dquote', index: 40, isBkr: false};
-  this.rules[41] = {name: 'ESCAPE', lower: 'escape', index: 41, isBkr: false};
-  this.rules[42] = {name: 'OWS', lower: 'ows', index: 42, isBkr: false};
-  this.rules[43] = {name: 'RWS', lower: 'rws', index: 43, isBkr: false};
-  this.rules[44] = {name: 'WS', lower: 'ws', index: 44, isBkr: false};
+  this.rules[37] = {name: 'DOC-COMMENT', lower: 'doc-comment', index: 37, isBkr: false};
+  this.rules[38] = {name: 'ALPHA', lower: 'alpha', index: 38, isBkr: false};
+  this.rules[39] = {name: 'DIGIT', lower: 'digit', index: 39, isBkr: false};
+  this.rules[40] = {name: 'CHAR', lower: 'char', index: 40, isBkr: false};
+  this.rules[41] = {name: 'DQUOTE', lower: 'dquote', index: 41, isBkr: false};
+  this.rules[42] = {name: 'ESCAPE', lower: 'escape', index: 42, isBkr: false};
+  this.rules[43] = {name: 'OWS', lower: 'ows', index: 43, isBkr: false};
+  this.rules[44] = {name: 'RWS', lower: 'rws', index: 44, isBkr: false};
+  this.rules[45] = {name: 'WS', lower: 'ws', index: 45, isBkr: false};
 
   /* UDTS */
   this.udts = [];
@@ -85,11 +86,11 @@ module.exports = function grammar(){
   /* model */
   this.rules[0].opcodes = [];
   this.rules[0].opcodes[0] = {type: 2, children: [1,2,6,8,15]};// CAT
-  this.rules[0].opcodes[1] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[0].opcodes[1] = {type: 4, index: 43};// RNM(OWS)
   this.rules[0].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[0].opcodes[3] = {type: 2, children: [4,5]};// CAT
   this.rules[0].opcodes[4] = {type: 4, index: 1};// RNM(namespace)
-  this.rules[0].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[0].opcodes[5] = {type: 4, index: 44};// RNM(RWS)
   this.rules[0].opcodes[6] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[0].opcodes[7] = {type: 4, index: 2};// RNM(include)
   this.rules[0].opcodes[8] = {type: 3, min: 0, max: 1};// REP
@@ -97,31 +98,31 @@ module.exports = function grammar(){
   this.rules[0].opcodes[10] = {type: 4, index: 3};// RNM(modelElement)
   this.rules[0].opcodes[11] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[0].opcodes[12] = {type: 2, children: [13,14]};// CAT
-  this.rules[0].opcodes[13] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[0].opcodes[13] = {type: 4, index: 44};// RNM(RWS)
   this.rules[0].opcodes[14] = {type: 4, index: 3};// RNM(modelElement)
-  this.rules[0].opcodes[15] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[0].opcodes[15] = {type: 4, index: 43};// RNM(OWS)
 
   /* namespace */
   this.rules[1].opcodes = [];
   this.rules[1].opcodes[0] = {type: 2, children: [1,2,3]};// CAT
   this.rules[1].opcodes[1] = {type: 6, string: [110,97,109,101,115,112,97,99,101]};// TBS
-  this.rules[1].opcodes[2] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[1].opcodes[2] = {type: 4, index: 44};// RNM(RWS)
   this.rules[1].opcodes[3] = {type: 4, index: 28};// RNM(qualifiedName)
 
   /* include */
   this.rules[2].opcodes = [];
   this.rules[2].opcodes[0] = {type: 2, children: [1,2,3,4,6,7,8,9,10,11]};// CAT
   this.rules[2].opcodes[1] = {type: 6, string: [105,110,99,108,117,100,101]};// TBS
-  this.rules[2].opcodes[2] = {type: 4, index: 43};// RNM(RWS)
-  this.rules[2].opcodes[3] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[2].opcodes[2] = {type: 4, index: 44};// RNM(RWS)
+  this.rules[2].opcodes[3] = {type: 4, index: 41};// RNM(DQUOTE)
   this.rules[2].opcodes[4] = {type: 3, min: 1, max: Infinity};// REP
-  this.rules[2].opcodes[5] = {type: 4, index: 39};// RNM(CHAR)
-  this.rules[2].opcodes[6] = {type: 4, index: 40};// RNM(DQUOTE)
-  this.rules[2].opcodes[7] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[2].opcodes[5] = {type: 4, index: 40};// RNM(CHAR)
+  this.rules[2].opcodes[6] = {type: 4, index: 41};// RNM(DQUOTE)
+  this.rules[2].opcodes[7] = {type: 4, index: 44};// RNM(RWS)
   this.rules[2].opcodes[8] = {type: 6, string: [97,115]};// TBS
-  this.rules[2].opcodes[9] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[2].opcodes[9] = {type: 4, index: 44};// RNM(RWS)
   this.rules[2].opcodes[10] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[2].opcodes[11] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[2].opcodes[11] = {type: 4, index: 44};// RNM(RWS)
 
   /* modelElement */
   this.rules[3].opcodes = [];
@@ -138,22 +139,22 @@ module.exports = function grammar(){
   this.rules[4].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[4].opcodes[3] = {type: 2, children: [4,5]};// CAT
   this.rules[4].opcodes[4] = {type: 6, string: [97,98,115,116,114,97,99,116]};// TBS
-  this.rules[4].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[4].opcodes[5] = {type: 4, index: 44};// RNM(RWS)
   this.rules[4].opcodes[6] = {type: 6, string: [116,121,112,101]};// TBS
-  this.rules[4].opcodes[7] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[4].opcodes[7] = {type: 4, index: 44};// RNM(RWS)
   this.rules[4].opcodes[8] = {type: 4, index: 29};// RNM(identifier)
   this.rules[4].opcodes[9] = {type: 3, min: 0, max: 1};// REP
   this.rules[4].opcodes[10] = {type: 2, children: [11,12,13]};// CAT
   this.rules[4].opcodes[11] = {type: 6, string: [101,120,116,101,110,100,115]};// TBS
-  this.rules[4].opcodes[12] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[4].opcodes[12] = {type: 4, index: 44};// RNM(RWS)
   this.rules[4].opcodes[13] = {type: 4, index: 28};// RNM(qualifiedName)
-  this.rules[4].opcodes[14] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[4].opcodes[14] = {type: 4, index: 43};// RNM(OWS)
   this.rules[4].opcodes[15] = {type: 7, string: [123]};// TLS
   this.rules[4].opcodes[16] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[4].opcodes[17] = {type: 2, children: [18,19]};// CAT
-  this.rules[4].opcodes[18] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[4].opcodes[18] = {type: 4, index: 43};// RNM(OWS)
   this.rules[4].opcodes[19] = {type: 4, index: 5};// RNM(structuredTypeMember)
-  this.rules[4].opcodes[20] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[4].opcodes[20] = {type: 4, index: 43};// RNM(OWS)
   this.rules[4].opcodes[21] = {type: 7, string: [125]};// TLS
 
   /* structuredTypeMember */
@@ -169,11 +170,11 @@ module.exports = function grammar(){
   this.rules[6].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[6].opcodes[3] = {type: 2, children: [4,5]};// CAT
   this.rules[6].opcodes[4] = {type: 4, index: 7};// RNM(propertyModifier)
-  this.rules[6].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[6].opcodes[5] = {type: 4, index: 44};// RNM(RWS)
   this.rules[6].opcodes[6] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[6].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[6].opcodes[7] = {type: 4, index: 43};// RNM(OWS)
   this.rules[6].opcodes[8] = {type: 7, string: [58]};// TLS
-  this.rules[6].opcodes[9] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[6].opcodes[9] = {type: 4, index: 43};// RNM(OWS)
   this.rules[6].opcodes[10] = {type: 4, index: 8};// RNM(typeReference)
 
   /* propertyModifier */
@@ -240,27 +241,27 @@ module.exports = function grammar(){
   this.rules[12].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7,8,18,19]};// CAT
   this.rules[12].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[12].opcodes[2] = {type: 4, index: 13};// RNM(operationKind)
-  this.rules[12].opcodes[3] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[12].opcodes[3] = {type: 4, index: 44};// RNM(RWS)
   this.rules[12].opcodes[4] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[12].opcodes[5] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[5] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[6] = {type: 7, string: [40]};// TLS
-  this.rules[12].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[7] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[8] = {type: 3, min: 0, max: 1};// REP
   this.rules[12].opcodes[9] = {type: 2, children: [10,11,17]};// CAT
   this.rules[12].opcodes[10] = {type: 4, index: 14};// RNM(parameter)
   this.rules[12].opcodes[11] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[12].opcodes[12] = {type: 2, children: [13,14,15,16]};// CAT
-  this.rules[12].opcodes[13] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[13] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[14] = {type: 7, string: [44]};// TLS
-  this.rules[12].opcodes[15] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[15] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[16] = {type: 4, index: 14};// RNM(parameter)
-  this.rules[12].opcodes[17] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[17] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[18] = {type: 7, string: [41]};// TLS
   this.rules[12].opcodes[19] = {type: 3, min: 0, max: 1};// REP
   this.rules[12].opcodes[20] = {type: 2, children: [21,22,23,24,25]};// CAT
-  this.rules[12].opcodes[21] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[21] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[22] = {type: 7, string: [58]};// TLS
-  this.rules[12].opcodes[23] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[12].opcodes[23] = {type: 4, index: 43};// RNM(OWS)
   this.rules[12].opcodes[24] = {type: 4, index: 23};// RNM(annotations)
   this.rules[12].opcodes[25] = {type: 4, index: 8};// RNM(typeReference)
 
@@ -275,9 +276,9 @@ module.exports = function grammar(){
   this.rules[14].opcodes[0] = {type: 2, children: [1,2,3,4,5,6]};// CAT
   this.rules[14].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[14].opcodes[2] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[14].opcodes[3] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[14].opcodes[3] = {type: 4, index: 43};// RNM(OWS)
   this.rules[14].opcodes[4] = {type: 7, string: [58]};// TLS
-  this.rules[14].opcodes[5] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[14].opcodes[5] = {type: 4, index: 43};// RNM(OWS)
   this.rules[14].opcodes[6] = {type: 4, index: 8};// RNM(typeReference)
 
   /* enumType */
@@ -287,11 +288,11 @@ module.exports = function grammar(){
   this.rules[15].opcodes[2] = {type: 1, children: [3,4]};// ALT
   this.rules[15].opcodes[3] = {type: 6, string: [101,110,117,109]};// TBS
   this.rules[15].opcodes[4] = {type: 6, string: [102,108,97,103,115]};// TBS
-  this.rules[15].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[15].opcodes[5] = {type: 4, index: 44};// RNM(RWS)
   this.rules[15].opcodes[6] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[15].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[15].opcodes[7] = {type: 4, index: 43};// RNM(OWS)
   this.rules[15].opcodes[8] = {type: 7, string: [123]};// TLS
-  this.rules[15].opcodes[9] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[15].opcodes[9] = {type: 4, index: 43};// RNM(OWS)
   this.rules[15].opcodes[10] = {type: 3, min: 1, max: Infinity};// REP
   this.rules[15].opcodes[11] = {type: 4, index: 16};// RNM(enumMember)
   this.rules[15].opcodes[12] = {type: 7, string: [125]};// TLS
@@ -301,18 +302,18 @@ module.exports = function grammar(){
   this.rules[16].opcodes[0] = {type: 2, children: [1,2,3]};// CAT
   this.rules[16].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[16].opcodes[2] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[16].opcodes[3] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[16].opcodes[3] = {type: 4, index: 43};// RNM(OWS)
 
   /* typeDefinition */
   this.rules[17].opcodes = [];
   this.rules[17].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7,8]};// CAT
   this.rules[17].opcodes[1] = {type: 4, index: 23};// RNM(annotations)
   this.rules[17].opcodes[2] = {type: 6, string: [116,121,112,101,100,101,102]};// TBS
-  this.rules[17].opcodes[3] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[17].opcodes[3] = {type: 4, index: 44};// RNM(RWS)
   this.rules[17].opcodes[4] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[17].opcodes[5] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[17].opcodes[5] = {type: 4, index: 43};// RNM(OWS)
   this.rules[17].opcodes[6] = {type: 7, string: [58]};// TLS
-  this.rules[17].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[17].opcodes[7] = {type: 4, index: 43};// RNM(OWS)
   this.rules[17].opcodes[8] = {type: 1, children: [9,10]};// ALT
   this.rules[17].opcodes[9] = {type: 4, index: 10};// RNM(builtInType)
   this.rules[17].opcodes[10] = {type: 4, index: 11};// RNM(edmType)
@@ -324,17 +325,17 @@ module.exports = function grammar(){
   this.rules[18].opcodes[2] = {type: 6, string: [115,101,114,118,105,99,101]};// TBS
   this.rules[18].opcodes[3] = {type: 3, min: 0, max: 1};// REP
   this.rules[18].opcodes[4] = {type: 2, children: [5,6]};// CAT
-  this.rules[18].opcodes[5] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[18].opcodes[5] = {type: 4, index: 44};// RNM(RWS)
   this.rules[18].opcodes[6] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[18].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[18].opcodes[7] = {type: 4, index: 43};// RNM(OWS)
   this.rules[18].opcodes[8] = {type: 7, string: [123]};// TLS
-  this.rules[18].opcodes[9] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[18].opcodes[9] = {type: 4, index: 43};// RNM(OWS)
   this.rules[18].opcodes[10] = {type: 4, index: 19};// RNM(serviceMember)
   this.rules[18].opcodes[11] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[18].opcodes[12] = {type: 2, children: [13,14]};// CAT
-  this.rules[18].opcodes[13] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[18].opcodes[13] = {type: 4, index: 44};// RNM(RWS)
   this.rules[18].opcodes[14] = {type: 4, index: 19};// RNM(serviceMember)
-  this.rules[18].opcodes[15] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[18].opcodes[15] = {type: 4, index: 43};// RNM(OWS)
   this.rules[18].opcodes[16] = {type: 7, string: [125]};// TLS
 
   /* serviceMember */
@@ -350,9 +351,9 @@ module.exports = function grammar(){
   this.rules[20].opcodes = [];
   this.rules[20].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7]};// CAT
   this.rules[20].opcodes[1] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[20].opcodes[2] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[20].opcodes[2] = {type: 4, index: 43};// RNM(OWS)
   this.rules[20].opcodes[3] = {type: 7, string: [58]};// TLS
-  this.rules[20].opcodes[4] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[20].opcodes[4] = {type: 4, index: 43};// RNM(OWS)
   this.rules[20].opcodes[5] = {type: 7, string: [91]};// TLS
   this.rules[20].opcodes[6] = {type: 4, index: 28};// RNM(qualifiedName)
   this.rules[20].opcodes[7] = {type: 7, string: [93]};// TLS
@@ -361,36 +362,36 @@ module.exports = function grammar(){
   this.rules[21].opcodes = [];
   this.rules[21].opcodes[0] = {type: 2, children: [1,2,3,4,5]};// CAT
   this.rules[21].opcodes[1] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[21].opcodes[2] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[21].opcodes[2] = {type: 4, index: 43};// RNM(OWS)
   this.rules[21].opcodes[3] = {type: 7, string: [58]};// TLS
-  this.rules[21].opcodes[4] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[21].opcodes[4] = {type: 4, index: 43};// RNM(OWS)
   this.rules[21].opcodes[5] = {type: 4, index: 28};// RNM(qualifiedName)
 
   /* serviceOperation */
   this.rules[22].opcodes = [];
   this.rules[22].opcodes[0] = {type: 2, children: [1,2,3,4,5,6,7,17,18]};// CAT
   this.rules[22].opcodes[1] = {type: 4, index: 13};// RNM(operationKind)
-  this.rules[22].opcodes[2] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[22].opcodes[2] = {type: 4, index: 44};// RNM(RWS)
   this.rules[22].opcodes[3] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[22].opcodes[4] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[4] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[5] = {type: 7, string: [40]};// TLS
-  this.rules[22].opcodes[6] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[6] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[7] = {type: 3, min: 0, max: 1};// REP
   this.rules[22].opcodes[8] = {type: 2, children: [9,10,16]};// CAT
   this.rules[22].opcodes[9] = {type: 4, index: 14};// RNM(parameter)
   this.rules[22].opcodes[10] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[22].opcodes[11] = {type: 2, children: [12,13,14,15]};// CAT
-  this.rules[22].opcodes[12] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[12] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[13] = {type: 7, string: [44]};// TLS
-  this.rules[22].opcodes[14] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[14] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[15] = {type: 4, index: 14};// RNM(parameter)
-  this.rules[22].opcodes[16] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[16] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[17] = {type: 7, string: [41]};// TLS
   this.rules[22].opcodes[18] = {type: 3, min: 0, max: 1};// REP
   this.rules[22].opcodes[19] = {type: 2, children: [20,21,22,23,24]};// CAT
-  this.rules[22].opcodes[20] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[20] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[21] = {type: 7, string: [58]};// TLS
-  this.rules[22].opcodes[22] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[22].opcodes[22] = {type: 4, index: 43};// RNM(OWS)
   this.rules[22].opcodes[23] = {type: 4, index: 23};// RNM(annotations)
   this.rules[22].opcodes[24] = {type: 4, index: 8};// RNM(typeReference)
 
@@ -399,21 +400,23 @@ module.exports = function grammar(){
   this.rules[23].opcodes[0] = {type: 3, min: 0, max: Infinity};// REP
   this.rules[23].opcodes[1] = {type: 2, children: [2,3]};// CAT
   this.rules[23].opcodes[2] = {type: 4, index: 24};// RNM(annotation)
-  this.rules[23].opcodes[3] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[23].opcodes[3] = {type: 4, index: 44};// RNM(RWS)
 
   /* annotation */
   this.rules[24].opcodes = [];
-  this.rules[24].opcodes[0] = {type: 2, children: [1,2,3,7,8,9,10]};// CAT
-  this.rules[24].opcodes[1] = {type: 7, string: [64]};// TLS
-  this.rules[24].opcodes[2] = {type: 4, index: 28};// RNM(qualifiedName)
-  this.rules[24].opcodes[3] = {type: 3, min: 0, max: 1};// REP
-  this.rules[24].opcodes[4] = {type: 2, children: [5,6]};// CAT
-  this.rules[24].opcodes[5] = {type: 7, string: [35]};// TLS
-  this.rules[24].opcodes[6] = {type: 4, index: 29};// RNM(identifier)
-  this.rules[24].opcodes[7] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[24].opcodes[8] = {type: 7, string: [58]};// TLS
-  this.rules[24].opcodes[9] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[24].opcodes[10] = {type: 4, index: 25};// RNM(annotationValue)
+  this.rules[24].opcodes[0] = {type: 1, children: [1,12]};// ALT
+  this.rules[24].opcodes[1] = {type: 2, children: [2,3,4,8,9,10,11]};// CAT
+  this.rules[24].opcodes[2] = {type: 7, string: [64]};// TLS
+  this.rules[24].opcodes[3] = {type: 4, index: 28};// RNM(qualifiedName)
+  this.rules[24].opcodes[4] = {type: 3, min: 0, max: 1};// REP
+  this.rules[24].opcodes[5] = {type: 2, children: [6,7]};// CAT
+  this.rules[24].opcodes[6] = {type: 7, string: [35]};// TLS
+  this.rules[24].opcodes[7] = {type: 4, index: 29};// RNM(identifier)
+  this.rules[24].opcodes[8] = {type: 4, index: 43};// RNM(OWS)
+  this.rules[24].opcodes[9] = {type: 7, string: [58]};// TLS
+  this.rules[24].opcodes[10] = {type: 4, index: 43};// RNM(OWS)
+  this.rules[24].opcodes[11] = {type: 4, index: 25};// RNM(annotationValue)
+  this.rules[24].opcodes[12] = {type: 4, index: 37};// RNM(DOC-COMMENT)
 
   /* annotationValue */
   this.rules[25].opcodes = [];
@@ -423,13 +426,13 @@ module.exports = function grammar(){
   this.rules[25].opcodes[3] = {type: 6, string: [110,117,108,108]};// TBS
   this.rules[25].opcodes[4] = {type: 4, index: 32};// RNM(number)
   this.rules[25].opcodes[5] = {type: 2, children: [6,7,9]};// CAT
-  this.rules[25].opcodes[6] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[25].opcodes[6] = {type: 4, index: 41};// RNM(DQUOTE)
   this.rules[25].opcodes[7] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[25].opcodes[8] = {type: 4, index: 39};// RNM(CHAR)
-  this.rules[25].opcodes[9] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[25].opcodes[8] = {type: 4, index: 40};// RNM(CHAR)
+  this.rules[25].opcodes[9] = {type: 4, index: 41};// RNM(DQUOTE)
   this.rules[25].opcodes[10] = {type: 2, children: [11,12,13,30]};// CAT
   this.rules[25].opcodes[11] = {type: 7, string: [91]};// TLS
-  this.rules[25].opcodes[12] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[12] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[13] = {type: 3, min: 0, max: 1};// REP
   this.rules[25].opcodes[14] = {type: 2, children: [15,16,25,26]};// CAT
   this.rules[25].opcodes[15] = {type: 4, index: 25};// RNM(annotationValue)
@@ -437,20 +440,20 @@ module.exports = function grammar(){
   this.rules[25].opcodes[17] = {type: 2, children: [18,24]};// CAT
   this.rules[25].opcodes[18] = {type: 1, children: [19,23]};// ALT
   this.rules[25].opcodes[19] = {type: 2, children: [20,21,22]};// CAT
-  this.rules[25].opcodes[20] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[20] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[21] = {type: 7, string: [44]};// TLS
-  this.rules[25].opcodes[22] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[25].opcodes[23] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[25].opcodes[22] = {type: 4, index: 43};// RNM(OWS)
+  this.rules[25].opcodes[23] = {type: 4, index: 44};// RNM(RWS)
   this.rules[25].opcodes[24] = {type: 4, index: 25};// RNM(annotationValue)
-  this.rules[25].opcodes[25] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[25] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[26] = {type: 3, min: 0, max: 1};// REP
   this.rules[25].opcodes[27] = {type: 2, children: [28,29]};// CAT
   this.rules[25].opcodes[28] = {type: 7, string: [44]};// TLS
-  this.rules[25].opcodes[29] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[29] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[30] = {type: 7, string: [93]};// TLS
   this.rules[25].opcodes[31] = {type: 2, children: [32,33,34,51]};// CAT
   this.rules[25].opcodes[32] = {type: 7, string: [123]};// TLS
-  this.rules[25].opcodes[33] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[33] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[34] = {type: 3, min: 0, max: 1};// REP
   this.rules[25].opcodes[35] = {type: 2, children: [36,37,46,47]};// CAT
   this.rules[25].opcodes[36] = {type: 4, index: 26};// RNM(annotationProperty)
@@ -458,16 +461,16 @@ module.exports = function grammar(){
   this.rules[25].opcodes[38] = {type: 2, children: [39,45]};// CAT
   this.rules[25].opcodes[39] = {type: 1, children: [40,44]};// ALT
   this.rules[25].opcodes[40] = {type: 2, children: [41,42,43]};// CAT
-  this.rules[25].opcodes[41] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[41] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[42] = {type: 7, string: [44]};// TLS
-  this.rules[25].opcodes[43] = {type: 4, index: 42};// RNM(OWS)
-  this.rules[25].opcodes[44] = {type: 4, index: 43};// RNM(RWS)
+  this.rules[25].opcodes[43] = {type: 4, index: 43};// RNM(OWS)
+  this.rules[25].opcodes[44] = {type: 4, index: 44};// RNM(RWS)
   this.rules[25].opcodes[45] = {type: 4, index: 26};// RNM(annotationProperty)
-  this.rules[25].opcodes[46] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[46] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[47] = {type: 3, min: 0, max: 1};// REP
   this.rules[25].opcodes[48] = {type: 2, children: [49,50]};// CAT
   this.rules[25].opcodes[49] = {type: 7, string: [44]};// TLS
-  this.rules[25].opcodes[50] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[25].opcodes[50] = {type: 4, index: 43};// RNM(OWS)
   this.rules[25].opcodes[51] = {type: 7, string: [125]};// TLS
   this.rules[25].opcodes[52] = {type: 2, children: [53,54]};// CAT
   this.rules[25].opcodes[53] = {type: 7, string: [46]};// TLS
@@ -480,9 +483,9 @@ module.exports = function grammar(){
   this.rules[26].opcodes = [];
   this.rules[26].opcodes[0] = {type: 2, children: [1,2,3,4,5]};// CAT
   this.rules[26].opcodes[1] = {type: 4, index: 27};// RNM(propertyName)
-  this.rules[26].opcodes[2] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[26].opcodes[2] = {type: 4, index: 43};// RNM(OWS)
   this.rules[26].opcodes[3] = {type: 7, string: [58]};// TLS
-  this.rules[26].opcodes[4] = {type: 4, index: 42};// RNM(OWS)
+  this.rules[26].opcodes[4] = {type: 4, index: 43};// RNM(OWS)
   this.rules[26].opcodes[5] = {type: 4, index: 25};// RNM(annotationValue)
 
   /* propertyName */
@@ -490,10 +493,10 @@ module.exports = function grammar(){
   this.rules[27].opcodes[0] = {type: 1, children: [1,2,7]};// ALT
   this.rules[27].opcodes[1] = {type: 4, index: 29};// RNM(identifier)
   this.rules[27].opcodes[2] = {type: 2, children: [3,4,6]};// CAT
-  this.rules[27].opcodes[3] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[27].opcodes[3] = {type: 4, index: 41};// RNM(DQUOTE)
   this.rules[27].opcodes[4] = {type: 3, min: 1, max: Infinity};// REP
-  this.rules[27].opcodes[5] = {type: 4, index: 39};// RNM(CHAR)
-  this.rules[27].opcodes[6] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[27].opcodes[5] = {type: 4, index: 40};// RNM(CHAR)
+  this.rules[27].opcodes[6] = {type: 4, index: 41};// RNM(DQUOTE)
   this.rules[27].opcodes[7] = {type: 2, children: [8,9,10]};// CAT
   this.rules[27].opcodes[8] = {type: 7, string: [64]};// TLS
   this.rules[27].opcodes[9] = {type: 4, index: 28};// RNM(qualifiedName)
@@ -521,37 +524,42 @@ module.exports = function grammar(){
   /* identInitial */
   this.rules[30].opcodes = [];
   this.rules[30].opcodes[0] = {type: 1, children: [1,2]};// ALT
-  this.rules[30].opcodes[1] = {type: 4, index: 37};// RNM(ALPHA)
+  this.rules[30].opcodes[1] = {type: 4, index: 38};// RNM(ALPHA)
   this.rules[30].opcodes[2] = {type: 7, string: [95]};// TLS
 
   /* identSubsequent */
   this.rules[31].opcodes = [];
   this.rules[31].opcodes[0] = {type: 1, children: [1,2]};// ALT
   this.rules[31].opcodes[1] = {type: 4, index: 30};// RNM(identInitial)
-  this.rules[31].opcodes[2] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[31].opcodes[2] = {type: 4, index: 39};// RNM(DIGIT)
 
   /* number */
   this.rules[32].opcodes = [];
-  this.rules[32].opcodes[0] = {type: 2, children: [1,3,4,6]};// CAT
-  this.rules[32].opcodes[1] = {type: 3, min: 0, max: 1};// REP
-  this.rules[32].opcodes[2] = {type: 7, string: [45]};// TLS
-  this.rules[32].opcodes[3] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[32].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[32].opcodes[5] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[32].opcodes[6] = {type: 3, min: 0, max: 1};// REP
-  this.rules[32].opcodes[7] = {type: 2, children: [8,9]};// CAT
-  this.rules[32].opcodes[8] = {type: 7, string: [46]};// TLS
-  this.rules[32].opcodes[9] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[32].opcodes[10] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[32].opcodes[0] = {type: 2, children: [1,2,7]};// CAT
+  this.rules[32].opcodes[1] = {type: 4, index: 33};// RNM(integer)
+  this.rules[32].opcodes[2] = {type: 3, min: 0, max: 1};// REP
+  this.rules[32].opcodes[3] = {type: 2, children: [4,5]};// CAT
+  this.rules[32].opcodes[4] = {type: 7, string: [46]};// TLS
+  this.rules[32].opcodes[5] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[32].opcodes[6] = {type: 4, index: 39};// RNM(DIGIT)
+  this.rules[32].opcodes[7] = {type: 3, min: 0, max: 1};// REP
+  this.rules[32].opcodes[8] = {type: 2, children: [9,10]};// CAT
+  this.rules[32].opcodes[9] = {type: 7, string: [101]};// TLS
+  this.rules[32].opcodes[10] = {type: 4, index: 33};// RNM(integer)
 
   /* integer */
   this.rules[33].opcodes = [];
-  this.rules[33].opcodes[0] = {type: 2, children: [1,3,4]};// CAT
+  this.rules[33].opcodes[0] = {type: 2, children: [1,5]};// CAT
   this.rules[33].opcodes[1] = {type: 3, min: 0, max: 1};// REP
-  this.rules[33].opcodes[2] = {type: 7, string: [45]};// TLS
-  this.rules[33].opcodes[3] = {type: 4, index: 38};// RNM(DIGIT)
-  this.rules[33].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[33].opcodes[5] = {type: 4, index: 38};// RNM(DIGIT)
+  this.rules[33].opcodes[2] = {type: 1, children: [3,4]};// ALT
+  this.rules[33].opcodes[3] = {type: 7, string: [43]};// TLS
+  this.rules[33].opcodes[4] = {type: 7, string: [45]};// TLS
+  this.rules[33].opcodes[5] = {type: 1, children: [6,7]};// ALT
+  this.rules[33].opcodes[6] = {type: 6, string: [48]};// TBS
+  this.rules[33].opcodes[7] = {type: 2, children: [8,9]};// CAT
+  this.rules[33].opcodes[8] = {type: 5, min: 49, max: 57};// TRG
+  this.rules[33].opcodes[9] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[33].opcodes[10] = {type: 4, index: 39};// RNM(DIGIT)
 
   /* precision */
   this.rules[34].opcodes = [];
@@ -565,54 +573,64 @@ module.exports = function grammar(){
   this.rules[36].opcodes = [];
   this.rules[36].opcodes[0] = {type: 4, index: 33};// RNM(integer)
 
-  /* ALPHA */
+  /* DOC-COMMENT */
   this.rules[37].opcodes = [];
-  this.rules[37].opcodes[0] = {type: 1, children: [1,2]};// ALT
-  this.rules[37].opcodes[1] = {type: 5, min: 65, max: 90};// TRG
-  this.rules[37].opcodes[2] = {type: 5, min: 97, max: 122};// TRG
+  this.rules[37].opcodes[0] = {type: 2, children: [1,2]};// CAT
+  this.rules[37].opcodes[1] = {type: 7, string: [35,35]};// TLS
+  this.rules[37].opcodes[2] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[37].opcodes[3] = {type: 1, children: [4,5,6]};// ALT
+  this.rules[37].opcodes[4] = {type: 5, min: 0, max: 9};// TRG
+  this.rules[37].opcodes[5] = {type: 5, min: 11, max: 12};// TRG
+  this.rules[37].opcodes[6] = {type: 5, min: 14, max: 1114111};// TRG
+
+  /* ALPHA */
+  this.rules[38].opcodes = [];
+  this.rules[38].opcodes[0] = {type: 1, children: [1,2]};// ALT
+  this.rules[38].opcodes[1] = {type: 5, min: 65, max: 90};// TRG
+  this.rules[38].opcodes[2] = {type: 5, min: 97, max: 122};// TRG
 
   /* DIGIT */
-  this.rules[38].opcodes = [];
-  this.rules[38].opcodes[0] = {type: 5, min: 48, max: 57};// TRG
+  this.rules[39].opcodes = [];
+  this.rules[39].opcodes[0] = {type: 5, min: 48, max: 57};// TRG
 
   /* CHAR */
-  this.rules[39].opcodes = [];
-  this.rules[39].opcodes[0] = {type: 1, children: [1,2,3,4,7]};// ALT
-  this.rules[39].opcodes[1] = {type: 5, min: 32, max: 33};// TRG
-  this.rules[39].opcodes[2] = {type: 5, min: 35, max: 91};// TRG
-  this.rules[39].opcodes[3] = {type: 5, min: 93, max: 1114111};// TRG
-  this.rules[39].opcodes[4] = {type: 2, children: [5,6]};// CAT
-  this.rules[39].opcodes[5] = {type: 4, index: 41};// RNM(ESCAPE)
-  this.rules[39].opcodes[6] = {type: 4, index: 41};// RNM(ESCAPE)
-  this.rules[39].opcodes[7] = {type: 2, children: [8,9]};// CAT
-  this.rules[39].opcodes[8] = {type: 4, index: 41};// RNM(ESCAPE)
-  this.rules[39].opcodes[9] = {type: 4, index: 40};// RNM(DQUOTE)
+  this.rules[40].opcodes = [];
+  this.rules[40].opcodes[0] = {type: 1, children: [1,2,3,4,7]};// ALT
+  this.rules[40].opcodes[1] = {type: 5, min: 32, max: 33};// TRG
+  this.rules[40].opcodes[2] = {type: 5, min: 35, max: 91};// TRG
+  this.rules[40].opcodes[3] = {type: 5, min: 93, max: 1114111};// TRG
+  this.rules[40].opcodes[4] = {type: 2, children: [5,6]};// CAT
+  this.rules[40].opcodes[5] = {type: 4, index: 42};// RNM(ESCAPE)
+  this.rules[40].opcodes[6] = {type: 4, index: 42};// RNM(ESCAPE)
+  this.rules[40].opcodes[7] = {type: 2, children: [8,9]};// CAT
+  this.rules[40].opcodes[8] = {type: 4, index: 42};// RNM(ESCAPE)
+  this.rules[40].opcodes[9] = {type: 4, index: 41};// RNM(DQUOTE)
 
   /* DQUOTE */
-  this.rules[40].opcodes = [];
-  this.rules[40].opcodes[0] = {type: 6, string: [34]};// TBS
+  this.rules[41].opcodes = [];
+  this.rules[41].opcodes[0] = {type: 6, string: [34]};// TBS
 
   /* ESCAPE */
-  this.rules[41].opcodes = [];
-  this.rules[41].opcodes[0] = {type: 6, string: [92]};// TBS
+  this.rules[42].opcodes = [];
+  this.rules[42].opcodes[0] = {type: 6, string: [92]};// TBS
 
   /* OWS */
-  this.rules[42].opcodes = [];
-  this.rules[42].opcodes[0] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[42].opcodes[1] = {type: 4, index: 44};// RNM(WS)
+  this.rules[43].opcodes = [];
+  this.rules[43].opcodes[0] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[43].opcodes[1] = {type: 4, index: 45};// RNM(WS)
 
   /* RWS */
-  this.rules[43].opcodes = [];
-  this.rules[43].opcodes[0] = {type: 3, min: 1, max: Infinity};// REP
-  this.rules[43].opcodes[1] = {type: 4, index: 44};// RNM(WS)
+  this.rules[44].opcodes = [];
+  this.rules[44].opcodes[0] = {type: 3, min: 1, max: Infinity};// REP
+  this.rules[44].opcodes[1] = {type: 4, index: 45};// RNM(WS)
 
   /* WS */
-  this.rules[44].opcodes = [];
-  this.rules[44].opcodes[0] = {type: 1, children: [1,2,3,4]};// ALT
-  this.rules[44].opcodes[1] = {type: 6, string: [8]};// TBS
-  this.rules[44].opcodes[2] = {type: 6, string: [10]};// TBS
-  this.rules[44].opcodes[3] = {type: 6, string: [13]};// TBS
-  this.rules[44].opcodes[4] = {type: 6, string: [32]};// TBS
+  this.rules[45].opcodes = [];
+  this.rules[45].opcodes[0] = {type: 1, children: [1,2,3,4]};// ALT
+  this.rules[45].opcodes[1] = {type: 6, string: [8]};// TBS
+  this.rules[45].opcodes[2] = {type: 6, string: [10]};// TBS
+  this.rules[45].opcodes[3] = {type: 6, string: [13]};// TBS
+  this.rules[45].opcodes[4] = {type: 6, string: [32]};// TBS
 
   // The `toString()` function will display the original grammar file(s) that produced these opcodes.
   this.toString = function toString(){
@@ -711,7 +729,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "annotations          = *( annotation RWS )\r\n";
     str += "\r\n";
-    str += "annotation           = \"@\" qualifiedName [ \"#\" identifier ] OWS \":\" OWS annotationValue\r\n";
+    str += "annotation           = \"@\" qualifiedName [ \"#\" identifier ] OWS \":\" OWS annotationValue / DOC-COMMENT\r\n";
     str += "\r\n";
     str += "annotationValue      = %s\"true\"\r\n";
     str += "                     / %s\"false\"\r\n";
@@ -739,15 +757,17 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "identSubsequent     = identInitial / DIGIT\r\n";
     str += "\r\n";
-    str += "number              = [ \"-\" ] DIGIT *DIGIT [\".\" *DIGIT ]\r\n";
+    str += "number              = integer [ \".\" 1*DIGIT ] [ \"e\" integer ]\r\n";
     str += "\r\n";
-    str += "integer             = [ \"-\" ] DIGIT *DIGIT\r\n";
+    str += "integer             = [ \"+\" / \"-\" ] ( %x30 / %x31-39 *DIGIT )\r\n";
     str += "\r\n";
     str += "precision           = integer\r\n";
     str += "\r\n";
     str += "scale               = integer\r\n";
     str += "\r\n";
     str += "maxLength           = integer\r\n";
+    str += "\r\n";
+    str += "DOC-COMMENT         = \"##\" *( %x0-9 / %xB-C / %xE-10FFFF)\r\n";
     str += "\r\n";
     str += "ALPHA               = %x41-5A / %x61-7A\r\n";
     str += "\r\n";

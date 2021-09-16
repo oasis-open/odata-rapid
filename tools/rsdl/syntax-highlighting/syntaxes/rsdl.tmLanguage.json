@@ -14,8 +14,8 @@
     }
   ],
   "repository": {
-    "comment": "https://www.sublimetext.com/docs/3/scope_naming.html",
     "rsdl": {
+      "comment": "See https://www.sublimetext.com/docs/3/scope_naming.html",
       "patterns": [
         {
           "name": "storage.type",
@@ -80,8 +80,24 @@
       ]
     },
     "comments": {
-      "name": "comment.line.number-sign",
-      "match": "#.*$\n?"
+      "patterns": [
+        {
+          "include": "#docComment"
+        },
+        {
+          "include": "#plainComment"
+        }
+      ],
+      "repository": {
+        "docComment": {
+          "name": "comment.block.documentation",
+          "match": "##.*$\n?"
+        },
+        "plainComment": {
+          "name": "comment.line.number-sign",
+          "match": "#.*$\n?"
+        }
+      }
     },
     "strings": {
       "name": "string.quoted.double.rsdl",
