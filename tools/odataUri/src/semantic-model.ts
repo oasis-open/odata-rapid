@@ -1,4 +1,4 @@
-import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
+import { AbstractParseTreeVisitor, RuleNode, TerminalNode } from 'antlr4ts/tree';
 import { AndExpressionContext, BasicExpressionContext, CompExpressionContext,
     ExpandFieldListContext,
     ExpandOptionContext,
@@ -332,7 +332,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return null;
     }
 
-    visitQueryOptions(ctx: QueryOptionsContext) {
+    visitQueryOptions(ctx: QueryOptionsContext): SemanticNode {
         if (!ctx) return null;
         const node = new QueryOptionsNode(ctx, this.rootType);
         this.root = node;
@@ -351,7 +351,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return node;
     }
 
-    visitQueryOption(ctx: QueryOptionContext) {
+    visitQueryOption(ctx: QueryOptionContext): SemanticNode {
         if (!ctx) return null;
         
         const options = ['filterOption', 'selectOption', 'expandOption', 'orderByOption', 'topOption', 'skipOption'];
@@ -360,7 +360,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return null;
     }
 
-    visitQueryOptionsList(ctx: QueryOptionsListContext) {
+    visitQueryOptionsList(ctx: QueryOptionsListContext): SemanticNode {
         if (ctx.childCount ===0 ) return;
         const option = ctx.queryOption();
         if (option) {
@@ -376,12 +376,15 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
     }
 
     checkAndAddQueryOption(option: string, ctx: QueryOptionContext) {
+        // @ts-ignore
         const optionCtx = ctx[option]() as ParserRuleContext;
         if (optionCtx) {
+            // @ts-ignore
             if (this.root[option]) {
                 const optName = option.split('Option')[0];
                 this.addError(`Duplicate query option $${optName}`, optionCtx);
             }
+            // @ts-ignore
             this.root[option] = optionCtx.accept(this);
         }
     }
@@ -441,7 +444,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return node;
     }
 
-    visitSelectNodeFields(ctx: SelectFieldListContext, selectNode: SelectNode) {
+    visitSelectNodeFields(ctx: SelectFieldListContext, selectNode: SelectNode): SemanticNode {
         this.semanticMap.set(ctx, selectNode); // this helps with auto-complete since this ctx is visited even when there's no field
         const field = ctx.children && ctx.tryGetRuleContext(0, SelectFieldContext);
         if (!field) return;
@@ -513,7 +516,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return node;
     }
 
-    visitExpandNodeFields(ctx: ExpandFieldListContext, expandNode: ExpandNode) {
+    visitExpandNodeFields(ctx: ExpandFieldListContext, expandNode: ExpandNode): SemanticNode {
         this.semanticMap.set(ctx, expandNode); // this helps with auto-complete since this ctx is visited even when there's no field
         if (ctx.childCount == 0) return null;
         const field = ctx.expandField();
@@ -769,7 +772,7 @@ export class QueryOptionsVisitor extends AbstractParseTreeVisitor<SemanticNode> 
         return node;
     }
 
-    visitTerminal(ctx: TerminalNode) {
+    visitTerminal(ctx: TerminalNode): SemanticNode {
         const tokenIndex = ctx._symbol.tokenIndex;
         if (tokenIndex === ODataUriQueryParser.NUMBER) {
             // todo: the forced cast could be an error

@@ -1,0 +1,53 @@
+/* Query editor */
+
+div.query-editor {
+    display: block;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+}
+
+div.cm-gutters {
+    display: none !important;
+}
+
+div.cm-focused {
+    outline: none !important;
+}
+
+div.cm-line {
+    line-height: 2.3rem;
+    padding-left: 0 !important;
+}
+
+div.cm-content {
+    padding: 0 !important;
+    border-top: 1px solid rgb(206, 212, 218);
+    border-bottom: 1px solid rgb(206, 212, 218);
+}
+
+div.cm-scroller {
+    overflow-x: scroll;
+    padding: 0;
+}
+
+div.cm-scroller::-webkit-scrollbar {
+    display:none;
+}
+
+/* Code samples */
+
+span.input-group-text {
+    font-family: monospace;
+}
+
+/* Override bootstrap */
+
+a.menu__link, a.table-of-contents__link {
+    text-decoration: none;
+}
+
+.navbar--fixed-top {
+    position: sticky !important;
+}

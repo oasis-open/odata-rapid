@@ -17,7 +17,7 @@ export function includeReader(source) {
     };
 }
 
-export function convertToCsdl(rsdl: string): Record<string, any> {
+export function convertToCsdl(rsdl: string): any {
     const json = parse(rsdl, includeReader(rsdl));
 
     // TODO: proper error handling
