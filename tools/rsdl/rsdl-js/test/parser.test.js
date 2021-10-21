@@ -535,6 +535,43 @@ describe("Parse RSDL with errors", () => {
     });
   });
 
+  it("Multiple errors", () => {
+    assert.deepStrictEqual(
+      parse("type foo { a-b: String c: Integer } type bar { d: Int-eger }"),
+      {
+        $$errors: [
+          {
+            message: "token recognition error at: '-b'",
+            target: "1:13",
+          },
+          {
+            message: "token recognition error at: '-e'",
+            target: "1:54",
+          },
+          {
+            message: "mismatched input '}' expecting ':'",
+            target: "1:60",
+          },
+        ],
+        $Version: "4.0",
+        Model: {
+          bar: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            d: { $Type: "Model.Int" },
+            ger: {},
+          },
+          foo: {
+            $Kind: "ComplexType",
+            $OpenType: true,
+            a: {},
+            c: { $Type: "Edm.Int32" },
+          },
+        },
+      }
+    );
+  });
+
   //TODO: error cases
   // - same type name twice
   // - operation with same name as type
