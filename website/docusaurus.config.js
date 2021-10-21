@@ -7,6 +7,9 @@ module.exports = {
   organizationName: 'oasis-open', // Usually your GitHub org/user name.
   projectName: 'odata-rapid', // Usually your repo name.
   themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/oceanicNext'),
+    },
     navbar: {
       title: 'RAPID',
       logo: {
@@ -79,7 +82,7 @@ module.exports = {
           routeBasePath: 'docs',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/oasis-open/odata-rapid/edit/master/docs/'
+            'https://github.com/oasis-open/odata-rapid/edit/main/docs/'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

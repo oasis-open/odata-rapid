@@ -1,22 +1,22 @@
 ---
 id: rsdl-semantics
-title: RAPID Schema Definition Language Semantics
+title: RSDL Semantics
 ---
 
 > DRAFT
 > Initial Draft. July 2020
 
 The semantic of RSDL (RAPID Schema Definition Language) can be described by mapping
-syntactical constructs described in [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
+syntactical constructs described in [rapid-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
 
-Please refer to [rapid-pro-rsdl-abnf](./rapid-pro-rsdl-abnf.md) for the syntactical constructs of RSDL.
+Please refer to [rapid-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 ## Model
 
-A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
+A [model](rsdl-abnf#model) is mapped to a CSDL Schema named "Model", that has an entity container named "Service".
 
 <Tabs
   defaultValue="json"
@@ -52,20 +52,25 @@ A [model](./rapid-pro-rsdl-abnf.md#model) is mapped to a CSDL Schema named "Mode
 </Tabs>
 
 The model's
-[service](./rapid-pro-rsdl-abnf.md#service),
-[structured types](./rapid-pro-rsdl-abnf.md#structured-type), and
-[enumeration types](./rapid-pro-rsdl-abnf.md#enumeration-type) are mapped to the respective constructs below and added to the schema (or container respectively)
+[service](rsdl-abnf#service),
+[structured types](rsdl-abnf#structured-type), and
+[enumeration types](rsdl-abnf#enumeration-type) are mapped to the respective constructs below and added to the schema (or container respectively)
 
 ## Structured Types
 
-A [structured type](./rapid-pro-rsdl-abnf.md#structured-type) is mapped to either an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType) or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType).
+A [structured type](rsdl-abnf#structured-type) is mapped to either
+an [entity type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EntityType)
+or a [complex type](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_ComplexType)
+when converting from RSDL to CSDL.
 
 A structured type with one or more properties marked with `key` is mapped to an entity type.
 Correspondingly, a structured type without `key` properties is mapped to a complex type.
 
 ### Structured Types with `key` Properties
 
-```
+Here, we can see an example of how an RSDL structured type with a `key` id property maps to a CSDL entity type.
+
+```rsdl
 type Employee {
   key id: Integer
   name : Name
@@ -109,7 +114,10 @@ type Employee {
 
 ### Structured Types without `key` Properties
 
-```
+On the other hand, an RSDL structured type without a `key` property maps to a CSDL complex type.
+Such types don't have keys because they are intended for organizing related properties into a group that is non-unique and does not stand on its own.
+
+```rsdl
 type Name {
   firstName : String
   lastName: String
@@ -147,13 +155,94 @@ type Name {
 </TabItem>
 </Tabs>
 
-### Properties
+### Abstract Structured Types
 
-The properties of a type definition are mapped to either a Property or a NavigationProperty depending on the property's type.
+A type may be defined as `abstract`. An abstract type cannot be instantiated, but can be used as a base type for other type definitions.
 
-In the following example, let's assume name is mapped to a complex type and employee is mapped to a entity type.
+```rsdl
+abstract type Robot {
+  model: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Robot": {
+  "$Kind": "ComplexType",
+  "$Abstract": true,
+  "model": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Robot" Abstract="true">
+  <Property Name="model" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Structured Type Inheritance
+
+Types may extend other types through inheritance.
+The type derived from the base type inherits all properties, relationships, and operations bound to the base type (type inheritance) and can be used anywhere the base type is used (polymorphism).
 
 ```
+type Android extends Robot {
+  name: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Android": {
+  "$Kind": "ComplexType",
+  "$BaseType": "Model.Robot",
+  "name": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Android" BaseType="Model.Robot">
+  <Property Name="name" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Properties
+
+The properties of a structured type are mapped to either a Property or a NavigationProperty depending on the property's type.
+
+In the following example, let's assume `name` is mapped to a complex type and `employee` is mapped to an entity type.
+
+```rsdl
 type Company {
   key stockSymbol: String
   name: Name
@@ -180,7 +269,8 @@ type Company {
   "employees": {
     "$Kind": "NavigationProperty",
     "$Type": "Model.Employee",
-    "$Collection": true
+    "$Collection": true,
+    "$ContainsTarget": true
   }
 }
 ```
@@ -193,8 +283,9 @@ type Company {
   <Key>
     <PropertyRef Name="stockSymbol" />
   </Key>
+  <Property Name="stockSymbol" Type="Edm.String" Nullable="false" />
   <Property Name="name" Type="Edm.String" Nullable="false" />
-  <NavigationProperty Name="ceo" Type="Model.Employee" Nullable="false" />
+  <NavigationProperty Name="employees" Type="Collection(Model.Employee)" ContainsTarget="true" />
 </EntityType>
 ```
 
@@ -205,8 +296,8 @@ type Company {
 
 The type of a property is one of:
 
-- the built-in types defined in the [`builtInType`](./rapid-pro-rsdl-abnf.md/#structured-type) syntax rule
-- the primitive EDM types listed in [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
+- the built-in types defined in the [`builtInType`](rsdl-abnf/#structured-type) syntax rule
+- the primitive EDM types listed in [OData CSDL JSON Representation](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html#sec_PrimitiveTypes) and [OData CSDL XML Representation](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_PrimitiveTypes)
 - the structured or enumeration types defined in the model
 
 Each of these named types can be marked as
@@ -214,7 +305,7 @@ Each of these named types can be marked as
 - optional via a question mark `?`
 - multi-valued via enclosing it in brackets `[` `]`
 
-```
+```rsdl
 type Foo {
   test1: Integer
   test2: Integer?
@@ -244,7 +335,7 @@ type Foo {
   "test2": { "$Nullable": true, "$Type": "Edm.Int32" },
   "test3": { "$Collection": true, "$Type": "Edm.Int32" },
   "test4": { "$Collection": true, "$Nullable": true, "$Type": "Edm.Int32" },
-  "test5": { },
+  "test5": {},
   "test6": {  "$MaxLength": 80 },
   "test7": {  "$Type": "Edm.Decimal", "$Scale": "variable" },
   "test8": {  "$Type": "Edm.Decimal", "$Precision": 15, "$Scale": 2 },
@@ -270,16 +361,16 @@ type Foo {
 </TabItem>
 </Tabs>
 
-### Functions and Actions
+### Actions and Functions
 
 The syntactical production rule `operation` is mapped to a bound action or a bound function in CSDL.
 
-- functions without a modifier are mapped to CSDL [Function](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Function)
-- functions with an `action` modifier are mapped to a CSDL [Action](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Action)
+- operations with an `action` modifier are mapped to a CSDL [Action](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Action)
+- operations without a modifier are mapped to CSDL [Function](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_Function)
 
 The binding parameter of the function is inferred from the containing type production rule and named `it`
 
-```
+```rsdl
 type Employee {
   key id: Integer
   foo()
@@ -323,7 +414,7 @@ type Employee {
 
 The return type of a function is mapped similar to a property type with the same semantic for `[` `]` and `?`.
 
-```
+```rsdl
 type Employee {
   key id: Integer
   foo() : Integer
@@ -384,7 +475,7 @@ type Employee {
 
 Parameters are similar to properties in that they have a name and reference a type.
 
-```
+```rsdl
 type Employee {
   key id: Integer
   foo(a: Integer, b: [Integer?])
@@ -434,7 +525,7 @@ type Employee {
 
 ## Enumeration Types
 
-An [Enumeration Type](./rapid-pro-rsdl-abnf.md#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
+An [Enumeration Type](rsdl-abnf#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
 
 ```json
 enum employmentType { salaried hourly }
@@ -473,7 +564,7 @@ enum employmentType { salaried hourly }
 
 ## Flag Types
 
-A [Flags Type](./rapid-pro-rsdl-abnf.md#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
+A [Flags Type](rsdl-abnf#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
 The members' values are automatically assigned to powers of 2.
 
 ```json
@@ -522,7 +613,7 @@ flags PhoneService { LandLine Cell Fax Internet Other }
 
 As mentioned above, every RAPID service model creates a CSDL entity container named "Service"
 
-```
+```rsdl
 service {
 }
 ```
@@ -557,7 +648,7 @@ service {
 
 A service member of a multi-valued type is mapped to a CSDL entity set.
 
-```
+```rsdl
 service {
   employees: [Employee]
 }
@@ -592,12 +683,12 @@ service {
 </TabItem>
 </Tabs>
 
-If the type is used as a type on a multi-value and as the type of a property of type definitions (i.e. a navigation property in CSDL),
+If the type is used as a type on a multi-value and as the type of a property of a structured type (i.e. a navigation property in CSDL),
 the appropriate navigation property bindings get created.
-In the example below, the `company` type has a `ceo` and an `employees` property of the same type `employee` (except one is single-value and the other multi-value).
+The `Company` type from the [Properties section](#properties) has an `employees` property of the type `Employee`.
 The binding in CSDL defines that objects of these properties are bound to the `employees` entity set.
 
-```
+```rsdl
 service {
   competitors: [Company]
 }
@@ -620,7 +711,6 @@ service {
     "$Collection": true,
     "$Type": "Model.Company",
     "$NavigationPropertyBinding": {
-      "ceo": "employees",
       "employees": "employees"
     }
   }
@@ -633,7 +723,6 @@ service {
 ```xml
 <EntityContainer Name="Service">
   <EntitySet Name="competitors" EntityType="Model.Company">
-    <NavigationPropertyBinding Path="ceo" Target="employees" />
     <NavigationPropertyBinding Path="employees" Target="employees" />
   </EntitySet>
 </EntityContainer>
@@ -646,7 +735,7 @@ service {
 
 A service member of a single-value type gets mapped to a CSDL singleton.
 
-```
+```rsdl
 service {
   company: Company
 }
@@ -681,6 +770,54 @@ service {
 </TabItem>
 </Tabs>
 
+## Descriptions and Comments
+
+All elements of a model can be described by lines starting with `##` preceding the model element.
+These descriptions are mapped to annotations with term [Core.Description](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md#Description) in the corresponding CSDL construct.
+
+In addition anything after a single `#` character will be treated as a comment and ignored when mapping to CSDL.
+
+```rsdl
+## The Employees Service
+# still needs some work
+service {
+  ## List of all employees
+  employees: [Employee]
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Service": {
+  "$Kind": "EntityContainer",
+  "@Core.Description": "The Employees Service",
+  "employees": { "$Collection": true, "$Type": "Model.Employee", "@Core.Description": "List of all employees" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<EntityContainer Name="Service">
+  <Annotation Term="Core.Description" String="The Employees Service" />
+  <EntitySet Name="employees" EntityType="Model.Employee">
+    <Annotation Term="Core.Description" String="List of all employees" />
+  </EntitySet>
+</EntityContainer>
+```
+
+</TabItem>
+</Tabs>
 ## Appendix
 
 ### References

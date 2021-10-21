@@ -3,11 +3,11 @@ name: .NET Core CI build - RAPID CLI tool
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - "tools/rsdl/rapid-cli/**"
   pull_request:
-    branches: [master]
+    branches: [main]
     paths:
       - "tools/rsdl/rapid-cli/**"
 

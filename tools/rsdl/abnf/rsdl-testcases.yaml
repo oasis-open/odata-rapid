@@ -115,7 +115,7 @@
       @a.b:"\""
       function f( @b.c:0 g: DateTime ): @a.b:0 Decimal?
       @a.b:"\\"
-      action a( b :Decimal(5,2), @b.c:1 d : Double ) : [Duration]
+      action a( b :Decimal(5,2), @b.c:-1.2e3 d : Double ) : [Duration]
     }
   tokens:
     - service
@@ -141,7 +141,7 @@
     - a
     - b
     - "Decimal(5,2)"
-    - "@b.c:1"
+    - "@b.c:-1.2e3"
     - d
     - Double
     - "[Duration]"
@@ -180,3 +180,22 @@
     - h
     - "@a.b:6"
     - TimeOfDay
+
+- source: |
+    ## The Employees Service
+    ##
+    ## Provides a list of all employees
+
+    service {
+      ## List of all employees
+      employees: [Employee]
+    }
+  tokens:
+    - service
+    - "## The Employees Service"
+    - "##"
+    - "## Provides a list of all employees"
+    - "## List of all employees"
+    - entitySet
+    - employees
+    - Employee

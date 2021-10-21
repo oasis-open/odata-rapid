@@ -1,6 +1,6 @@
 ---
 id: rsdl-intro
-title: RAPID SDL intro
+title: RSDL Intro
 ---
 
 # Introduction to RAPID Schema Definition Language (RSDL)
@@ -89,6 +89,7 @@ Now we can get employees for our company:
 | GET [http://rapid-pro.org/company/employees/1?select=lastName,title](https://jetsons.azurewebsites.net/company/employees/1?$select=lastName,title)                             | get the last name and title of the employee with id=1           |
 | GET [http://rapid-pro.org/company?select=name&expand=employees(select=lastName)](<https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=lastName)>) | get the company name and the last names of all of its employees |
 | POST http://rapid-pro.org/company/employees <br/> { "firstName": "Cosmo","lastName": "Spacely","title": "CEO" }                                                                | add a new employee                                              |
+| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}| change the title of the employee with id=1 |
 | DELETE http://rapid-pro.org/company/employees/1                                                                                                                                | delete the employee with id=1                                   |
 
 ### Defining a Top-Level Collection
@@ -178,34 +179,15 @@ type Employee
 }
 ```
 
+Grouping these properties together keeps them organized and makes them easy to use in various structured types.
+
 ### Defining Methods
 
-RAPID supports functions and actions.
+RAPID supports actions and functions.
 
-A function takes zero or more input parameters, and returns a value. Functions must not have side effects.
+#### Actions
 
-We can define a "topEmployees" function on our company:
-
-```rsdl
-type Company
-{
-    key stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
-    topEmployees(num: Integer) : [Employee]
-}
-```
-
-topEmployees takes a single Integer parameter "num" and returns a collection of employees.
-
-Functions are invoked using a GET request. Function parameters are passed in the URL.
-
-| Request                                                                                                                                 | Comment                            |
-| :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
-| GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
-
-An action takes zero or more input parameters and may or may not return a value. Actions may have side-affects.
+An action takes zero or more input parameters and may or may not return a value. Actions may have side effects.
 
 We can define a "youAreFired" action on our company that takes a string parameter "reason":
 
@@ -242,3 +224,28 @@ service {
 | Request                                                                                                                                  | Comment                               |
 | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------ |
 | GET [http://rapid-pro.org/currentStockPrice?stockSymbol=cgswl](<https://jetsons.azurewebsites.net/currentStockPrice(stockSymbol=cgswl)>) | get the current stock price for cgswl |
+
+#### Functions
+
+A function takes zero or more input parameters, and returns a value. Functions must not have side effects.
+
+We can define a "topEmployees" function on our company:
+
+```rsdl
+type Company
+{
+    key stockSymbol: String
+    name: String
+    incorporated: Date
+    employees: [Employee]
+    topEmployees(num: Integer) : [Employee]
+}
+```
+
+topEmployees takes a single Integer parameter "num" and returns a collection of employees.
+
+Functions are invoked using a GET request. Function parameters are passed in the URL.
+
+| Request                                                                                                                                 | Comment                            |
+| :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
+| GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
