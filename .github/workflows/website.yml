@@ -5,12 +5,12 @@ name: WebsiteCI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
        - "website/**"
        - "docs/**"
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
        - "website/**"
        - "docs/**"

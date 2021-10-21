@@ -5,7 +5,7 @@ const { dir } = require("console");
 const fs = require("fs");
 const path = require("path");
 
-const rsdlDoc = "../../../docs/rsdl/rapid-pro-rsdl-abnf.md";
+const rsdlDoc = "../../../docs/rsdl/rapid-rsdl-abnf.md";
 const abnfFile = "./rsdl.abnf";
 
 const markdown = fs.readFileSync(rsdlDoc, "utf8").split("\n");

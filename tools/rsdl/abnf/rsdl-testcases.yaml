@@ -180,3 +180,22 @@
     - h
     - "@a.b:6"
     - TimeOfDay
+
+- source: |
+    ## The Employees Service
+    ##
+    ## Provides a list of all employees
+
+    service {
+      ## List of all employees
+      employees: [Employee]
+    }
+  tokens:
+    - service
+    - "## The Employees Service"
+    - "##"
+    - "## Provides a list of all employees"
+    - "## List of all employees"
+    - entitySet
+    - employees
+    - Employee

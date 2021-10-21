@@ -88,7 +88,7 @@ the client can select a subset of properties to be returned for each instance in
 
 ### Requesting a Range of Members
 
-The client can use `top` and/or `skip` query options to select a range of resources within a collection. 
+The client can use `skip` and/or `top` query options to select a range of resources within a collection.
 They can use the `count` query option to request the count of all resources in the collection.
 
 <TemplateRequest command="GET" query="{collection-resource-path}?skip={int}"/>
@@ -99,7 +99,8 @@ They can use the `count` query option to request the count of all resources in t
 
 <InteractiveQuerying defaultQuery="company/employees?skip=1&top=2&count=true" id="8"/>
 
-The result skips the first member and returns the next two.
+The `skip` option is used to specify how many members at the beginning of a collection to ignore; `top` refers to how many members to return from the beginning of the remaining collection. Therefore, in this example, the result skips the first member and returns the next two.
+
 The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`. 
 There is no next link because all two of the requested resources are returned.
 

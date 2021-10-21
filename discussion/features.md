@@ -72,7 +72,7 @@ Discussion results from virtual offsite on 2020-11-12.
 
 | OData Feature                     | RAPID Equivalent                                                             |
 | --------------------------------- | ---------------------------------------------------------------------------- |
-| Basic POST(create), PATCH, DELETE | yes                                                                          |
+| Basic POST(create), PATCH, DELETE | yes, with query options to shape the result for POST and PATCH               |
 | PUT                               | :x:, only PATCH                                                              |
 | Deep Insert                       | yes                                                                          |
 | Deep Update/Upsert                | :x:                                                                          |

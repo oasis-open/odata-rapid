@@ -1,6 +1,6 @@
 ---
 id: rsdl-abnf
-title: RAPID SDL ABNF
+title: RSDL ABNF
 ---
 
 # RAPID Pro Syntax
@@ -16,7 +16,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 
 ## Syntax rules
 
-- [RAPID Pro syntax](#rapid-pro-syntax)
+- [RAPID Pro Syntax](#rapid-pro-syntax)
   - [Overview](#overview)
   - [Syntax rules](#syntax-rules)
     - [Model](#model)
@@ -110,7 +110,7 @@ serviceOperation     = operationKind RWS identifier
 ```ABNF
 annotations          = *( annotation RWS )
 
-annotation           = "@" qualifiedName [ "#" identifier ] OWS ":" OWS annotationValue
+annotation           = "@" qualifiedName [ "#" identifier ] OWS ":" OWS annotationValue / DOC-COMMENT
 
 annotationValue      = %s"true"
                      / %s"false"
@@ -146,6 +146,8 @@ precision           = integer
 scale               = integer
 
 maxLength           = integer
+
+DOC-COMMENT         = "##" *( %x0-9 / %xB-C / %xE-10FFFF)
 
 ALPHA               = %x41-5A / %x61-7A
 

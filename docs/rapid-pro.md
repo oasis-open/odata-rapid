@@ -42,7 +42,7 @@ Sweet. Who says you can't have it all?
 
 ## Resource Description
 
-RAPID introduces a simple RAPID Schema Definition Language (RSDL) that can be used at design time to define the shape of your service.
+RAPID introduces a simple RAPID Schema Definition Language (RSDL) that can be used at design time to define the shape of your API (the allowed requests, format of responses, and so forth).
 
 For example, the following RSDL defines a simple type "Company", returned by the "company" endpoint of the service.
 
@@ -59,7 +59,7 @@ service {
 }
 ```
 
-For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rapid-pro-rsdl-intro.md).
+For details on defining a RAPID service using RSDL, see [RAPID Schema Definition Language (RSDL)](./rsdl/rsdl-intro).
 
 This simple design time syntax is converted to a runtime service description that client applications and tooling can use to interact with the service.
 
@@ -114,8 +114,8 @@ RAPID services return individual resources as a json object.
 ```
 
 RAPID responses are self-describing. 
-The first line says that the response is described by the `company` singleton defined in the `$metadata` resource. 
-The `$metadata` resource may be represented as a relative or absolute URL.
+The first line says that the response is described by the `company` singleton defined in the `$metadata` document. 
+The `@context` property is the URL representation of this section in the document, and in this example, it is a relative URL.
 
 RAPID uses properties prefixed with the `@` symbol to denote control information that is not part of the data.
 
@@ -128,6 +128,8 @@ For details on reading data in RAPID, see [Retrieving Resources in RAPID](./rapi
 ### Modifying a Resource
 
 RAPID services support modifying a resource using the PATCH, POST, and DELETE methods.
+
+This example PATCH call changes the name in the Company singleton to a given replacement:
 
 | Template    | PATCH {single-resource-path}                   |
 | ----------- | :--------------------------------------------- |
