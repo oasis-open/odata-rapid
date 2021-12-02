@@ -20,5 +20,5 @@
     "start": "parcel src/html/index.html"
   },
   "author": "",
-  "license": "ISC"
+  "license": "Apache-2.0"
 }

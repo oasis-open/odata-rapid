@@ -9,7 +9,7 @@
     "build": "webpack"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "antlr4-c3": "^1.1.16",
     "antlr4ts": "^0.5.0-alpha.4",
