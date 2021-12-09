@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@codemirror/basic-setup": "^0.18.2",
     "@codemirror/theme-one-dark": "^0.18.1"

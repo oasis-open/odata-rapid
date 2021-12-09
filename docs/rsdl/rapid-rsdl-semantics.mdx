@@ -7,9 +7,9 @@ title: RSDL Semantics
 > Initial Draft. July 2020
 
 The semantic of RSDL (RAPID Schema Definition Language) can be described by mapping
-syntactical constructs described in [rapid-pro-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
+syntactical constructs described in [rapid-rsdl-abnf](rsdl-abnf) to equivalent runtime [Service Definition](../spec/rapid-pro-resource_description.md) constructs.
 
-Please refer to [rapid-pro-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
+Please refer to [rapid-rsdl-abnf](./rsdl-abnf) for the syntactical constructs of RSDL.
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
@@ -149,6 +149,87 @@ type Name {
 <ComplexType Name="Name">
   <Property Name="firstName" Type="Edm.String" Nullable="false" />
   <Property Name="lastName" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Abstract Structured Types
+
+A type may be defined as `abstract`. An abstract type cannot be instantiated, but can be used as a base type for other type definitions.
+
+```rsdl
+abstract type Robot {
+  model: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Robot": {
+  "$Kind": "ComplexType",
+  "$Abstract": true,
+  "model": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Robot" Abstract="true">
+  <Property Name="model" Type="Edm.String" Nullable="false" />
+</ComplexType>
+```
+
+</TabItem>
+</Tabs>
+
+### Structured Type Inheritance
+
+Types may extend other types through inheritance.
+The type derived from the base type inherits all properties, relationships, and operations bound to the base type (type inheritance) and can be used anywhere the base type is used (polymorphism).
+
+```
+type Android extends Robot {
+  name: String
+}
+```
+
+<Tabs
+  defaultValue="json"
+  groupId="csdl"
+  values={[
+    { label: 'JSON', value: 'json', },
+    { label: 'XML', value: 'xml', },
+  ]
+}>
+<TabItem value="json">
+
+```json
+"Android": {
+  "$Kind": "ComplexType",
+  "$BaseType": "Model.Robot",
+  "name": { "$Type": "Edm.String" }
+}
+```
+
+</TabItem>
+<TabItem value="xml">
+
+```xml
+<ComplexType Name="Android" BaseType="Model.Robot">
+  <Property Name="name" Type="Edm.String" Nullable="false" />
 </ComplexType>
 ```
 

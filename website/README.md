@@ -20,6 +20,14 @@ yarn build
 ```
 
 
+Build the required [urlEditor](../tools/urlEditor) package.
+
+Then:
+
+```
+$ yarn
+```
+
 ### Local Development
 
 ```

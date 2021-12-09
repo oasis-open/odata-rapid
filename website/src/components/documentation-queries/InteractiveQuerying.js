@@ -16,7 +16,7 @@ import { initUrlEditor } from "odata-uri-editor";
 /// <remarks>
 ///   ID is required to isolate a specific InteractiveQuerying instance for the default query.
 /// </remarks>
-class InteractiveQuerying extends Component {
+class InteractiveQueryingInternal extends Component {
   constructor(props) {
     super(props);
     let newController = new AbortController();
@@ -32,7 +32,7 @@ class InteractiveQuerying extends Component {
 
   /// <summary>Start with results displayed.</summary>
   componentDidMount() {
-    this.editor = initUrlEditor(document.getElementById(this.props.id));
+    this.editor = this.props.initUrlEditor(document.getElementById(this.props.id));
     this.editor.setUrl(this.props.defaultQuery);
     let schema = `
     type Company
@@ -67,12 +67,8 @@ class InteractiveQuerying extends Component {
   /// <summary>Gets the results for the query entered by the user.</summary>
   updateQueryResults = () => {
     let newQuery = this.editor.getUrl();
-    if (newQuery !== "") {
-      this.setState({queryUrl: newQuery});
-      this.fetchResults(newQuery);
-    } else {
-      this.setToDefault();
-    }
+    this.setState({queryUrl: newQuery});
+    this.fetchResults(newQuery);
   }
 
   /// <summary>
