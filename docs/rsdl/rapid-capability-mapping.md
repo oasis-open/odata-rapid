@@ -28,6 +28,7 @@ path /skus/{id} {
         excluded { id releaseDate }
     }
 }
+```
 
 ```XML
 <Annotations Target="skus">
