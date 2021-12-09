@@ -135,7 +135,7 @@ path /orders {
 }    
 ```
 
-```JSON
+```javascript 
 "$Annotations": {
   "orders": {
     "@Org.OData.Capabilities.V1.FilterRestrictions": {
