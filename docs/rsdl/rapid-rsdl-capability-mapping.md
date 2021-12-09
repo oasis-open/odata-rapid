@@ -1,5 +1,10 @@
-# capability mapping
+---
+id: rsdl-capability-mapping
+title: Capability mapping
+sidebar_label: RSDL Capability mapping to CSDL
+---
 
+#  RSDL Capability mapping to CSDL
 
 
 ## delete
