@@ -27,6 +27,7 @@ module.exports = {
                 'rsdl/rsdl-capabilities',
                 'rsdl/rsdl-semantics',
                 'rsdl/rsdl-abnf',
+                'rsdl/rsdl-capability-mapping'
             ]
         },
         {

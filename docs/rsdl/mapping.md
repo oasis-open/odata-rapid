@@ -1,8 +1,4 @@
----
-id: rsdl-capability-mapping
-title: Capability mapping
-sidebar_label: RSDL Capability mapping to CSDL
----
+
 
 #  RSDL Capability mapping to CSDL
 
@@ -121,6 +117,18 @@ path /skus {
 ```
 
 ## filtering
+
+FilterExpressionRestrictions is a list of FilterExpressionRestrictionType, that in itself is a pair of a property name one of the literal values :
+
+| value                        | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SingleValue                  | Property can be used in a single `eq` clause                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| MultiValue                   | Property can be used in multiple `eq` and `in` clauses, combined by `or` (which is logically equivalent to a single `in` clause)                                                                                                                                                                                                                                                                                                                                                                   |
+| SingleRange                  | Property can be used in at most one `ge` and/or one `le` clause, separated by `and`                                                                                                                                                                                                                                                                                                                                                                                                                |
+| MultiRange                   | Property can be compared to a union of one or more closed, half-open, or open intervals" <br/> The filter expression for this property consists of one or more interval expressions combined by `or`. A single interval expression is either a single comparison of the property and a literal value with `eq`, `le`, `lt`, `ge`, or `gt`, or pair of boundaries combined by `and` and enclosed in parentheses. The lower boundary is either `ge` or `gt`, the upper boundary either `le` or `lt`. |
+| SearchExpression             | String property can be used as first operand in `startswith`, `endswith`, and `contains` clauses"                                                                                                                                                                                                                                                                                                                                                                                                  |
+| MultiRangeOrSearchExpression | Property can be compared to a union of zero or more closed, half-open, or open intervals plus zero or more simple string patterns" <br/> The filter expression for this property consists of one or more interval expressions or string comparison functions combined by `or`. See MultiRange for a definition of an interval expression. See SearchExpression for the allowed string comparison functions.                                                                                        |
+
 
 ```RSDL
 path /orders {

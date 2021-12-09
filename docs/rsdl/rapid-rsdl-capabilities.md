@@ -1,7 +1,7 @@
 ---
 id: rsdl-capabilities
 title: Capabilities
-sidebar_label: RSDL Capabilities
+sidebar_label: RSDL API Capabilities
 ---
 
 # Path Centric Service Capabilities 
@@ -61,7 +61,7 @@ The path-centric view in RSDL allows to enumerate the allowed requests and speci
 ## HTTP capabilities
 The first level of the above mentioned capabilities is to specify the path of theURL and the HTTP method, Here is a partial RSDL to demonstrate this.
 
-```rsdl
+``` rsdl
 path /orders {
     GET { ... }
     POST { ... }
@@ -102,10 +102,11 @@ The specific capabilities that can be used in the HTTP capabilities section inst
 | POST   | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
 | PATCH  | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
 | PUT    | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> | &#x2713;<sup>1</sup> |
-| DELETE | &#x2713;<sup>2</sup> |                      |                      |                      |
+| DELETE | |                      |                      |                      |
 
 [1] to shape the POST/PATCH/PUT response. Rarely used but supported<br/>
 [2] deleting multiple items. Rarely used but supported<br/>
+[!!TODO: check if filter segment on delete is allowed in RAPID ]
 
 ## Individual Query capabilities
 
@@ -135,6 +136,13 @@ path /orders {
             prefix { name }
             text   { description }                   
         }
+
+        filter { 
+            eq     except { description }                 
+            ranges { createdDate description }
+            prefix { name }
+            text   { description }                   
+        }
     }
 }
 ```
@@ -158,22 +166,56 @@ path /orders {
  The expand capability introduces a nesting of capabilities since the type of the expandable property can itself be used in select, filter, and expand.
 
 ```rsdl
+
+
+type Order {
+
+}
+
+capability Order defaultOrder {
+    filter {
+        eq { id name }
+        prefix { nam description }
+        range { createdDateTime }
+    }
+    expand {
+        items { 
+            filter { 
+                eq { id name } 
+                prefix { name }
+            }
+            expand { 
+                sku
+            }
+        }    
+    }
+    paging
+    count
+}
+
+capability Order limitedOrder {   
+    filter {
+        eq { id name }
+    } 
+}
+
 path /orders {
     GET { 
-        expand {
-            items { 
-                filter { 
-                    eq { id name } 
-                    prefix { name }
-                }
-                expand { 
-                    sku
-                }
-            }    
-        }
+       defaultOrder
+    }
+}
+
+path /customers/{id}/orders {
+    GET { 
+        limitedOrder
     }
 }
 ```
+
+- `/order?$expand=items`
+- `/order?$expand=items(expand=sku)`
+- `/order?$expand=items(expand=sku; filter=id eq '100')`
+- `/order?$expand=items(select=id; expand=sku; filter=id eq '100')`
 
 
 ### Paging capabilities
@@ -204,43 +246,53 @@ path /orders {
 }
 ```
 
-The count capability is typically seen in a GET capability but can also be nested in an expand capability.
-
-### Select capabilities
-
-The select capability allows to specify if a response contains certain properties. To be precise, it specifies the properties that are not returned in a request or response respectively.
-
-```rsdl
-path /orders {
-    GET { 
-        select { 
-            readonly { createDate lastUpdateDate }
-            writeonly { password attachment }
-        }
-    }
-}
-```
-
-The properties in `readonly` are written by the service (hence the readonly) and any value sent in a request is ignored.<br/>
-The properties in `writeonly` are never returned by the service (hence the writeonly) but can be used in create and update requests. 
-
-
 ## Extensibility
 
-The RSDL capabilities allow to specify custom patterns, so called traits, for the service to implement that are outside the scope of the RSDL specification. One example for these could be the handling of requests when throttling is needed, where the service responds with certain headers for requests that cross a throttling threshold. This could be a well established pattern (protocol) but is not covered in RSDL. The service implementation can read the traits and configure the right behavior based on the settings in RSDL.
+The RSDL API capabilities allow to specify custom capabilities, so called traits, for the service to implement that are outside the scope of the patterns known by the RSDL specification. 
 
-The individual traits are treated by RSDL as simple opaque (meta-) data that is passed on the the service in the form of a trait name and a list of key-value pairs. The implementation is then free to interpret the presence of the trait and the parameters as it sees fit.
+One example for these could be the handling of requests when throttling is needed, where the service responds with certain headers for requests that cross a throttling threshold. There are multiple established pattern (protocol) to implement this but it is not covered in RSDL directly. But it can be specified in RSDL as an extension and the service implementation can read it and configure the right behavior based on the traits in RSDL.
+
+The individual trait is treated as simple opaque (meta-) data that is passed on the service in the form of a trait name and a list of key-value pairs. The implementation is then free to interpret the presence of the trait and the parameters as it sees fit.
 
 ```rsdl
 path /orders {
     GET { 
         traits { 
             longRunningOperation
-            throttling { level: "premium" }
+            topWithoutSkip
+            throttling { level: "premium\u12a4" }
         }
     }
 }
 ```
+
+
+## Other path based characteristics
+
+```rsdl
+path /user/{id}/recentOrders {
+    # references an Order contained in /orders
+    targets: /orders
+    targets: unbound
+    # 'targets' ':' ( path / 'unbound' )
+
+    GET {  }
+}
+
+path /orders {
+    # top level entity set
+    GET {  }
+
+}
+
+path /orders/{id}/items {
+    # containment navigation (informally an entity set)
+    GET {  }
+
+}
+```
+
+
 
 
 ## Syntax
