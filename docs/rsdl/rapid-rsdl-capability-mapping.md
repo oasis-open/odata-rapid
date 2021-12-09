@@ -162,3 +162,39 @@ path /orders {
     }
   }
 ```
+
+
+# expansion
+
+```RSDL
+path /orders {
+    GET { 
+        expand {
+            items { 
+                expand { 
+                    sku
+                }
+            }    
+        }
+    }
+}
+```
+
+```XML
+<Annotations Target="orders">
+  <Annotation Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.ExpandRestrictionsType">
+      <PropertyValue Property="Expandable" Bool="true" />
+    </Record>
+  </Annotation>
+</Annotations>
+<Annotations Target="orders/items">
+  <Annotation Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.ExpandRestrictionsType">
+      <PropertyValue Property="Expandable" Bool="true" />
+    </Record>
+  </Annotation>
+</Annotations>
+
+```
+
