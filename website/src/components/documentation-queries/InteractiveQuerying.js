@@ -6,7 +6,6 @@ import './InteractiveQuerying.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import { initUrlEditor } from "odata-uri-editor";
 
 /// <summary>
 /// Tool to allow a user to make a query on the Jetsons API and see the results

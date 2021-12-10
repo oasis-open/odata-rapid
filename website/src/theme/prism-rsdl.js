@@ -5,20 +5,17 @@ Prism.languages.rsdl = {
             pattern: /\b(?:type|enum|service|abstract|open|key|extends|path|capability)\b/
         },
         {
-            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count|select|readonly|writeonly|traits)\b/
+            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count|required|excluded|traits)\b/
         },
         {
-            pattern: /\b(?:except|eq|range|ranges|prefix|text|any)\b/
-        },
-        {
-            pattern: /\b(?:selectoptions)\b/
+            pattern: /\b(?:eq|range|ranges|prefix|text|any)\b/
         }
     ],
     
     'string': [
         {
-            // pattern: /"""[ \t]*[\r\n](?:(?:"|"")?(?:\\.|[^"\\]))*"""/,
-            pattern: /(?:"(?:[^"\\]|\\["\\\/bfnrt]|\\u[0-9A-Fa-f]{4})*")/, // javascript strings https://www.json.org/json-en.html
+            // javascript strings https://www.json.org/json-en.html
+            pattern: /(?:"(?:[^"\\]|\\["\\\/bfnrt]|\\u[0-9A-Fa-f]{4})*")/, 
             greedy: true
         }
     ],
