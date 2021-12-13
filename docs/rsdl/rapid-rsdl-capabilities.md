@@ -317,7 +317,7 @@ post-capabilities     = "POST" "{" "}"
 
 patch-capabilities    = "PATCH" "{" "}"
 
-delete-capabilities   = "DELETE" "{" [ filter-capabilities ] "}"
+delete-capabilities   = "DELETE" "{" "}"
 
 expand-capabilities   = "expand" ["{" 
                            *( property-name "{" query-capabilities "}" ) 
