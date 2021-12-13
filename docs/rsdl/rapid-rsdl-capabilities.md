@@ -59,7 +59,7 @@ The amount of potential URLs that the service may support is large - in larger s
 The path-centric view in RSDL allows to enumerate the allowed requests and specify which  query options are supported for these requests.
 
 ## HTTP capabilities
-The first level of the above mentioned capabilities is to specify the path of theURL and the HTTP method, Here is a partial RSDL to demonstrate this.
+The first level of the above mentioned capabilities is to specify the path of the URL and the HTTP method, Here is a partial RSDL to demonstrate this.
 
 ``` rsdl
 path /orders {
