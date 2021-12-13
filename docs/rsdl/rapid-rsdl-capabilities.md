@@ -149,7 +149,7 @@ path /orders {
 
 ### Expand capabilities
 
-The expand capability allows to specify which property can be used in `$expand` query parameter. 
+The expand capability allows to specify which properties can be used in `$expand` query parameter. 
 
 The format is a sequence of properties that can be expanded.
 
