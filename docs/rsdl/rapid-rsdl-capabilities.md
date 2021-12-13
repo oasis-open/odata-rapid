@@ -32,7 +32,7 @@ enum OrderStatus {
 
 type OrderItem {
     key id: String
-    sku: *SKU
+    sku: SKU
     amount: Integer
 }
 
