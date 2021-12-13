@@ -88,7 +88,7 @@ path /skus {
 }
 
 ```
-The effect of this is that for each declared `path` declaration and HTTP method the service is expected to return data, data in the form as specified by the corresponding type. The service is free to respond with success messages for other combinations but the service guarantees to work for the ones listed.
+The effect of this is that for each declared `path` and HTTP method the service is expected to return data, in the form specified by the corresponding type. The service is free to respond with success messages for other combinations but the service guarantees to work for the ones listed.
 
 Important to notice is that the path after the `path` keyword are not literal paths but sort of templates. Many of the interesting paths in a REST service have path segments that are entity ids. this is indicated via the `{id}` syntax. the `id` in there is exactly the name of the key.
 
