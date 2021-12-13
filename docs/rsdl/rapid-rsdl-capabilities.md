@@ -112,7 +112,7 @@ The specific capabilities that can be used in the HTTP capabilities section inst
 
 ### Filter capabilities
 
-The filter capability allows to specify which property can be used in which filter expression. There is a vast amount of possible filter expressions (see [odata abnf](https://github.com/oasis-tcs/odata-abnf/blob/main/abnf/odata-abnf-construction-rules.txt#L502)). Therefore, the filter capabilities allow to specify a few well-known but restrictive expressions or allow any expression.
+The filter capability allows to specify which property can be used in which filter expression. There is a vast amount of possible filter expressions (see [OData System Query Option `$filter`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)). Therefore, the filter capabilities allow to specify a few well-known but restrictive expressions or allow any expression.
 
 The format for filter capabilities is a sequence of pairs of a so called operator group and a list of property names. An operator group is constraining the form of the expression allowed in the $filter system query option.
 
