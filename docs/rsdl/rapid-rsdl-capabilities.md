@@ -90,7 +90,7 @@ path /skus {
 ```
 The effect of this is that for each declared `path` and HTTP method the service is expected to return data, in the form specified by the corresponding type. The service is free to respond with success messages for other combinations but the service guarantees to work for the ones listed.
 
-Important to notice is that the path after the `path` keyword are not literal paths but sort of templates. Many of the interesting paths in a REST service have path segments that are entity ids. this is indicated via the `{id}` syntax. the `id` in there is exactly the name of the key.
+Important to notice is that the paths after the `path` keyword are not literal paths but sort of templates. Many of the interesting paths in a REST service have path segments that are entity ids. This is indicated via the `{id}` syntax: the `id` in there is exactly the name of the key property.
 
 The placeholders `...` are used to declare which query options are supported by the service. For example a GET capability lists that certain $filter options are allowed or that paging is supported via the $top, $skip options. More details in the next sections.
 
