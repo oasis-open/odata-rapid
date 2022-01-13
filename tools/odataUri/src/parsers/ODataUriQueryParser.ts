@@ -1,4 +1,4 @@
-// Generated from src/js/odata-uri/parsers/ODataUriQuery.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from src/parsers/ODataUriQuery.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ATN } from "antlr4ts/atn/ATN";
@@ -86,8 +86,8 @@ export class ODataUriQueryParser extends Parser {
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
 		undefined, "'$filter'", "'$select'", "'$expand'", "'$orderby'", "'$top'", 
-		"'$skip'", "'desc'", "'or'", "'and'", "'eq'", "'neq'", "'gt'", "'gte'", 
-		"'lt'", "'lte'", "'&'", "'='", "'('", "')'", "','",
+		"'$skip'", "'desc'", "'or'", "'and'", "'eq'", "'ne'", "'gt'", "'ge'", 
+		"'lt'", "'le'", "'&'", "'='", "'('", "')'", "','",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
 		undefined, "FILTER", "SELECT", "EXPAND", "ORDERBY", "TOP", "SKIPKW", "DESC", 
