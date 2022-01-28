@@ -38,10 +38,11 @@ module.exports = {
             ]
         }
     ],
-    tutorial: {
-        'Rapid Tutorial': [
-            'tutorial/buildserver',
-            'tutorial/buildclient'
-        ]
-    }
+    samples: 
+        {
+           'Samples' : [
+               'samples/jetsons',
+               'tutorial/graphqlclient'
+            ]
+       }
 };
