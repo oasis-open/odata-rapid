@@ -29,7 +29,7 @@ path that points to this package's `dist` folder:
 
 ```json
 "dependencies": {
-    "odata-url-editor": "file:path/to/urlEditor/dist
+    "odata-url-editor": "file:path/to/urlEditor
 }
 ```
 
