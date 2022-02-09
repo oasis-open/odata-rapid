@@ -15,7 +15,7 @@ const editor = new visualModelEditor.MermaidEditor(
     (rsdl) => console.log("visualEditor", rsdl)
 );
 
-editor.loadRsdl(`
+editor.updateRsdl(`
 type Company {
     key id: String
     name: String

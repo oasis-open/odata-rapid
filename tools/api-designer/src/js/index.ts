@@ -3,7 +3,7 @@ import 'swagger-ui/dist/swagger-ui.css';
 import 'highlight.js/styles/default.css';
 import '../css/main.scss';
 import { initRsdlEditor } from 'rsdl-editor';
-//import { MermaidEditor} from "visual-model-editor"; // TODO: this is a placeholder for the "visualModelEditor" project
+import { MermaidEditor} from "visual-model-editor";
 import { initUrlEditor } from "odata-url-editor";
 import { App, Listener } from './app';
 import hljs from 'highlight.js/lib/core';
@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', function (event) {
     const urlEditor = initUrlEditor(document.getElementById('uri-editor'), () => {});
     app.addListener(new Listener("urlEditor", (rsdl) => urlEditor.updateSchema(rsdl)));
   
-    // const mermaidEditor = new MermaidEditor(
-    //   document.getElementById('rsdl-editor-gui-content'),
-    //   document.getElementById('rsdl-editor-gui-tab'),
-    //   window,
-    //   (rsdl: string) => app.publishRsdl("visualEditor", rsdl)
-    // );
-    // app.addListener(new Listener("visualEditor", (rsdl: string) => mermaidEditor.loadRsdl(rsdl)));
+    const mermaidEditor = new MermaidEditor(
+      document.getElementById('rsdl-editor-gui-content'),
+      document.getElementById('rsdl-editor-gui-tab'),
+      window,
+      (rsdl: string) => app.publishRsdl("visualEditor", rsdl)
+    );
+    app.addListener(new Listener("visualEditor", (rsdl: string) => mermaidEditor.updateRsdl(rsdl)));
   
     app.publishRsdl('main', rsdlEditor.getContent());
     hljs.highlightAll();

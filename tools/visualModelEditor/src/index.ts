@@ -26,8 +26,8 @@ export class MermaidEditor {
   private _currentRsdlJs: NormalizedEdmModel;
 
   constructor(
-    editorContainer: HTMLDivElement,
-    tabButton: HTMLButtonElement,
+    editorContainer: HTMLElement,
+    tabButton: HTMLElement,
     global: any,
     onModelUpdated: ModelUpdatedCallback
   ) {
