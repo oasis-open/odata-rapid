@@ -40,7 +40,7 @@ function initRsdlEditor(domElement: HTMLElement, onRsdlUpdated: RsdlUpdatedCallb
 
     const view = new EditorView({
         parent: domElement,
-        state: initialState,
+         state: initialState,
     });
 
     const updateContent = (rsdl) => {
