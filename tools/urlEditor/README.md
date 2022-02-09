@@ -25,7 +25,7 @@ packages will fetch this package from the local filesystem as is.
 
 To add this package as a depedency to another project, add reference to this library to
 the other project's `package.json` `dependencies`, the reference should be a file
-path that points to this package's `dist` folder:
+path that points to this package's root folder:
 
 ```json
 "dependencies": {
@@ -52,3 +52,5 @@ function onUrlUpdated(url: string) {
 const url = editor.getUrl();
 
 ```
+
+You can also load this library directly in a html's `src` tag. See the [example.html](./example.html) file for a sample.

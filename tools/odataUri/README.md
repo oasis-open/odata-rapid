@@ -23,7 +23,7 @@ packages will fetch this package from the local filesystem as is.
 
 To add this package as a depedency to another project, add reference to this library to
 the other project's `package.json` `dependencies`, the reference should be a file
-path that points to this package's `dist` folder:
+path that points to this package's root folder:
 
 ```json
 "dependencies": {
@@ -51,3 +51,11 @@ const suggestions = parser.getCompletions("http://service/companies?$filter=", 3
 parsers.updateSchema(newSchema);
 
 ```
+
+You can also load this library directly in a html's `src` tag. See the [example.html](./example.html) file for a sample.
+
+## Notes for future reference (feel free to ignore this)
+
+I stumbled into a lot of issues trying to create a bundle of this package,
+mostly due to the fact that antlr-t4 libraries reference some objects only
+available in Node.js (e.g. `process`, `util`). This caused a bunch of errors when accessing the package through a browser. I addressed the issues by configuring some shims/fallbacks in webpack as you can see in the `webpack.config.js` file.

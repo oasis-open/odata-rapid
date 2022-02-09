@@ -51,6 +51,8 @@ const currentContent = editor.getContent();
 
 ```
 
+You can also load this library directly in a html's `src` tag. See the [example.html](./example.html) file for a sample.
+
 ## Notes for future reference (feel free to ignore this)
 
 I used Rollup here instead of Webpack to fix some issues with the build. Initially, I used Webpack
