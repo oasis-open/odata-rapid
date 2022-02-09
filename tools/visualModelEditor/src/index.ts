@@ -27,7 +27,6 @@ export class MermaidEditor {
 
   constructor(
     editorContainer: HTMLElement,
-    tabButton: HTMLElement,
     global: any,
     onModelUpdated: ModelUpdatedCallback
   ) {
@@ -46,10 +45,6 @@ export class MermaidEditor {
 
     this._diagramView = new DiagramView(
       editorContainer.querySelector<HTMLDivElement>('#diagramContainer')
-    );
-
-    tabButton.addEventListener('shown.bs.tab', () =>
-      this._diagramView.redraw()
     );
 
     global.selectElement = (name) => this.selectElement(name);
@@ -71,6 +66,11 @@ export class MermaidEditor {
       this.addEntityContainerType()
     );
   }
+
+  public redraw() {
+    this._diagramView.redraw();
+  }
+
   public updateRsdl(rsdl: string) {
     this.loadRsdl(rsdl);
   }

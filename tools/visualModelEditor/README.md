@@ -38,16 +38,13 @@ path that points to this package's root folder.
 ```ts
 import { MermaidEditor } from "visual-model-editor";
 
-
 const container = document.getElementById('rsdl-editor-gui-content');
-const tabButton = document.getElementById('rsdl-editor-gui-tab');
 
 const editor = MermaidEditor(
     container,
-    tabButton,
     window,
-    // get notified when the rsdl has been updated by the visual editor
-    (rsdl) => console.log("visual editor updated", rsdl)
+    // Subscribe to the update event.
+    (rsdl) => editor.updateRsdl(rsdl)
 );
 
 // update the rsdl programmatically
