@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Visual Model Builder</title>
+    <script src="dist/index.js"></script>
+</head>
+<body>
+<button id="rsdl-editor-gui-tab">Tab</button>
+<div id="rsdl-editor-gui-content" style="width:500px;height:500px;"></div>
+<script>
+const editor = new visualModelEditor.MermaidEditor(
+    document.getElementById('rsdl-editor-gui-content'),
+    document.getElementById('rsdl-editor-gui-tab'),
+    window,
+    (rsdl) => console.log("visualEditor", rsdl)
+);
+
+editor.loadRsdl(`
+type Company {
+    key id: String
+    name: String
+}
+
+type User {
+    key id: String
+    name: String
+    addresses: [Address]
+}
+
+enum WorkLocation {
+    Office
+    Home
+}
+
+type Address {
+    email: String
+    physical: String
+}
+
+type Employee extends User {
+    employeeNumber: String
+    location: WorkLocation
+    company: Company
+    action relocate(location: WorkLocation): Employee
+}
+
+service {
+    users: [User]
+    companies: [Company]
+    employees: [Employee]
+}
+
+`)
+</script>
+</body>
+</html>

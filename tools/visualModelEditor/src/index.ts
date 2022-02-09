@@ -1,6 +1,11 @@
 import { parse } from 'rsdl-js';
 import mermaid from 'mermaid';
 
+import 'bootstrap/dist/css/bootstrap.css';
+// import 'swagger-ui/dist/swagger-ui.css';
+// import 'highlight.js/styles/default.css';
+// import '../css/main.scss';
+
 import {
   NormalizedEdmModel,
   NormalizedEdmModelType,
