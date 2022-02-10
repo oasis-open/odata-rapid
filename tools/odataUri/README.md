@@ -27,7 +27,7 @@ path that points to this package's root folder:
 
 ```json
 "dependencies": {
-    "odata-uri": "file:path/to/odataUri
+    "odata-uri": "file:path/to/odataUri"
 }
 ```
 
