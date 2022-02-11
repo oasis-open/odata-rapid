@@ -31,7 +31,7 @@ The input object `orders_filter` has one field per property mentioned in the `fi
 input orders_filter {
   id: [String_eq] # disjunction of "eq" expressions, which effectively is an "in" expression
   name: [String_eq_prefix]
-  description: [String_filter] # combination of eq, range(s), and text
+  description: [String_any] # combination of eq, range(s), and text
   createdDate: [Date_range] # disjunction of range expressions
   fulfillmentDate: [Date_eq]
   name: [String_eq_prefix] # combination of eq and prefix
@@ -45,7 +45,7 @@ input String_eq {
   eq: String
 }
 
-input String_filter {
+input String_any {
   eq: String
   ne: String
   ge: String
