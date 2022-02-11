@@ -98,7 +98,7 @@ This will allow queries such as
 
 which translates into
 
-```http
+```url
 GET /orders?$filter=startswith(name,'Foo') and
                     ((createdDate ge 2021-11-01 and createdDate le 2021-11-30) or
                      (createdDate ge 2022-01-01 and createdDate le 2022-01-31))
