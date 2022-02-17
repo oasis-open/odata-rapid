@@ -30,11 +30,10 @@ The input object `orders_filter` has one field per property mentioned in the `fi
 ```gql
 input orders_filter {
   id: [String_eq] # disjunction of "eq" expressions, which effectively is an "in" expression
-  name: [String_eq_prefix]
+  name: [String_eq_prefix] # combination of eq and prefix
   description: [String_any] # combination of eq, range(s), and text
   createdDate: [Date_range] # disjunction of range expressions
   fulfillmentDate: [Date_eq]
-  name: [String_eq_prefix] # combination of eq and prefix
 }
 ```
 
@@ -109,7 +108,7 @@ Note: only a single input object is passed to the filter argument, which is Grap
 
 The basic rule:
 
-- fields of an object translate into and `and` expression
-- objects in an array translate into an `or` expression
+- fields of an object translate into expressions joined by `and`
+- objects in an array translate into expressions joined by `or`
 
-This means that the maximum expression complexity is a disjunction of conjunctions for different fields of disjunctions for the same field, which is complex enough for most use cases. The example above doesn't even use t
+This means that the maximum expression complexity is a disjunction of conjunctions for different fields of disjunctions for the same field, which is complex enough for most use cases. The example above doesn't even use top-level `or` expressions.

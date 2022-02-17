@@ -1,16 +1,19 @@
 {
   "cSpell.words": [
-    "dotnet",
-    "nuget",
-    "nupkg",
-    "rapid",
-    "rsdl",
-    "tools",
     "abnf",
+    "dotnet",
+    "endswith",
     "eset",
     "jetsons",
+    "nuget",
+    "nupkg",
     "odata",
+    "rapid",
+    "RDSL",
+    "rsdl",
+    "startswith",
     "svel",
+    "tools",
     "xunit"
   ],
   "dotnet-test-explorer.testProjectPath": "**/*tests.@(csproj|vbproj|fsproj)"
