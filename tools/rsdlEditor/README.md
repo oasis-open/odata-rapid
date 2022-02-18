@@ -80,5 +80,5 @@ to de-duplicate dependencies:
 - https://github.com/skypackjs/skypack-cdn/issues/159
 - https://codemirror.net/6/examples/bundle/
 
-So I switched to using Rollup cause I wasn't sure how to for de-duplication with Webpack. The build just worked with Rollup
+So I switched to using Rollup cause I wasn't sure how to force de-duplication with Webpack. The build just worked with Rollup
 without even using the `dedup` trick mentioned in the articles linked above.

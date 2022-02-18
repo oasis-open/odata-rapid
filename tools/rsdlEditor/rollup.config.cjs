@@ -1,5 +1,5 @@
-import {nodeResolve} from "@rollup/plugin-node-resolve"
-import typescript from '@rollup/plugin-typescript';
+const {nodeResolve} = require("@rollup/plugin-node-resolve");
+const typescript = require('@rollup/plugin-typescript');
 
 /**
  * @type {import('rollup').RollupOptions}
@@ -14,4 +14,4 @@ const config = {
   plugins: [typescript(), nodeResolve()]
 }
 
-export default config;
+module.exports = config;
