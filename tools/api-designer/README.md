@@ -19,7 +19,7 @@ This project depends on other tools in this repo. You have to manually build tho
 - adding it back to `package.json`
 - running `npm run build`
 
-**TODO**: Consider organising this project as a monorepo to make dependency management of related tools easier. The current set up is quick hack.
+**TODO**: Consider organizing this project as a monorepo to make dependency management of related tools easier. The current set up is quick hack.
 
 ### Install dependencies
 
