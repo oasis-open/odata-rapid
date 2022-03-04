@@ -1,10 +1,10 @@
-import { structuredTypeFunction } from '../templates';
+import { structuredTypeFunction } from './templates';
 import {
   $TypeOptions,
   NormalizedEdmModel,
   NormalizedEdmModelType,
   objectEntries,
-} from '../mermaid-editor-utils';
+} from './mermaid-editor-utils';
 
 import { getPropertyFromEditor, ITypeEditor } from './modal-utils';
 

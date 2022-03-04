@@ -1,0 +1,28 @@
+{
+  "name": "rsdleditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup --config rollup.config.cjs"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@codemirror/basic-setup": "^0.18.1",
+    "@codemirror/language": "^0.18.1",
+    "@codemirror/state": "^0.18.1",
+    "@codemirror/theme-one-dark": "^0.18.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@tsconfig/recommended": "^1.0.1",
+    "rollup": "^2.67.1",
+    "ts-loader": "^9.2.6",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5"
+  }
+}

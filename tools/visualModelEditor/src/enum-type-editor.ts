@@ -1,10 +1,10 @@
-import { enumTypeFunction } from '../templates';
+import { enumTypeFunction } from './templates';
 import {
   ModelTypeKind,
   NormalizedEdmModel,
   NormalizedEdmModelType,
   objectEntries,
-} from '../mermaid-editor-utils';
+} from './mermaid-editor-utils';
 
 import { ITypeEditor } from './modal-utils';
 

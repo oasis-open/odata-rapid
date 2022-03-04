@@ -1,4 +1,4 @@
-import { ModelTypeKind, NormalizedEdmModel, NormalizedEdmModelType } from '../mermaid-editor-utils';
+import { ModelTypeKind, NormalizedEdmModel, NormalizedEdmModelType } from './mermaid-editor-utils';
 export interface ITypeEditor {
   getEditor(edmType: NormalizedEdmModelType, rsdljs: NormalizedEdmModel): string;
   getEdmType(): NormalizedEdmModelType;

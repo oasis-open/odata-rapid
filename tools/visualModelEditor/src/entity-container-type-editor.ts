@@ -1,5 +1,5 @@
-import { entityContainerFunction } from '../templates';
-import { NormalizedEdmModel, NormalizedEdmModelType, objectEntries } from '../mermaid-editor-utils';
+import { entityContainerFunction } from './templates';
+import { NormalizedEdmModel, NormalizedEdmModelType, objectEntries } from './mermaid-editor-utils';
 
 import { getPropertyFromEditor, ITypeEditor } from './modal-utils';
 

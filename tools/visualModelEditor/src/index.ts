@@ -1,6 +1,11 @@
 import { parse } from 'rsdl-js';
 import mermaid from 'mermaid';
 
+import 'bootstrap/dist/css/bootstrap.css';
+// import 'swagger-ui/dist/swagger-ui.css';
+// import 'highlight.js/styles/default.css';
+// import '../css/main.scss';
+
 import {
   NormalizedEdmModel,
   NormalizedEdmModelType,
@@ -21,8 +26,7 @@ export class MermaidEditor {
   private _currentRsdlJs: NormalizedEdmModel;
 
   constructor(
-    editorContainer: HTMLDivElement,
-    tabButton: HTMLButtonElement,
+    editorContainer: HTMLElement,
     global: any,
     onModelUpdated: ModelUpdatedCallback
   ) {
@@ -41,10 +45,6 @@ export class MermaidEditor {
 
     this._diagramView = new DiagramView(
       editorContainer.querySelector<HTMLDivElement>('#diagramContainer')
-    );
-
-    tabButton.addEventListener('shown.bs.tab', () =>
-      this._diagramView.redraw()
     );
 
     global.selectElement = (name) => this.selectElement(name);
@@ -66,6 +66,11 @@ export class MermaidEditor {
       this.addEntityContainerType()
     );
   }
+
+  public redraw() {
+    this._diagramView.redraw();
+  }
+
   public updateRsdl(rsdl: string) {
     this.loadRsdl(rsdl);
   }
