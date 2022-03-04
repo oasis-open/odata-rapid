@@ -14,13 +14,18 @@
     "odata-url-editor": "file:../urlEditor",
     "parcel": "^2.0.0-beta.2",
     "rsdl-editor": "file:../rsdlEditor",
-    "visual-model-editor": "file:../visualModelEditor",
     "rsdl-js": "^0.2.0",
-    "swagger-ui": "^3.51.1"
+    "swagger-ui": "^3.51.1",
+    "visual-model-editor": "file:../visualModelEditor"
   },
   "devDependencies": {},
   "scripts": {
     "start": "parcel src/html/index.html"
+  },
+  "alias": {
+    "process": {
+      "global": "{}"
+    }
   },
   "author": "",
   "license": "Apache-2.0"
