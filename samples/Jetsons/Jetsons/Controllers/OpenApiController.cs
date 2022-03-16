@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Web;
 using System.Web.Http;
-using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
-using Microsoft.AspNet.OData.Routing;
 using Jetsons.Api;
-using System.Threading;
-using System.Text;
 using System.Web.Http.Results;
 using System.IO;
 
@@ -29,7 +20,7 @@ namespace Jetsons.Controllers
         [Route("openapi.json")]
         public JsonResult<object> Get()
         {
-            IEdmModel model = new JetsonsApi.ModelBuilder().GetModelAsync(null, CancellationToken.None).Result;
+            IEdmModel model = new JetsonsApi.ModelBuilder().GetModel(null);
             OpenApiDocument document = model.ConvertToOpenApi();
             document.Servers.Clear();
             document.Servers.Add(new OpenApiServer { Url = service, Description = description });

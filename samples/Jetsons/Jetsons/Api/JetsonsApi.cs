@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
@@ -105,13 +105,13 @@ namespace Jetsons.Api
 
         internal class ModelBuilder : IModelBuilder
         {
-            public Task<IEdmModel> GetModelAsync(ModelContext context, CancellationToken cancellationToken)
+            public IEdmModel GetModel(ModelContext context)
             {
                 var modelBuilder = new ODataConventionModelBuilder();
                 modelBuilder.Namespace = "Jetsons";
                 modelBuilder.EntitySet<Company>("competitors");
                 modelBuilder.Singleton<Company>("company");
-                return Task.FromResult(modelBuilder.GetEdmModel());
+                return modelBuilder.GetEdmModel();
             }
         }
     }

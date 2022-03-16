@@ -3,8 +3,6 @@
 
 using System;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Web.Mvc;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
@@ -16,7 +14,7 @@ using Microsoft.Restier.Core.Submit;
 using Microsoft.Restier.Providers.InMemory.DataStoreManager;
 using Microsoft.Restier.Providers.InMemory.Submit;
 using Microsoft.OData;
-using System.Net.Http;
+using Microsoft.OData.UriParser;
 
 namespace Jetsons
 {
@@ -27,12 +25,12 @@ namespace Jetsons
         public static void Register(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();
-
+            config.Filter().Expand().Select().OrderBy().MaxTop(100).Count().SetTimeZoneInfo(TimeZoneInfo.Utc);
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.LocalOnly;
             config.MessageHandlers.Add(new ETagMessageHandler());
             config.SetUrlKeyDelimiter(ODataUrlKeyDelimiter.Slash);
-            config.UseRestier<JetsonsApi>((services) =>
+            config.UseRestier((builder) =>
             {
                 Func<IServiceProvider, ODataValidationSettings> validationSettingFactory = sp => new ODataValidationSettings
                 {
@@ -40,19 +38,39 @@ namespace Jetsons
                     MaxExpansionDepth = 4
                 };
 
-                services.AddSingleton<ODataValidationSettings>(validationSettingFactory);
-                services.AddChainedService<IModelBuilder>((sp, next) => new JetsonsApi.ModelBuilder());
-                services.AddChainedService<IChangeSetInitializer>((sp, next) => new ChangeSetInitializer<JetsonsDataSource>());
-                services.AddChainedService<ISubmitExecutor>((sp, next) => new SubmitExecutor());
-                services.AddSingleton<IDataStoreManager<string, JetsonsDataSource>>(new SingleDataStoreManager<string, JetsonsDataSource>());
-                services.AddScoped<ODataMessageWriterSettings>((sp) => 
-                    new ODataMessageWriterSettings {
-                        Version=ODataVersion.V401
+                builder.AddRestierApi<JetsonsApi>(services =>
+                {
+                    services.AddSingleton<ODataValidationSettings>(validationSettingFactory);
+                    services.AddChainedService<IModelBuilder>((sp, next) => new JetsonsApi.ModelBuilder());
+                    services.AddChainedService<IChangeSetInitializer>((sp, next) => new ChangeSetInitializer<JetsonsDataSource>());
+                    services.AddChainedService<ISubmitExecutor>((sp, next) => new SubmitExecutor());
+                    services.AddSingleton<IDataStoreManager<string, JetsonsDataSource>>(new SingleDataStoreManager<string, JetsonsDataSource>());
+                    services.AddScoped<ODataMessageWriterSettings>((sp) =>
+                        new ODataMessageWriterSettings
+                        {
+                            Version = ODataVersion.V401,
+                            BaseUri = new Uri("myUri")
+                        });
+
+                    // omit @odata prefixes
+                    services.AddScoped<ODataSimplifiedOptions>((serviceProvider) =>
+                    {
+                        ODataSimplifiedOptions simplifiedOptions = new ODataSimplifiedOptions();
+                        simplifiedOptions.SetOmitODataPrefix(true);
+                        return simplifiedOptions;
                     });
-                //services.AddScoped<ODataQuerySettings>((sp) => new ODataQuerySettings
-                //{
-                //    PageSize = 2
-                //});
+
+                    services.AddScoped<ODataUriResolver>((serviceProvider) =>
+                        new ODataUriResolver {
+                            EnableNoDollarQueryOptions = true,
+                            EnableCaseInsensitive = true,
+                        });
+
+                    //services.AddScoped<ODataQuerySettings>((sp) => new ODataQuerySettings
+                    //{
+                    //    PageSize = 2
+                    //});
+                });
             });
 
             RegisterJetsons(config, GlobalConfiguration.DefaultServer);
@@ -64,10 +82,11 @@ namespace Jetsons
             // enable query options for all properties
             config.Filter().Expand().Select().OrderBy().MaxTop(null).Count().SkipToken();
             config.SetTimeZoneInfo(TimeZoneInfo.Utc);
-            config.MapRestier<JetsonsApi>(
-                routeName,
+            config.MapRestier((builder)=>
+                builder.MapApiRoute<JetsonsApi>(routeName,
                 "",
-                true); // use default batchhandler 
+                true) // use default batchhandler
+                );
         }
     }
 }
