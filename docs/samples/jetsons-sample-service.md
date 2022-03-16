@@ -31,9 +31,8 @@ type Company
 type Employee
 {
     key id: Integer 
-    key: Boolean
     firstName : String?
-    firstName : String?
+    lastName : String?
     title: String?
 }
 
