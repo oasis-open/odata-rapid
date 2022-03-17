@@ -1,0 +1,5 @@
+Use Relative URLs in response
+JSON metadata
+maxpagesize=2
+use skiptoken in paging
+operation syntax

@@ -1,26 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net48</TargetFramework>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<ApplicationIcon />
 		<OutputType>Library</OutputType>
 		<StartupObject />
 	</PropertyGroup>
-		
+
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNet.OData" Version="7.5.14" />
-		<PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.7" />
-		<PackageReference Include="Microsoft.Restier.Core" Version="1.0.0-rc6.20210412.2" />
-		<PackageReference Include="Microsoft.Restier.EntityFramework" Version="1.0.0-rc6.20210412.2" />
-		<PackageReference Include="System.Collections" Version="4.3.0" />
-		<PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
-		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.OData" Version="7.5.14" />
+		<PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="System.Web" />
+		<Reference Include="Microsoft.Restier.AspNetCore">
+			<HintPath>..\RESTierAssemblies\Microsoft.Restier.AspNetCore.dll</HintPath>
+			<CopyLocal>True</CopyLocal>
+		</Reference>
+		<Reference Include="Microsoft.Restier.Core">
+			<HintPath>..\RESTierAssemblies\Microsoft.Restier.Core.dll</HintPath>
+			<CopyLocal>True</CopyLocal>
+		</Reference>
 	</ItemGroup>
 
 </Project>
-

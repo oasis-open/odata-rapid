@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.OData.Edm;
-using Microsoft.Restier.AspNet.Model;
+using Microsoft.Restier.AspNetCore.Model;
 using Microsoft.Restier.Core;
 using Microsoft.Restier.Core.Model;
 using Microsoft.Restier.Providers.InMemory.DataStoreManager;
 using Microsoft.Restier.Providers.InMemory.Utils;
 
-namespace Jetsons.Api
+namespace Jetsons
 {
     public partial class JetsonsApi : ApiBase
     {
@@ -26,7 +26,11 @@ namespace Jetsons.Api
 
         private string Key
         {
-            get { return InMemoryProviderUtils.GetSessionId(); }
+            get
+            {
+                var requestScope = this.ServiceProvider.GetService(typeof(HttpRequestScope)) as HttpRequestScope;
+                return InMemoryProviderUtils.GetSessionId(requestScope?.HttpRequest.HttpContext);
+            }
         }
 
         public JetsonsApi(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -95,7 +99,7 @@ namespace Jetsons.Api
         /// <summary>
         ///     Function to return top employees.
         /// </summary>
-        [Operation(OperationType = OperationType.Function, IsBound = true)]
+        [BoundOperation(OperationType = OperationType.Function)]
         public IEnumerable<Employee> topEmployees(Company company, int num)
         {
             return company.employees.OrderByDescending(e=>e.id).Take(num);
