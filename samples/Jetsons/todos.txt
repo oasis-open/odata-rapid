@@ -1,5 +1,7 @@
-Use Relative URLs in response
-JSON metadata
 maxpagesize=2
 use skiptoken in paging
 operation syntax
+host on //jetsons.odata-rapid.org
+tools in tutorial
+make resilient in case service is down
+POST to /$query

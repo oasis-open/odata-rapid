@@ -25,6 +25,8 @@ namespace Jetsons
     {
         private const string routeName = "JetsonsApi";
         private const string corsPolicy = "_allowAllCORS";
+        internal const string serviceName = "Jetsons.rapid-pro.org";
+
         /// <summary>
         /// The application configuration
         /// </summary>
@@ -62,7 +64,7 @@ namespace Jetsons
                         new ODataMessageWriterSettings
                         {
                             Version = ODataVersion.V401,
-                            BaseUri = new Uri("http://jetsons", UriKind.Absolute)
+                            BaseUri = new Uri("http://" + serviceName, UriKind.Absolute)
                         })
 
                     // omit @odata prefixes
@@ -124,6 +126,8 @@ namespace Jetsons
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(corsPolicy);
+
             app.UseThreadPrincipals();
             app.UseSession();
             app.UseJetsonsMiddleware();
@@ -137,10 +141,6 @@ namespace Jetsons
                     builder.MapApiRoute<JetsonsApi>(routeName, "", true);
                 });
             });
-
-            app.UseCors(corsPolicy);
-            app.UseAuthorization();
-
         }
     }
 
@@ -158,7 +158,7 @@ namespace Jetsons
         public async Task Invoke(HttpContext context)
         {
             // set the host to be Jetsons
-            context.Request.Host = new HostString("Jetsons");
+            context.Request.Host = new HostString(Startup.serviceName);
 
             // set the default format to be application/json
             if (!context.Request.Headers.ContainsKey("Accept"))

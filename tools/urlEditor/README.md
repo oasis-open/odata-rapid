@@ -29,7 +29,7 @@ path that points to this package's root folder:
 
 ```json
 "dependencies": {
-    "odata-url-editor": "file:path/to/urlEditor
+    "odata-url-editor": "file:path/to/urlEditor"
 }
 ```
 
