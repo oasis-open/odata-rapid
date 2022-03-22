@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
@@ -7,39 +7,34 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Batch;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace JetsonsRW
 {
-    public class JetsonsBatchHandler : Microsoft.Restier.AspNet.Batch.RestierBatchHandler
+    public class JetsonsBatchHandler : Microsoft.Restier.AspNetCore.Batch.RestierBatchHandler
     {
-        public JetsonsBatchHandler(HttpServer httpServer)
-            : base(httpServer)
-        {
-        }
-
         public override async Task<IList<ODataBatchRequestItem>> ParseBatchRequestsAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
+            HttpContext context)
         {
-            IList<ODataBatchRequestItem> requests = await base.ParseBatchRequestsAsync(request, cancellationToken);
+            IList<ODataBatchRequestItem> requests = await base.ParseBatchRequestsAsync(context);
 
             foreach (ODataBatchRequestItem requestItem in requests)
             {
                 OperationRequestItem operation = requestItem as OperationRequestItem;
                 if (operation != null)
                 {
-                    operation.Request.RequestUri = Jetsons.Api.JetsonsApi.RemoveSessionIdFromUri(operation.Request.RequestUri);
+                    operation.Context.Request.CopyAbsoluteUrl(Jetsons.JetsonsApi.RemoveSessionIdFromUri(new Uri(operation.Context.Request.GetEncodedUrl(), UriKind.Absolute)));
                 }
                 else
                 {
                     ChangeSetRequestItem changeset = requestItem as ChangeSetRequestItem;
                     if (changeset != null)
                     {
-                        foreach (HttpRequestMessage changesetOperation in changeset.Requests)
+                        foreach (HttpContext changesetOperation in changeset.Contexts)
                         {
-                            changesetOperation.RequestUri = Jetsons.Api.JetsonsApi.RemoveSessionIdFromUri(changesetOperation.RequestUri);
+                            changesetOperation.Request.CopyAbsoluteUrl(Jetsons.JetsonsApi.RemoveSessionIdFromUri(new Uri(changesetOperation.Request.GetEncodedUrl(),UriKind.Absolute)));
                         }
                     }
                 }

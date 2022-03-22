@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.OData.Edm;
 using Microsoft.Restier.AspNetCore.Model;
 using Microsoft.Restier.Core;
