@@ -6,6 +6,7 @@ import './InteractiveQuerying.css';
 import {Component} from 'react';
 import CodeBlock from "@theme/CodeBlock";
 import BrowserOnly from '@docusaurus/BrowserOnly';
+//import { initUrlEditor } from "./..\\..\\..\\..\\tools\\urlEditor";
 
 /// <summary>
 /// Tool to allow a user to make a query on the Jetsons API and see the results
@@ -47,7 +48,7 @@ class InteractiveQueryingInternal extends Component {
 
     this.state = {
       queryUrl: this.props.defaultQuery,
-      responseElement: <CodeBlock className="language-json">[Loading]</CodeBlock>,
+      responseElement: <CodeBlock className="language-json">[Loading...]</CodeBlock>,
       controller: newController,
       signal: newController.signal
     }
@@ -108,9 +109,10 @@ class InteractiveQueryingInternal extends Component {
   /// </summary>
   /// <param name="query">Query on the Jetsons API.</param>
   fetchResults(query) {
-    let formattedQuery = this.formatQuery(query);
     let signal = this.state.signal;
-    fetch("https://jetsons.azurewebsites.net/" + formattedQuery, {signal})
+    fetch("https://jetsons.azurewebsites.net/" + query, {signal})
+// for debugging against a local service:
+//    fetch("https://localhost:44396/" + formattedQuery, {signal})
     .then (res => res.text())
     .then(
       (result) => {
@@ -128,7 +130,10 @@ class InteractiveQueryingInternal extends Component {
     });
   }
 
-  /// <summary>Adds '$' before commands if missing, AKA after '?', '(', '&', and ';'.</summary>
+  /// <summary>
+  /// Adds '$' before commands if missing, AKA after '?', '(', '&', and ';'.
+  /// Currently not used since Jetsons supports no-$ requests.
+  /// </summary>
   /// <param name="query">Query to reformat.</param>
   /// <returns>The reformatted query (unchanged if no '$' are missing).</returns>
   formatQuery(query) {

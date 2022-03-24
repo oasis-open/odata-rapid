@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Restier.Core;
 using Microsoft.Restier.Core.Submit;
 using Microsoft.Restier.Providers.InMemory.DataStoreManager;
@@ -27,7 +28,8 @@ namespace Microsoft.Restier.Providers.InMemory.Submit
     {
         public Task InitializeAsync(SubmitContext context, CancellationToken cancellationToken)
         {
-            var key = InMemoryProviderUtils.GetSessionId();
+            var requestScope = context.Api.ServiceProvider.GetService(typeof(HttpRequestScope)) as HttpRequestScope;
+            var key = InMemoryProviderUtils.GetSessionId(requestScope?.HttpRequest.HttpContext);
             var dataStoreManager = context.GetApiService<IDataStoreManager<string, TDataStoreType>>();
             if (dataStoreManager == null)
             {
