@@ -1,17 +1,15 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Jetsons.Api;
+using Jetsons;
 using Microsoft.Restier.Core;
-using Jetsons.Models;
 using System.Collections.Generic;
-using Microsoft.Restier.AspNet.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JetsonsRW.Controllers
 {
@@ -38,7 +36,7 @@ namespace JetsonsRW.Controllers
         /// <returns><see cref="IHttpActionResult"></returns>
         [HttpPost]
         [ODataRoute("company/employees")]
-        public IHttpActionResult AddEmployeeToCompany([FromBody]employee employee)
+        public IActionResult AddEmployeeToCompany([FromBody]Employee employee)
         {
             return AddEmployee(Api.company, employee);
         }
@@ -50,7 +48,7 @@ namespace JetsonsRW.Controllers
         /// <returns><see cref="IHttpActionResult"></returns>
         [HttpPost]
         [ODataRoute("competitors")]
-        public IHttpActionResult AddCompetitor([FromBody]company competitor)
+        public IActionResult AddCompetitor([FromBody]Company competitor)
         {
             return AddCompetitor(Api._competitors, competitor);
         }
@@ -63,7 +61,7 @@ namespace JetsonsRW.Controllers
         [HttpDelete]
         [ODataRoute("company/employees/{id}")]
         [ODataRoute("company/employees({id})")]
-        public IHttpActionResult DeleteEmployeeFromCompany([FromODataUri]int employeeId)
+        public IActionResult DeleteEmployeeFromCompany([FromODataUri]int employeeId)
         {
             return DeleteEmployee(Api.company, employeeId);
         }
@@ -76,7 +74,7 @@ namespace JetsonsRW.Controllers
         [HttpDelete]
         [ODataRoute("competitors/{stockSymbol}")]
         [ODataRoute("competitors({stockSymbol})")]
-        public IHttpActionResult DeleteCompetitor([FromODataUri]string stockSymbol)
+        public IActionResult DeleteCompetitor([FromODataUri]string stockSymbol)
         {
             return DeleteCompetitor(Api._competitors, stockSymbol);
         }
@@ -87,7 +85,7 @@ namespace JetsonsRW.Controllers
         /// <param name="company">Company to add the employee to.</param>
         /// <param name="employee">The employee to add.</param>
         /// <returns><see cref="IHttpActionResult"></returns>
-        private IHttpActionResult AddEmployee(company company, employee employee)
+        private IActionResult AddEmployee(Company company, Employee employee)
         {
             if (company != null)
             {
@@ -109,7 +107,7 @@ namespace JetsonsRW.Controllers
         /// <param name="competitors">The list of competitors to add the employee to.</param>
         /// <param name="competitor">The competitor to add.</param>
         /// <returns><see cref="IHttpActionResult"></returns>
-        private IHttpActionResult AddCompetitor(IList<company> competitors, company competitor)
+        private IActionResult AddCompetitor(IList<Company> competitors, Company competitor)
         {
             if (competitors != null)
             {
@@ -131,7 +129,7 @@ namespace JetsonsRW.Controllers
         /// <param name="company">Company containing the employee to delete.</param>
         /// <param name="employeeId">The id of the employee to delete.</param>
         /// <returns><see cref="IHttpActionResult"></returns>
-        private IHttpActionResult DeleteEmployee(company company, int employeeId)
+        private IActionResult DeleteEmployee(Company company, int employeeId)
         {
             if (company != null)
             {
@@ -141,7 +139,7 @@ namespace JetsonsRW.Controllers
                     company.employees.Remove(employee);
                 }
 
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
 
             return NotFound();
@@ -153,7 +151,7 @@ namespace JetsonsRW.Controllers
         /// <param name="competitors">List of competitors containing the company to delete.</param>
         /// <param name="competitor">The competitor to delete.</param>
         /// <returns><see cref="IHttpActionResult"></returns>
-        private IHttpActionResult DeleteCompetitor(IList<company> competitors, string competitorStockSymbol)
+        private IActionResult DeleteCompetitor(IList<Company> competitors, string competitorStockSymbol)
         {
             if (competitors != null)
             {
@@ -163,7 +161,7 @@ namespace JetsonsRW.Controllers
                     competitors.Remove(competitor);
                 }
 
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
 
             return NotFound();

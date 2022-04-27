@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+        <script src="dist/index.js"></script>
+    </head>
+    <body>
+        <div id="editor" style="width:500px;height:500px;"></div>
+        <script>
+            const editor = rsdlEditor.initRsdlEditor(document.getElementById("editor"), (rsdl) => {
+                console.log("rsdl updated to", rsdl);
+            });
+        </script>
+    </body>
+</html>

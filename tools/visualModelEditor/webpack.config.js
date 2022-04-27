@@ -4,13 +4,18 @@ const webpack = require("webpack");
 module.exports = {
     entry: "./src/index.ts",
     devtool: "inline-source-map",
+    stats: { errorDetails: true },
     module: {
         rules: [
             {
                 test: /\.ts/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
         ]
     },
     resolve: {
@@ -25,14 +30,14 @@ module.exports = {
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
         library: {
-            name: "odataUri",
+            name: "visualModelEditor",
             type: "umd"
         }
     },
-    plugins: [
-        new webpack.ProvidePlugin({
-            process: "process/browser"
-        })
-    ],
+    // plugins: [
+    //     new webpack.ProvidePlugin({
+    //         process: "process/browser"
+    //     })
+    // ],
     mode: "development"
 }
