@@ -36,12 +36,12 @@ path that points to this package's root folder:
 ## Usage
 
 ```ts
-import { initUrlEditor } from "odata-url-editor";
+import { schemaFormat, initUrlEditor } from "odata-url-editor";
 
 const editor = initUrlEditor(document.getElementById("editor"), onUrlUpdated);
 // schema is a string in rsdl format
 const schema: string = "...";
-editor.updateSchema(schema);
+editor.updateSchema(schema, schemaFormat.rsdl);
 
 // this handler will be called when the user updates the url input in the editor
 function onUrlUpdated(url: string) {

@@ -6,9 +6,10 @@ import json from 'highlight.js/lib/languages/json';
 import '../css/main.scss';
 import { initRsdlEditor } from 'rsdl-editor';
 import { MermaidEditor } from "visual-model-editor";
-import { initUrlEditor } from "odata-url-editor";
+import { schemaFormat, initUrlEditor } from "odata-url-editor";
 import { App, Listener } from './app';
 import { initViewers } from './viewers';
+
 hljs.registerLanguage('json', json);
 
 document.addEventListener('DOMContentLoaded', function (event) {
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     app.addListener(new Listener("main", (rsdl) => rsdlEditor.updateContent(rsdl)))
 
     const urlEditor = initUrlEditor(document.getElementById('uri-editor'), () => { });
-    app.addListener(new Listener("urlEditor", (rsdl) => urlEditor.updateSchema(rsdl)));
+    app.addListener(new Listener("urlEditor", (rsdl) => urlEditor.updateSchema(rsdl, schemaFormat.rsdl)));
 
     const mermaidEditor = new MermaidEditor(
         document.getElementById('rsdl-editor-gui-content'),

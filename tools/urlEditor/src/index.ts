@@ -1,1 +1,1 @@
-export { initUrlEditor } from "./uri-editor";
+export { initUrlEditor, schemaFormat } from "./uri-editor";

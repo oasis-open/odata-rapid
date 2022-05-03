@@ -7,6 +7,10 @@ import { getDocContent, convertToCsdl } from "./utils";
 
 type UrlUpdatedCallback = (url: string) => any;
 
+export enum schemaFormat {
+    rsdl,
+    jsonCsdl
+}
 
 function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback) {
     const manager = new AutoCompleteManager(null);
@@ -74,10 +78,21 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
         state: initialState,
     });
 
-    const updateSchema = (rsdl: string) => {
-        const jsonCsdl = convertToCsdl(rsdl);
+    const updateSchema = (schema: string, inputFormat: schemaFormat) =>
+    {
+        var jsonCsdl;
+        switch(inputFormat)
+        {
+            case schemaFormat.rsdl:
+                jsonCsdl = convertToCsdl(schema);
+                break;
+            case schemaFormat.jsonCsdl:
+                jsonCsdl = JSON.parse(schema);
+                break;
+        }
+
         manager.updateSchema(jsonCsdl);
-    };
+    }
 
     function getUrl() {
         return getDocContent(editor.state.doc);
