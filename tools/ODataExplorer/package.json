@@ -1,5 +1,5 @@
 {
-  "name": "api-designer",
+  "name": "odata-explorer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -20,7 +20,10 @@
   },
   "devDependencies": {
     "buffer": "^6.0.3",
-    "querystring-es3": "^0.2.1"
+    "events": "^3.3.0",
+    "querystring-es3": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "string_decoder": "^1.3.0"
   },
   "scripts": {
     "start": "parcel src/html/index.html"

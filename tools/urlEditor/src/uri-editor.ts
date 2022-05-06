@@ -4,12 +4,14 @@ import { linter, Diagnostic } from '@codemirror/lint';
 // import { AutoCompleteManager } from "odata-uri";
 import { AutoCompleteManager } from "../../odataUri/src/autocomplete-manager";
 import { getDocContent, convertToCsdl } from "./utils";
+import { xml2json } from "odata-csdl";
 
 type UrlUpdatedCallback = (url: string) => any;
 
 export enum schemaFormat {
     rsdl,
-    jsonCsdl
+    jsonCsdl,
+    xmlCsdl
 }
 
 function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback) {
@@ -88,6 +90,9 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
                 break;
             case schemaFormat.jsonCsdl:
                 jsonCsdl = JSON.parse(schema);
+                break;
+            case schemaFormat.xmlCsdl:
+                jsonCsdl = xml2json(schema);
                 break;
         }
 
