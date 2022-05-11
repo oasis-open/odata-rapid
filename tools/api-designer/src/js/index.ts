@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'swagger-ui/dist/swagger-ui.css';
 import 'highlight.js/styles/default.css';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';

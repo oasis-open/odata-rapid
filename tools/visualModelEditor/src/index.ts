@@ -23,7 +23,7 @@ export class MermaidEditor {
   private readonly _entityContainerButton: HTMLButtonElement;
   private readonly _diagramView: DiagramView;
 
-  private _currentRsdlJs: NormalizedEdmModel;
+  private _currentSchema: NormalizedEdmModel;
 
   constructor(
     editorContainer: HTMLElement,
@@ -71,12 +71,14 @@ export class MermaidEditor {
     this._diagramView.redraw();
   }
 
-  public updateRsdl(rsdl: string) {
-    this.loadRsdl(rsdl);
+  public updateCsdl(jsonCsdlText: string)
+  {
+    //todo: add error handling
+    const schema = JSON.parse(jsonCsdlText);
+    this.updateSchema(schema);
   }
 
-  private loadRsdl(rsdlText: string) {
-    const entityContainerButton = this._entityContainerButton;
+  public updateRsdl(rsdlText: string) {
     try {
       const { rsdljs, errors } = getRsdlJs(rsdlText);
 
@@ -84,24 +86,28 @@ export class MermaidEditor {
         errors.map((error) => console.error(error));
         return;
       }
-
-      console.info(rsdljs);
-
-      if (rsdljs.$EntityContainer) {
-        entityContainerButton.classList.add('d-none');
-      } else {
-        entityContainerButton.classList.remove('d-none');
-      }
-
-      this._currentRsdlJs = rsdljs;
-      this._diagramView.update(rsdljs);
-    } catch (e) {
-      console.error(e);
+      this.updateSchema(rsdljs);
     }
+    catch {}
+  }
+
+  private updateSchema(schema: any)
+  {
+    const entityContainerButton = this._entityContainerButton;
+      console.info(schema);
+
+    if (schema.$EntityContainer) {
+      entityContainerButton.classList.add('d-none');
+    } else {
+      entityContainerButton.classList.remove('d-none');
+    }
+
+    this._currentSchema = schema;
+    this._diagramView.update(schema);
   }
 
   private publishRsdl() {
-    const rsdlText = getRsdlText(this._currentRsdlJs);
+    const rsdlText = getRsdlText(this._currentSchema);
     if (this._onModelUpdated) {
       this._onModelUpdated(rsdlText);
     }
@@ -111,8 +117,8 @@ export class MermaidEditor {
     existingModel: NormalizedEdmModelType,
     edmModel: NormalizedEdmModelType
   ) {
-    const rsdljs = this._currentRsdlJs;
-    const entries = Object.entries(rsdljs.Model);
+    const schema = this._currentSchema;
+    const entries = Object.entries(schema.Model);
     const existingModelIndex = entries.findIndex(
       (e) => e[0] == existingModel.$Name
     );
@@ -122,12 +128,12 @@ export class MermaidEditor {
       entries.push([edmModel.$Name, edmModel]);
     }
 
-    rsdljs.Model = Object.fromEntries(entries);
+    schema.Model = Object.fromEntries(entries);
     this.publishRsdl();
   }
 
   private delete(edmModel: NormalizedEdmModelType) {
-    const rsdljs = this._currentRsdlJs;
+    const rsdljs = this._currentSchema;
     if (rsdljs.Model[edmModel.$Name]) {
       delete rsdljs.Model[edmModel.$Name];
 
@@ -136,7 +142,7 @@ export class MermaidEditor {
   }
 
   private selectElement(name: string) {
-    const rsdljs = this._currentRsdlJs;
+    const rsdljs = this._currentSchema;
 
     const edmType = rsdljs.Model[name];
     if (!edmType) {
@@ -179,6 +185,6 @@ export class MermaidEditor {
   }
 
   private show(edmType: NormalizedEdmModelType) {
-    this._editorModal.open(edmType, this._currentRsdlJs);
+    this._editorModal.open(edmType, this._currentSchema);
   }
 }
