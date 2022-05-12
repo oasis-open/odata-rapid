@@ -72,7 +72,11 @@ class MyListener extends rsdlListener {
     const docComment = ctx.DOC_COMMENT();
     if (docComment) {
       const name = `${this.annotatable[0].prefix}@Org.OData.Core.V1.Description`;
-      const newText = docComment.getText().substring(2).trim();
+      let newText = docComment.getText().substring(2);
+      // remove trailing \n
+      newText = newText.substring(0, newText.length - 1);
+      // ignore one space immediately following ##, preserve text if there is no space
+      if (newText.startsWith(" ")) newText = newText.substring(1);
       const oldText = this.annotatable[0].target[name];
       this.annotatable[0].target[name] = oldText
         ? `${oldText}\n${newText}`
