@@ -4,13 +4,14 @@ RSDL specification status
 
 Status of the Rapid Schema Definition Language (RSDL) specification.
 
-The following chapters each describe one RSDL syntactical construct and the current state of its specification.
+The following describe the RSDL syntactical construct, one per chapter, including the current state of its specification.
 
 This document is intended to give an overview to comittee members and decide on missing work.
 
 # Schema 
 
-<span style="background-color: green">finalized</span>
+**:green_circle: finalized**
+
 
 - structural types, complex and entity, keys
 - enums including flag enums
@@ -39,7 +40,7 @@ enum EmploymentType
 
 # Navigation properties 
 
-<span style="background-color: orange">documentation gaps</span>
+:yellow_circle: documentation gaps
 - syntactically similar to other properties
 - more documentation required 
 - containment automatically derived based on service (CSDL container)
@@ -62,7 +63,7 @@ type Employee
 
 # Service Definition
 
-<span style="background-color: yellow">documentation gaps</span>
+**:yellow_circle: documentation gaps**
 
 - aligned with type definition
 - entitySet, singelton distinction expressed via property type
@@ -76,11 +77,11 @@ service {
 
 # Unbound operations
 
-<span style="background-color: yellow">missing</span>
+**:red_circle: missing**
 
 # Annotations 
 
-<span style="background-color: yellow">final but almost undocumented</span>
+**:orange_circle: final but almost undocumented**
 
 - only [ABNF](https://rapid.rocks/docs/rsdl/rsdl-abnf#annotations), no prose  
 - excludes capability annotations
@@ -107,7 +108,7 @@ type Pet
 
 # Service capabilities
 
-<span style="background-color: orange">essentially undocumented</span>
+**:orange_circle: essentially undocumented**
 
 - list of paths and their supported HTTP verbs and query parameters
 - hierarchical syntax to address the nested nature of some query options
@@ -139,7 +140,8 @@ path /orders {
 
 # Schema import/export 
 
-<span style="background-color: red">essentially undocumented</span>
+**:red_circle: essentially undocumented**
+
 
 # Appendix
 
