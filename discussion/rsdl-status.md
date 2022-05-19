@@ -10,7 +10,7 @@ This document is intended to give an overview to comittee members and decide on 
 
 # Schema 
 
-<mark style="background-color: green">finalized</mark>
+<span style="background-color: green">finalized</span>
 
 - structural types, complex and entity, keys
 - enums including flag enums
@@ -39,7 +39,7 @@ enum EmploymentType
 
 # Navigation properties 
 
-<mark style="background-color: orange">documentation gaps</mark>
+<span style="background-color: orange">documentation gaps</span>
 - syntactically similar to other properties
 - more documentation required 
 - containment automatically derived based on service (CSDL container)
@@ -62,7 +62,7 @@ type Employee
 
 # Service Definition
 
-<mark style="background-color: yellow">documentation gaps</mark>
+<span style="background-color: yellow">documentation gaps</span>
 
 - aligned with type definition
 - entitySet, singelton distinction expressed via property type
@@ -76,11 +76,11 @@ service {
 
 # Unbound operations
 
-<mark style="background-color: yellow">missing</mark>
+<span style="background-color: yellow">missing</span>
 
 # Annotations 
 
-<mark style="background-color: yellow">final but almost undocumented</mark>
+<span style="background-color: yellow">final but almost undocumented</span>
 
 - only [ABNF](https://rapid.rocks/docs/rsdl/rsdl-abnf#annotations), no prose  
 - excludes capability annotations
@@ -107,7 +107,7 @@ type Pet
 
 # Service capabilities
 
-<mark style="background-color: orange">essentially undocumented</mark>
+<span style="background-color: orange">essentially undocumented</span>
 
 - list of paths and their supported HTTP verbs and query parameters
 - hierarchical syntax to address the nested nature of some query options
@@ -139,7 +139,7 @@ path /orders {
 
 # Schema import/export 
 
-<mark style="background-color: red">essentially undocumented</mark>
+<span style="background-color: red">essentially undocumented</span>
 
 # Appendix
 
