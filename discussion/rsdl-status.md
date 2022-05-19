@@ -68,7 +68,7 @@ type Employee
 
 - aligned with type definition
 - entitySet, singleton distinction expressed via property type
-
+- action and function imports and their implied unbound operations
 ```RSDL
 service {
     company: Company
