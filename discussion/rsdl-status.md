@@ -40,7 +40,8 @@ enum EmploymentType
 
 # Navigation properties 
 
-:yellow_circle: documentation gaps
+**:yellow_circle: documentation gaps**
+
 - syntactically similar to other properties
 - more documentation required 
 - containment automatically derived based on service (CSDL container)
