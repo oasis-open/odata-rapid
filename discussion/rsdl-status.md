@@ -6,7 +6,7 @@ Status of the Rapid Schema Definition Language (RSDL) specification.
 
 The following describe the RSDL syntactical construct, one per chapter, including the current state of its specification.
 
-This document is intended to give an overview to comittee members and decide on missing work.
+This document is intended to give an overview to committee members and decide on missing work.
 
 # Schema 
 
