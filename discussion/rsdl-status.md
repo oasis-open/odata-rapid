@@ -78,10 +78,10 @@ service {
 
 # Unbound operations
 
-**:red_circle: documentation gaps**
+**:yellow_circle: documentation gaps**
 
 - unbound operations for action/function imports defined as part of the `service` construct
-- free-flying unbound functions intentionally out of scope, see https://github.com/oasis-open/odata-rapid/blob/main/discussion/features.md
+- free-flying unbound functions intentionally out of scope, see [features](https://github.com/oasis-open/odata-rapid/blob/main/discussion/features.md)
 
 # Annotations 
 
