@@ -67,7 +67,7 @@ type Employee
 **:yellow_circle: documentation gaps**
 
 - aligned with type definition
-- entitySet, singelton distinction expressed via property type
+- entitySet, singleton distinction expressed via property type
 
 ```RSDL
 service {
