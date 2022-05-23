@@ -1,6 +1,6 @@
 # Visual Model Editor
 
-A visual diagramming tool for graphically desigining an RSDL/OData entity data model.
+A visual diagramming tool for graphically designing an RSDL/OData entity data model.
 
 ![Screenshot](./screenshot.jpeg)
 
@@ -38,13 +38,13 @@ path that points to this package's root folder.
 ```ts
 import { MermaidEditor } from "visual-model-editor";
 
-const container = document.getElementById('rsdl-editor-gui-content');
+const container = document.getElementById("rsdl-editor-gui-content");
 
 const editor = MermaidEditor(
-    container,
-    window,
-    // Subscribe to the update event.
-    (rsdl) => editor.updateRsdl(rsdl)
+  container,
+  window,
+  // Subscribe to the update event.
+  (rsdl) => editor.updateRsdl(rsdl)
 );
 
 // update the rsdl programmatically
