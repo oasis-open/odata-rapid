@@ -7,12 +7,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 // import '../css/main.scss';
 
 import {
+  getModel,
   NormalizedEdmModel,
   NormalizedEdmModelType,
 } from './mermaid-editor-utils';
 import { editorContents } from './templates';
 import { EditorModal } from './editor-modal';
-import { getRsdlJs, getRsdlText } from './rsdl-converter';
+import { getSchema, getRsdlText } from './rsdl-converter';
 import { DiagramView } from './diagram-view';
 
 type ModelUpdatedCallback = (rsdl: string) => any;
@@ -40,7 +41,7 @@ export class MermaidEditor {
 
     this._editorModal = editorModal;
 
-    editorModal.onSave = (edmType, rsdljs) => this.save(edmType, rsdljs);
+    editorModal.onSave = (edmType, schema) => this.save(edmType, schema);
     editorModal.onDelete = (edmType) => this.delete(edmType);
 
     this._diagramView = new DiagramView(
@@ -80,13 +81,13 @@ export class MermaidEditor {
 
   public updateRsdl(rsdlText: string) {
     try {
-      const { rsdljs, errors } = getRsdlJs(rsdlText);
+      const { schema, errors } = getSchema(rsdlText);
 
       if (errors) {
         errors.map((error) => console.error(error));
         return;
       }
-      this.updateSchema(rsdljs);
+      this.updateSchema(schema);
     }
     catch {}
   }
@@ -118,7 +119,8 @@ export class MermaidEditor {
     edmModel: NormalizedEdmModelType
   ) {
     const schema = this._currentSchema;
-    const entries = Object.entries(schema.Model);
+    const model = getModel(schema);
+    const entries = Object.entries(model);
     const existingModelIndex = entries.findIndex(
       (e) => e[0] == existingModel.$Name
     );
@@ -127,24 +129,26 @@ export class MermaidEditor {
     } else {
       entries.push([edmModel.$Name, edmModel]);
     }
-
-    schema.Model = Object.fromEntries(entries);
+    var modelName, serviceName;
+    [modelName,serviceName] = schema['$EntityContainer'].split('.');
+    schema[modelName] = Object.fromEntries(entries);
     this.publishRsdl();
   }
 
   private delete(edmModel: NormalizedEdmModelType) {
-    const rsdljs = this._currentSchema;
-    if (rsdljs.Model[edmModel.$Name]) {
-      delete rsdljs.Model[edmModel.$Name];
+    const schema = this._currentSchema;
+    const model = getModel(schema);
+    if (model[edmModel.$Name]) {
+      delete model[edmModel.$Name];
 
       this.publishRsdl();
     }
   }
 
   private selectElement(name: string) {
-    const rsdljs = this._currentSchema;
-
-    const edmType = rsdljs.Model[name];
+    const schema = this._currentSchema;
+    const model = getModel(schema);
+    const edmType = model[name];
     if (!edmType) {
       return;
     }

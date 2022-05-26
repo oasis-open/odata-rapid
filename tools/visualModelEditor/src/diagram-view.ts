@@ -1,6 +1,6 @@
 import mermaid from 'mermaid';
 import { NormalizedEdmModel } from './mermaid-editor-utils';
-import { getType } from './mermaid-editor-utils';
+import { getType, getModel } from './mermaid-editor-utils';
 
 export class DiagramView {
   private readonly _diagramContainer: HTMLDivElement;
@@ -11,9 +11,9 @@ export class DiagramView {
     this._diagramContainer = diagramContainer;
   }
 
-  public update(rsdljs: NormalizedEdmModel) {
+  public update(schema: NormalizedEdmModel) {
     const diagramContainer = this._diagramContainer;
-    const mermaidText = this.getMermaid(rsdljs);
+    const mermaidText = this.getMermaid(schema);
     this._mermaidText = mermaidText;
 
     this.redraw();
@@ -36,13 +36,14 @@ export class DiagramView {
     mermaid.init(undefined, diagramContainer);
   }
 
-  private getMermaid(rsdljs) {
-    if (!rsdljs.Model || !Object.keys(rsdljs.Model).length) {
+  private getMermaid(schema: NormalizedEdmModel) {
+    const schemaModel = getModel(schema);
+    if (!schemaModel || !Object.keys(schemaModel).length) {
       return `graph LR
       text[Add new element above]`;
     }
 
-    const entries = Object.entries(rsdljs.Model);
+    const entries = Object.entries(schemaModel);
     const model = entries.map(([key, element]) =>
       this.getMermaidElement(key, element)
     );

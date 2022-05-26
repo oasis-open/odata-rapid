@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
+import SwaggerUI from "swagger-ui";
 import "swagger-ui/dist/swagger-ui.css";
 import "highlight.js/styles/default.css";
 import hljs from "highlight.js/lib/core";
@@ -135,13 +136,10 @@ function updateSchema(schema: string) {
     scheme: "http",
   });
 
-  //    console.log(openapi);
-  //    console.log(swaggerUiNode.id);
-
-  //   SwaggerUI({
-  //       domNode: swaggerUiNode,
-  //       spec: openapi
-  //   });
+  SwaggerUI({
+     domNode: swaggerUiNode,
+     spec: openapi
+  });
 
   hljs.highlightAll();
 }

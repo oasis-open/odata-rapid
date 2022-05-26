@@ -4,6 +4,7 @@ import {
   NormalizedEdmModel,
   NormalizedEdmModelType,
   objectEntries,
+  getModel
 } from '../mermaid-editor-utils';
 
 import { getPropertyFromEditor, ITypeEditor } from './modal-utils';
@@ -19,8 +20,8 @@ abstract class StructuredTypeEditor implements ITypeEditor {
     this._typeKind = typeKind;
   }
 
-  getEditor(edmType: NormalizedEdmModelType, rsdljs: NormalizedEdmModel): string {
-    const baseElements = objectEntries(rsdljs.Model).filter(
+  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string {
+    const baseElements = objectEntries(getModel(schema)).filter(
       ([_, item]) => item !== edmType && item.$Kind === edmType.$Kind
     );
 
@@ -56,7 +57,7 @@ abstract class StructuredTypeEditor implements ITypeEditor {
         isNullable: property.$Nullable,
       }));
 
-    const schemaTypeOptions = objectEntries(rsdljs.Model)
+    const schemaTypeOptions = objectEntries(getModel(schema))
       .filter(
         ([_, item]) =>
           item.$Kind === 'EntityType' ||

@@ -5,6 +5,7 @@ import {
   NormalizedEdmModel,
   NormalizedEdmModelType,
   ModelTypeKind,
+  getModel
 } from '../mermaid-editor-utils';
 import { ITypeEditor, DefaultTypeEditor } from './modal-utils';
 import {
@@ -31,7 +32,7 @@ export class EditorModal {
 
   private _editModel: NormalizedEdmModelType;
   private _globalIndex = 1000;
-  private _currentRsdlJs: NormalizedEdmModel;
+  private _currentSchema: NormalizedEdmModel;
 
   constructor(element: HTMLElement) {
     this._modal = new Modal(element);
@@ -84,12 +85,12 @@ export class EditorModal {
 
   public onDelete?: (edmModel: NormalizedEdmModelType) => void;
 
-  public open(model: NormalizedEdmModelType, rsdljs: NormalizedEdmModel) {
-    this._currentRsdlJs = rsdljs;
+  public open(model: NormalizedEdmModelType, schema: NormalizedEdmModel) {
+    this._currentSchema = schema;
     this._editModel = model;
 
     const typeEditor = this.getTypeEditor(model.$Kind);
-    const editorHtml = typeEditor.getEditor(model, rsdljs);
+    const editorHtml = typeEditor.getEditor(model, schema);
 
     const modelEditor = this._modelEditor;
 
@@ -124,7 +125,7 @@ export class EditorModal {
     }
 
     // Validate
-    // updateModel(rsdljs, modelModal.model, editorModel);
+    // updateModel(schema, modelModal.model, editorModel);
 
     // console.log(modelEditor.innerHTML);
     // console.log(modelModal.model);
@@ -166,12 +167,12 @@ export class EditorModal {
       return;
     }
 
-    const rsdljs = this._currentRsdlJs;
+    const schema = this._currentSchema;
     const index = this._globalIndex++;
 
     const template = document.createElement('template');
 
-    const schemaOptions = objectEntries(rsdljs.Model)
+    const schemaOptions = objectEntries(getModel(schema))
       .filter(
         ([name, item]) =>
           item.$Kind === 'EntityType' ||
@@ -215,7 +216,7 @@ export class EditorModal {
       case 'navigationSource':
         templateFunction = propertyFunction;
 
-        const $TypeOptions = objectEntries(this._currentRsdlJs.Model)
+        const $TypeOptions = objectEntries(getModel(this._currentSchema))
           .filter(
             ([name, item]) => name[0] !== '$' && item.$Kind === 'EntityType'
           )

@@ -1,25 +1,25 @@
 import { parse } from 'rsdl-js';
-import { getType } from './mermaid-editor-utils';
+import { getType, getModel } from './mermaid-editor-utils';
 import { NormalizedEdmModel, objectEntries } from './mermaid-editor-utils';
 
-export function getRsdlJs(rsdlText) {
+export function getSchema(rsdlText) {
   try {
     const json = parse(rsdlText, () => () => '');
     if (json.$$errors) {
       return { errors: json.$$errors };
     }
 
-    var normalized = getNormalizedRsdlJs(json);
+    var normalized = getNormalizedSchema(json);
 
-    return { rsdljs: normalized };
+    return { schema: normalized };
   } catch (e) {
     return { errors: [e] };
   }
 }
 
-function getNormalizedRsdlJs(rsdljs): NormalizedEdmModel {
-  const copy = JSON.parse(JSON.stringify(rsdljs));
-  const model = copy.Model;
+function getNormalizedSchema(schema): NormalizedEdmModel {
+  const copy = JSON.parse(JSON.stringify(schema));
+  const model = getModel(copy);
   const schemaElements = objectEntries(model).filter(
     ([key, item]) => item.$Kind
   );
@@ -85,8 +85,8 @@ function getNormalizedRsdlJs(rsdljs): NormalizedEdmModel {
   return copy;
 }
 
-export function getRsdlText(rsdljs) {
-  return Object.entries(rsdljs.Model)
+export function getRsdlText(schema) {
+  return Object.entries(getModel(schema))
     .map(([name, element]) => getRsdlElement(name, element))
     .join('');
 }
