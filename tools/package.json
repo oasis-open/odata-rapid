@@ -16,8 +16,5 @@
   },
   "dependencies": {
     "patch-package": "^6.4.7"
-  },
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.6.0"
   }
 }
