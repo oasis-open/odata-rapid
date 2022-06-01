@@ -29,7 +29,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "start": "parcel src/html/index.html"
+    "start": "parcel -p 2345 src/html/index.html"
   },
   "alias": {
     "process": {
