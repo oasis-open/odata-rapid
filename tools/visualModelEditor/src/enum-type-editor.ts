@@ -16,7 +16,7 @@ export class EnumTypeEditor implements ITypeEditor {
 
   getEditor(
     edmType: NormalizedEdmModelType,
-    rsdljs: NormalizedEdmModel
+    schema: NormalizedEdmModel
   ): string {
     const enumMembers = objectEntries(edmType)
       .filter(([name, _]) => name[0] !== '$')

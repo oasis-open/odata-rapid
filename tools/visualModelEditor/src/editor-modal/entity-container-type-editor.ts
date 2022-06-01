@@ -1,5 +1,5 @@
 import { entityContainerFunction } from '../templates';
-import { NormalizedEdmModel, NormalizedEdmModelType, objectEntries } from '../mermaid-editor-utils';
+import { NormalizedEdmModel, NormalizedEdmModelType, objectEntries, getModel } from '../mermaid-editor-utils';
 
 import { getPropertyFromEditor, ITypeEditor } from './modal-utils';
 
@@ -9,7 +9,7 @@ export class EntityContainerTypeEditor implements ITypeEditor {
     this._modelEditor = modelEditor;
   }
 
-  getEditor(edmType: NormalizedEdmModelType, rsdljs: NormalizedEdmModel): string {
+  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string {
     const $NavigationSources = objectEntries(edmType)
       .filter(([name, _]) => name[0] !== '$')
       .map(([name, property]) => ({
@@ -18,8 +18,8 @@ export class EntityContainerTypeEditor implements ITypeEditor {
         isCollection: property.$Collection,
         isNullable: property.$Nullable,
       }));
-
-    const $EntityTypes = objectEntries(rsdljs.Model)
+    const model = getModel(schema);
+    const $EntityTypes = objectEntries(model)
       .filter(([name, item]) => name[0] !== '$' && item.$Kind === 'EntityType')
       .map(([name, _]) => name);
 

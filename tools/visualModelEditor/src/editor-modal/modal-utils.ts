@@ -1,6 +1,6 @@
 import { ModelTypeKind, NormalizedEdmModel, NormalizedEdmModelType } from '../mermaid-editor-utils';
 export interface ITypeEditor {
-  getEditor(edmType: NormalizedEdmModelType, rsdljs: NormalizedEdmModel): string;
+  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string;
   getEdmType(): NormalizedEdmModelType;
 }
 
@@ -9,7 +9,7 @@ export class DefaultTypeEditor implements ITypeEditor {
   constructor(typeKind: ModelTypeKind) {
     this._typeKind = typeKind;
   }
-  getEditor(edmType: NormalizedEdmModelType, rsdljs: NormalizedEdmModel): string {
+  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string {
     return `<pre>${JSON.stringify(edmType, null, 2)}</pre>`;
   }
   getEdmType(): NormalizedEdmModelType {
