@@ -18,6 +18,7 @@ using Microsoft.Restier.Core.Model;
 using Microsoft.Restier.Providers.InMemory.DataStoreManager;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace Jetsons
 {
@@ -25,7 +26,7 @@ namespace Jetsons
     {
         private const string routeName = "JetsonsApi";
         private const string corsPolicy = "_allowAllCORS";
-        internal const string serviceName = "Jetsons.rapid-pro.org";
+        internal const string serviceName = "jetsons.azurewebsites.net";
 
         /// <summary>
         /// The application configuration
@@ -161,10 +162,21 @@ namespace Jetsons
             context.Request.Host = new HostString(Startup.serviceName);
 
             // set the default format to be application/json
-            if (!context.Request.Headers.ContainsKey("Accept"))
+            string accepts = "application/json";
+            StringValues acceptValues;
+            if (context.Request.Headers.TryGetValue("Accept", out acceptValues)  && acceptValues.Count > 0)
             {
-                context.Request.Headers.Add("Accept", "application/json");
+                accepts = acceptValues[0].Replace("*/*", "application/json").Replace("application/*", "application/json");
+                foreach (string accept in accepts.Split(','))
+                {
+                    if (accept.StartsWith("application/json") | accept.StartsWith("application/xml"))
+                    {
+                        break;
+                    }
+                }
             }
+
+            context.Request.Headers["Accept"] = accepts;
 
             await _next.Invoke(context);
         }
