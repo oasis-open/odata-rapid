@@ -7,7 +7,11 @@
     <div id="editor"></div>
     <script src="dist/index.js"></script>
     <script>
-        const editor = odataUriEditor.initUrlEditor(document.getElementById("editor"), (e) => console.log(e));
+        const jetsonsUrl = "https://jetsons.azurewebsites.net/$metadata?$format=application/json";
+        const urlEditor = odataUriEditor.initUrlEditor(document.getElementById("editor"), (e) => console.log(e));
+        fetch(jetsonsUrl)
+            .then((response) => response.text()
+            .then((text)=> urlEditor.updateSchema(text, odataUriEditor.schemaFormat.jsonCsdl)));
     </script>
 </body>
 </html>

@@ -20,7 +20,6 @@ service
     competitors: [Company]
     company: Company
 }
-
 `.trimStart();
 
 export { rsdlSample };
