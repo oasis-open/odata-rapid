@@ -24,7 +24,7 @@
     "querystring-es3": "^0.2.1"
   },
   "scripts": {
-    "postinstall": "patch-package",
+    "# postinstall": "patch-package",
     "start": "parcel src/html/index.html"
   },
   "alias": {
