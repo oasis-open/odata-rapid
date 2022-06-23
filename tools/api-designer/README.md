@@ -41,3 +41,9 @@ In the `tools` folder (parent of this folder) run:
 ```
 npm run api-designer
 ```
+
+Alternatively, in this folder run:
+
+```
+npm start
+```

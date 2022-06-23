@@ -39,3 +39,9 @@ In the `tools` folder (parent of this folder) run:
 ```
 npm run odata-explorer
 ```
+
+Alternatively, in this folder run:
+
+```
+npm start
+```
