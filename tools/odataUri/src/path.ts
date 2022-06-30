@@ -109,11 +109,14 @@ export class PathParser {
     typeStack: ISchemaType[];
     errors: IError[] = [];
     segments: PathSegment[] = [];
+    modelName: string;
+    serviceName: string;
 
     constructor(input: string, schema: ISchema) {
         this.input = input;
         this.schema = schema;
         this.typeStack = [];
+        [this.modelName, this.serviceName] = this.schema['$EntityContainer'].split('.');
     }
 
     parse() {
@@ -171,8 +174,8 @@ export class PathParser {
     }
 
     parseFirstSegment(raw: IRawSegment) {
-        const model = getModel('Model', this.schema);
-        const service = getEntityContainer('Service', model);
+        const model = getModel(this.modelName, this.schema);
+        const service = getEntityContainer(this.serviceName, model);
         const [text, key] = raw.segment.split('(');
 
         if (!service) {
@@ -215,11 +218,14 @@ export class PathAutoComplete {
     schema: ISchema;
     segments: PathSegment[];
     input: string;
+    modelName: string;
+    serviceName: string;
 
     constructor(input: string, schema: ISchema, segments: PathSegment[]) {
         this.schema = schema;
         this.segments = segments;
         this.input = input;
+        [this.modelName,this.serviceName] = schema['$EntityContainer'].split('.');
     }
 
     getCompletions(pos: number): string[] {
@@ -227,8 +233,8 @@ export class PathAutoComplete {
         const rawSegments = this.input.split('/');
         if (rawSegments.length === 0) return [];
         if (rawSegments.length === 1) {
-            const model = getModel('Model', this.schema);
-            const service = getEntityContainer('Service', model);
+            const model = getModel(this.modelName, this.schema);
+            const service = getEntityContainer(this.serviceName, model);
             const navSources = getAllPropertiesNames(service);
             return navSources;
         }

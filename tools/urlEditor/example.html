@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <div id="editor"></div>
+    <script src="dist/index.js"></script>
+    <script>
+        const jetsonsUrl = "https://jetsons.azurewebsites.net/$metadata?$format=application/json";
+        const urlEditor = odataUriEditor.initUrlEditor(document.getElementById("editor"), (e) => console.log(e));
+        fetch(jetsonsUrl)
+            .then((response) => response.text()
+            .then((text)=> urlEditor.updateSchema(text, odataUriEditor.schemaFormat.jsonCsdl)));
+    </script>
+</body>
+</html>

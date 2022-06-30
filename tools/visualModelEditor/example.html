@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Visual Model Builder</title>
+    <script src="dist/index.js"></script>
+</head>
+<body>
+<div id="rsdl-editor-gui-content" style="width:500px;height:500px;"></div>
+<script>
+const editor = new visualModelEditor.MermaidEditor(
+    document.getElementById('rsdl-editor-gui-content'),
+    window,
+    (rsdl) => editor.updateRsdl(rsdl)
+);
+
+editor.updateRsdl(`
+type Company
+{
+    key stockSymbol: String
+    name: String
+    incorporated: DateTime
+    employees: [Employee]
+}
+
+type Employee
+{
+    key id: Integer 
+    key: Boolean
+    firstName : String?
+    firstName : String?
+    title: String?
+}
+
+service
+{
+    competitors: [Company]
+    company: Company
+}
+`)
+</script>
+</body>
+</html>

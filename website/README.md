@@ -46,6 +46,8 @@ This command generates static content into the `build` directory and can be serv
 
 ### Deployment
 
+Once you have built the website, you can deploy using GIT Bash:
+
 ```
 $ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
 ```

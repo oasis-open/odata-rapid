@@ -16,8 +16,9 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js'],
         fallback: {
-            util: require.resolve("util"),
-            assert: require.resolve("assert"),
+            util: false,
+            assert: false,
+            fs: false,
         }
     },
     output: {
@@ -26,13 +27,12 @@ module.exports = {
         library: {
             name: "odataUri",
             type: "umd"
-        },
-        globalObject: 'this',
+        }
     },
     plugins: [
         new webpack.ProvidePlugin({
             process: "process/browser"
         })
     ],
-    mode: "production"
+    mode: "development"
 }

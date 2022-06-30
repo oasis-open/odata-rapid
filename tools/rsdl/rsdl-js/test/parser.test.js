@@ -406,6 +406,8 @@ describe("Parse correct RSDL", () => {
              ##
              # this is ignored and does not add a line break
              ## has nice properties
+             ##   preserves leading and trailing spaces  
+             ##doesn't require a space after ##
              ## and a cool action
              type foo {
                ## nice property
@@ -437,7 +439,7 @@ describe("Parse correct RSDL", () => {
             $Kind: "ComplexType",
             $OpenType: true,
             "@Org.OData.Core.V1.Description":
-              "good type\n\nhas nice properties\nand a cool action",
+              "good type\n\nhas nice properties\n  preserves leading and trailing spaces  \ndoesn't require a space after ##\nand a cool action",
             bar: { "@Org.OData.Core.V1.Description": "nice property" },
             qux: {},
           },

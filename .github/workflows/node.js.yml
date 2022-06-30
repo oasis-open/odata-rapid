@@ -6,11 +6,11 @@ name: Node.js CI
 on:
   push:
     branches: [ main ]
-    paths: 
+    paths:
        - "reference/**"
   pull_request:
     branches: [ main ]
-    paths: 
+    paths:
        - "reference/**"
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v2

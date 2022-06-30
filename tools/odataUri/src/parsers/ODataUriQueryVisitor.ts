@@ -1,4 +1,4 @@
-// Generated from src/js/odata-uri/parsers/ODataUriQuery.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from src/parsers/ODataUriQuery.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
