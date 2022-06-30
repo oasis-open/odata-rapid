@@ -6,12 +6,12 @@ name: WebsiteCI
 on:
   push:
     branches: [ main ]
-    paths: 
+    paths:
        - "website/**"
        - "docs/**"
   pull_request:
     branches: [ main ]
-    paths: 
+    paths:
        - "website/**"
        - "docs/**"
 jobs:
@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -29,4 +29,4 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd tools/urlEditor && npm install && npm run build && cd ../../website && npm install && npm run lintDocs && npm run build
+    - run: cd tools && npm install && npm run build && cd ../website && npm install && npm run lintDocs && npm run build
