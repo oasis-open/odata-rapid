@@ -5729,18 +5729,6 @@ odata-csdl@^0.4.4:
     minimist "^1.2.6"
     sax "^1.2.4"
 
-"odata-uri-editor@file:../tools/urlEditor":
-  version "1.0.0"
-  dependencies:
-    "@codemirror/basic-setup" "^0.18.2"
-    buffer "^6.0.3"
-    odata-csdl "^0.4.4"
-    odata-uri "file:../../../Users/D037427/AppData/Local/Yarn/Cache/v6/npm-odata-uri-editor-1.0.0-9f091e84-225b-4ba5-aac3-a5e183ada8eb-1656949066634/node_modules/odataUri"
-    process "^0.11.10"
-    rsdl-js "^0.2.0"
-    stream "^0.0.2"
-    string_decoder "^1.3.0"
-
 "odata-uri@file:../tools/odataUri":
   version "1.0.0"
   dependencies:
@@ -5749,6 +5737,18 @@ odata-csdl@^0.4.4:
     assert "^2.0.0"
     process "^0.11.10"
     util "^0.12.4"
+
+"odata-url-editor@file:../tools/urlEditor":
+  version "1.0.0"
+  dependencies:
+    "@codemirror/basic-setup" "^0.18.2"
+    buffer "^6.0.3"
+    odata-csdl "^0.4.4"
+    odata-uri "file:../tools/odataUri"
+    process "^0.11.10"
+    rsdl-js "^0.2.0"
+    stream "^0.0.2"
+    string_decoder "^1.3.0"
 
 on-finished@2.4.1:
   version "2.4.1"

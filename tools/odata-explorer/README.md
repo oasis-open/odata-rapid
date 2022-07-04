@@ -9,7 +9,7 @@ An app for exploring RAPID/ODATA services.
 This project depends on other tools in this repo. These tools are built in the correct order via `npm install` + `npm run build` in the `tools` folder (parent of this folder):
 
 - [odataUri](../odataUri) (This is not a direct dependency of the API designer, but is required by the `urlEditor` )
-- [urlEditor](../urlEditor) (Referenced in `package.json` as `odata-uri-editor`)
+- [urlEditor](../urlEditor) (Referenced in `package.json` as `odata-url-editor`)
 - [visualModelEditor](../visualModelEditor) (`visual-model-editor`)
 - [rsdlEditor](../rsdlEditor) (`rsdl-editor`)
 
