@@ -32,7 +32,7 @@ export class AutoCompleteManager {
 
     constructor(schema: ISchema) {
         this.schema = schema;
-        this.lastInput = '';
+        this.lastInput = null;
         this.errors = [];
         this.queryOptions = null;
         this.queryParser = null;
@@ -51,7 +51,7 @@ export class AutoCompleteManager {
             this.pathStart = 1;
         }
 
-        
+
         this.pathEnd = path.length + this.pathStart - 1;
         this.path = path;
         this.parsePath();
@@ -84,7 +84,7 @@ export class AutoCompleteManager {
         const tokens = new CommonTokenStream(queryLexer);
         const queryParser = new ODataUriQueryParser(tokens);
         const ast = queryParser.queryOptions();
-        
+
         const semanticResult = parseQueryOptionsSemantics(ast, this.schema, rootType);
         this.queryOptions = semanticResult.tree;
         this.errors.push(...semanticResult.errors.map(err => {
@@ -101,11 +101,11 @@ export class AutoCompleteManager {
         this.schema = schema;
         // reset everything
         this.reset();
-        
+
     }
 
     reset() {
-        this.lastInput = '';
+        this.lastInput = null;
         this.errors = [];
         this.pathResult = null;
         this.queryOptions = null;
@@ -143,6 +143,6 @@ export class AutoCompleteManager {
             const suggestions = this.pathAutoComplete.getCompletions(pos);
             return suggestions;
         }
-        
+
     }
 }
