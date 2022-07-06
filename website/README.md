@@ -2,7 +2,6 @@
 
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
-
 ### Installation
 
 ```sh
@@ -10,7 +9,15 @@ cd website
 yarn
 ```
 
-### Linting and fixing documentation issues 
+If you had installed the website previously and want to start from a clean slate:
+
+```
+cd website
+yarn clean
+yarn
+```
+
+### Linting and fixing documentation issues
 
 To run linting and build locally before contributing any change to the website
 
@@ -18,7 +25,6 @@ To run linting and build locally before contributing any change to the website
 yarn lintDocs
 yarn build
 ```
-
 
 Build the required [urlEditor](../tools/urlEditor) package.
 
