@@ -12,7 +12,8 @@
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
-    "odata-explorer": "cd odata-explorer && npm start"
+    "odata-explorer": "cd odata-explorer && npm start",
+    "test": "c8 mocha -r ts-node/register */test/**/*.test.ts"
   },
   "dependencies": {
     "patch-package": "^6.4.7"

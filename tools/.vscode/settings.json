@@ -1,0 +1,9 @@
+{
+    "mochaExplorer.files": "*/test/**/*.ts",
+    "mochaExplorer.require": "ts-node/register",
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+}
