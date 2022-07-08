@@ -58,11 +58,21 @@ describe("odataUri", () => {
         "$skip",
         //TODO: $orderby should also be suggested
       ],
+      "competitors/": [
+        "$count",
+        "(", //TODO: a paren after a slash is syntactically incorrect
+      ],
+      "competitors/foo": ["$count", "("], //TODO: this doesn't make sense
+      "competitors/123": ["$count", "("], //TODO: this doesn't make sense
     });
   });
 
   it("completions for entity set after updateSchema", () => {
     const manager = new AutoCompleteManager(null);
+
+    const errors = manager.getErrors("foo");
+    expect(errors).to.be.empty;
+
     expectCompletions(manager, {
       "competitors?": [],
     });
@@ -80,14 +90,10 @@ describe("odataUri", () => {
     });
   });
 
-  it("completions for query option", () => {
-    const manager = new AutoCompleteManager(jetsons);
-    expectCompletions(manager, { "competitors?$select": ["="] });
-  });
-
-  it("completions for $select=", () => {
+  it("completions for $select", () => {
     const manager = new AutoCompleteManager(jetsons);
     expectCompletions(manager, {
+      "competitors?$select": ["="],
       "competitors?$select=": [
         "stockSymbol",
         "name",
@@ -105,7 +111,115 @@ describe("odataUri", () => {
     });
   });
 
-  //TOOD: other query options
+  it("completions for $expand", () => {
+    const manager = new AutoCompleteManager(jetsons);
+    expectCompletions(manager, {
+      "company?$expand": ["="],
+      "company?$expand=": ["employees"],
+      "company?$expand=employees": ["&", "employees", ","],
+    });
+  });
+
+  it("completions for $filter", () => {
+    const manager = new AutoCompleteManager(jetsons);
+    expectCompletions(manager, {
+      "company?$filter": ["="],
+      "company?$filter=": [
+        "stockSymbol",
+        "name",
+        "incorporated",
+        "employees",
+        "true",
+        "false",
+      ],
+      "company?$filter=stocksymbol": [
+        "eq",
+        "ne",
+        "gt",
+        "ge",
+        "lt",
+        "le",
+        "and",
+        "or",
+        "&",
+      ],
+      "company?$filter=stocksymbol eq": [
+        "stockSymbol",
+        "name",
+        "incorporated",
+        "employees",
+        "true",
+        "false",
+      ],
+      "company?$filter=stocksymbol eq 123": [
+        "eq", //TODO: makes no sense here
+        "ne", //TODO: makes no sense here
+        "gt", //TODO: makes no sense here
+        "ge", //TODO: makes no sense here
+        "lt", //TODO: makes no sense here
+        "le", //TODO: makes no sense here
+        "and",
+        "or",
+        "&",
+      ],
+      "company?$filter=stocksymbol eq 'FOO'": [
+        "eq", //TODO: makes no sense here
+        "ne", //TODO: makes no sense here
+        "gt", //TODO: makes no sense here
+        "ge", //TODO: makes no sense here
+        "lt", //TODO: makes no sense here
+        "le", //TODO: makes no sense here
+        "and",
+        "or",
+        "&",
+      ],
+      "company?$filter=(stocksymbol eq true": [], //TODO: would expect closing paren
+    });
+  });
+
+  it("completions for $orderby", () => {
+    const manager = new AutoCompleteManager(jetsons);
+    expectCompletions(manager, {
+      // "company?$orderby": ["="],
+      "company?$orderby=": [
+        "stockSymbol",
+        "stockSymbol desc",
+        "name",
+        "name desc",
+        "incorporated",
+        "incorporated desc",
+        "employees", //TODO: that doesn't make much sense
+        "employees desc", //TODO: that doesn't make much sense
+      ],
+      "company?$orderby=name": [
+        "&",
+        "stockSymbol",
+        "stockSymbol desc",
+        "name",
+        "name desc",
+        "incorporated",
+        "incorporated desc",
+        "employees", //TODO: that doesn't make much sense
+        "employees desc", //TODO: that doesn't make much sense
+        //TODO: would have expected "," here
+      ],
+    });
+  });
+
+  it("completions for $skip & $top", () => {
+    const manager = new AutoCompleteManager(jetsons);
+    // expectCompletions(manager, {
+
+    // });
+    expectCompletions(manager, {
+      // "competitors?$skip": [???], //TODO: throws exception
+      "competitors?$skip=": ["NUMBER"],
+      "competitors?$skip=3": ["&"],
+      // "competitors?$top": [???], //TODO: throws exception
+      "competitors?$top=": ["NUMBER"],
+      "competitors?$top=3": ["&"],
+    });
+  });
 
   it("errors for invalid input", () => {
     const manager = new AutoCompleteManager(jetsons);
@@ -142,7 +256,7 @@ function expectCompletions(
   expected: IExpectation
 ) {
   for (const [input, completions] of Object.entries(expected)) {
-    const actual = manager.getCompletions(input, input.length);
-    expect(actual).to.eql(completions);
+    const actual = manager.getCompletions(input, input.length - 1);
+    expect(actual).to.eql(completions, input);
   }
 }
