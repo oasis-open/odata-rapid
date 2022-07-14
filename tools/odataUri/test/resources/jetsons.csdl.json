@@ -1,0 +1,93 @@
+{
+  "$Version": "4.0",
+  "$EntityContainer": "Jetsons.Container",
+  "Jetsons": {
+    "Company": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "stockSymbol"
+      ],
+      "stockSymbol": {},
+      "name": {
+        "$Nullable": true
+      },
+      "incorporated": {
+        "$Type": "Edm.DateTimeOffset",
+        "$Precision": 0
+      },
+      "employees": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Jetsons.Employee",
+        "$ContainsTarget": true
+      }
+    },
+    "Employee": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "id"
+      ],
+      "id": {
+        "$Type": "Edm.Int32"
+      },
+      "firstName": {
+        "$Nullable": true
+      },
+      "lastName": {
+        "$Nullable": true
+      },
+      "title": {
+        "$Nullable": true
+      }
+    },
+    "topEmployees": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "company",
+            "$Type": "Jetsons.Company",
+            "$Nullable": true
+          },
+          {
+            "$Name": "num",
+            "$Type": "Edm.Int32"
+          }
+        ],
+        "$ReturnType": {
+          "$Collection": true,
+          "$Type": "Jetsons.Employee",
+          "$Nullable": true
+        }
+      }
+    ],
+    "youreFired": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "employee",
+            "$Type": "Jetsons.Employee",
+            "$Nullable": true
+          },
+          {
+            "$Name": "reason",
+            "$Unicode": false
+          }
+        ]
+      }
+    ],
+    "Container": {
+      "$Kind": "EntityContainer",
+      "competitors": {
+        "$Collection": true,
+        "$Type": "Jetsons.Company"
+      },
+      "company": {
+        "$Type": "Jetsons.Company"
+      }
+    }
+  }
+}
