@@ -1,8 +1,7 @@
 import { basicSetup, EditorState, EditorView } from "@codemirror/basic-setup";
 import { autocompletion, CompletionSource } from '@codemirror/autocomplete';
 import { linter, Diagnostic } from '@codemirror/lint';
-// import { AutoCompleteManager } from "odata-uri";
-import { AutoCompleteManager } from "../../odataUri/src/autocomplete-manager";
+import { AutoCompleteManager } from "odata-uri";
 import { getDocContent, convertToCsdl } from "./utils";
 import { xml2json } from "odata-csdl";
 
@@ -29,7 +28,7 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
             console.error(e);
             suggestions = [];
         }
-        
+
         const result = {
             from: context.pos,
             options: suggestions.map(sugg => ({
@@ -80,7 +79,7 @@ function initUrlEditor(domElement: HTMLElement, onUrlUpdated: UrlUpdatedCallback
         state: initialState,
     });
 
-    const updateSchema = (schema: string, inputFormat: schemaFormat) =>
+    const updateSchema = (schema: string, inputFormat: schemaFormat = schemaFormat.rsdl) =>
     {
         var jsonCsdl;
         switch(inputFormat)

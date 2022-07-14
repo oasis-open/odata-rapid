@@ -5,18 +5,17 @@ name: WebsiteCI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-       - "website/**"
-       - "docs/**"
+      - "website/**"
+      - "docs/**"
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-       - "website/**"
-       - "docs/**"
+      - "website/**"
+      - "docs/**"
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -24,9 +23,9 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: cd tools && npm install && npm run build && cd ../website && npm install && npm run lintDocs && npm run build
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: cd tools && npm install && npm run build && cd ../website && yarn && yarn lintDocs && yarn build
