@@ -6,6 +6,8 @@ A collection of tools for RAPID/ODATA APIs and RSDL-based services.
 
 Note for Windows: use [PowerShell](https://github.com/PowerShell/PowerShell) for running these commands.
 
+Make sure you have [Node.js](https://nodejs.org/) installed and in the `PATH`.
+
 Install all tools in this monorepo:
 
 ```
