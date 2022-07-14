@@ -14,7 +14,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 /// </summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
 /// <prop name="id">
-///   ID to identify a specific component instance - must be unique; 
+///   ID to identify a specific component instance - must be unique;
 ///   otherwise, setting the default query can impact other instances.
 /// </prop>
 /// <remarks>
@@ -24,7 +24,7 @@ const InteractiveQuerying = (props) => {
   return (
     <BrowserOnly>
       {() => {
-        const initUrlEditor = require("odata-uri-editor").initUrlEditor;
+        const initUrlEditor = require("odata-url-editor").initUrlEditor;
         return <InteractiveQueryingInternal {...props} initUrlEditor={initUrlEditor} />;
       }}
     </BrowserOnly>
@@ -34,7 +34,7 @@ const InteractiveQuerying = (props) => {
 /// <summary>Tool to allow a user to make a query on the Jetsons API and see the results.</summary>
 /// <prop name="defaultQuery">Default query to start with filled in.</prop>
 /// <prop name="id">
-///   ID to identify a specific component instance - must be unique; 
+///   ID to identify a specific component instance - must be unique;
 ///   otherwise, setting the default query can impact other instances.
 /// </prop>
 /// <remarks>
@@ -74,7 +74,7 @@ class InteractiveQueryingInternal extends Component {
         lastName: String
         title: String
     }
-    
+
     service {
         company: Company
         competitors: [Company]
@@ -82,7 +82,7 @@ class InteractiveQueryingInternal extends Component {
     this.editor.updateSchema(schema);
     this.fetchResults(this.props.defaultQuery);
   }
-  
+
   /// <summary>Abandons fetch request before component unmounts.</summary>
   componentWillUnmount() {
     this.state.controller.abort();
@@ -153,9 +153,9 @@ class InteractiveQueryingInternal extends Component {
   render() {
     return (
       <div>
-        <Query 
-          updateQueryResults={this.updateQueryResults} 
-          setToDefault={this.setToDefault} 
+        <Query
+          updateQueryResults={this.updateQueryResults}
+          setToDefault={this.setToDefault}
           id={this.props.id}
         />
         <Results results={this.state.responseElement} />
@@ -193,7 +193,7 @@ class Results extends Component {
   render() {
     return (
       <div style={{
-                "paddingTop": "1rem", 
+                "paddingTop": "1rem",
                 "paddingBottom": "1rem"
             }}>
         <p><strong>Result:</strong></p>

@@ -9,6 +9,7 @@
     "api-designer"
   ],
   "scripts": {
+    "clean": "npx rimraf node_modules */node_modules */dist .parcel-cache",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",

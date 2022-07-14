@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "clean": "npx rimraf node_modules .docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
@@ -14,7 +15,8 @@
     "@docusaurus/preset-classic": "^2.0.0-beta.6",
     "bootstrap": "^5.0.2",
     "classnames": "^2.2.6",
-    "odata-uri-editor": "file:../tools/urlEditor",
+    "odata-uri": "link:../tools/odataUri",
+    "odata-url-editor": "link:../tools/urlEditor",
     "prettier": "2.0.5",
     "prism-react-renderer": "^1.2.1",
     "react": "^16.8.4",
