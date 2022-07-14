@@ -4,6 +4,8 @@ A collection of tools for RAPID/ODATA APIs and RSDL-based services.
 
 ## Installation and build instructions
 
+Note for Windows: use [PowerShell](https://github.com/PowerShell/PowerShell) for running these commands.
+
 Install all tools in this monorepo:
 
 ```
