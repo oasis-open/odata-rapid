@@ -24,10 +24,10 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'docs/samples/jetsons',
+          to: 'docs/samples/apidesigner',
           label: 'Samples',
           position: 'left',
-          activeBaseRegex: `docs/(samples/jetsons|tutorial/graphqlclient)`,
+          activeBaseRegex: `docs/(samples/apidesigner|samples/apiexplorer|samples/jetsons|tutorial/graphqlclient)`,
       },
       ]
     },

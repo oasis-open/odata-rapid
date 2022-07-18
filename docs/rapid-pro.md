@@ -5,6 +5,14 @@ title: Rest API Design (RAPID) Profile
 sidebar_label: Getting Started
 ---
 
+<!--
+import InteractiveQuerying from '../website/src/components/documentation-queries/InteractiveQuerying.js';
+
+import TemplateRequest from '../website/src/components/documentation-queries/TemplateRequest.js';
+
+import Request from '../website/src/components/documentation-queries/Request.js';
+-->
+
 RAPID is a simple profile for building well-designed APIs that can scale to the level of functionality required for any situation. 
 By following RAPID conventions, services are able to leverage common libraries and tools,
 and can share their information in a discoverable and interoperable way.
@@ -95,6 +103,12 @@ RAPID uses standard GET, POST, PATCH, and DELETE requests to retrieve and update
 ### Retrieving a Resource
 
 RAPID services support retrieving a resource using the GET method.
+
+<!--
+<TemplateRequest command="GET" query="{resource-path}"/>
+
+<InteractiveQuerying defaultQuery="company" id="1"/>
+-->
 
 | Template    | GET {resource-path}                                                             |
 | ----------- | :------------------------------------------------------------------------------ |

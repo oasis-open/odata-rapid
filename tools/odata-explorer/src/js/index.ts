@@ -112,12 +112,12 @@ function updateServiceUrl(serviceUrl: string) {
         text = JSON.stringify(xml2json(text), null, 2);
       }
 
-      updateSchema(text);
+      updateSchema(serviceUrl, text);
     })
   );
 }
 
-function updateSchema(schema: string) {
+function updateSchema(serviceUrl: string, schema: string) {
   // Update UrlEditor
   urlEditor.updateSchema(schema, schemaFormat.jsonCsdl);
 
@@ -130,10 +130,11 @@ function updateSchema(schema: string) {
 
   // Update SwaggerUI
   var jsonSchema = JSON.parse(schema);
+  var parsedUrl = parseUrl(serviceUrl);
   var openapi = csdl2openapi(jsonSchema, {
-    basePath: this.basePath,
-    host: this.host,
-    scheme: "http",
+    basePath: parsedUrl.basePath,
+    host: parsedUrl.host,
+    scheme: parsedUrl.scheme
   });
 
   SwaggerUI({
@@ -142,4 +143,17 @@ function updateSchema(schema: string) {
   });
 
   hljs.highlightAll();
+}
+
+function parseUrl(url: string)
+{
+  var iColon = url.indexOf(":");
+  var hostStart = url.indexOf("//") + 2;
+  var baseStart = url.indexOf("/", hostStart);
+ 
+  return {
+    scheme: url.substring(0, iColon),
+    host: url.substring(hostStart, baseStart),
+    basePath: url.substring(baseStart)
+  } 
 }
