@@ -1,17 +1,24 @@
 {
   "cSpell.words": [
     "abnf",
+    "capability",
     "CSDL",
     "dotnet",
+    "endswith",
     "eset",
+    "Insertable",
     "jetsons",
     "nuget",
     "nupkg",
     "odata",
     "rapid",
     "rsdl",
+    "sku",
+    "Spacely",
+    "startswith",
     "svel",
     "tools",
+    "writeonly",
     "xunit"
   ],
   "dotnet-test-explorer.testProjectPath": "**/*tests.@(csproj|vbproj|fsproj)"

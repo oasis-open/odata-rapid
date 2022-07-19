@@ -2,23 +2,21 @@ Prism.languages.rsdl = {
 
     'keyword': [
         {
-            pattern: /\b(?:type|enum|service|abstract|open|key|extends|path)\b/,
+            pattern: /\b(?:type|enum|service|abstract|open|key|extends|path|capability)\b/
         },
         {
-            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count)\b/,
+            pattern: /\b(?:GET|POST|PATCH|DELETE|expand|filter|paging|count|required|excluded|traits)\b/
         },
         {
-            pattern: /\b(?:eq|range|prefix|text|any)\b/,
+            pattern: /\b(?:eq|range|ranges|prefix|text|any)\b/
         }
     ],
-    'property': [
-        /[-\w\.]+(?=\s*=(?!=))/,
-        /"(?:\\[\s\S]|[^\\"])+"(?=\s*[:=])/,
-    ],
+    
     'string': [
         {
-            pattern: /"""[ \t]*[\r\n](?:(?:"|"")?(?:\\.|[^"\\]))*"""/,
-            greedy: true,
+            // javascript strings https://www.json.org/json-en.html
+            pattern: /(?:"(?:[^"\\]|\\["\\\/bfnrt]|\\u[0-9A-Fa-f]{4})*")/, 
+            greedy: true
         }
     ],
     'description': {
@@ -42,6 +40,6 @@ Prism.languages.rsdl = {
     },
     'number': /\b0x[\da-f]+\b|\b\d+(?:\.\d*)?(?:e[+-]?\d+)?/i,
     'boolean': /\b(?:true|false)\b/i,
-    'punctuation': /[\[\]{}:]/,
+    'punctuation': /[\[\]{}():]/,
     'symbol': /[=]/,
 };

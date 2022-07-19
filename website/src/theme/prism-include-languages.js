@@ -17,8 +17,9 @@ const prismIncludeLanguages = (PrismObject) => {
     additionalLanguages.forEach((lang) => {
       require(`prismjs/components/prism-${lang}`); // eslint-disable-line
     });
-
-    require('./rsdl/prism-rsdl.js');
+    
+    require(`prismjs/components/prism-abnf`)
+    require(`./prism-rsdl.js`);
 
     delete window.Prism;
   }

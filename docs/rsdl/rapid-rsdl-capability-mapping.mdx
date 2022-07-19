@@ -1,0 +1,220 @@
+---
+id: rsdl-capability-mapping
+title: Capability semantics
+sidebar_label: RSDL API Capability semantics
+---
+
+> DRAFT
+> Initial Draft. Dec 2021
+
+Mapping RSDL capabilities to CSDL annotations
+
+## Delete
+
+```rsdl
+path /skus/{id} {
+    DELETE
+}
+```
+
+```xml
+ <Annotations Target="skus">
+  <Annotation Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.DeleteRestrictionsType">
+      <PropertyValue Property="Deletable" Bool="true" />
+    </Record>
+  </Annotation>
+</Annotations>
+```
+
+## Update
+
+```rsdl
+path /skus/{id} {
+    PATCH {
+        excluded { id releaseDate }
+    }
+}
+```
+
+```xml
+<Annotations Target="skus">
+  <Annotation Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.UpdateRestrictionsType">
+      <PropertyValue Property="Updatable" Bool="true" />
+      <PropertyValue Property="NonUpdatableProperties">
+        <Collection>
+          <PropertyPath>id</PropertyPath>
+          <PropertyPath>releaseDate</PropertyPath>
+        </Collection>
+      </PropertyValue>
+    </Record>
+  </Annotation>
+</Annotations>
+```
+
+## Insert
+
+```rsdl
+path /orders {
+    POST {
+        required { externalId }
+        excluded { id orderDate }
+    }
+}
+```
+
+```json
+{
+  "$Annotations": {
+    "orders": {
+      "@Org.OData.Capabilities.V1.InsertRestrictions": {
+        "$Type": "Org.OData.Capabilities.V1.InsertRestrictionsType",
+        "RequiredProperties": ["id", "orderDate"],
+        "NonInsertableProperties": ["id", "orderDate"]
+      }
+    }
+  }
+}
+```
+
+```xml
+<Annotations Target="orders">
+  <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.InsertRestrictionsType">
+      <PropertyValue Property="Insertable" Bool="true" />
+      <PropertyValue Property="RequiredProperties">
+        <Collection>
+          <PropertyPath>id</PropertyPath>
+          <PropertyPath>orderDate</PropertyPath>
+        </Collection>
+      </PropertyValue>
+      <PropertyValue Property="NonInsertableProperties">
+        <Collection>
+          <PropertyPath>id</PropertyPath>
+          <PropertyPath>orderDate</PropertyPath>
+        </Collection>
+      </PropertyValue>
+    </Record>
+  </Annotation>
+</Annotations>
+```
+
+## Paging
+
+```rsdl
+path /skus {
+    GET {
+        paging
+    }
+}
+```
+
+```xml
+<Annotations Target="skus">
+  <Annotation Term="Org.OData.Capabilities.V1.TopSupported" Bool="true" />
+  <Annotation Term="Org.OData.Capabilities.V1.SkipSupported" Bool="true" />
+</Annotations>
+```
+
+## Filtering
+
+```rsdl
+path /orders {
+    GET {
+        filter {
+            eq     { id name description createdDate fulfillmentDate }
+            ranges { createdDate description }
+            prefix { name }
+            text   { description }
+        }
+    }
+}
+```
+
+```javascript
+"$Annotations": {
+  "orders": {
+    "@Org.OData.Capabilities.V1.FilterRestrictions": {
+      "$Type": "Org.OData.Capabilities.V1.FilterRestrictionsType",
+      "Filterable": true,
+      "FilterExpressionRestrictions": [
+        {
+          "$Type": "Org.OData.Capabilities.V1.FilterExpressionRestrictionType",
+          "Property": "id",
+          "AllowedExpressions": "SingleValue"
+        },
+        {
+          "$Type": "Org.OData.Capabilities.V1.FilterExpressionRestrictionType",
+          "Property": "name",
+          "AllowedExpressions": "SingleValue"
+        },
+        // some FilterExpressionRestrictionType removed for readability
+        {
+          "$Type": "Org.OData.Capabilities.V1.FilterExpressionRestrictionType",
+          "Property": "description",
+          "AllowedExpressions": "SearchExpression"
+        }
+      ]
+    }
+  }
+```
+
+### Filter restrictions
+
+The RSDL filter restriction is a simplified version of the EDM filter restrictions.
+Instead of listing each pair of property/filter-restrictions, properties are group together by filter restriction.
+e.g. `eq { a b } prefix { c }` in rsdl is represented in CSDL as a "flattend" list of pairs `eq: a, eq: b, prefix: c`
+
+The keywords for the filter restrictions are also simplified:
+
+|   RSDL   | CSDL                                   |                                                                                                                                                                                           |
+| :------: | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   `eq`   | `SingleValue`                          | Compare a property and a constant value with the eq operator                                                                                                                              |
+|   `in`   | `MultiValue`                           | Compare a property with the in operator and a set of constant values                                                                                                                      |
+| `range`  | `SingleRange`                          | Compare a property with the open interval (i.e. `a < p and p < b`) where a and b are constants and p is the property. the `<` can be any of the comparison operators `<`, `<=`, `>`, `>=` |
+| `ranges` | `MultiRange`                           | One of more `range` expressions combined by or                                                                                                                                            |
+| `prefix` | a specialization of `SearchExpression` | Compare a property with a constant using the startsWith function                                                                                                                          |
+|  `text`  | `SearchExpression`                     | Compare a property with a constant using any of the string comparison functions startsWith, contains, endsWith                                                                            |
+|   -/-    | `MultiRangeOrSearchExpression`         |                                                                                                                                                                                           |
+|  `any`   | no restrictions                        | Any combination of the above using `and`, `or`, and `not` and any of the built-in functions                                                                                               |
+
+## Expansion
+
+```rsdl
+path /orders {
+    GET {
+        expand {
+            items {
+                expand {
+                    sku
+                }
+            }
+        }
+    }
+}
+```
+
+```xml
+<Annotations Target="orders">
+  <Annotation Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.ExpandRestrictionsType">
+      <PropertyValue Property="Expandable" Bool="true" />
+    </Record>
+  </Annotation>
+</Annotations>
+<Annotations Target="orders/items">
+  <Annotation Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+    <Record Type="Org.OData.Capabilities.V1.ExpandRestrictionsType">
+      <PropertyValue Property="Expandable" Bool="true" />
+    </Record>
+  </Annotation>
+</Annotations>
+
+```
+
+## References
+
+- [OData Capability Vocabulary](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md)
+
+- [Filter Restrictions](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.xml#L410:~:text=%3CTerm%20Name=%22-,FilterRestrictions,-%22)
