@@ -2,7 +2,6 @@
   "name": "api-designer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "7.14.5",
     "@babel/plugin-transform-runtime": "7.14.5",
@@ -25,7 +24,14 @@
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "start": "parcel src/html/index.html"
+    "build": "parcel build",
+    "start": "parcel --open --dist-dir ./dist-dev"
+  },
+  "source": "src/html/index.html",
+  "targets": {
+    "default": {
+      "publicUrl": "./"
+    }
   },
   "alias": {
     "process": {
