@@ -5,7 +5,7 @@
     "urlEditor",
     "visualModelEditor",
     "rsdlEditor",
-    "odata-explorer",
+    "api-explorer",
     "api-designer"
   ],
   "scripts": {
@@ -13,7 +13,7 @@
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
-    "odata-explorer": "cd odata-explorer && npm start",
+    "api-explorer": "cd api-explorer && npm start",
     "test": "c8 mocha -r ts-node/register */test/**/*.test.ts"
   },
   "dependencies": {
