@@ -1,5 +1,5 @@
 {
-  "name": "odata-explorer",
+  "name": "api-explorer",
   "version": "1.0.0",
   "description": "",
   "dependencies": {
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "build": "parcel build --dist-dir ./dist/odata-explorer",
+    "build": "parcel build --dist-dir ./dist/api-explorer",
     "start": "parcel -p 2345 --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",
