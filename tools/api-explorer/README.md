@@ -1,4 +1,4 @@
-# RAPID ROCKS API Explorer
+# RAPID API Explorer
 
 An app for exploring RAPID/ODATA services.
 
