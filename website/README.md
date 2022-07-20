@@ -26,7 +26,7 @@ yarn lintDocs
 yarn build
 ```
 
-Build the required [urlEditor](../tools/urlEditor) package.
+Build the [tools](../tools/readme.md) mono-repo.
 
 Then:
 

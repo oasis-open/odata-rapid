@@ -6,14 +6,14 @@ sidebar_label: RAPID API Designer
 
 ## Overview
 
-The [RAPID API Designer](/api-designer) is a simple application for designing a RAPID API.
+The [RAPID API Designer](https://rapid.rocks/api-designer/index.html) is a simple application for designing a RAPID API.
 It allows you to describe your API in simple [RAPID Schema Definition Language (RSDL)](../rsdl/rapid-rsdl-intro.md) syntax,
 view as runtime [Common Schema Definition Language (CSDL)](../spec/rapid-pro-resource_description.md),
 Swagger UI, or visually, and build sample queries against the schema.
 
 ## Try it Out!
 
-To try out the RAPID API Designer, just click [RAPID API Designer](/api-designer).
+To try out the RAPID API Designer, just click [RAPID API Designer](https://rapid.rocks/api-designer/index.html).
 You can start with the schema for the [Jetsons service](../samples/jetsons-sample-service.md) or design your own schema from scratch.
 
 ## Source Code
