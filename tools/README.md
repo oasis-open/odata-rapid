@@ -29,8 +29,8 @@ npm run build
 npm run api-designer
 ```
 
-## Launch OData Explorer
+## Launch API Explorer
 
 ```
-npm run odata-explorer
+npm run api-explorer
 ```

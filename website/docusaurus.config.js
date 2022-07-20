@@ -9,7 +9,7 @@ module.exports = {
   staticDirectories: [
     'static',
     '../tools/api-designer/dist',
-    '../tools/odata-explorer/dist',
+    '../tools/api-explorer/dist',
   ],
   themeConfig: {
     prism: {
