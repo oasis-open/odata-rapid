@@ -25,6 +25,7 @@ class ViewerListener extends Listener {
     SwaggerUI({
       dom_id: this.config.swaggerUiId,
       spec: openapi,
+      supportedSubmitMethods:[],
     });
   };
 }
