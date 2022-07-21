@@ -139,7 +139,7 @@ function updateSchema(serviceUrl: string, schema: string) {
 
   SwaggerUI({
      domNode: swaggerUiNode,
-     spec: openapi,
+     spec: openapi
   });
 
   hljs.highlightAll();
