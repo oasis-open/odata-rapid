@@ -6,12 +6,12 @@ sidebar_label: RAPID API Explorer
 
 ## Overview
 
-The [RAPID API Explorer](https://rapid.rocks/api-explorer) is a simple application for exploring a RAPID Service.
+The [RAPID API Explorer](https://rapid.rocks/api-explorer/index.html) is a simple application for exploring a RAPID Service.
 It allows you to explore your services' metadata and build and execute queries against your service.
 
 ## Try it Out!
 
-To try out the RAPID API Explorer, just click [RAPID API Explorer](https://rapid.rocks/api-explorer).
+To try out the RAPID API Explorer, just click [RAPID API Explorer](https://rapid.rocks/api-explorer/index.html).
 You can experiment with the [Jetsons service](../samples/jetsons-sample-service.md) or enter your service URL and click Enter.
 
 ## Source Code
