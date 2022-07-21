@@ -12,16 +12,24 @@ class ViewerListener extends Listener {
     this.host = host;
     this.basePath = basePath;
   }
+
   callback = (rsdl: string) => {
+    
+    // Get various forms of representation
     const csdlJson = convert2csdl(rsdl);
     const openapi = convertCsdlJson2OpenApi(csdlJson, {
       basePath: this.basePath,
       host: this.host,
       scheme: "http",
     });
+    const xml = convert2csdlxml(csdlJson);
 
+    // set content for CSDL, CSDL-XML, and OpenAPI tabs
     this.config.openApiTabContent.innerHTML = JSON.stringify(openapi, null, 2);
     this.config.csdlTabContent.innerHTML = JSON.stringify(csdlJson, null, 2);
+    this.config.csdlXmlTabContent.innerHTML = xml;
+
+    // update SwaggerUI content
     SwaggerUI({
       dom_id: this.config.swaggerUiId,
       spec: openapi,
@@ -47,6 +55,17 @@ function convert2csdl(rsdl: string) {
     }
 
     return json;
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+}
+
+function convert2csdlxml(csdl: string) {
+  try {
+    const xml = "not supported";
+    // todo: insert json-xml csdl converter logic
+    return xml;
   } catch (e) {
     console.error(e);
     return;

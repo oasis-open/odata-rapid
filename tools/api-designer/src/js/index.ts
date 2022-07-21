@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   const config = {
     swaggerUiId: "#swagger-ui-desc",
     csdlTabContent: document.getElementById("csdl-desc"),
+    csdlXmlTabContent: document.getElementById("csdl-xml-desc"),
     openApiTabContent: document.getElementById("open-api-desc"),
   };
   viewerListener.configure(config);
@@ -94,6 +95,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
         text = config.csdlTabContent.innerText;
         filename = `rsdl-csdl.${extension}`;
         break;
+      case "CSDL-XML":
+          text = config.csdlXmlTabContent.innerText;
+          filename = `rsdl-csdl-xml.${extension}`;
+          break;
       case "Open API":
         text = config.openApiTabContent.innerText;
         filename = `rsdl-openapi3.${extension}`;
