@@ -2,12 +2,14 @@ import { expect } from "chai";
 import { readFileSync } from "fs";
 import "mocha";
 
-import { AutoCompleteManager } from "../src/autocomplete-manager";
+import { ICompletions, AutoCompleteManager } from "../src/autocomplete-manager";
 import { ISchema } from "../src/json-model";
 
 const jetsons: ISchema = JSON.parse(
   readFileSync(`${__dirname}/resources/jetsons.csdl.json`, "utf8")
 );
+
+//TODO: also expect "from" for completions
 
 describe("odataUri", () => {
   it("completions for empty input", () => {
@@ -257,6 +259,6 @@ function expectCompletions(
 ) {
   for (const [input, completions] of Object.entries(expected)) {
     const actual = manager.getCompletions(input, input.length - 1);
-    expect(actual).to.eql(completions, input);
+    expect(actual.suggestions).to.eql(completions, input);
   }
 }
