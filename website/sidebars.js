@@ -41,6 +41,8 @@ module.exports = {
     samples: 
         {
            'Samples' : [
+               'samples/apidesigner',
+               'samples/apiexplorer',
                'samples/jetsons',
                'tutorial/graphqlclient'
             ]

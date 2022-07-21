@@ -1,4 +1,4 @@
-# RAPID OData Explorer
+# RAPID API Explorer
 
 An app for exploring RAPID/ODATA services.
 
@@ -37,7 +37,7 @@ npm run build
 In the `tools` folder (parent of this folder) run:
 
 ```
-npm run odata-explorer
+npm run api-explorer
 ```
 
 Alternatively, in this folder run:

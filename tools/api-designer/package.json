@@ -24,7 +24,7 @@
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "build": "parcel build",
+    "build": "parcel build --dist-dir ./dist/api-designer",
     "start": "parcel --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",

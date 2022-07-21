@@ -4,7 +4,7 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ### Installation
 
-Build the required [tools](../tools) package.
+Build the [tools](../tools/readme.md) mono-repo.
 
 Then:
 
@@ -14,7 +14,7 @@ yarn clean
 yarn
 ```
 
-Repeat this whenever you want to pull in changes in the [tools](../tools) package.
+Repeat this whenever you want to pull in changes from the [tools](../tools/readme.md) mono-repo.
 
 ### Linting and fixing documentation issues
 
