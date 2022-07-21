@@ -57,9 +57,8 @@ namespace Jetsons
                     routeServices
                         .AddSingleton(new ODataValidationSettings
                         {
-                            MaxTop = 5,
-                            MaxAnyAllExpressionDepth = 3,
-                            MaxExpansionDepth = 3,
+                            MaxAnyAllExpressionDepth = 10,
+                            MaxExpansionDepth = 10,
                         })
                         .AddScoped<ODataMessageWriterSettings>((sp) =>
                         new ODataMessageWriterSettings

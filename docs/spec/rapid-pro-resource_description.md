@@ -6,8 +6,8 @@ title: Runtime Service Description
 Client applications and tooling can use a runtime service description to understand how to interact with the service.
 By convention, this description is retrieved by requesting the `/$metadata` resource, located at the root of the service.
 
-| Example | GET [`http://rapid-pro.org/$metadata`](https://jetsons.azurewebsites.net/$metadata)<br/>Accept: application/json |
-| ------- | :--------------------------------------------------------------------------------------------------------------- |
+| Example | GET [`https://jetsons.azurewebsites.net/$metadata`](https://jetsons.azurewebsites.net/$metadata?$format=application/json)<br/>Accept: application/json |
+| ------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 
 **Result:**

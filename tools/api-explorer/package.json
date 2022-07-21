@@ -1,5 +1,5 @@
 {
-  "name": "odata-explorer",
+  "name": "api-explorer",
   "version": "1.0.0",
   "description": "",
   "dependencies": {
@@ -12,6 +12,7 @@
     "odata-openapi": "0.8.0",
     "odata-url-editor": "file:../urlEditor",
     "parcel": "2.0.0",
+    "patch-package": "6.4.7",
     "rsdl-editor": "file:../rsdlEditor",
     "rsdl-js": "0.2.0",
     "swagger-ui": "3.52.5",
@@ -26,7 +27,8 @@
     "string_decoder": "^1.3.0"
   },
   "scripts": {
-    "build": "parcel build",
+    "# postinstall": "patch-package",
+    "build": "parcel build --dist-dir ./dist/api-explorer",
     "start": "parcel -p 2345 --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",

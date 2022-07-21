@@ -6,6 +6,11 @@ module.exports = {
   favicon: 'img/rest.svg',
   organizationName: 'oasis-open', // Usually your GitHub org/user name.
   projectName: 'odata-rapid', // Usually your repo name.
+  staticDirectories: [
+    'static',
+    '../tools/api-designer/dist',
+    '../tools/api-explorer/dist',
+  ],
   themeConfig: {
     prism: {
       theme: require('prism-react-renderer/themes/oceanicNext'),
@@ -24,12 +29,12 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'docs/samples/jetsons',
+          to: 'docs/samples/apidesigner',
           label: 'Samples',
           position: 'left',
-          activeBaseRegex: `docs/(samples/jetsons|tutorial/graphqlclient)`,
-      },
-      ]
+          activeBaseRegex: `docs/(samples/apidesigner|samples/apiexplorer|samples/jetsons|tutorial/graphqlclient)`,
+        },
+      ],
     },
     footer: {
       style: 'dark',
@@ -40,7 +45,7 @@ module.exports = {
             {
               label: 'Introduction',
               to: 'docs/',
-            }
+            },
           ],
         },
         {
@@ -70,8 +75,8 @@ module.exports = {
     },
   },
   scripts: [
-    "https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"
+    'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js',
+    'https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js',
   ],
   presets: [
     [
@@ -81,8 +86,7 @@ module.exports = {
           path: '../docs',
           routeBasePath: 'docs',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/oasis-open/odata-rapid/edit/main/docs/'
+          editUrl: 'https://github.com/oasis-open/odata-rapid/edit/main/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

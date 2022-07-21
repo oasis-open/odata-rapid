@@ -5,15 +5,15 @@
     "urlEditor",
     "visualModelEditor",
     "rsdlEditor",
-    "odata-explorer",
+    "api-explorer",
     "api-designer"
   ],
   "scripts": {
-    "clean": "npx rimraf node_modules */node_modules */dist .parcel-cache",
+    "clean": "npx rimraf */.parcel-cache */dist */dist-dev */node_modules .parcel-cache coverage node_modules ",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
-    "odata-explorer": "cd odata-explorer && npm start",
+    "api-explorer": "cd api-explorer && npm start",
     "test": "c8 mocha -r ts-node/register */test/**/*.test.ts"
   },
   "dependencies": {

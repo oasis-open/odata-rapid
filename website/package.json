@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "clean": "npx rimraf node_modules .docusaurus",
+    "clean": "npx rimraf .docusaurus build node_modules",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
@@ -11,8 +11,8 @@
     "lintDocs": "prettier ../docs/spec/**.md ../docs/related/**.md --write"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.6",
-    "@docusaurus/preset-classic": "^2.0.0-beta.6",
+    "@docusaurus/core": "^2.0.0-rc.1",
+    "@docusaurus/preset-classic": "^2.0.0-rc.1",
     "bootstrap": "^5.0.2",
     "classnames": "^2.2.6",
     "odata-uri": "file:../tools/odataUri",

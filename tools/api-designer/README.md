@@ -1,4 +1,4 @@
-# RAPID ROCKS API DESIGNER
+# RAPID API Designer
 
 An experimental designer for RAPID/ODATA APIs and RSDL-based services.
 
