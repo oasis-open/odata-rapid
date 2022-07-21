@@ -138,7 +138,8 @@ function updateSchema(schema: string) {
 
   SwaggerUI({
      domNode: swaggerUiNode,
-     spec: openapi
+     spec: openapi,
+     supportedSubmitMethods:[],
   });
 
   hljs.highlightAll();
