@@ -1,1 +1,1 @@
-export { AutoCompleteManager } from "./autocomplete-manager";
+export { ICompletions, AutoCompleteManager } from "./autocomplete-manager";
