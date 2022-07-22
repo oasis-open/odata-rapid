@@ -9,11 +9,13 @@ on:
     paths:
       - "website/**"
       - "docs/**"
+      - "tools/**"
   pull_request:
     branches: [main]
     paths:
       - "website/**"
       - "docs/**"
+      - "tools/**"
 jobs:
   build:
     runs-on: ubuntu-latest
