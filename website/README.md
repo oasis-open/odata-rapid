@@ -6,6 +6,8 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 Build the [tools](../tools/readme.md) mono-repo.
 
+Make sure you have [Yarn v1.22.19](https://classic.yarnpkg.com/lang/en/docs/install) installed.
+
 Then:
 
 ```
