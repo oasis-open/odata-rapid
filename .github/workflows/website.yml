@@ -9,11 +9,13 @@ on:
     paths:
       - "website/**"
       - "docs/**"
+      - "tools/**"
   pull_request:
     branches: [main]
     paths:
       - "website/**"
       - "docs/**"
+      - "tools/**"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,4 +30,4 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cd tools && npm install && npm run build && cd ../website && yarn && yarn lintDocs && yarn build
+      - run: cd tools && npm install && npm run build && npm run test && cd ../website && yarn && yarn lintDocs && yarn build
