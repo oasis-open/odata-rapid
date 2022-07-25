@@ -11,10 +11,10 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@codemirror/basic-setup": "^0.18.1",
-    "@codemirror/language": "^0.18.1",
-    "@codemirror/state": "^0.18.1",
-    "@codemirror/theme-one-dark": "^0.18.1"
+    "@codemirror/language": "^6",
+    "@codemirror/state": "^6",
+    "@codemirror/theme-one-dark": "^6",
+    "codemirror": "^6"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.1.3",

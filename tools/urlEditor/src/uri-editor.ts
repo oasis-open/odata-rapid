@@ -1,4 +1,5 @@
-import { basicSetup, EditorState, EditorView } from "@codemirror/basic-setup";
+import { basicSetup, EditorView } from "codemirror";
+import { EditorState } from "@codemirror/state";
 import { autocompletion, CompletionSource } from "@codemirror/autocomplete";
 import { linter, Diagnostic } from "@codemirror/lint";
 import { ICompletions, AutoCompleteManager } from "odata-uri";
