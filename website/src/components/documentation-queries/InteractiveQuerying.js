@@ -131,7 +131,7 @@ class InteractiveQueryingInternal extends Component {
           result = 'This query is not valid; please try a different query.';
         } else {
           result = JSON.parse(result);
-          result = JSON.stringify(result, null, 4);
+          result = JSON.stringify(result, null, 2);
         }
         let newResponse = (
           <CodeBlock className="language-json">{result}</CodeBlock>
