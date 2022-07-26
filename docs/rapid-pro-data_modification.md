@@ -18,19 +18,19 @@ Resources are added to a collection by submitting a `POST` request to the collec
 
 ```json
 {
-    "firstName": "Elroy",
-    "lastName": "Jetson",
-    "title": "Intern"
+  "firstName": "Elroy",
+  "lastName": "Jetson",
+  "title": "Intern"
 }
 ```
 
-Payloads sent to the service don't require the `@context` property because the request defines the expected shape of the payload. 
+Payloads sent to the service don't require the `@context` property because the request defines the expected shape of the payload.
 If specified, the `@context` is ignored by the service.
 
 Properties that are nullable or have a default value may be omitted from the `POST` request.
 
-The service returns, at minimum, a `Location` header specifying the URL for the created resource. 
-It may also include a payload containing the values of the newly created resource, 
+The service returns, at minimum, a `Location` header specifying the URL for the created resource.
+It may also include a payload containing the values of the newly created resource,
 including default or computed values.
 
 ## Deep Insert
@@ -45,16 +45,16 @@ When creating a new resource, related resources can be created and associated in
 
 ```json
 {
-    "name": "Cogswell's Cosmic COGs",
-    "incoporated": "2054-10-4",
-    "stockSymbol": "cgswl",
-    "employees": [
-        {
-            "firstName": "Spencer",
-            "lastName": "Cogswell",
-            "title": "CEO"
-        }
-    ]
+  "name": "Cogswell's Cosmic COGs",
+  "incoporated": "2054-10-4",
+  "stockSymbol": "cgswl",
+  "employees": [
+    {
+      "firstName": "Spencer",
+      "lastName": "Cogswell",
+      "title": "CEO"
+    }
+  ]
 }
 ```
 
@@ -70,11 +70,11 @@ Resources are updated by submitting a `PATCH` request to the URL identifying the
 
 ```json
 {
-    "title": "Manager"
+  "title": "Manager"
 }
 ```
 
-The payload for a `PATCH` request need only include the properties that are being updated. 
+The payload for a `PATCH` request need only include the properties that are being updated.
 Properties not specified in the payload are not changed.
 
 ## Upserting a Resource
@@ -90,9 +90,9 @@ a resource can be created by submitting a `PATCH` request to the URL that will i
 
 ```json
 {
-    "firstName": "Elroy",
-    "lastName": "Jetson",
-    "title": "Intern"
+  "firstName": "Elroy",
+  "lastName": "Jetson",
+  "title": "Intern"
 }
 ```
 

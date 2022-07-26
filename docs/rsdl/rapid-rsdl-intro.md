@@ -89,7 +89,7 @@ Now we can get employees for our company:
 | GET [http://rapid-pro.org/company/employees/1?select=lastName,title](https://jetsons.azurewebsites.net/company/employees/1?$select=lastName,title)                             | get the last name and title of the employee with id=1           |
 | GET [http://rapid-pro.org/company?select=name&expand=employees(select=lastName)](<https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=lastName)>) | get the company name and the last names of all of its employees |
 | POST http://rapid-pro.org/company/employees <br/> { "firstName": "Cosmo","lastName": "Spacely","title": "CEO" }                                                                | add a new employee                                              |
-| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}| change the title of the employee with id=1 |
+| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}               | change the title of the employee with id=1                      |
 | DELETE http://rapid-pro.org/company/employees/1                                                                                                                                | delete the employee with id=1                                   |
 
 ### Defining a Top-Level Collection

@@ -28,11 +28,11 @@ enum { a b c d }
 path /foo/bar/baz {
     GET {
         expand {}
-        filter { 
+        filter {
             eq: {foo bar baz}
             range: {foo bar baz}
         }
-        paging 
+        paging
     }
     POST {
 
