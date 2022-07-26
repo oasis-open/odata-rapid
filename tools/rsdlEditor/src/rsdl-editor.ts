@@ -3,6 +3,7 @@ import { EditorState } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { syntaxHighlighting } from "@codemirror/language";
 
 import { rsdl } from "./lang-rsdl/lang";
 import { rsdlStyle } from "./lang-rsdl/styling";
@@ -30,7 +31,7 @@ function initRsdlEditor(
       basicSetup,
       rsdl(),
       oneDark,
-      rsdlStyle,
+      syntaxHighlighting(rsdlStyle),
       keymap.of([indentWithTab]),
       EditorView.updateListener.of((v) => {
         if (v.docChanged) {

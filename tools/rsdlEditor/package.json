@@ -11,8 +11,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@codemirror/language": "^6",
-    "@codemirror/state": "^6",
     "@codemirror/theme-one-dark": "^6",
     "codemirror": "^6"
   },
