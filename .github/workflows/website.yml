@@ -30,4 +30,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cd tools && npm install && npm run build && npm run test && cd ../website && yarn && yarn lintDocs && yarn build
+      - run: |
+          cd tools
+          npm ci
+          npm run build
+          npm test 
+          cd ../website 
+          npm ci 
+          npm run lintDocs 
+          npm run build

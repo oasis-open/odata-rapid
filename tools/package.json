@@ -1,5 +1,5 @@
 {
-  "name": "rsdl-tools",
+  "name": "rapid-tools",
   "workspaces": [
     "odataUri",
     "urlEditor",
