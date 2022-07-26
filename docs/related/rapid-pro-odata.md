@@ -31,7 +31,7 @@ In addition to the "friendly" query option names `filter`, `orderby`, `select`, 
 
 ## Support qualified action and function names
 
-In addititon to "short" action and function names services SHOULD also support namespace-qualified action and function names, for example
+In addition to "short" action and function names services SHOULD also support namespace-qualified action and function names, for example
 
 ```
 POST http://rapid-pro.org/company/employees/1/youreFired

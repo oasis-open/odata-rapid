@@ -57,13 +57,13 @@ For example, the following RSDL defines a simple type "Company", returned by the
 ```rsdl
 type Company
 {
-    stockSymbol: String
-    name: String
-    incorporated: Date
+  stockSymbol: String
+  name: String
+  incorporated: Date
 }
 
 service {
-    company: Company
+  company: Company
 }
 ```
 
