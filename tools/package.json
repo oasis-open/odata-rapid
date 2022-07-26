@@ -16,7 +16,7 @@
     "api-explorer": "cd api-explorer && npm start",
     "test": "c8 mocha -r ts-node/register */test/**/*.test.ts"
   },
-  "dependencies": {
+  "devDependencies": {
     "patch-package": "^6.4.7"
   }
 }
