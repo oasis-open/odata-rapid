@@ -9,7 +9,6 @@ By convention, this description is retrieved by requesting the `/$metadata` reso
 | Example | GET [`https://jetsons.azurewebsites.net/$metadata`](https://jetsons.azurewebsites.net/$metadata?$format=application/json)<br/>Accept: application/json |
 | ------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
 
-
 **Result:**
 
 ```json
