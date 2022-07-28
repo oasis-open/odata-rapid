@@ -1,11 +1,11 @@
-import mermaid from 'mermaid';
-import { NormalizedEdmModel } from './mermaid-editor-utils';
-import { getType, getModel } from './mermaid-editor-utils';
+import mermaid from "mermaid";
+import { NormalizedEdmModel } from "./mermaid-editor-utils";
+import { getType, getModel } from "./mermaid-editor-utils";
 
 export class DiagramView {
   private readonly _diagramContainer: HTMLDivElement;
 
-  private _mermaidText = '';
+  private _mermaidText = "";
 
   constructor(diagramContainer: HTMLDivElement) {
     this._diagramContainer = diagramContainer;
@@ -28,7 +28,7 @@ export class DiagramView {
 
     mermaid.initialize({
       startOnLoad: false,
-      securityLevel: 'loose',
+      securityLevel: "loose",
       useMaxWidth: false,
       // logLevel: 1,
     });
@@ -52,19 +52,19 @@ export class DiagramView {
       .reduce((accumulator, [elementName, element]) => {
         return Object.entries(element).reduce(
           (accumlator2, [propertyName, propertyType]) => {
-            if (propertyType.$Kind === 'NavigationProperty') {
+            if (propertyType.$Kind === "NavigationProperty") {
               accumlator2.push({
                 source: elementName,
-                target: propertyType.$Type.split('.').pop(),
+                target: propertyType.$Type.split(".").pop(),
                 name: propertyName,
                 isContained: propertyType.$ContainsTarget === true,
               });
             }
 
-            if (propertyName === '$BaseType') {
+            if (propertyName === "$BaseType") {
               accumlator2.push({
                 source: elementName,
-                target: propertyType.split('.').pop(),
+                target: propertyType.split(".").pop(),
                 isInheritance: true,
               });
             }
@@ -75,11 +75,11 @@ export class DiagramView {
         );
       }, [])
       .map((relation) => {
-        let definition = '--o';
+        let definition = "--o";
         if (relation.isContained) {
-          definition = '--*';
+          definition = "--*";
         } else if (relation.isInheritance) {
-          definition = '--|>';
+          definition = "--|>";
         }
 
         const text = `\t${relation.source} ${definition} ${relation.target}`;
@@ -94,8 +94,8 @@ export class DiagramView {
       ([key, ..._]) => `\tclick ${key} call selectElement(${key}) "${key}"`
     );
 
-    return ['classDiagram', ...model, ...relationships, ...elementSelects].join(
-      '\n'
+    return ["classDiagram", ...model, ...relationships, ...elementSelects].join(
+      "\n"
     );
   }
 
@@ -106,23 +106,23 @@ export class DiagramView {
 
   private getElementContents(edmElement) {
     switch (edmElement.$Kind) {
-      case 'EnumType':
+      case "EnumType":
         return this.getEnumTypeContents(edmElement);
-      case 'EntityType':
-      case 'ComplexType':
+      case "EntityType":
+      case "ComplexType":
         return this.getStructuredTypeContents(edmElement);
-      case 'EntityContainer':
+      case "EntityContainer":
         return this.getEntityContainerContents(edmElement);
       default:
-        return '';
+        return "";
     }
   }
 
   private getEnumTypeContents(enumType) {
     return Object.entries(enumType)
-      .filter(([name, _]) => name[0] !== '$')
+      .filter(([name, _]) => name[0] !== "$")
       .map(([name, value]) => `${name}: ${value}`)
-      .join('\n\t\t');
+      .join("\n\t\t");
   }
 
   private getStructuredTypeContents(structuredType) {
@@ -138,35 +138,35 @@ export class DiagramView {
 
   private getPropertiesContents(edmType) {
     return Object.entries(edmType)
-      .filter(([name, _]) => name[0] !== '$')
+      .filter(([name, _]) => name[0] !== "$")
       .map(([name, typeDef]) => this.getProperty(name, typeDef))
-      .join('\n\t\t');
+      .join("\n\t\t");
   }
 
   private getOperationsContents(operations) {
     if (!operations || !operations.length) {
-      return '';
+      return "";
     }
 
     return (
-      '\n\t\t' +
+      "\n\t\t" +
       operations
         .map(
           (op) =>
             `${op.$Name} (${this.getOperationParameters(
               op.$Parameter.slice(1)
-            )}) ${op.$ReturnType ? '∶ ' + getType(op.$ReturnType) : ''}`
+            )}) ${op.$ReturnType ? "∶ " + getType(op.$ReturnType) : ""}`
         )
-        .join('\n\t\t')
+        .join("\n\t\t")
     );
   }
 
   private getOperationParameters(inputParameters) {
     if (!inputParameters || !inputParameters.length) {
-      return '';
+      return "";
     }
 
-    return inputParameters.map((p) => this.getProperty(p.$Name, p)).join(', ');
+    return inputParameters.map((p) => this.getProperty(p.$Name, p)).join(", ");
   }
 
   private getProperty(name, typeDef) {

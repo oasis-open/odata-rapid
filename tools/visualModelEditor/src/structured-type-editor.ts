@@ -1,15 +1,15 @@
-import { structuredTypeFunction } from './templates';
+import { structuredTypeFunction } from "./templates";
 import {
   $TypeOptions,
   NormalizedEdmModel,
   NormalizedEdmModelType,
   objectEntries,
-  getModel
-} from './mermaid-editor-utils';
+  getModel,
+} from "./mermaid-editor-utils";
 
-import { getPropertyFromEditor, ITypeEditor } from './modal-utils';
+import { getPropertyFromEditor, ITypeEditor } from "./modal-utils";
 
-type StructuredTypeKind = 'EntityType' | 'ComplexType';
+type StructuredTypeKind = "EntityType" | "ComplexType";
 
 abstract class StructuredTypeEditor implements ITypeEditor {
   private readonly _modelEditor: HTMLFormElement;
@@ -20,13 +20,16 @@ abstract class StructuredTypeEditor implements ITypeEditor {
     this._typeKind = typeKind;
   }
 
-  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string {
+  getEditor(
+    edmType: NormalizedEdmModelType,
+    schema: NormalizedEdmModel
+  ): string {
     const baseElements = objectEntries(getModel(schema)).filter(
       ([_, item]) => item !== edmType && item.$Kind === edmType.$Kind
     );
 
     const baseMap = baseElements.reduce((map, [key, edmElement]) => {
-      map[key] = (edmElement.$BaseType || '').split('.').pop();
+      map[key] = (edmElement.$BaseType || "").split(".").pop();
       return map;
     }, {});
 
@@ -48,11 +51,11 @@ abstract class StructuredTypeEditor implements ITypeEditor {
       .sort();
 
     const $Properties = objectEntries(edmType)
-      .filter(([name, _]) => name[0] !== '$')
+      .filter(([name, _]) => name[0] !== "$")
       .map(([name, property]) => ({
         name,
         isPk: edmType.$Key && edmType.$Key.indexOf(name) >= 0,
-        type: (property.$Type || 'String').split('.').pop(),
+        type: (property.$Type || "String").split(".").pop(),
         isCollection: property.$Collection,
         isNullable: property.$Nullable,
       }));
@@ -60,9 +63,9 @@ abstract class StructuredTypeEditor implements ITypeEditor {
     const schemaTypeOptions = objectEntries(getModel(schema))
       .filter(
         ([_, item]) =>
-          item.$Kind === 'EntityType' ||
-          item.$Kind === 'ComplexType' ||
-          item.$Kind === 'EnumType'
+          item.$Kind === "EntityType" ||
+          item.$Kind === "ComplexType" ||
+          item.$Kind === "EnumType"
       )
       .map(([name, _]) => name)
       .sort();
@@ -78,25 +81,22 @@ abstract class StructuredTypeEditor implements ITypeEditor {
   getEdmType(): NormalizedEdmModelType {
     const typeKind = this._typeKind;
     const structuredTypeEditor = this._modelEditor;
-    const name = structuredTypeEditor.querySelector<HTMLInputElement>(
-      '#nameInput'
-    ).value;
-    const extendsInput = structuredTypeEditor.querySelector<HTMLInputElement>(
-      '#extendsInput'
-    );
-    const extendsSelect = structuredTypeEditor.querySelector<HTMLInputElement>(
-      '#extendsSelect'
-    );
+    const name =
+      structuredTypeEditor.querySelector<HTMLInputElement>("#nameInput").value;
+    const extendsInput =
+      structuredTypeEditor.querySelector<HTMLInputElement>("#extendsInput");
+    const extendsSelect =
+      structuredTypeEditor.querySelector<HTMLInputElement>("#extendsSelect");
 
     const properties = Array.from(
       structuredTypeEditor.querySelectorAll<HTMLDivElement>(
-        '#propertiesContainer > div.data-row-container'
+        "#propertiesContainer > div.data-row-container"
       )
     ).map((element) => getPropertyFromEditor(element));
 
     const operations = Array.from(
       structuredTypeEditor.querySelectorAll(
-        '#operationsContainer > div.data-row-container'
+        "#operationsContainer > div.data-row-container"
       )
     ).map((element) => this.getOperation(element, name));
 
@@ -111,7 +111,7 @@ abstract class StructuredTypeEditor implements ITypeEditor {
       }
     );
 
-    if (typeKind === 'EntityType') {
+    if (typeKind === "EntityType") {
       structuredType.$Operations = operations;
       structuredType.$Key = properties
         .filter((p) => p.$IsPk)
@@ -130,20 +130,20 @@ abstract class StructuredTypeEditor implements ITypeEditor {
 
   private getOperation(operationEditor, bindingTypeName) {
     const nameInput = operationEditor.querySelector(
-      'input[type=text].operation-name-data'
+      "input[type=text].operation-name-data"
     );
     const typeInput = operationEditor.querySelector(
-      'select.operation-type-data'
+      "select.operation-type-data"
     );
     const hasReturnInput = operationEditor.querySelector(
-      'input[type=checkbox].has-return-data'
+      "input[type=checkbox].has-return-data"
     );
     const returnTypeDataRow = operationEditor.querySelector(
-      'div.return-type-container > div.data-row-container'
+      "div.return-type-container > div.data-row-container"
     );
     const inputParameters = [
       ...operationEditor.querySelectorAll(
-        'div.input-parameters-container > div.data-row-container'
+        "div.input-parameters-container > div.data-row-container"
       ),
     ].map((element) => getPropertyFromEditor(element));
 
@@ -153,7 +153,7 @@ abstract class StructuredTypeEditor implements ITypeEditor {
       $IsBound: true,
       $Parameter: [
         {
-          $Name: 'this',
+          $Name: "this",
           $Type: bindingTypeName,
         },
         ...inputParameters,
@@ -171,12 +171,12 @@ abstract class StructuredTypeEditor implements ITypeEditor {
 
 export class EntityTypeEditor extends StructuredTypeEditor {
   constructor(modelEditor: HTMLFormElement) {
-    super(modelEditor, 'EntityType');
+    super(modelEditor, "EntityType");
   }
 }
 
 export class ComplexTypeEditor extends StructuredTypeEditor {
   constructor(modelEditor: HTMLFormElement) {
-    super(modelEditor, 'ComplexType');
+    super(modelEditor, "ComplexType");
   }
 }

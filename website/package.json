@@ -8,7 +8,7 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "lintDocs": "prettier ../docs/spec/**.md ../docs/related/**.md --write"
+    "lintDocs": "prettier --write ../docs/**/*.md ../docs/**/*.mdx"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-rc.1",
@@ -17,7 +17,7 @@
     "classnames": "^2.2.6",
     "odata-uri": "file:../tools/odataUri",
     "odata-url-editor": "file:../tools/urlEditor",
-    "prettier": "2.0.5",
+    "prettier": "^2.7.1",
     "prism-react-renderer": "^1.2.1",
     "react": "^16.8.4",
     "react-bootstrap": "^1.6.1",

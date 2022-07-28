@@ -16,7 +16,7 @@ You can experiment with the [Jetsons service](../samples/jetsons-sample-service.
 
 ## Source Code
 
-The source code for the API Explorer can be found in the [RAPID API Explorer](https://github.com/oasis-open/odata-rapid/tree/main/tools/odata-explorer) open source repo, and demonstrates the use of the following individual controls:
+The source code for the API Explorer can be found in the [RAPID API Explorer](https://github.com/oasis-open/odata-rapid/tree/main/tools/api-explorer) open source repo, and demonstrates the use of the following individual controls:
 
 - [RAPID Url Editor](https://github.com/oasis-open/odata-rapid/tree/main/tools/urlEditor) for building RAPID-compliant URLs against your service
 - [RAPID Visual Model Editor](https://github.com/oasis-open/odata-rapid/tree/main/tools/visualModelEditor) for creating a visual display of your service

@@ -1,10 +1,10 @@
-import { parse } from 'rsdl-js';
-import { getType, getModel } from './mermaid-editor-utils';
-import { NormalizedEdmModel, objectEntries } from './mermaid-editor-utils';
+import { parse } from "rsdl-js";
+import { getType, getModel } from "./mermaid-editor-utils";
+import { NormalizedEdmModel, objectEntries } from "./mermaid-editor-utils";
 
 export function getSchema(rsdlText) {
   try {
-    const json = parse(rsdlText, () => () => '');
+    const json = parse(rsdlText, () => () => "");
     if (json.$$errors) {
       return { errors: json.$$errors };
     }
@@ -27,7 +27,7 @@ function getNormalizedSchema(schema): NormalizedEdmModel {
   const kindMap = schemaElements.reduce((map, [key, edmElement]) => {
     map[key] = {
       $Kind: edmElement.$Kind,
-      $BaseType: (edmElement.$BaseType || '').split('.').pop(),
+      $BaseType: (edmElement.$BaseType || "").split(".").pop(),
     };
 
     return map;
@@ -36,7 +36,7 @@ function getNormalizedSchema(schema): NormalizedEdmModel {
   schemaElements
     .filter(([key, edmElement]) => edmElement.$BaseType)
     .forEach(([key, edmElement]) => {
-      const baseType = edmElement.$BaseType.split('.').pop();
+      const baseType = edmElement.$BaseType.split(".").pop();
       edmElement.$Extends = baseType;
 
       let rootType = kindMap[baseType];
@@ -57,14 +57,14 @@ function getNormalizedSchema(schema): NormalizedEdmModel {
     operations.forEach((op) => {
       // TODO: Remove Hacks
       const bindingParameter = op.$Parameter[0];
-      const typeName = bindingParameter.$Type.split('.').pop();
+      const typeName = bindingParameter.$Type.split(".").pop();
       const type = model[typeName];
       if (type) {
         type.$Operations = type.$Operations || [];
         op.$Name = key;
         op.$InputParameters = op.$Parameter.slice(1).map((p) => ({
           name: p.$Name,
-          type: (p.$Type || 'String').split('.').pop(),
+          type: (p.$Type || "String").split(".").pop(),
           isCollection: p.$Collection,
           isNullable: p.$Nullable,
         }));
@@ -72,7 +72,7 @@ function getNormalizedSchema(schema): NormalizedEdmModel {
           op.$ReturnType = {
             ...op.$ReturnType,
             name: op.$ReturnType.$Name,
-            type: (op.$ReturnType.$Type || 'String').split('.').pop(),
+            type: (op.$ReturnType.$Type || "String").split(".").pop(),
             isCollection: op.$ReturnType.$Collection,
             isNullable: op.$ReturnType.$Nullable,
           };
@@ -88,29 +88,29 @@ function getNormalizedSchema(schema): NormalizedEdmModel {
 export function getRsdlText(schema) {
   return Object.entries(getModel(schema))
     .map(([name, element]) => getRsdlElement(name, element))
-    .join('');
+    .join("");
 }
 
 function getRsdlElement(name, edmElement) {
   switch (edmElement.$Kind) {
-    case 'EnumType':
+    case "EnumType":
       return getEnumTypeRsdl(name, edmElement);
-    case 'EntityType':
+    case "EntityType":
       return getEntityTypeRsdl(name, edmElement);
-    case 'ComplexType':
+    case "ComplexType":
       return getComplexTypeRsdl(name, edmElement);
-    case 'EntityContainer':
+    case "EntityContainer":
       return getEntityContainerRsdl(name, edmElement);
     default:
-      return '';
+      return "";
   }
 }
 
 function getEnumTypeRsdl(name, enumType) {
   const members = Object.entries(enumType)
     .map(([name]) => name)
-    .filter((name) => name[0] !== '$')
-    .join('\n    ');
+    .filter((name) => name[0] !== "$")
+    .join("\n    ");
   return `
 enum ${name} {
     ${members}
@@ -128,8 +128,8 @@ function getComplexTypeRsdl(name, complexType) {
 
 function getStructuredTypeRsdl(name, structuredType) {
   const baseType = structuredType.$BaseType
-    ? ' extends ' + structuredType.$BaseType.split('.').pop()
-    : '';
+    ? " extends " + structuredType.$BaseType.split(".").pop()
+    : "";
   const properties = getRsdlProperties(structuredType);
   const operations = getRsdlOperations(structuredType.$Operations);
 
@@ -142,19 +142,19 @@ type ${name} ${baseType}{
 
 function getRsdlOperations(operations) {
   if (!operations || !operations.length) {
-    return '';
+    return "";
   }
 
   return (
-    '\n    ' +
+    "\n    " +
     operations
       .map(
         (op) =>
           `${op.$Kind.toLowerCase()} ${op.$Name} (${getOperationParametersRsdl(
             op.$Parameter.slice(1)
-          )}) ${op.$ReturnType ? ': ' + getType(op.$ReturnType) : ''}`
+          )}) ${op.$ReturnType ? ": " + getType(op.$ReturnType) : ""}`
       )
-      .join('\n    ')
+      .join("\n    ")
   );
 }
 
@@ -168,15 +168,15 @@ service {
 
 function getOperationParametersRsdl(inputParameters) {
   if (!inputParameters || !inputParameters.length) {
-    return '';
+    return "";
   }
 
-  return inputParameters.map((p) => getPropertyRsdl(p.$Name, p, [])).join(', ');
+  return inputParameters.map((p) => getPropertyRsdl(p.$Name, p, [])).join(", ");
 }
 
 function getPropertyRsdl(name, typeDef, keys) {
   const type = getType(typeDef);
-  const keyPrefix = keys && keys.indexOf(name) >= 0 ? 'key ' : '';
+  const keyPrefix = keys && keys.indexOf(name) >= 0 ? "key " : "";
   return `${keyPrefix}${name}: ${type}`;
 }
 
@@ -184,7 +184,7 @@ function getRsdlProperties(edmType) {
   // TODO: Reuses mermaid property;
   const keys = edmType.$Key;
   return Object.entries(edmType)
-    .filter(([name, _]) => name[0] !== '$')
+    .filter(([name, _]) => name[0] !== "$")
     .map(([name, typeDef]) => getPropertyRsdl(name, typeDef, keys))
-    .join('\n    ');
+    .join("\n    ");
 }

@@ -22,9 +22,9 @@ Let's say that we wanted our API to deal with information about a company. We co
 ```rsdl
 type Company
 {
-    stockSymbol: String
-    name: String
-    incorporated: Date
+  stockSymbol: String
+  name: String
+  incorporated: Date
 }
 ```
 
@@ -38,7 +38,7 @@ Now we can create a service that returns information about our company:
 
 ```rsdl
 service {
-    company: Company
+  company: Company
 }
 ```
 
@@ -58,10 +58,10 @@ First, we would define the employee type:
 ```rsdl
 type Employee
 {
-    key id: Integer
-    firstName : String
-    lastName : String
-    title: String
+  key id: Integer
+  firstName : String
+  lastName : String
+  title: String
 }
 ```
 
@@ -72,10 +72,10 @@ Now we can add employees to our company:
 ```rsdl
 type Company
 {
-    stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
+  stockSymbol: String
+  name: String
+  incorporated: Date
+  employees: [Employee]
 }
 ```
 
@@ -89,7 +89,7 @@ Now we can get employees for our company:
 | GET [http://rapid-pro.org/company/employees/1?select=lastName,title](https://jetsons.azurewebsites.net/company/employees/1?$select=lastName,title)                             | get the last name and title of the employee with id=1           |
 | GET [http://rapid-pro.org/company?select=name&expand=employees(select=lastName)](<https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=lastName)>) | get the company name and the last names of all of its employees |
 | POST http://rapid-pro.org/company/employees <br/> { "firstName": "Cosmo","lastName": "Spacely","title": "CEO" }                                                                | add a new employee                                              |
-| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}| change the title of the employee with id=1 |
+| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}               | change the title of the employee with id=1                      |
 | DELETE http://rapid-pro.org/company/employees/1                                                                                                                                | delete the employee with id=1                                   |
 
 ### Defining a Top-Level Collection
@@ -102,8 +102,8 @@ For example, we could reuse the same company type to create a collection of comp
 
 ```rsdl
 service {
-    company: Company
-    competitors: [Company]
+  company: Company
+  competitors: [Company]
 }
 ```
 
@@ -112,10 +112,10 @@ Because company is now part of a collection, if we want to reference individual 
 ```rsdl
 type Company
 {
-    key stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
+  key stockSymbol: String
+  name: String
+  incorporated: Date
+  employees: [Employee]
 }
 ```
 
@@ -138,8 +138,8 @@ Let's say that we wanted to define an employmentType enumeration, with possible 
 ```rsdl
 enum EmploymentType
 {
-    salaried
-    hourly
+  salaried
+  hourly
 }
 ```
 
@@ -148,11 +148,11 @@ Now we could use that employmentType enum in our employees example:
 ```rsdl
 type Employee
 {
-    key id: Integer
-    firstName: String
-    lastName: String
-    title: String
-    employeeType: EmploymentType
+  key id: Integer
+  firstName: String
+  lastName: String
+  title: String
+  employeeType: EmploymentType
 }
 ```
 
@@ -163,8 +163,8 @@ Our employee has first name and last name properties. We could define a "fullNam
 ```rsdl
 type FullName
 {
-    firstName: String
-    lastName: String
+  firstName: String
+  lastName: String
 }
 ```
 
@@ -173,9 +173,9 @@ and then use that type in our employee:
 ```rsdl
 type Employee
 {
-    key id: Integer
-    name: FullName
-    title: String
+  key id: Integer
+  name: FullName
+  title: String
 }
 ```
 
@@ -194,12 +194,12 @@ We can define a "youAreFired" action on our company that takes a string paramete
 ```rsdl
 type Company
 {
-    key stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
-    topEmployees(num: Integer): [Employee]
-    action youAreFired(reason: String)
+  key stockSymbol: String
+  name: String
+  incorporated: Date
+  employees: [Employee]
+  topEmployees(num: Integer): [Employee]
+  action youAreFired(reason: String)
 }
 ```
 
@@ -215,9 +215,9 @@ Actions and functions may also be defined on the service.
 
 ```rsdl
 service {
-    company: Company
-    competitors: [Company]
-    currentStockPrice(stockSymbol: String): Decimal
+  company: Company
+  competitors: [Company]
+  currentStockPrice(stockSymbol: String): Decimal
 }
 ```
 
@@ -234,11 +234,11 @@ We can define a "topEmployees" function on our company:
 ```rsdl
 type Company
 {
-    key stockSymbol: String
-    name: String
-    incorporated: Date
-    employees: [Employee]
-    topEmployees(num: Integer) : [Employee]
+  key stockSymbol: String
+  name: String
+  incorporated: Date
+  employees: [Employee]
+  topEmployees(num: Integer) : [Employee]
 }
 ```
 
