@@ -159,7 +159,13 @@ export class AutoCompleteManager {
     } else {
       // path
       const suggestions = this.pathAutoComplete.getCompletions(pos);
-      return { from: input.lastIndexOf("/") + 1, suggestions };
+      const lastSlash = input.lastIndexOf("/");
+      const lastSegment = input.substring(lastSlash + 1);
+      if (suggestions.includes(lastSegment)) {
+        return { from: pos, suggestions: ["?", "/"] };
+      } else {
+        return { from: lastSlash + 1, suggestions };
+      }
     }
   }
 }

@@ -20,11 +20,12 @@
     "buffer": "^6.0.3",
     "parcel": "^2.6.2",
     "patch-package": "6.4.7",
-    "querystring-es3": "^0.2.1"
+    "querystring-es3": "^0.2.1",
+    "rimraf": "^3.0.2"
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "build": "parcel build --dist-dir ./dist/api-designer",
+    "build": "rimraf dist && parcel build --dist-dir ./dist/api-designer",
     "start": "parcel --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",
