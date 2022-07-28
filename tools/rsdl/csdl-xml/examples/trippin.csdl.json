@@ -1,0 +1,440 @@
+{
+  "$Version": "4.0",
+  "Trippin": {
+    "Person": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "UserName"
+      ],
+      "UserName": {},
+      "FirstName": {},
+      "LastName": {
+        "$Nullable": true,
+        "$MaxLength": 26
+      },
+      "MiddleName": {
+        "$Nullable": true
+      },
+      "Gender": {
+        "$Type": "Trippin.PersonGender"
+      },
+      "Age": {
+        "$Type": "Edm.Int64",
+        "$Nullable": true
+      },
+      "Emails": {
+        "$Collection": true
+      },
+      "AddressInfo": {
+        "$Collection": true,
+        "$Type": "Trippin.Location"
+      },
+      "HomeAddress": {
+        "$Type": "Trippin.Location",
+        "$Nullable": true
+      },
+      "FavoriteFeature": {
+        "$Type": "Trippin.Feature"
+      },
+      "Features": {
+        "$Collection": true,
+        "$Type": "Trippin.Feature"
+      },
+      "Friends": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Trippin.Person"
+      },
+      "BestFriend": {
+        "$Kind": "NavigationProperty",
+        "$Type": "Trippin.Person",
+        "$Nullable": true
+      },
+      "Trips": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Trippin.Trip"
+      }
+    },
+    "Airline": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "AirlineCode"
+      ],
+      "AirlineCode": {},
+      "Name": {
+        "$Nullable": true
+      }
+    },
+    "Airport": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "IcaoCode"
+      ],
+      "Name": {
+        "$Nullable": true
+      },
+      "IcaoCode": {},
+      "IataCode": {
+        "$Nullable": true
+      },
+      "Location": {
+        "$Type": "Trippin.AirportLocation",
+        "$Nullable": true
+      }
+    },
+    "Location": {
+      "$Kind": "ComplexType",
+      "Address": {
+        "$Nullable": true
+      },
+      "City": {
+        "$Type": "Trippin.City",
+        "$Nullable": true
+      }
+    },
+    "City": {
+      "$Kind": "ComplexType",
+      "Name": {
+        "$Nullable": true
+      },
+      "CountryRegion": {
+        "$Nullable": true
+      },
+      "Region": {
+        "$Nullable": true
+      }
+    },
+    "AirportLocation": {
+      "$Kind": "ComplexType",
+      "$BaseType": "Trippin.Location",
+      "Loc": {
+        "$Type": "Edm.GeographyPoint",
+        "$Nullable": true
+      }
+    },
+    "EventLocation": {
+      "$Kind": "ComplexType",
+      "$BaseType": "Trippin.Location",
+      "BuildingInfo": {
+        "$Nullable": true
+      }
+    },
+    "Trip": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "TripId"
+      ],
+      "TripId": {
+        "$Type": "Edm.Int32"
+      },
+      "ShareId": {
+        "$Type": "Edm.Guid"
+      },
+      "Name": {
+        "$Nullable": true
+      },
+      "Budget": {
+        "$Type": "Edm.Single"
+      },
+      "Description": {
+        "$Nullable": true
+      },
+      "Tags": {
+        "$Collection": true
+      },
+      "StartsAt": {
+        "$Type": "Edm.DateTimeOffset",
+        "$Precision": 0
+      },
+      "EndsAt": {
+        "$Type": "Edm.DateTimeOffset",
+        "$Precision": 0
+      },
+      "PlanItems": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Trippin.PlanItem"
+      }
+    },
+    "PlanItem": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "PlanItemId"
+      ],
+      "PlanItemId": {
+        "$Type": "Edm.Int32"
+      },
+      "ConfirmationCode": {
+        "$Nullable": true
+      },
+      "StartsAt": {
+        "$Type": "Edm.DateTimeOffset",
+        "$Precision": 0
+      },
+      "EndsAt": {
+        "$Type": "Edm.DateTimeOffset",
+        "$Precision": 0
+      },
+      "Duration": {
+        "$Type": "Edm.Duration"
+      }
+    },
+    "Event": {
+      "$Kind": "EntityType",
+      "$BaseType": "Trippin.PlanItem",
+      "OccursAt": {
+        "$Type": "Trippin.EventLocation",
+        "$Nullable": true
+      },
+      "Description": {
+        "$Nullable": true
+      }
+    },
+    "PublicTransportation": {
+      "$Kind": "EntityType",
+      "$BaseType": "Trippin.PlanItem",
+      "SeatNumber": {
+        "$Nullable": true
+      }
+    },
+    "Flight": {
+      "$Kind": "EntityType",
+      "$BaseType": "Trippin.PublicTransportation",
+      "FlightNumber": {
+        "$Nullable": true
+      },
+      "Airline": {
+        "$Kind": "NavigationProperty",
+        "$Type": "Trippin.Airline",
+        "$Nullable": true
+      },
+      "From": {
+        "$Kind": "NavigationProperty",
+        "$Type": "Trippin.Airport",
+        "$Nullable": true
+      },
+      "To": {
+        "$Kind": "NavigationProperty",
+        "$Type": "Trippin.Airport",
+        "$Nullable": true
+      }
+    },
+    "Employee": {
+      "$Kind": "EntityType",
+      "$BaseType": "Trippin.Person",
+      "Cost": {
+        "$Type": "Edm.Int64"
+      },
+      "Peers": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Trippin.Person"
+      }
+    },
+    "Manager": {
+      "$Kind": "EntityType",
+      "$BaseType": "Trippin.Person",
+      "Budget": {
+        "$Type": "Edm.Int64"
+      },
+      "BossOffice": {
+        "$Type": "Trippin.Location",
+        "$Nullable": true
+      },
+      "DirectReports": {
+        "$Kind": "NavigationProperty",
+        "$Collection": true,
+        "$Type": "Trippin.Person"
+      }
+    },
+    "PersonGender": {
+      "$Kind": "EnumType",
+      "Male": 0,
+      "Female": 1,
+      "Unknown": 2
+    },
+    "Feature": {
+      "$Kind": "EnumType",
+      "Feature1": 0,
+      "Feature2": 1,
+      "Feature3": 2,
+      "Feature4": 3
+    },
+    "GetPersonWithMostFriends": [
+      {
+        "$Kind": "Function",
+        "$ReturnType": {
+          "$Type": "Trippin.Person",
+          "$Nullable": true
+        }
+      }
+    ],
+    "GetNearestAirport": [
+      {
+        "$Kind": "Function",
+        "$Parameter": [
+          {
+            "$Name": "lat",
+            "$Type": "Edm.Double"
+          },
+          {
+            "$Name": "lon",
+            "$Type": "Edm.Double"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Trippin.Airport",
+          "$Nullable": true
+        }
+      }
+    ],
+    "GetFavoriteAirline": [
+      {
+        "$Kind": "Function",
+        "$EntitySetPath": "person",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "person",
+            "$Type": "Trippin.Person",
+            "$Nullable": true
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Trippin.Airline",
+          "$Nullable": true
+        }
+      }
+    ],
+    "GetFriendsTrips": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "person",
+            "$Type": "Trippin.Person",
+            "$Nullable": true
+          },
+          {
+            "$Name": "userName",
+            "$Unicode": false
+          }
+        ],
+        "$ReturnType": {
+          "$Collection": true,
+          "$Type": "Trippin.Trip"
+        }
+      }
+    ],
+    "GetInvolvedPeople": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "trip",
+            "$Type": "Trippin.Trip",
+            "$Nullable": true
+          }
+        ],
+        "$ReturnType": {
+          "$Collection": true,
+          "$Type": "Trippin.Person"
+        }
+      }
+    ],
+    "ResetDataSource": [
+      {
+        "$Kind": "Action"
+      }
+    ],
+    "UpdateLastName": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "person",
+            "$Type": "Trippin.Person",
+            "$Nullable": true
+          },
+          {
+            "$Name": "lastName",
+            "$Unicode": false
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Boolean"
+        }
+      }
+    ],
+    "ShareTrip": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "personInstance",
+            "$Type": "Trippin.Person",
+            "$Nullable": true
+          },
+          {
+            "$Name": "userName",
+            "$Unicode": false
+          },
+          {
+            "$Name": "tripId",
+            "$Type": "Edm.Int32"
+          }
+        ]
+      }
+    ],
+    "Container": {
+      "$Kind": "EntityContainer",
+      "People": {
+        "$Collection": true,
+        "$Type": "Trippin.Person",
+        "$NavigationPropertyBinding": {
+          "BestFriend": "People",
+          "Friends": "People",
+          "Trippin.Employee/Peers": "People",
+          "Trippin.Manager/DirectReports": "People"
+        }
+      },
+      "Airlines": {
+        "$Collection": true,
+        "$Type": "Trippin.Airline",
+        "@Org.OData.Core.V1.OptimisticConcurrency": [
+          "Name"
+        ]
+      },
+      "Airports": {
+        "$Collection": true,
+        "$Type": "Trippin.Airport"
+      },
+      "Me": {
+        "$Type": "Trippin.Person",
+        "$NavigationPropertyBinding": {
+          "BestFriend": "People",
+          "Friends": "People",
+          "Trippin.Employee/Peers": "People",
+          "Trippin.Manager/DirectReports": "People"
+        }
+      },
+      "GetPersonWithMostFriends": {
+        "$Function": "Trippin.GetPersonWithMostFriends",
+        "$EntitySet": "People"
+      },
+      "GetNearestAirport": {
+        "$Function": "Trippin.GetNearestAirport",
+        "$EntitySet": "Airports"
+      },
+      "ResetDataSource": {
+        "$Action": "Trippin.ResetDataSource"
+      }
+    }
+  },
+  "$EntityContainer": "Trippin.Container"
+}

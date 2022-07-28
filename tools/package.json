@@ -1,6 +1,7 @@
 {
   "name": "rsdl-tools",
   "workspaces": [
+    "rsdl/csdl-xml",
     "odataUri",
     "urlEditor",
     "visualModelEditor",

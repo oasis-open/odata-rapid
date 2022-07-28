@@ -8,6 +8,7 @@
     "@babel/plugin-transform-typescript": "7.14.6",
     "@parcel/transformer-sass": "2.6.2",
     "bootstrap": "5.0.2",
+    "csdl2xml": "file:../rsdl/csdl-xml",
     "highlight.js": "11.1.0",
     "odata-openapi": "0.8.0",
     "odata-url-editor": "file:../urlEditor",

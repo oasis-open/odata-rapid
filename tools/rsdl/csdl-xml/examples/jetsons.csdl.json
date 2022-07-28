@@ -1,0 +1,105 @@
+{
+  "$Version": "4.0",
+  "$EntityContainer": "Jetsons.Service",
+  "Jetsons": {
+    "company": {
+      "$Kind": "EntityType",
+      "$OpenType": true,
+      "$Key": [
+        "stockSymbol"
+      ],
+      "stockSymbol": {},
+      "name": {},
+      "incorporated": {
+        "$Type": "Edm.Date"
+      },
+      "employees": {
+        "$Collection": true,
+        "$Type": "Jetsons.employee",
+        "$Kind": "NavigationProperty",
+        "$ContainsTarget": true
+      },
+      "test": {
+        "$Collection": true,
+        "$Type": "Edm.Int32"
+      },
+      "ceo": {
+        "$Type": "Jetsons.employee",
+        "$Kind": "NavigationProperty",
+        "$ContainsTarget": true
+      }
+    },
+    "employee": {
+      "$Kind": "EntityType",
+      "$OpenType": true,
+      "$Key": [
+        "id"
+      ],
+      "id": {
+        "$Type": "Edm.Int32"
+      },
+      "key": {
+        "$Type": "Edm.Boolean"
+      },
+      "name": {
+        "$Type": "Model.name"
+      },
+      "title": {}
+    },
+    "fire": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Jetsons.employee"
+          },
+          {
+            "$Name": "date",
+            "$Nullable": true,
+            "$Type": "Edm.Date"
+          }
+        ]
+      }
+    ],
+    "promote": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Jetsons.employee"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Int32"
+        }
+      }
+    ],
+    "name": {
+      "$Kind": "ComplexType",
+      "$OpenType": true,
+      "firstName": {},
+      "middleInitial": {
+        "$Nullable": true
+      },
+      "lastName": {},
+      "title": {
+        "$Nullable": true
+      }
+    },
+    "Service": {
+      "$Kind": "EntityContainer",
+      "competitors": {
+        "$Collection": true,
+        "$Type": "Jetsons.company"
+      },
+      "company": {
+        "$Type": "Jetsons.company"
+      }
+    }
+  }
+}

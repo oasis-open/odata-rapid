@@ -2,6 +2,8 @@ import SwaggerUI from "swagger-ui";
 import { App, Listener } from "./app";
 import { csdl2openapi } from "odata-openapi/lib/csdl2openapi";
 import { parse } from "rsdl-js/lib/parser";
+import { serializeToXml } from "csdl2xml";
+
 
 class ViewerListener extends Listener {
   private host: string;
@@ -27,7 +29,7 @@ class ViewerListener extends Listener {
     // set content for CSDL, CSDL-XML, and OpenAPI tabs
     this.config.openApiTabContent.innerHTML = JSON.stringify(openapi, null, 2);
     this.config.csdlTabContent.innerHTML = JSON.stringify(csdlJson, null, 2);
-    this.config.csdlXmlTabContent.innerHTML = xml;
+    this.config.csdlXmlTabContent.innerText = xml;
 
     // update SwaggerUI content
     SwaggerUI({
@@ -61,14 +63,13 @@ function convert2csdl(rsdl: string) {
   }
 }
 
-function convert2csdlxml(csdl: string) {
+function convert2csdlxml(csdl) {
   try {
-    const xml = "not supported";
-    // todo: insert json-xml csdl converter logic
+    const xml = serializeToXml(csdl);
     return xml;
   } catch (e) {
     console.error(e);
-    return;
+    return e;
   }
 }
 

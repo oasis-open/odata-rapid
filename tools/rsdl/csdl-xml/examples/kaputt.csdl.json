@@ -1,0 +1,9 @@
+{
+  "$Version": "4.0",
+  "Model": {
+    "kaputt": {
+      "$Kind": "ComplexType",
+      "$OpenType": true
+    }
+  }
+}
