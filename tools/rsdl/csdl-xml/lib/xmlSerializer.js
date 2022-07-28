@@ -65,7 +65,7 @@ function serializeToXml(jsonCsdl, pretty = true)
           writeEntityContainer(schema, key, modelElement);
           break;
         default:
-          console.log("Unexpected Schema Element ${key}");
+          console.log(`Unexpected Schema Element ${key}`);
       }
     }
   }
@@ -349,7 +349,7 @@ function writeEntitySetOrSingleton(modelElement, entitySetOrSingleton)
           }
           else
           {
-            console.log("Unsupported property on entity set or singleton ${key}.");
+            console.log(`Unsupported property on entity set or singleton ${key}.`);
           }
     }
   }
@@ -541,7 +541,7 @@ function writeOperation(operationElement, operation)
         }
         else
         {
-          console.log("Not Implemented Operation Attribute ${key}.");
+          console.log(`Not Implemented Operation Attribute ${key}.`);
         }
     }
   }
@@ -628,7 +628,7 @@ function writeAnnotation(xmlElement, term, annotationValue)
       break;
     break;
       default:
-        console.log("Annotation type ${typeof(annotationValue)} not supported for term ${term}.");
+        console.log(`Annotation type ${typeof(annotationValue)} not supported for term ${term}.`);
   }
 }
 
