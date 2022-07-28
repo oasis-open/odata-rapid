@@ -6,8 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-rsdl-parser": "lezer-generator ./src/lang-rsdl/lezer-rsdl.grammar -o src/lang-rsdl/parser.js --noTerms",
-    "build": "npm run generate-rsdl-parser && rollup --config rollup.config.cjs"
+    "build": "rimraf dist && rollup --config rollup.config.cjs"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -16,10 +15,10 @@
     "codemirror": "^6"
   },
   "devDependencies": {
-    "@lezer/generator": "^1.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@tsconfig/recommended": "^1.0.1",
+    "rimraf": "^3.0.2",
     "rollup": "^2.77.1",
     "ts-loader": "^9.2.6",
     "tslib": "^2.3.1",
