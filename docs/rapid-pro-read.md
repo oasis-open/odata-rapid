@@ -18,13 +18,13 @@ RAPID services support retrieving a resource using the GET method, then returnin
 
 <InteractiveQuerying defaultQuery="company" id="1"/>
 
-RAPID responses are self-describing. 
-The first line says that the response is described by the `company` singleton defined in the `$metadata` resource. 
+RAPID responses are self-describing.
+The first line says that the response is described by the `company` singleton defined in the `$metadata` resource.
 The `$metadata` resource may be represented as a relative or absolute URL.
 
 RAPID uses properties prefixed with the `@` symbol to denote control information that is not part of the data.
 
-RAPID payloads use native JSON types for string, boolean, and double values. 
+RAPID payloads use native JSON types for string, boolean, and double values.
 Dates, Times, and DateTimeOffset values are represented as ISO-8601 strings.
 
 ### Selecting Individual Properties of a Resource
@@ -45,10 +45,10 @@ Related resources can be retrieved as nested resources through the `expand` quer
 
 <InteractiveQuerying defaultQuery="company?expand=employees" id="3"/>
 
-The context property specifies that the `employees` are expanded within the `company`. 
+The context property specifies that the `employees` are expanded within the `company`.
 Because the next link refers to the nested `employees` property, the `nextLink` property is prefixed with the name of the nested property.
 
-When expanding related resources, 
+When expanding related resources,
 you can express the same options for the related resource that you can for any other resource path.
 
 <TemplateRequest command="GET" query="{collection-resource-path}?expand={navigationProp(queryOptions),…}"/>
@@ -57,14 +57,14 @@ you can express the same options for the related resource that you can for any o
 
 ## Retrieving a Collection of Resources
 
-RAPID services return collections of resources as a JSON array:                                              
+RAPID services return collections of resources as a JSON array:
 
 <TemplateRequest command="GET" query="{collection-resource-path}"/>
 
 <InteractiveQuerying defaultQuery="company/employees" id="5"/>
 
 If the result is large, the service may include a next link to tell the client that there are more items in the collection.
-The value of the next link is an opaque URL that the client can use to retrieve the next set of resources from the collection. 
+The value of the next link is an opaque URL that the client can use to retrieve the next set of resources from the collection.
 The absence of the next link signals the client that they have retrieved all of the resources in the collection.
 
 ### Retrieving an Individual Member of a Collection
@@ -101,7 +101,7 @@ They can use the `count` query option to request the count of all resources in t
 
 The `skip` option is used to specify how many members at the beginning of a collection to ignore; `top` refers to how many members to return from the beginning of the remaining collection. Therefore, in this example, the result skips the first member and returns the next two.
 
-The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`. 
+The `@count` property denotes the total number of resources in the collection, and is not affected by `skip` or `top`.
 There is no next link because all two of the requested resources are returned.
 
 ### Ordering Results
@@ -126,13 +126,13 @@ The client can use the `filter` query option to filter the results returned from
 
 In this case, there is no next link since all of the resources matching the filter predicate were returned inline.
 
-There is a full expression language to describe what the client can express in the filter. 
+There is a full expression language to describe what the client can express in the filter.
 For more information, see [RAPID Expression Language](./spec/rapid-pro-expression_language.md)
 
 ## Combining Query Options
 
-Query options can be combined using the ampersand (`&`). 
-To comply with URL parsing rules, query options within an expand clause are separated using semi-colons (`;`). 
+Query options can be combined using the ampersand (`&`).
+To comply with URL parsing rules, query options within an expand clause are separated using semi-colons (`;`).
 The order of query options is not significant.
 
 <TemplateRequest command="GET" query="{resource-path}?select={propertyName,…}&expand={navigationProperty(queryOptions),…}"/>
@@ -142,7 +142,7 @@ The order of query options is not significant.
 ## Passing Query Strings in the Body
 
 Don't like long query strings? No problem!
-RAPID allows you to pass the query string in the body, making it easy to write and format as text. 
+RAPID allows you to pass the query string in the body, making it easy to write and format as text.
 The target is still the resource being queried or modified, making it easy to route the request,
 and the syntax is the same, making it easy to execute.
 
@@ -156,4 +156,3 @@ and the syntax is the same, making it easy to execute.
     &expand=employees(
                 select=firstName;
                 filter=lastName eq 'Jetson')
-

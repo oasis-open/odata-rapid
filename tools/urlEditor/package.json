@@ -11,7 +11,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@codemirror/basic-setup": "^0.18.2",
+    "codemirror": "^6",
     "odata-csdl": "^0.4.4",
     "odata-uri": "file:../odataUri",
     "process": "^0.11.10",

@@ -9,14 +9,15 @@
     "api-designer"
   ],
   "scripts": {
-    "clean": "npx rimraf */.parcel-cache */dist */dist-dev */node_modules .parcel-cache coverage node_modules ",
+    "clean": "rimraf */.parcel-cache */dist */dist-dev */node_modules .parcel-cache coverage node_modules ",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
     "api-explorer": "cd api-explorer && npm start",
     "test": "c8 mocha -r ts-node/register */test/**/*.test.ts"
   },
-  "dependencies": {
-    "patch-package": "^6.4.7"
+  "devDependencies": {
+    "patch-package": "^6.4.7",
+    "rimraf": "^3.0.2"
   }
 }

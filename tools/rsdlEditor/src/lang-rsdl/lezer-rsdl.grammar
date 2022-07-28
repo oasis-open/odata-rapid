@@ -48,7 +48,7 @@ ServiceDefinition {
 
 ServiceBodyDefinition {
   TypeBodyDefinition |
-  EnumDefinition |
+  EnumDefinition
 }
 
 TypeBodyDefinition {
@@ -82,7 +82,7 @@ OptionalType {
 }
 
 FunctionDefinition {
-  kw<"function"> Identifier FormalParameters ":" FieldType 
+  kw<"function"> Identifier FormalParameters ":" FieldType
 }
 
 ActionDefinition {
@@ -111,7 +111,7 @@ NumberLiteral {
 }
 
 Literal {
-  kw<"true"> | 
+  kw<"true"> |
   kw<"false"> |
   kw<"null"> |
   NumberLiteral |

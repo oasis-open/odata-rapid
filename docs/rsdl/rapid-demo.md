@@ -10,15 +10,15 @@ title: RSDL syntax highlighting demo
 # comment
 abstract type Entity
 {
-    key id: String
+  key id: String
 }
 
 @Edm.Description: "the company entity"
 type Company extends Entity
 {
-    stockSymbol: String
-    name: String
-    incorporated: Date
+  stockSymbol: String
+  name: String
+  incorporated: Date
 }
 
 ## an enumeration
@@ -26,16 +26,16 @@ enum { a b c d }
 
 
 path /foo/bar/baz {
-    GET {
-        expand {}
-        filter { 
-            eq: {foo bar baz}
-            range: {foo bar baz}
-        }
-        paging 
+  GET {
+    expand {}
+    filter {
+      eq: {foo bar baz}
+      range: {foo bar baz}
     }
-    POST {
+    paging
+  }
+  POST {
 
-    }
+  }
 }
 ```
