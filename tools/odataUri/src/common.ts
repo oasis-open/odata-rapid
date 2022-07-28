@@ -1,11 +1,11 @@
 export interface IError {
-    message: string;
-    range: {
-        start: number;
-        stop: number;
-    }
+  message: string;
+  range: {
+    start: number;
+    stop: number;
+  };
 }
 
 export function peekStack<T>(stack: T[]): T {
-    return stack[stack.length - 1];
+  return stack[stack.length - 1];
 }

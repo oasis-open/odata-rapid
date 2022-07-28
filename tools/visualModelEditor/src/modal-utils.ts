@@ -1,6 +1,13 @@
-import { ModelTypeKind, NormalizedEdmModel, NormalizedEdmModelType } from './mermaid-editor-utils';
+import {
+  ModelTypeKind,
+  NormalizedEdmModel,
+  NormalizedEdmModelType,
+} from "./mermaid-editor-utils";
 export interface ITypeEditor {
-  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string;
+  getEditor(
+    edmType: NormalizedEdmModelType,
+    schema: NormalizedEdmModel
+  ): string;
   getEdmType(): NormalizedEdmModelType;
 }
 
@@ -9,7 +16,10 @@ export class DefaultTypeEditor implements ITypeEditor {
   constructor(typeKind: ModelTypeKind) {
     this._typeKind = typeKind;
   }
-  getEditor(edmType: NormalizedEdmModelType, schema: NormalizedEdmModel): string {
+  getEditor(
+    edmType: NormalizedEdmModelType,
+    schema: NormalizedEdmModel
+  ): string {
     return `<pre>${JSON.stringify(edmType, null, 2)}</pre>`;
   }
   getEdmType(): NormalizedEdmModelType {
@@ -19,19 +29,18 @@ export class DefaultTypeEditor implements ITypeEditor {
 
 export function getPropertyFromEditor(editorElement: HTMLElement) {
   const pkInput = editorElement.querySelector<HTMLInputElement>(
-    'input[type=checkbox].pk-data'
+    "input[type=checkbox].pk-data"
   );
   const nameInput = editorElement.querySelector<HTMLInputElement>(
-    'input[type=text].name-data'
+    "input[type=text].name-data"
   );
-  const typeInput = editorElement.querySelector<HTMLSelectElement>(
-    'select.type-data'
-  );
+  const typeInput =
+    editorElement.querySelector<HTMLSelectElement>("select.type-data");
   const collectionInput = editorElement.querySelector<HTMLInputElement>(
-    'input[type=checkbox].collection-data'
+    "input[type=checkbox].collection-data"
   );
   const nullableInput = editorElement.querySelector<HTMLInputElement>(
-    'input[type=checkbox].nullable-data'
+    "input[type=checkbox].nullable-data"
   );
 
   const property = {} as any;

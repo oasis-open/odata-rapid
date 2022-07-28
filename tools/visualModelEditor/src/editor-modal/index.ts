@@ -1,13 +1,13 @@
-import { Modal, Tooltip } from 'bootstrap';
+import { Modal, Tooltip } from "bootstrap";
 import {
   $TypeOptions,
   objectEntries,
   NormalizedEdmModel,
   NormalizedEdmModelType,
   ModelTypeKind,
-  getModel
-} from '../mermaid-editor-utils';
-import { ITypeEditor, DefaultTypeEditor } from './modal-utils';
+  getModel,
+} from "../mermaid-editor-utils";
+import { ITypeEditor, DefaultTypeEditor } from "./modal-utils";
 import {
   enumTypeFunction,
   enumMemberFunction,
@@ -15,11 +15,11 @@ import {
   structuredTypeFunction,
   operationFunction,
   entityContainerFunction,
-} from '../templates';
+} from "../templates";
 
-import { EnumTypeEditor } from './enum-type-editor';
-import { ComplexTypeEditor, EntityTypeEditor } from './structured-type-editor';
-import { EntityContainerTypeEditor } from './entity-container-type-editor';
+import { EnumTypeEditor } from "./enum-type-editor";
+import { ComplexTypeEditor, EntityTypeEditor } from "./structured-type-editor";
+import { EntityContainerTypeEditor } from "./entity-container-type-editor";
 
 export class EditorModal {
   private readonly _modal: Modal;
@@ -36,14 +36,14 @@ export class EditorModal {
 
   constructor(element: HTMLElement) {
     this._modal = new Modal(element);
-    this._modelLabel = element.querySelector('#modelLabel');
+    this._modelLabel = element.querySelector("#modelLabel");
     const deleteElementButton = element.querySelector<HTMLButtonElement>(
-      '#deleteElementButton'
+      "#deleteElementButton"
     );
 
-    deleteElementButton.addEventListener('click', () => this.delete());
+    deleteElementButton.addEventListener("click", () => this.delete());
 
-    const modelEditor = element.querySelector<HTMLFormElement>('#modelEditor');
+    const modelEditor = element.querySelector<HTMLFormElement>("#modelEditor");
     this._modelEditor = modelEditor;
 
     this._enumTypeEditor = new EnumTypeEditor(modelEditor);
@@ -53,17 +53,17 @@ export class EditorModal {
       modelEditor
     );
 
-    modelEditor.addEventListener('click', (event) => {
+    modelEditor.addEventListener("click", (event) => {
       const button = event.target as HTMLButtonElement;
       if (!button) {
         return;
       }
 
       switch (button.dataset.modalCommand) {
-        case 'remove':
+        case "remove":
           this.removeDataRow(button);
           return;
-        case 'add':
+        case "add":
           this.addDataRow(button);
           return;
         default:
@@ -71,7 +71,7 @@ export class EditorModal {
       }
     });
 
-    modelEditor.addEventListener('submit', (event) => {
+    modelEditor.addEventListener("submit", (event) => {
       event.preventDefault();
       event.stopPropagation();
       this.save();
@@ -100,7 +100,7 @@ export class EditorModal {
       .querySelectorAll('[data-bs-toggle="tooltip"]')
       .forEach((element) => new Tooltip(element));
 
-    modelEditor.classList.remove('was-validated');
+    modelEditor.classList.remove("was-validated");
 
     this._modelLabel.innerHTML = model.$Kind;
 
@@ -119,8 +119,8 @@ export class EditorModal {
   private save() {
     const modelEditor = this._modelEditor;
     if (!modelEditor.checkValidity()) {
-      modelEditor.classList.add('was-validated');
-      console.log('Not valid');
+      modelEditor.classList.add("was-validated");
+      console.log("Not valid");
       return;
     }
 
@@ -143,13 +143,13 @@ export class EditorModal {
 
   private getTypeEditor(typeKind: ModelTypeKind): ITypeEditor {
     switch (typeKind) {
-      case 'EnumType':
+      case "EnumType":
         return this._enumTypeEditor;
-      case 'ComplexType':
+      case "ComplexType":
         return this._complexTypeEditor;
-      case 'EntityType':
+      case "EntityType":
         return this._entityTypeEditor;
-      case 'EntityContainer':
+      case "EntityContainer":
         return this._entityContainerTypeEditor;
       default:
         return new DefaultTypeEditor(typeKind);
@@ -157,7 +157,7 @@ export class EditorModal {
   }
 
   private removeDataRow(button: HTMLButtonElement) {
-    const dataRow = button.closest('.data-row-container');
+    const dataRow = button.closest(".data-row-container");
     dataRow.parentNode.removeChild(dataRow);
   }
 
@@ -170,14 +170,14 @@ export class EditorModal {
     const schema = this._currentSchema;
     const index = this._globalIndex++;
 
-    const template = document.createElement('template');
+    const template = document.createElement("template");
 
     const schemaOptions = objectEntries(getModel(schema))
       .filter(
         ([name, item]) =>
-          item.$Kind === 'EntityType' ||
-          item.$Kind === 'ComplexType' ||
-          item.$Kind === 'EnumType'
+          item.$Kind === "EntityType" ||
+          item.$Kind === "ComplexType" ||
+          item.$Kind === "EnumType"
       )
       .map(([name, _]) => name)
       .sort();
@@ -190,7 +190,7 @@ export class EditorModal {
     }).trim();
 
     const dataRow = template.content.firstElementChild;
-    button.parentElement.insertAdjacentElement('beforebegin', dataRow);
+    button.parentElement.insertAdjacentElement("beforebegin", dataRow);
 
     dataRow
       .querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -201,24 +201,24 @@ export class EditorModal {
     let templateFunction: HandlebarsTemplateDelegate;
     let extraProps = {};
     switch (button.dataset.addType) {
-      case 'property':
+      case "property":
         templateFunction = propertyFunction;
         break;
-      case 'operation':
+      case "operation":
         templateFunction = operationFunction;
         break;
-      case 'enumMember':
+      case "enumMember":
         templateFunction = enumMemberFunction;
         break;
-      case 'inputParameter':
+      case "inputParameter":
         templateFunction = propertyFunction;
         break;
-      case 'navigationSource':
+      case "navigationSource":
         templateFunction = propertyFunction;
 
         const $TypeOptions = objectEntries(getModel(this._currentSchema))
           .filter(
-            ([name, item]) => name[0] !== '$' && item.$Kind === 'EntityType'
+            ([name, item]) => name[0] !== "$" && item.$Kind === "EntityType"
           )
           .map(([name, _]) => name);
 
