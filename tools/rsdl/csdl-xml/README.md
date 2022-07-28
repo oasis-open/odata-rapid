@@ -1,6 +1,6 @@
-# CSDL Xml Serializer
+# CSDL XML Serializer
 
-CSDL has a native in-memory and serialized JSON representation.  The CSDL XmlSerializer saves the in-memory JSON CSDL to XML.
+CSDL has a native in-memory and serialized JSON representation. The CSDL XmlSerializer saves the in-memory JSON CSDL to XML.
 
 ## Installation
 
@@ -50,6 +50,5 @@ node lib/cli.js ...
 
 Install
 
-- Java
 - Node.js
 - VS Code

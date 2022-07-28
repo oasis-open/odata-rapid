@@ -3,10 +3,9 @@
 
 //TODO: glob for source file patterns
 
-const { serializeToXml  } = require("./xmlSerializer");
+const { serializeToXml } = require("./xmlSerializer");
 const minimist = require("minimist");
 const fs = require("fs");
-const path = require("path");
 
 var unknown = false;
 

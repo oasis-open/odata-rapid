@@ -1,37 +1,38 @@
-var builder = require('xmlbuilder');
+const builder = require('xmlbuilder');
 
 function serializeToXml(jsonCsdl, pretty = true) 
 {
-  var entityContainerName = jsonCsdl.$EntityContainer;
-  var namespace = entityContainerName.substring(entityContainerName, entityContainerName.lastIndexOf('.'));
+  const entityContainerName = jsonCsdl.$EntityContainer;
+  const namespace = entityContainerName.substring(entityContainerName, entityContainerName.lastIndexOf('.'));
 
   // Write Edmx wrapper
   // <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   //   <edmx:DataServices>
 
-  var xmlElement = builder.begin().dec()
+  const xmlElement = builder.begin().dec()
     .ele('edmx:Edmx')
       .att('xmlns:edmx','http://docs.oasis-open.org/odata/ns/edmx')
       .att('Version','4.0');
 
   // Write References
-  if(jsonCsdl.$References != undefined)
+  if(jsonCsdl.$References)
   {
     writeReferences(xmlElement, jsonCsdl.$References);
   }
 
   // Write Schema Element
   //     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Jetsons">
-  var dataServiceElement = xmlElement.ele('Schema');
-  var schema = dataServiceElement
+  const dataServiceElement = xmlElement.ele('Schema');
+  const schema = dataServiceElement
     .att('xmlns','http://docs.oasis-open.org/odata/ns/edm')
     .att('Namespace', namespace);
 
-    var model = jsonCsdl[namespace];
+  const model = jsonCsdl[namespace];
+  
   // write model elements
-  Object.keys(model).forEach((key)=>
+  for(const key of Object.keys(model)) 
   {
-    var modelElement = model[key];
+    const modelElement = model[key];
     if (Array.isArray(modelElement))
     {
       handleOperation(schema, key, modelElement);
@@ -64,11 +65,10 @@ function serializeToXml(jsonCsdl, pretty = true)
           writeEntityContainer(schema, key, modelElement);
           break;
         default:
-          console.log("Unexpected Schema Element" + key);
+          console.log("Unexpected Schema Element ${key}");
       }
     }
   }
-  );
 
   return xmlElement.end(
     {
@@ -80,15 +80,15 @@ function writeEntityType(parentElement, name, type)
 {
   // write Entity element
   // <EntityType Name="Employee">
-  var entity = parentElement.ele('EntityType')
+  const entity = parentElement.ele('EntityType')
     .att('Name', name);
 
   // write Key element first
-  var keys = type.$Key;
-  if (keys != undefined && keys.length > 0)
+  const keys = type.$Key;
+  if (keys?.length > 0)
   {
     // <Key>
-    var keyElement = entity.ele('Key');
+    const keyElement = entity.ele('Key');
 
     keys.forEach((key)=>
     {
@@ -106,7 +106,7 @@ function writeComplexType(parentElement, typeName, type)
 {
   // write ComplexType element
   // <ComplexType Name="FullName">
-  var complex = parentElement.ele('ComplexType')
+  const complex = parentElement.ele('ComplexType')
     .att('Name', typeName);
 
   // write complex type
@@ -115,7 +115,7 @@ function writeComplexType(parentElement, typeName, type)
 
 function writeTypeMembers(typeElement, type)
 {
-  Object.keys(type).forEach((key)=>
+  for(const key of Object.keys(type))
   {
     switch(key)
     {
@@ -154,7 +154,7 @@ function writeTypeMembers(typeElement, type)
           writeProperty(typeElement, key, type[key]);
         }
     }
-  });
+  }
 }
 
 function writeProperty(typeElement, name, property)
@@ -179,7 +179,7 @@ function writeStructuralProperty(typeElement, propertyName, property)
 {
   // write Property
   // <Property Name="firstName" Type="Edm.String"/>
-  var propertyElement = typeElement.ele('Property')
+  const propertyElement = typeElement.ele('Property')
     .att('Name', propertyName);
 
   writeTypeUsage(propertyElement, property);
@@ -191,7 +191,7 @@ function writeNavigationProperty(typeElement, propertyName, property)
 {
   // write NavigationProperty
   // <NavigationProperty Name="employees" Type="Collection(Jetsons.Employee)"/>
-  var propertyElement = typeElement.ele('NavigationProperty')
+  const propertyElement = typeElement.ele('NavigationProperty')
     .att('Name', propertyName);
 
   // write common property attributes
@@ -213,8 +213,8 @@ function writeNavigationProperty(typeElement, propertyName, property)
 function writeTypeUsage(element, typeUsage)
 {
   // write Type attribute
-  var type = typeUsage.$Type == null ? "Edm.String" : typeUsage.$Type;
-  if (typeUsage.$Collection != undefined && typeUsage.$Collection == true)
+  let type = typeUsage.$Type == null ? "Edm.String" : typeUsage.$Type;
+  if (typeUsage.$Collection == true)
   {
     type = "Collection(" + type + ")";
   }
@@ -259,7 +259,7 @@ function writeEntityContainer(xmlElement, entityContainerName, entityContainer)
 {
   // Write Entity Container
   // <EntityContainer Name="Service">
-  var container = xmlElement.ele('EntityContainer')
+  const container = xmlElement.ele('EntityContainer')
     .att('Name', entityContainerName);
 
   // Write Extends
@@ -269,7 +269,7 @@ function writeEntityContainer(xmlElement, entityContainerName, entityContainer)
   }
 
   // Write Entity Container members
-  Object.keys(entityContainer).forEach((key)=>
+  for(const key of Object.keys(entityContainer))
   {
     if(key[0] == '@')
     {
@@ -277,7 +277,7 @@ function writeEntityContainer(xmlElement, entityContainerName, entityContainer)
     }
     else if(key[0] != '$')
     {
-      var containerMember = entityContainer[key];
+      const containerMember = entityContainer[key];
 
       // check for function
       if (containerMember.$Function != undefined)
@@ -303,14 +303,14 @@ function writeEntityContainer(xmlElement, entityContainerName, entityContainer)
         writeSingleton(container, key, containerMember);
       }
     } 
-  });
+  }
 }
 
 function writeEntitySet(schemaElement, name, entitySet)
 {
   // write Entity Set element
   // <EntitySet Name="competitors" EntityType="Jetsons.Company">
-  var entitySetElement = schemaElement.ele('EntitySet')
+  const entitySetElement = schemaElement.ele('EntitySet')
     .att('Name', name)
     .att('EntityType', entitySet.$Type);
   
@@ -321,7 +321,7 @@ function writeSingleton(schemaElement, name, singleton)
 {
     // write Singleton element
     // <Singleton Name="company" Type="Jetsons.Company">
-    var singletonElement = schemaElement.ele('Singleton')
+    const singletonElement = schemaElement.ele('Singleton')
       .att('Name', name)
       .att('Type', singleton.$Type);
 
@@ -330,7 +330,7 @@ function writeSingleton(schemaElement, name, singleton)
 
 function writeEntitySetOrSingleton(modelElement, entitySetOrSingleton)
 {
-  Object.keys(entitySetOrSingleton).forEach((key)=>
+  for(const key of Object.keys(entitySetOrSingleton))
   {
     switch(key)
     {
@@ -349,30 +349,30 @@ function writeEntitySetOrSingleton(modelElement, entitySetOrSingleton)
           }
           else
           {
-            console.log("Unsupported property on entity set or singleton: " + key);
+            console.log("Unsupported property on entity set or singleton ${key}.");
           }
     }
-  });
+  }
 }
 
 function writeNavigationPropertyBindings(modelElement, navigationPropertyBindings)
 {
   // write navigation property bindings
   // <NavigationPropertyBinding Path="company" Target="Companies" />
-  Object.keys(navigationPropertyBindings).forEach((key)=>
+  for(const key of Object.keys(navigationPropertyBindings))
   {
       modelElement.ele('NavigationPropertyBinding')
         .att('Path', key)
         .att('Target', navigationPropertyBindings[key]);
-  });
+  }
 }
 
 function writeEnumType(schemaElement, name, enumType)
 {
   //<EnumType Name="Type" Flags="true">
-  var enumElement = schemaElement.ele('EnumType');
+  const enumElement = schemaElement.ele('EnumType');
 
-  Object.keys(enumType).forEach((key)=>
+  for(const key of Object.keys(enumType))
   {
     switch(key)
     {
@@ -395,18 +395,18 @@ function writeEnumType(schemaElement, name, enumType)
           .att('Value',enumType[key]);
         }
     }
-  });
+  }
 }
 
 function writeReferences(xmlElement, references)
 {
   // write schema references
-  Object.keys(references).forEach((key)=>
+  for(const key of Object.keys(references))
   {    
-    var reference = references[key];
+    const reference = references[key];
     // <edmx:Reference Uri="Jetsons.azurewebsites.com"> 
 
-    var referenceElement = xmlElement.ele('edmx:Reference')
+    const referenceElement = xmlElement.ele('edmx:Reference')
       .att('Uri', key)
 
     if(reference.$Include != undefined)
@@ -431,7 +431,7 @@ function writeReferences(xmlElement, references)
           .att('TargetNamespace', includeAnnotation.$TargetNamespace)
       });
     }  
-  });
+  }
 }
 
 function handleOperation(schema, name, operation)
@@ -454,7 +454,7 @@ function writeAction(schemaElement, name, actionDefinition)
 {
   // write action
   // <Action Name='youreFired' IsBound="true">
-  var action = schemaElement.ele('Action')
+  const action = schemaElement.ele('Action')
     .att('Name', name);
 
   writeOperation(action, actionDefinition);
@@ -464,7 +464,7 @@ function writeFunction(schemaElement, name, functionDefinition)
 {
   // write function
   // <Function Name='youreFired' IsBound="true">
-  var functionElement = schemaElement.ele('Function')
+  const functionElement = schemaElement.ele('Function')
     .att('Name', name);
 
   writeOperation(functionElement, functionDefinition);
@@ -473,7 +473,7 @@ function writeFunction(schemaElement, name, functionDefinition)
 function writeActionImport(entityContainer, importName, actionDefinition)
 {
   // <ActionImport Name="yourFired" Action="Jetsons.yourFired" EntitySet="companies"/>
-  var actionImport = entityContainer.ele('ActionImport')
+  const actionImport = entityContainer.ele('ActionImport')
     .att('Name', importName)
     .att('Action', actionDefinition.$Actioin);
 
@@ -487,12 +487,12 @@ function writeActionImport(entityContainer, importName, actionDefinition)
 function writeFunctionImport(entityContainer, name, functionDefinition)
 {
   // <FunctionImport Name="TopEmployees" Action="Jetsons.topEmployees" EntitySet="companies" IncludeInServiceDocument="true"/>
-  var functionImport = entityContainer.ele('FunctionImport')
+  const functionImport = entityContainer.ele('FunctionImport')
     .att('Name', name)
     .att('Function', functionDefinition.$Function);
 
   // write IncludeInServiceDocument attribute
-  if(functionDefinition.$IncludeInServiceDocument != undefined && functionDefinition.$IncludeInServiceDocument == false)
+  if(functionDefinition.$IncludeInServiceDocument == false)
   {
     functionImport.att('IncludeInServiceDocument', 'false');
   }
@@ -506,7 +506,7 @@ function writeFunctionImport(entityContainer, name, functionDefinition)
 
 function writeOperation(operationElement, operation)
 {
-  Object.keys(operation).forEach((key)=>
+  for(const key of Object.keys(operation))
   {
     switch(key)
     {
@@ -541,17 +541,17 @@ function writeOperation(operationElement, operation)
         }
         else
         {
-          console.log("Not Implemented Operation Attribute: " + key);
+          console.log("Not Implemented Operation Attribute ${key}.");
         }
     }
-  });
+  }
 }
 
 function writeReturnType(operationElement, returnType)
 {
   // write ReturnType element
   // <ReturnType Type="Collection(Jetsons.Employee)"/>
-  var returnElement = operationElement.ele('ReturnType');
+  const returnElement = operationElement.ele('ReturnType');
 
   writeTypeUsage(returnElement, returnType);
 }
@@ -562,7 +562,7 @@ function writeParameters(operationElement, parameters)
   { 
     // write parameter
     // <Parameter Name="company" Type="Jetsons.Company"/>
-    var parameterElement = operationElement.ele('Parameter')
+    const parameterElement = operationElement.ele('Parameter')
       .att('Name', parameter.$Name);
   
     writeTypeUsage(parameterElement, parameter);
@@ -578,29 +578,28 @@ function writeAnnotationsElement(schemaElement, annotations)
 {
   // write Annotation element
   // <Annotations Target="employees">
-  var annotationsElement = schemaElement.ele('Annotations')
+  const annotationsElement = schemaElement.ele('Annotations')
   
-  Object.keys(annotations).forEach((key)=>
+  for(const key of Object.keys(annotations))
   {
-    var annotationElement = annotationsElement.ele('Annotation')
+    const annotationElement = annotationsElement.ele('Annotation')
       .att('Target', key);
     
     writeAnnotations(annotationElement, annotations[key]);
-  });
-  
+  }
 }
 
 function writeAnnotations(xmlElement, modelElement)
 {
   // writeAnnotations
   // <Annotation Term="Org.OData.Core.V1.Description" String="description"/>
-  Object.keys(modelElement).forEach((term)=>
+  for(const term of Object.keys(modelElement))
   {
     if(term[0]=='@')
     {
       writeAnnotation(xmlElement, term, modelElement[term]);
     }    
-  });
+  }
 }
 
 function writeAnnotation(xmlElement, term, annotationValue)
@@ -629,7 +628,7 @@ function writeAnnotation(xmlElement, term, annotationValue)
       break;
     break;
       default:
-        console.log("Annotation type " + typeof(annotationValue) + " not supported for term " + term);
+        console.log("Annotation type ${typeof(annotationValue)} not supported for term ${term}.");
   }
 }
 

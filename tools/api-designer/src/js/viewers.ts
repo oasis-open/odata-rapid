@@ -65,9 +65,8 @@ function convert2csdl(rsdl: string) {
 
 function convert2csdlxml(csdl) {
   try {
-    const xml = serializeToXml(csdl);
-    return xml;
-  } catch (e) {
+    return serializeToXml(csdl);
+   } catch (e) {
     console.error(e);
     return e;
   }
