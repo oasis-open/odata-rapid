@@ -11,8 +11,11 @@ function serializeToXml(jsonCsdl, pretty = true)
 
   const xmlElement = builder.begin().dec()
     .ele('edmx:Edmx')
-      .att('xmlns:edmx','http://docs.oasis-open.org/odata/ns/edmx')
-      .att('Version','4.0');
+      .att('xmlns:edmx','http://docs.oasis-open.org/odata/ns/edmx');
+
+  // Write Version
+  const version = jsonCsdl.$Version;
+  xmlElement.att('Version', version == undefined ? "4.0" : version);
 
   // Write References
   if(jsonCsdl.$References)

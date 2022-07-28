@@ -1,0 +1,1 @@
+{"$Version":"4.0","$Reference":{"foo-bar.rsdl":{"$Include":[{"$Namespace":"foo.bar","$Alias":"foobar"}]},"other/baz.rsdl":{"$Include":[{"$Namespace":"dot.dot.baz","$Alias":"hwga"}]}},"Model":{}}

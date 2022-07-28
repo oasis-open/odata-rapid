@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Trippin">
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="UserName"/>
+        </Key>
+        <Property Name="UserName" Type="Edm.String" Nullable="false"/>
+        <Property Name="FirstName" Type="Edm.String" Nullable="false"/>
+        <Property Name="LastName" Type="Edm.String" Nullable="false"/>
+        <Property Name="MiddleName" Type="Edm.String" Nullable="false"/>
+        <Property Name="Gender" Type="Trippin.PersonGender" Nullable="false"/>
+        <Property Name="Age" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="Emails" Type="Collection(Edm.String)" Nullable="false"/>
+        <Property Name="AddressInfo" Type="Collection(Trippin.Location)" Nullable="false"/>
+        <Property Name="HomeAddress" Type="Trippin.Location" Nullable="false"/>
+        <Property Name="FavoriteFeature" Type="Trippin.Feature" Nullable="false"/>
+        <Property Name="Features" Type="Collection(Trippin.Feature)" Nullable="false"/>
+        <NavigationProperty Name="Friends" Type="Collection(Trippin.Person)" Nullable="false"/>
+        <NavigationProperty Name="BestFriend" Type="Trippin.Person" Nullable="false"/>
+        <NavigationProperty Name="Trips" Type="Collection(Trippin.Trip)" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Airline">
+        <Key>
+          <PropertyRef Name="AirlineCode"/>
+        </Key>
+        <Property Name="AirlineCode" Type="Edm.String" Nullable="false"/>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Airport">
+        <Key>
+          <PropertyRef Name="IcaoCode"/>
+        </Key>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="IcaoCode" Type="Edm.String" Nullable="false"/>
+        <Property Name="IataCode" Type="Edm.String" Nullable="false"/>
+        <Property Name="Location" Type="Trippin.AirportLocation" Nullable="false"/>
+      </EntityType>
+      <ComplexType Name="Location">
+        <Property Name="Address" Type="Edm.String" Nullable="false"/>
+        <Property Name="City" Type="Trippin.City" Nullable="false"/>
+      </ComplexType>
+      <ComplexType Name="City">
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="CountryRegion" Type="Edm.String" Nullable="false"/>
+        <Property Name="Region" Type="Edm.String" Nullable="false"/>
+      </ComplexType>
+      <ComplexType Name="AirportLocation" BaseType="Trippin.Location">
+        <Property Name="Loc" Type="Edm.GeographyPoint" Nullable="false"/>
+      </ComplexType>
+      <ComplexType Name="EventLocation" BaseType="Trippin.Location">
+        <Property Name="BuildingInfo" Type="Edm.String" Nullable="false"/>
+      </ComplexType>
+      <EntityType Name="Trip">
+        <Key>
+          <PropertyRef Name="TripId"/>
+        </Key>
+        <Property Name="TripId" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="ShareId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="Budget" Type="Edm.Single" Nullable="false"/>
+        <Property Name="Description" Type="Edm.String" Nullable="false"/>
+        <Property Name="Tags" Type="Collection(Edm.String)" Nullable="false"/>
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <NavigationProperty Name="PlanItems" Type="Collection(Trippin.PlanItem)" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="PlanItem">
+        <Key>
+          <PropertyRef Name="PlanItemId"/>
+        </Key>
+        <Property Name="PlanItemId" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="ConfirmationCode" Type="Edm.String" Nullable="false"/>
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="Duration" Type="Edm.Duration" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Event" BaseType="Trippin.PlanItem">
+        <Property Name="OccursAt" Type="Trippin.EventLocation" Nullable="false"/>
+        <Property Name="Description" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="PublicTransportation" BaseType="Trippin.PlanItem">
+        <Property Name="SeatNumber" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Flight" BaseType="Trippin.PublicTransportation">
+        <Property Name="FlightNumber" Type="Edm.String" Nullable="false"/>
+        <NavigationProperty Name="Airline" Type="Trippin.Airline" Nullable="false"/>
+        <NavigationProperty Name="From" Type="Trippin.Airport" Nullable="false"/>
+        <NavigationProperty Name="To" Type="Trippin.Airport" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Employee" BaseType="Trippin.Person">
+        <Property Name="Cost" Type="Edm.Int64" Nullable="false"/>
+        <NavigationProperty Name="Peers" Type="Collection(Trippin.Person)" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Manager" BaseType="Trippin.Person">
+        <Property Name="Budget" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="BossOffice" Type="Trippin.Location" Nullable="false"/>
+        <NavigationProperty Name="DirectReports" Type="Collection(Trippin.Person)" Nullable="false"/>
+      </EntityType>
+      <EnumType>
+        <Member Name="Male" Value="0"/>
+        <Member Name="Female" Value="1"/>
+        <Member Name="Unknown" Value="2"/>
+      </EnumType>
+      <EnumType>
+        <Member Name="Feature1" Value="0"/>
+        <Member Name="Feature2" Value="1"/>
+        <Member Name="Feature3" Value="2"/>
+        <Member Name="Feature4" Value="3"/>
+      </EnumType>
+      <Function Name="GetPersonWithMostFriends">
+        <ReturnType Type="Trippin.Person" Nullable="false"/>
+      </Function>
+      <Function Name="GetNearestAirport">
+        <Parameter Name="lat" Type="Edm.Double" Nullable="false"/>
+        <Parameter Name="lon" Type="Edm.Double" Nullable="false"/>
+        <ReturnType Type="Trippin.Airport" Nullable="false"/>
+      </Function>
+      <Function Name="GetFavoriteAirline" EntitySetPath="person" IsBound="true">
+        <Parameter Name="person" Type="Trippin.Person" Nullable="false"/>
+        <ReturnType Type="Trippin.Airline" Nullable="false"/>
+      </Function>
+      <Function Name="GetFriendsTrips" IsBound="true">
+        <Parameter Name="person" Type="Trippin.Person" Nullable="false"/>
+        <Parameter Name="userName" Type="Edm.String" Nullable="false"/>
+        <ReturnType Type="Collection(Trippin.Trip)" Nullable="false"/>
+      </Function>
+      <Function Name="GetInvolvedPeople" IsBound="true">
+        <Parameter Name="trip" Type="Trippin.Trip" Nullable="false"/>
+        <ReturnType Type="Collection(Trippin.Person)" Nullable="false"/>
+      </Function>
+      <Action Name="ResetDataSource"/>
+      <Action Name="UpdateLastName" IsBound="true">
+        <Parameter Name="person" Type="Trippin.Person" Nullable="false"/>
+        <Parameter Name="lastName" Type="Edm.String" Nullable="false"/>
+        <ReturnType Type="Edm.Boolean" Nullable="false"/>
+      </Action>
+      <Action Name="ShareTrip" IsBound="true">
+        <Parameter Name="personInstance" Type="Trippin.Person" Nullable="false"/>
+        <Parameter Name="userName" Type="Edm.String" Nullable="false"/>
+        <Parameter Name="tripId" Type="Edm.Int32" Nullable="false"/>
+      </Action>
+      <EntityContainer Name="Container">
+        <EntitySet Name="People" EntityType="Trippin.Person">
+          <NavigationPropertyBinding Path="BestFriend" Target="People"/>
+          <NavigationPropertyBinding Path="Friends" Target="People"/>
+          <NavigationPropertyBinding Path="Trippin.Employee/Peers" Target="People"/>
+          <NavigationPropertyBinding Path="Trippin.Manager/DirectReports" Target="People"/>
+        </EntitySet>
+        <EntitySet Name="Airlines" EntityType="Trippin.Airline"/>
+        <EntitySet Name="Airports" EntityType="Trippin.Airport"/>
+        <Singleton Name="Me" Type="Trippin.Person">
+          <NavigationPropertyBinding Path="BestFriend" Target="People"/>
+          <NavigationPropertyBinding Path="Friends" Target="People"/>
+          <NavigationPropertyBinding Path="Trippin.Employee/Peers" Target="People"/>
+          <NavigationPropertyBinding Path="Trippin.Manager/DirectReports" Target="People"/>
+        </Singleton>
+        <FunctionImport Name="GetPersonWithMostFriends" Function="Trippin.GetPersonWithMostFriends" EntitySet="People"/>
+        <FunctionImport Name="GetNearestAirport" Function="Trippin.GetNearestAirport" EntitySet="Airports"/>
+        <ActionImport Name="ResetDataSource"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

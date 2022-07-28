@@ -1,7 +1,7 @@
 {
   "name": "rapid-tools",
   "workspaces": [
-    "rsdl/csdl-xml",
+    "csdl-xml",
     "odataUri",
     "urlEditor",
     "visualModelEditor",
