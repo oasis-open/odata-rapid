@@ -1,7 +1,7 @@
-import { parse } from 'rsdl-js';
-import mermaid from 'mermaid';
+import { parse } from "rsdl-js";
+import mermaid from "mermaid";
 
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 // import 'swagger-ui/dist/swagger-ui.css';
 // import 'highlight.js/styles/default.css';
 // import '../css/main.scss';
@@ -10,11 +10,11 @@ import {
   getModel,
   NormalizedEdmModel,
   NormalizedEdmModelType,
-} from './mermaid-editor-utils';
-import { editorContents } from './templates';
-import { EditorModal } from './editor-modal';
-import { getSchema, getRsdlText } from './rsdl-converter';
-import { DiagramView } from './diagram-view';
+} from "./mermaid-editor-utils";
+import { editorContents } from "./templates";
+import { EditorModal } from "./editor-modal";
+import { getSchema, getRsdlText } from "./rsdl-converter";
+import { DiagramView } from "./diagram-view";
 
 type ModelUpdatedCallback = (rsdl: string) => any;
 
@@ -36,7 +36,7 @@ export class MermaidEditor {
     editorContainer.innerHTML = editorContents;
 
     const editorModal = new EditorModal(
-      editorContainer.querySelector<HTMLFormElement>('#modelModal')
+      editorContainer.querySelector<HTMLFormElement>("#modelModal")
     );
 
     this._editorModal = editorModal;
@@ -45,25 +45,26 @@ export class MermaidEditor {
     editorModal.onDelete = (edmType) => this.delete(edmType);
 
     this._diagramView = new DiagramView(
-      editorContainer.querySelector<HTMLDivElement>('#diagramContainer')
+      editorContainer.querySelector<HTMLDivElement>("#diagramContainer")
     );
 
     global.selectElement = (name) => this.selectElement(name);
 
     editorContainer
-      .querySelector('#enumTypeButton')
-      .addEventListener('click', () => this.addEnumType());
+      .querySelector("#enumTypeButton")
+      .addEventListener("click", () => this.addEnumType());
     editorContainer
-      .querySelector('#complexTypeButton')
-      .addEventListener('click', () => this.addComplexType());
+      .querySelector("#complexTypeButton")
+      .addEventListener("click", () => this.addComplexType());
     editorContainer
-      .querySelector('#entityTypeButton')
-      .addEventListener('click', () => this.addEntityType());
-    const entityContainerButton = editorContainer.querySelector<HTMLButtonElement>(
-      '#entityContainerButton'
-    );
+      .querySelector("#entityTypeButton")
+      .addEventListener("click", () => this.addEntityType());
+    const entityContainerButton =
+      editorContainer.querySelector<HTMLButtonElement>(
+        "#entityContainerButton"
+      );
     this._entityContainerButton = entityContainerButton;
-    entityContainerButton.addEventListener('click', () =>
+    entityContainerButton.addEventListener("click", () =>
       this.addEntityContainerType()
     );
   }
@@ -72,8 +73,7 @@ export class MermaidEditor {
     this._diagramView.redraw();
   }
 
-  public updateCsdl(jsonCsdlText: string)
-  {
+  public updateCsdl(jsonCsdlText: string) {
     //todo: add error handling
     const schema = JSON.parse(jsonCsdlText);
     this.updateSchema(schema);
@@ -88,19 +88,17 @@ export class MermaidEditor {
         return;
       }
       this.updateSchema(schema);
-    }
-    catch {}
+    } catch {}
   }
 
-  private updateSchema(schema: any)
-  {
+  private updateSchema(schema: any) {
     const entityContainerButton = this._entityContainerButton;
-      console.info(schema);
+    console.info(schema);
 
     if (schema.$EntityContainer) {
-      entityContainerButton.classList.add('d-none');
+      entityContainerButton.classList.add("d-none");
     } else {
-      entityContainerButton.classList.remove('d-none');
+      entityContainerButton.classList.remove("d-none");
     }
 
     this._currentSchema = schema;
@@ -130,7 +128,7 @@ export class MermaidEditor {
       entries.push([edmModel.$Name, edmModel]);
     }
     var modelName, serviceName;
-    [modelName,serviceName] = schema['$EntityContainer'].split('.');
+    [modelName, serviceName] = schema["$EntityContainer"].split(".");
     schema[modelName] = Object.fromEntries(entries);
     this.publishRsdl();
   }
@@ -161,30 +159,30 @@ export class MermaidEditor {
 
   private addEnumType() {
     this.show({
-      $Kind: 'EnumType',
-      '': 0,
+      $Kind: "EnumType",
+      "": 0,
     });
   }
 
   private addComplexType() {
     this.show({
-      $Kind: 'ComplexType',
-      '': {},
+      $Kind: "ComplexType",
+      "": {},
     });
   }
 
   private addEntityType() {
     this.show({
-      $Kind: 'EntityType',
-      '': {},
+      $Kind: "EntityType",
+      "": {},
     });
   }
 
   private addEntityContainerType() {
     this.show({
-      $Kind: 'EntityContainer',
-      $Name: 'Service',
-      '': {},
+      $Kind: "EntityContainer",
+      $Name: "Service",
+      "": {},
     });
   }
 

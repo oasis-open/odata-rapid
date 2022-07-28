@@ -1,10 +1,10 @@
-import Handlebars from 'handlebars';
+import Handlebars from "handlebars";
 
-Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
+Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
 
-Handlebars.registerHelper('addOne', function (value) {
+Handlebars.registerHelper("addOne", function (value) {
   return parseInt(value) + 1;
 });
 
@@ -22,7 +22,7 @@ const enumMemberTemplate = `
 </div>
 `;
 
-Handlebars.registerPartial('enumMember', enumMemberTemplate);
+Handlebars.registerPartial("enumMember", enumMemberTemplate);
 export const enumMemberFunction = Handlebars.compile(enumMemberTemplate);
 
 const enumTypeTemplate = `
@@ -110,7 +110,7 @@ const propertyTemplate = `
 </div>
 `;
 
-Handlebars.registerPartial('property', propertyTemplate);
+Handlebars.registerPartial("property", propertyTemplate);
 export const propertyFunction = Handlebars.compile(propertyTemplate);
 
 const operationTemplate = `
@@ -194,7 +194,7 @@ const operationTemplate = `
 
 `;
 
-Handlebars.registerPartial('operation', operationTemplate);
+Handlebars.registerPartial("operation", operationTemplate);
 export const operationFunction = Handlebars.compile(operationTemplate);
 
 const structuredTypeTemplate = `

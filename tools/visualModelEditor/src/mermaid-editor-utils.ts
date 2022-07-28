@@ -7,48 +7,48 @@ export function objectEntries<T>(obj: T): Entries<T> {
 }
 
 export const $TypeOptions = [
-  'String',
-  'Binary',
-  'Boolean',
-  'Byte',
-  'Date',
-  'DateTimeOffset',
-  'Decimal',
-  'Double',
-  'Duration',
-  'Guid',
-  'Int16',
-  'Int32',
-  'Int64',
-  'SByte',
-  'Single',
-  'Stream',
-  'TimeOfDay',
-  'Geography',
-  'GeographyPoint',
-  'GeographyLineString',
-  'GeographyPolygon',
-  'GeographyMultiPoint',
-  'GeographyMultiLineString',
-  'GeographyMultiPolygon',
-  'GeographyCollection',
-  'Geometry',
-  'GeometryPoint',
-  'GeometryLineString',
-  'GeometryPolygon',
-  'GeometryMultiPoint',
-  'GeometryMultiLineString',
-  'GeometryMultiPolygon',
-  'GeometryCollection',
+  "String",
+  "Binary",
+  "Boolean",
+  "Byte",
+  "Date",
+  "DateTimeOffset",
+  "Decimal",
+  "Double",
+  "Duration",
+  "Guid",
+  "Int16",
+  "Int32",
+  "Int64",
+  "SByte",
+  "Single",
+  "Stream",
+  "TimeOfDay",
+  "Geography",
+  "GeographyPoint",
+  "GeographyLineString",
+  "GeographyPolygon",
+  "GeographyMultiPoint",
+  "GeographyMultiLineString",
+  "GeographyMultiPolygon",
+  "GeographyCollection",
+  "Geometry",
+  "GeometryPoint",
+  "GeometryLineString",
+  "GeometryPolygon",
+  "GeometryMultiPoint",
+  "GeometryMultiLineString",
+  "GeometryMultiPolygon",
+  "GeometryCollection",
 ];
 
 export type ModelTypeKind =
-  | 'EnumType'
-  | 'ComplexType'
-  | 'EntityType'
-  | 'EntityContainer'
-  | 'Function'
-  | 'Action';
+  | "EnumType"
+  | "ComplexType"
+  | "EntityType"
+  | "EntityContainer"
+  | "Function"
+  | "Action";
 
 export interface NormalizedEdmModelType {
   $Kind: ModelTypeKind;
@@ -62,9 +62,9 @@ export interface NormalizedEdmModel {
 
 export function getType(typeDef) {
   // TODO: Remove hack
-  let type = (typeDef.$Type || 'String').split('.').pop();
+  let type = (typeDef.$Type || "String").split(".").pop();
   if (typeDef.$Nullable) {
-    type = type + '?';
+    type = type + "?";
   }
 
   if (typeDef.$Collection) {
@@ -74,11 +74,10 @@ export function getType(typeDef) {
   return type;
 }
 
-export function getModel(schema : NormalizedEdmModel)
-{
+export function getModel(schema: NormalizedEdmModel) {
   var modelName;
   var serviceName;
-  [modelName, serviceName] = schema['$EntityContainer'].split('.');
+  [modelName, serviceName] = schema["$EntityContainer"].split(".");
 
   return schema[modelName];
 }

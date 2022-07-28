@@ -1,12 +1,12 @@
-import { enumTypeFunction } from './templates';
+import { enumTypeFunction } from "./templates";
 import {
   ModelTypeKind,
   NormalizedEdmModel,
   NormalizedEdmModelType,
   objectEntries,
-} from './mermaid-editor-utils';
+} from "./mermaid-editor-utils";
 
-import { ITypeEditor } from './modal-utils';
+import { ITypeEditor } from "./modal-utils";
 
 export class EnumTypeEditor implements ITypeEditor {
   private readonly _modelEditor: HTMLFormElement;
@@ -19,7 +19,7 @@ export class EnumTypeEditor implements ITypeEditor {
     schema: NormalizedEdmModel
   ): string {
     const enumMembers = objectEntries(edmType)
-      .filter(([name, _]) => name[0] !== '$')
+      .filter(([name, _]) => name[0] !== "$")
       .map(([name, _]) => name);
 
     return enumTypeFunction({ ...edmType, enumMembers });
@@ -27,10 +27,10 @@ export class EnumTypeEditor implements ITypeEditor {
 
   getEdmType(): NormalizedEdmModelType {
     const enumEditor = this._modelEditor;
-    const name = enumEditor.querySelector<HTMLInputElement>('#nameInput').value;
+    const name = enumEditor.querySelector<HTMLInputElement>("#nameInput").value;
     const enumType = Array.from(
       enumEditor.querySelectorAll<HTMLInputElement>(
-        '#enumMembersContainer input[type=text]'
+        "#enumMembersContainer input[type=text]"
       )
     )
       .map((element) => element.value)
@@ -40,7 +40,7 @@ export class EnumTypeEditor implements ITypeEditor {
           return accumulator;
         },
         {
-          $Kind: 'EnumType' as ModelTypeKind,
+          $Kind: "EnumType" as ModelTypeKind,
           $Name: name,
         }
       );

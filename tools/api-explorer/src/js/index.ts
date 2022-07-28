@@ -134,26 +134,25 @@ function updateSchema(serviceUrl: string, schema: string) {
   var openapi = csdl2openapi(jsonSchema, {
     basePath: parsedUrl.basePath,
     host: parsedUrl.host,
-    scheme: parsedUrl.scheme
+    scheme: parsedUrl.scheme,
   });
 
   SwaggerUI({
-     domNode: swaggerUiNode,
-     spec: openapi
+    domNode: swaggerUiNode,
+    spec: openapi,
   });
 
   hljs.highlightAll();
 }
 
-function parseUrl(url: string)
-{
+function parseUrl(url: string) {
   var iColon = url.indexOf(":");
   var hostStart = url.indexOf("//") + 2;
   var baseStart = url.indexOf("/", hostStart);
- 
+
   return {
     scheme: url.substring(0, iColon),
     host: url.substring(hostStart, baseStart),
-    basePath: url.substring(baseStart)
-  } 
+    basePath: url.substring(baseStart),
+  };
 }
