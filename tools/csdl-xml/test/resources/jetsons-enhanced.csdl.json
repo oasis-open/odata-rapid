@@ -1,7 +1,7 @@
 {
   "$Version": "4.0",
   "$EntityContainer": "Jetsons.Service",
-  "$References" :
+  "$Reference" :
   {
     "http://vocabs.odata.org/core/v1" :
     {

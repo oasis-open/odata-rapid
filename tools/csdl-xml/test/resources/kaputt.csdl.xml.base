@@ -1,0 +1,7 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataService>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Model">
+      <ComplexType Name="kaputt" OpenType="true"/>
+    </Schema>
+  </edmx:DataService>
+</edmx:Edmx>

@@ -12,75 +12,57 @@ describe("CLI", () => {
   });
 
   it("Translate one file", async () => {
-    const outfile = "examples/jetsons.csdl.xml";
+    const outfile = "resources/jetsons.csdl.xml";
+    const basefile = "resources/jetsons.csdl.xml.base";
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "examples/jetsons.csdl.json"], ".");
+    const result = await cmd(["-p", "resources/jetsons.csdl.json"], ".");
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.equal("examples/jetsons.csdl.xml\n");
+    expect(result.stdout).to.equal("resources/jetsons.csdl.xml\n");
     expect(fs.existsSync(outfile)).to.equal(true);
+    const basexml = fs.readFileSync(basefile,"utf-8");
     const xml = fs.readFileSync(outfile, "utf-8");
-    expect(xml).to.contain({
-      Version: "4.0",
-      $EntityContainer: "Model.Service",
-    });
-    expect(csdl.Model.Service).to.deep.equal({
-      $Kind: "EntityContainer",
-      competitors: {
-        $Collection: true,
-        $Type: "Model.company",
-      },
-      company: { $Type: "Model.company" },
-    });
+    expect(xml).to.equal(basexml);
   });
 
   it("Translate file with includes", async () => {
-    const outfile = "test/resources/main.csdl.json";
+    const outfile = "resources/main.csdl.xml";
+    const basefile = "resources/main.csdl.xml.base";
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["resources/main.rsdl"], "test");
+    const result = await cmd(["resources/main.csdl.json"], "test");
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.equal("resources/main.csdl.json\n");
+    expect(result.stdout).to.equal("resources/main.csdl.xml\n");
     expect(fs.existsSync(outfile)).to.equal(true);
-    const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
-    expect(csdl).to.deep.equal({
-      $Version: "4.0",
-      $Reference: {
-        "foo-bar.rsdl": {
-          $Include: [{ $Namespace: "foo.bar", $Alias: "foobar" }],
-        },
-        "other/baz.rsdl": {
-          $Include: [{ $Namespace: "dot.dot.baz", $Alias: "hwga" }],
-        },
-      },
-      Model: {},
-    });
+    const basexml = fs.readFileSync(basefile,"utf-8");
+    const xml = fs.readFileSync(outfile, "utf-8");
+    expect(xml).to.equal(basexml);
   });
+
 });
 
 describe("CLI - error cases", () => {
   it("Invalid option", async () => {
     const result = await cmd(["-x"]);
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.contain("Usage: rsdl2csdl");
+    expect(result.stdout).to.contain("Usage: csdl2xml");
   });
 
   it("Non-existing file", async () => {
-    const result = await cmd(["no-such.rsdl"]);
+    const result = await cmd(["no-such.csdl.json"]);
     expect(result.code).to.equal(0);
-    expect(result.stderr).to.contain("Source file not found: no-such.rsdl");
+    expect(result.stderr).to.contain("Source file not found: no-such.csdl.json");
   });
 
   it("File with syntax errors", async () => {
-    const outfile = "examples/kaputt.csdl.json";
+    const outfile = "resources/kaputt.csdl.xml";
+    const basefile = outfile + ".base";
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "examples/kaputt.rsdl"], ".");
+    const result = await cmd(["-p", "resources/kaputt.csdl.json"], ".");
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.equal("\nexamples/kaputt.csdl.json\n");
+    expect(result.stdout).to.equal("\nresources/kaputt.csdl.xml\n");
     expect(fs.existsSync(outfile)).to.equal(true);
-    const csdl = JSON.parse(fs.readFileSync(outfile, "utf-8"));
-    expect(csdl).to.deep.equal({
-      $Version: "4.0",
-      Model: { kaputt: { $Kind: "ComplexType", $OpenType: true } },
-    });
+    const xml = fs.readFileSync(outfile, "utf-8");
+    const xmlbase = fs.readFileSync(basefile, "utf-8");
+    expect(xml).to.equal(xmlbase);
   });
 });
 

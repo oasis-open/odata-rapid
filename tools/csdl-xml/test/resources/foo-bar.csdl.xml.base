@@ -1,0 +1,5 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.01">
+  <edmx:DataService>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="foo.bar"/>
+  </edmx:DataService>
+</edmx:Edmx>
