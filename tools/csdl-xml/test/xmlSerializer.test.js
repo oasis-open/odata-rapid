@@ -1,6 +1,5 @@
 const assert = require("chai").assert;
-const csdl = require("odata-csdl");
-const fs = require("fs");
+const expect = require("chai").expect;
 const { serializeToXml } = require("../lib/xmlSerializer");
 
 function stripWhitespace(inputString) {
@@ -17,17 +16,18 @@ describe("Parse correct JSON CSDL", () => {
   });
 
   it("Empty model", () => {
-    assert.contains(
+    expect(
       serializeToXml({
         $Version: "4.0",
         Model: {},
-      }),
+      })
+    ).to.contain(
       '<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">'
     );
   });
 
   it("Default Complex Type", () => {
-    assert.contains(
+    expect(
       serializeToXml({
         $Version: "4.0",
         Model: {
@@ -36,9 +36,8 @@ describe("Parse correct JSON CSDL", () => {
             $OpenType: true,
           },
         },
-      }),
-      '<ComplexType Name="foo" OpenType="true"/>'
-    );
+      })
+    ).to.contain('<ComplexType Name="foo" OpenType="true"/>');
   });
 
   it("Two types", () => {
@@ -49,10 +48,9 @@ describe("Parse correct JSON CSDL", () => {
         bar: { $Kind: "ComplexType", $OpenType: true, baz: {} },
       },
     });
-    assert.contains(xml, '<ComplexType Name="foo" OpenType="true"/>');
-    assert.contains(xml, '<ComplexType Name="bar" OpenType="true">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<ComplexType Name="foo" OpenType="true"/>');
+    expect(xml).to.contain('<ComplexType Name="bar" OpenType="true">');
+    expect(xml).to.contain(
       '<Property Name="baz" Type="Edm.String" Nullable="false"/>'
     );
   });
@@ -70,14 +68,13 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(xml, '<EntityType Name="foo" OpenType="true">');
-    assert.contains(xml, "<Key>");
-    assert.contains(xml, '<PropertyRef Name="key"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<EntityType Name="foo" OpenType="true">');
+    expect(xml).to.contain("<Key>");
+    expect(xml).to.contain('<PropertyRef Name="key"/>');
+    expect(xml).to.contain(
       '<Property Name="key" Type="Edm.String" Nullable="false"/>'
     );
-    assert.contains(xml, '<Property Name="baz" Type="Edm.Int32"/>');
+    expect(xml).to.contain('<Property Name="baz" Type="Edm.Int32"/>');
   });
 
   it("All primitive types, two keys", () => {
@@ -104,55 +101,45 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(xml, '<PropertyRef Name="qux"/>');
-    assert.contains(xml, '<PropertyRef Name="dat"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<PropertyRef Name="qux"/>');
+    expect(xml).to.contain('<PropertyRef Name="dat"/>');
+    expect(xml).to.contain(
       '<Property Name="bar" Type="Collection(Edm.String)" Nullable="false"/>'
     );
-    assert.contains(xml, '<Property Name="baz" Type="Collection(Edm.Int32)"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
+      '<Property Name="baz" Type="Collection(Edm.Int32)"/>'
+    );
+    expect(xml).to.contain(
       '<Property Name="qux" Type="Edm.Boolean" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="dat" Type="Edm.Date" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="dbl" Type="Edm.Double" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="dec" Type="Edm.Decimal" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
-      '<Property Name="d42" Type="Edm.Decimal" Nullable="false"/>'
+    expect(xml).to.contain(
+      '<Property Name="d42" Type="Edm.Decimal" Nullable="false" Precision="4" Scale="2"/>'
     );
-    assert.contains(
-      xml,
-      '<Property Name="s42" Type="Edm.String" Nullable="false"/>'
+    expect(xml).to.contain(
+      '<Property Name="s42" Type="Edm.String" Nullable="false" MaxLength="42"/>'
     );
-    assert.contains(
-      xml,
-      '<Property Name="s4a" Type="Collection(Edm.String)"/>'
+    expect(xml).to.contain(
+      '<Property Name="s4a" Type="Collection(Edm.String)" MaxLength="4"/>'
     );
-    assert.contains(
-      xml,
-      '<Property Name="tsp" Type="Edm.DateTimeOffset" Nullable="false"/>'
+    expect(xml).to.contain(
+      '<Property Name="tsp" Type="Edm.DateTimeOffset" Nullable="false" Precision="0"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="tim" Type="Edm.TimeOfDay" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="dur" Type="Edm.Duration" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="geo" Type="Edm.GeographyPoint" Nullable="false"/>'
     );
   });
@@ -171,11 +158,11 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(xml, '<EntityType Name="foo" OpenType="true"/>');
-    assert.contains(xml, '<EntityType Name="bar" OpenType="true"/>');
-    assert.contains(xml, '<EntityContainer Name="Service">');
-    assert.contains(xml, '<EntitySet Name="set" EntityType="Model.foo"/>');
-    assert.contains(xml, '<Singleton Name="one" Type="Model.bar"/>');
+    expect(xml).to.contain('<EntityType Name="foo" OpenType="true"/>');
+    expect(xml).to.contain('<EntityType Name="bar" OpenType="true"/>');
+    expect(xml).to.contain('<EntityContainer Name="Service">');
+    expect(xml).to.contain('<EntitySet Name="set" EntityType="Model.foo"/>');
+    expect(xml).to.contain('<Singleton Name="one" Type="Model.bar"/>');
   });
 
   it("Complex Property", () => {
@@ -190,53 +177,50 @@ describe("Parse correct JSON CSDL", () => {
         baz: { $Kind: "ComplexType", $OpenType: true },
       },
     });
-    assert.contains(xml, '<ComplexType Name="foo" OpenType="true">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<ComplexType Name="foo" OpenType="true">');
+    expect(xml).to.contain(
       '<Property Name="bar" Type="Model.baz" Nullable="false"/'
     );
-    assert.contains(xml, '<ComplexType Name="baz" OpenType="true"/>');
+    expect(xml).to.contain('<ComplexType Name="baz" OpenType="true"/>');
   });
 
   it("Navigation Properties", () => {
     const xml = serializeToXml({
-      foo: {
-        $Kind: "EntityType",
-        $OpenType: true,
-        bar: {
-          $Kind: "NavigationProperty",
-          $Type: "Model.baz",
-          $ContainsTarget: true,
-        },
-      },
-      baz: {
-        $Kind: "EntityType",
-        $OpenType: true,
-        $Key: ["qux"],
-        qux: {},
+      $Version: "4.0",
+      Model: {
         foo: {
-          $Kind: "NavigationProperty",
-          $Type: "Model.foo",
+          $Kind: "EntityType",
+          $OpenType: true,
+          bar: {
+            $Kind: "NavigationProperty",
+            $Type: "Model.baz",
+            $ContainsTarget: true,
+          },
+        },
+        baz: {
+          $Kind: "EntityType",
+          $OpenType: true,
+          $Key: ["qux"],
+          qux: {},
+          foo: {
+            $Kind: "NavigationProperty",
+            $Type: "Model.foo",
+          },
         },
       },
     });
-    assert.contains(xml, '<EntityType Name="foo" OpenType="true">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<EntityType Name="foo" OpenType="true">');
+    expect(xml).to.contain(
       '<NavigationProperty Name="bar" Type="Model.baz" Nullable="false" ContainsTarget="true"/>'
     );
-    assert.contains(xml, '<EntityType Name="baz" OpenType="true">');
-    assert.contains(xml, '<PropertyRef Name="qux"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<EntityType Name="baz" OpenType="true">');
+    expect(xml).to.contain('<PropertyRef Name="qux"/>');
+    expect(xml).to.contain(
       '<Property Name="qux" Type="Edm.String" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<NavigationProperty Name="foo" Type="Model.foo" Nullable="false"/>'
     );
-    assert.contains(xml, '<EntityContainer Name="Service">');
-    assert.contains(xml, '<Singleton Name="foo" Type="Model.foo"/>');
   });
 
   it("Namespace", () => {
@@ -244,11 +228,10 @@ describe("Parse correct JSON CSDL", () => {
       $Version: "4.0",
       "here.we.go": { foo: { $Kind: "ComplexType", $OpenType: true } },
     });
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="here.we.go">'
     );
-    assert.contains(xml, '<ComplexType Name="foo" OpenType="true"/>');
+    expect(xml).to.contain('<ComplexType Name="foo" OpenType="true"/>');
   });
 
   it("Include", () => {
@@ -264,12 +247,15 @@ describe("Parse correct JSON CSDL", () => {
       },
       Model: {},
     });
-    assert.contains(xml, '<edmx:Reference Uri="foo-bar.rsdl">');
-    assert.contains(xml, '<edmx:Include Namespace="Model" Alias="foobar"/>');
-    assert.contains(xml, '<edmx:Reference Uri="../baz">');
-    assert.contains(xml, '<edmx:Include Namespace="Model" Alias="hwga"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<edmx:Reference Uri="foo-bar.rsdl">');
+    expect(xml).to.contain(
+      '<edmx:Include Namespace="foo.bar" Alias="foobar"/>'
+    );
+    expect(xml).to.contain('<edmx:Reference Uri="../baz">');
+    expect(xml).to.contain(
+      '<edmx:Include Namespace="dot.dot.baz" Alias="hwga"/>'
+    );
+    expect(xml).to.contain(
       '<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Model"/>'
     );
   });
@@ -312,36 +298,30 @@ describe("Parse correct JSON CSDL", () => {
         ],
       },
     });
-    assert.contains(xml, '<ComplexType Name="foo" OpenType="true"/>');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<ComplexType Name="foo" OpenType="true"/>');
+    expect(xml).to.contain(
       '<Function Name="bar" IsBound="true" IsComposable="true">'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Parameter Name="this" Type="Model.foo" Nullable="false"/>'
     );
-    assert.contains(xml, '<ReturnType Type="Edm.Boolean" Nullable="false"/>');
-    assert.contains(xml, '<Action Name="baz" IsBound="true">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<ReturnType Type="Edm.Boolean" Nullable="false"/>');
+    expect(xml).to.contain('<Action Name="baz" IsBound="true">');
+    expect(xml).to.contain(
       '<Parameter Name="this" Type="Model.foo" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Parameter Name="quux" Type="Edm.Int32" Nullable="false"/>'
     );
-    assert.contains(xml, '<Action Name="qux" IsBound="true">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<Action Name="qux" IsBound="true">');
+    expect(xml).to.contain(
       '<Parameter Name="this" Type="Model.foo" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Parameter Name="quux" Type="Collection(Edm.String)" Nullable="false"/>'
     );
-    assert.contains(xml, '<Parameter Name="quuz" Type="Model.foo"/>');
-    assert.contains(xml, '<ReturnType Type="Model.foo" Nullable="false"/>');
+    expect(xml).to.contain('<Parameter Name="quuz" Type="Model.foo"/>');
+    expect(xml).to.contain('<ReturnType Type="Model.foo" Nullable="false"/>');
   });
 
   it("Action and function imports", () => {
@@ -369,14 +349,13 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(xml, '<EntityContainer Name="Service">');
-    assert.contains(xml, '<FunctionImport Name="foo" Function="Model.foo"/>');
-    assert.contains(xml, '<ActionImport Name="bar"/>');
-    assert.contains(xml, '<Function Name="foo" IsComposable="true">');
-    assert.contains(xml, '<ReturnType Type="Edm.Boolean" Nullable="false"/>');
-    assert.contains(xml, '<Action Name="bar">');
-    assert.contains(
-      xml,
+    expect(xml).to.contain('<EntityContainer Name="Service">');
+    expect(xml).to.contain('<FunctionImport Name="foo" Function="Model.foo"/>');
+    expect(xml).to.contain('<ActionImport Name="bar" Action="Model.bar"/>');
+    expect(xml).to.contain('<Function Name="foo" IsComposable="true">');
+    expect(xml).to.contain('<ReturnType Type="Edm.Boolean" Nullable="false"/>');
+    expect(xml).to.contain('<Action Name="bar">');
+    expect(xml).to.contain(
       '<Parameter Name="quux" Type="Edm.Int32" Nullable="false"/>'
     );
   });
@@ -388,10 +367,10 @@ describe("Parse correct JSON CSDL", () => {
         foo: { $Kind: "EnumType", bar: 0, baz: 1, qux: 2 },
       },
     });
-    assert.contains(xml, "<EnumType>");
-    assert.contains(xml, '<Member Name="bar" Value="0"/>');
-    assert.contains(xml, '<Member Name="baz" Value="1"/>');
-    assert.contains(xml, '<Member Name="qux" Value="2"/>');
+    expect(xml).to.contain("<EnumType>");
+    expect(xml).to.contain('<Member Name="bar" Value="0"/>');
+    expect(xml).to.contain('<Member Name="baz" Value="1"/>');
+    expect(xml).to.contain('<Member Name="qux" Value="2"/>');
   });
 
   it("Flag enumeration types", () => {
@@ -409,12 +388,10 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Annotation Term="Org.OData.Core.V1.Description" String="colours"/>'
     );
-    assert.contains(
-      stripWhitespace(xml),
+    expect(stripWhitespace(xml)).to.contain(
       '<MemberName="red"Value="1"><AnnotationTerm="Org.OData.Core.V1.Description"String="ruby"/></Member>'
     );
   });
@@ -435,8 +412,7 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(
-      stripWhitespace(xml),
+    expect(stripWhitespace(xml)).to.contain(
       '<ComplexTypeName="foo"OpenType="true"><PropertyName="bar"Type="Edm.Double"Nullable="false"><AnnotationTerm="Org.OData.Validation.V1.Maximum"Decimal="1000"/><AnnotationTerm="Org.OData.Validation.V1.Minimum"Decimal="0.01"/>'
     );
     // todo: validate @a.b annotation when support for other types of annotations
@@ -466,20 +442,16 @@ describe("Parse correct JSON CSDL", () => {
         },
       },
     });
-    assert.contains(
-      xml,
-      '<TypeDefinition Name="Amount" UnderlyingType="Edm.Decimal" Nullable="false" Precision="5"/>'
+    expect(xml).to.contain(
+      '<TypeDefinition Name="Amount" UnderlyingType="Edm.Decimal" Nullable="false" Precision="23" Scale="5"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<TypeDefinition Name="Currency" Nullable="false" MaxLength="5"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="amount" Type="Model.Amount" Nullable="false"/>'
     );
-    assert.contains(
-      xml,
+    expect(xml).to.contain(
       '<Property Name="currency" Type="Model.Currency" Nullable="false"/>'
     );
   });

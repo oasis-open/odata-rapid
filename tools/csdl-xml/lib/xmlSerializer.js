@@ -114,7 +114,8 @@ function writeTypeMembers(typeElement, type) {
   for (const key of Object.keys(type)) {
     switch (key) {
       case "$Key":
-      //ignore -- key element already written
+        //ignore -- key element already written
+        break;
       case "$Kind":
         // ignore
         break;
@@ -233,7 +234,7 @@ function writeFacets(element, typeUsage) {
 
   // Write Scale Attribute
   if (typeUsage.$Scale != null) {
-    element.att("Precision", typeUsage.$Scale);
+    element.att("Scale", typeUsage.$Scale);
   }
 }
 
@@ -611,7 +612,6 @@ function writeAnnotation(xmlElement, term, annotationValue) {
       break;
     case "object":
       writeAnnotationObject(xmlElement, term.substring(1), annotationValue);
-      break;
       break;
     default:
       console.log(
