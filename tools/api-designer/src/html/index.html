@@ -141,7 +141,21 @@
                 aria-controls="csdl"
                 aria-selected="false"
               >
-                Csdl
+                CSDL
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link"
+                id="csdl-xml-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#csdl-xml"
+                role="tab"
+                aria-controls="csdl-xml"
+                aria-selected="false"
+              >
+                CSDL-XML
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -177,6 +191,14 @@
               aria-labelledby="csdl-tab"
             >
               <pre><code id="csdl-desc" class="language-json"></code></pre>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="csdl-xml"
+              role="tabpanel"
+              aria-labelledby="csdl-xml-tab"
+            >
+              <pre><code id="csdl-xml-desc" class="language-xml"></code></pre>
             </div>
             <div
               class="tab-pane fade"
@@ -231,6 +253,9 @@
               </li>
               <li>
                 <a id="export-csdl" class="dropdown-item" href="#">CSDL</a>
+              </li>
+              <li>
+                <a id="export-csdl-xml" class="dropdown-item" href="#">CSDL-XML</a>
               </li>
               <li>
                 <a id="export-open-api" class="dropdown-item" href="#"

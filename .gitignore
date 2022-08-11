@@ -28,3 +28,4 @@ obj/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+*.bak

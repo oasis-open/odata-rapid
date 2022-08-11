@@ -1,0 +1,9 @@
+{
+  "$Version": "bogus",
+  "Model": {
+    "stuff": {
+      "$Kind": "noType",
+      "$OpenType": false
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Jetsons">
+    <EntityType Name="company" OpenType="true">
+      <Key>
+        <PropertyRef Name="stockSymbol"/>
+      </Key>
+      <Property Name="stockSymbol" Type="Edm.String" Nullable="false"/>
+      <Property Name="name" Type="Edm.String" Nullable="false"/>
+      <Property Name="incorporated" Type="Edm.Date" Nullable="false"/>
+      <NavigationProperty Name="employees" Type="Collection(Jetsons.employee)" Nullable="false" ContainsTarget="true"/>
+      <Property Name="test" Type="Collection(Edm.Int32)" Nullable="false"/>
+      <NavigationProperty Name="ceo" Type="Jetsons.employee" Nullable="false" ContainsTarget="true"/>
+    </EntityType>
+    <EntityType Name="employee" OpenType="true">
+      <Key>
+        <PropertyRef Name="id"/>
+      </Key>
+      <Property Name="id" Type="Edm.Int32" Nullable="false"/>
+      <Property Name="key" Type="Edm.Boolean" Nullable="false"/>
+      <Property Name="name" Type="Model.name" Nullable="false"/>
+      <Property Name="title" Type="Edm.String" Nullable="false"/>
+    </EntityType>
+    <Action Name="fire" IsBound="true">
+      <Parameter Name="this" Type="Jetsons.employee" Nullable="false"/>
+      <Parameter Name="date" Type="Edm.Date"/>
+    </Action>
+    <Function Name="promote" IsBound="true" IsComposable="true">
+      <Parameter Name="this" Type="Jetsons.employee" Nullable="false"/>
+      <ReturnType Type="Edm.Int32" Nullable="false"/>
+    </Function>
+    <ComplexType Name="name" OpenType="true">
+      <Property Name="firstName" Type="Edm.String" Nullable="false"/>
+      <Property Name="middleInitial" Type="Edm.String"/>
+      <Property Name="lastName" Type="Edm.String" Nullable="false"/>
+      <Property Name="title" Type="Edm.String"/>
+    </ComplexType>
+    <EntityContainer Name="Service">
+      <EntitySet Name="competitors" EntityType="Jetsons.company"/>
+      <Singleton Name="company" Type="Jetsons.company"/>
+    </EntityContainer>
+  </Schema>
+</edmx:Edmx>

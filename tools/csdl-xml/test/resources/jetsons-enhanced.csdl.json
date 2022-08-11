@@ -1,0 +1,165 @@
+{
+  "$Version": "4.0",
+  "$EntityContainer": "Jetsons.Service",
+  "$Reference" :
+  {
+    "http://vocabs.odata.org/core/v1" :
+    {
+      "$Include" : [
+        {
+          "$Namespace" : "Org.OData.Core.V1",
+          "$Alias": "Core"
+        }
+      ]
+    },
+    "http://vocabs.odata.org/capabilities/v1" :
+    {
+      "$Include" : [
+        {
+          "$Namespace" : "Org.OData.Capabilities.V1"
+        }
+      ]
+    },
+    "My.Annotations":
+    {
+      "$IncludeAnnotations": [
+        {
+          "$TermNamespace": "MyGlobalAnnotations"
+        },
+        {
+          "$TermNamespace": "MyAnnotationTerms",
+          "$Qualifier": "v1",
+          "$TargetNamespace": "items"
+        }
+      ]
+    }
+  },
+  "Jetsons": {
+    "$Alias": "Jets",
+    "company": {
+      "$Kind": "EntityType",
+      "$OpenType": true,
+      "$Key": [
+        "stockSymbol"
+      ],
+      "@Core.Description":"A company.",
+      "stockSymbol": {
+        "@core.description":"The Company's stock ticker symbol"
+      },
+      "name": {},
+      "incorporated": {
+        "$Type": "Edm.Date",
+        "@Core.Description":"When the company was incorporated"
+      },
+      "employees": {
+        "$Collection": true,
+        "$Type": "Jetsons.employee",
+        "$Kind": "NavigationProperty",
+        "$ContainsTarget": true,
+        "@Core.Description":"The company's employees"
+      },
+      "test": {
+        "$Collection": true,
+        "$Type": "Edm.Int32"
+      },
+      "ceo": {
+        "$Type": "Jetsons.employee",
+        "$Kind": "NavigationProperty",
+        "$ContainsTarget": true
+      }
+    },
+    "employee": {
+      "$Kind": "EntityType",
+      "$OpenType": true,
+      "$Key": [
+        "id"
+      ],
+      "@Core.Description":"An employee",
+      "id": {
+        "$Type": "Edm.Int32"
+      },
+      "key": {
+        "$Type": "Edm.Boolean"
+      },
+      "name": {
+        "$Type": "Model.name"
+      },
+      "title": {}
+    },
+    "fire": [
+      {
+        "$Kind": "Action",
+        "$IsBound": true,
+        "@Core.Description":"Bound Action used to fire an employee.",
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Jetsons.employee",
+            "@Core.Description" : "Employee to be fired"
+          },
+          {
+            "$Name": "date",
+            "$Nullable": true,
+            "$Type": "Edm.Date",
+            "@Core.Description" : "[Optional] Last date of employment."
+          }
+        ]
+      }
+    ],
+    "promote": [
+      {
+        "$Kind": "Function",
+        "$IsBound": true,
+        "$IsComposable": true,
+        "@Core.Description":"Promote function.",
+        "$Parameter": [
+          {
+            "$Name": "this",
+            "$Type": "Jetsons.employee",
+            "@Core.Description": "The employee promoted."
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "Edm.Int32",
+          "@Core.Description": "The promotion level."
+        }
+      }
+    ],
+    "name": {
+      "$Kind": "ComplexType",
+      "$OpenType": true,
+      "@Core.Description": "A type representing a full name",
+      "firstName": {},
+      "middleInitial": {
+        "$Nullable": true
+      },
+      "lastName": {},
+      "title": {
+        "$Nullable": true
+      }
+    },
+    "Service": {
+      "$Kind": "EntityContainer",
+      "@Core.Description": "Jetsons Service",
+      "competitors": {
+        "$Collection": true,
+        "$Type": "Jetsons.company",
+        "@Core.Description": "The company's competitors."
+      },
+      "company": {
+        "$Type": "Jetsons.company",
+        "@Core.Description":"The company."
+      }
+    },
+    "$Annotations": {
+      "Jetsons.employee": {
+        "@Core.Description": "Exernal Annotation of Employee.",
+        "@Core.LongDescription": "Long Description of Employee"
+      },
+      "Jetsons.company": {
+        "@Core.Description": "Exernal Annotation of Company.",
+        "@Core.LongDescription": "Long Description of Company"
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "csdl2xml",
+  "version": "0.1.0",
+  "description": "CSDL Xml Serializer",
+  "homepage": "https://rapid.rocks/",
+  "bugs": "https://github.com/oasis-open/odata-rapid/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oasis-open/odata-rapid.git"
+  },
+  "files": [
+    "lib/*"
+  ],
+  "bin": {
+    "csdl2xml": "lib/cli.js"
+  },
+  "main": "lib/xmlSerializer.js",
+  "scripts": {
+    "jetsons": "node lib/cli.js examples/jetsons.json",
+    "trippin": "node lib/cli.js examples/trippin.json",
+    "test": "c8 mocha"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "xmlbuilder": "^15.1.1",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "c8": "^7.7.2",
+    "chai": "^4.3.4",
+    "eslint": "^7.28.0",
+    "mocha": "^9.0.0"
+  }
+}
