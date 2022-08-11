@@ -6,7 +6,7 @@ function stripWhitespace(inputString) {
   return inputString.replace(/\s/g, "");
 }
 
-describe("Parse correct JSON CSDL", () => {
+describe("csdl-xml Parse correct JSON CSDL", () => {
   it("Empty Object", () => {
     const xml = serializeToXml({});
     assert.equal(
