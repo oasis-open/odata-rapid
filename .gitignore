@@ -29,3 +29,4 @@ obj/
 Thumbs.db
 UserInterfaceState.xcuserstate
 *.bak
+tools/csdl-xml/test/resources/*.csdl.xml
