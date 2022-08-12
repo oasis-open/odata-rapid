@@ -10,13 +10,13 @@ describe("csdl-xml CLI", () => {
     expect(result.stdout).to.contain("Usage: csdl2xml");
   });
 
-  it("Translate one file", async () => {
+  it("Translate one file specified with full path", async () => {
     const outfile = `${__dirname}/resources/jetsons-enhanced.csdl.xml`;
     const basefile = `${__dirname}/resources/jetsons-enhanced.csdl.base.xml`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
     const result = await cmd(
       ["-p", `${__dirname}/resources/jetsons-enhanced.csdl.json`],
-      __dirname
+      `${__dirname}/..`
     );
     expect(result.code).to.equal(0);
     expect(result.stdout).to.equal(
@@ -28,7 +28,7 @@ describe("csdl-xml CLI", () => {
     expect(xml).to.equal(basexml);
   });
 
-  it("Translate file with includes", async () => {
+  it("Translate file (specified with relative path) with includes", async () => {
     const outfile = `${__dirname}/resources/main.csdl.xml`;
     const basefile = `${__dirname}/resources/main.csdl.base.xml`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
