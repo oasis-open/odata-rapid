@@ -641,7 +641,7 @@ export class QueryOptionsVisitor
     this.typeStack.push(itemType);
 
     const orderSpec = ctx.tryGetRuleContext(0, OrderSpecContext);
-    console.log("order spec", orderSpec);
+    // console.log("order spec", orderSpec);
     if (orderSpec) {
       const field = orderSpec.tryGetRuleContext(0, OrderFieldContext);
       const fieldNode = field && this.visitOrderField(field);

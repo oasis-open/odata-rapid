@@ -3,34 +3,36 @@ const exec = require("child_process").exec;
 const fs = require("fs");
 const path = require("path");
 
-describe("CLI", () => {
+describe("csdl-xml CLI", () => {
   it("Help", async () => {
     const result = await cmd(["-h"]);
     expect(result.code).to.equal(0);
     expect(result.stdout).to.contain("Usage: csdl2xml");
   });
 
-  it("Translate one file", async () => {
-    const outfile = "test/resources/jetsons-enhanced.csdl.xml";
-    const basefile = "test/resources/jetsons-enhanced.csdl.base.xml";
+  it("Translate one file specified with full path", async () => {
+    const outfile = `${__dirname}/resources/jetsons-enhanced.csdl.xml`;
+    const basefile = `${__dirname}/resources/jetsons-enhanced.csdl.base.xml`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
     const result = await cmd(
-      ["-p", "resources/jetsons-enhanced.csdl.json"],
-      "test"
+      ["-p", `${__dirname}/resources/jetsons-enhanced.csdl.json`],
+      `${__dirname}/..`
     );
     expect(result.code).to.equal(0);
-    expect(result.stdout).to.equal("resources/jetsons-enhanced.csdl.xml\n");
+    expect(result.stdout).to.equal(
+      `${__dirname}/resources/jetsons-enhanced.csdl.xml\n`
+    );
     expect(fs.existsSync(outfile)).to.equal(true);
     const basexml = fs.readFileSync(basefile, "utf-8");
     const xml = fs.readFileSync(outfile, "utf-8");
     expect(xml).to.equal(basexml);
   });
 
-  it("Translate file with includes", async () => {
-    const outfile = "test/resources/main.csdl.xml";
-    const basefile = "test/resources/main.csdl.base.xml";
+  it("Translate file (specified with relative path) with includes", async () => {
+    const outfile = `${__dirname}/resources/main.csdl.xml`;
+    const basefile = `${__dirname}/resources/main.csdl.base.xml`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "resources/main.csdl.json"], "test");
+    const result = await cmd(["-p", "resources/main.csdl.json"], __dirname);
     expect(result.code).to.equal(0);
     expect(result.stdout).to.equal("resources/main.csdl.xml\n");
     expect(fs.existsSync(outfile)).to.equal(true);
@@ -40,7 +42,7 @@ describe("CLI", () => {
   });
 });
 
-describe("CLI - error cases", () => {
+describe("csdl-xml CLI - error cases", () => {
   it("Invalid option", async () => {
     const result = await cmd(["-x"]);
     expect(result.code).to.equal(0);
@@ -56,7 +58,7 @@ describe("CLI - error cases", () => {
   });
 
   it("File with syntax errors", async () => {
-    const result = await cmd(["-p", "resources/kaputt.csdl.json"], "test");
+    const result = await cmd(["-p", "resources/kaputt.csdl.json"], __dirname);
     expect(result.code).to.equal(0);
     expect(result.stdout).to.contain("Unexpected Schema Element");
   });
@@ -65,7 +67,7 @@ describe("CLI - error cases", () => {
 function cmd(args, cwd) {
   return new Promise((resolve) => {
     exec(
-      `node ${path.resolve("./lib/cli")} ${args.join(" ")}`,
+      `node ${path.resolve(`${__dirname}/../lib/cli`)} ${args.join(" ")}`,
       { cwd },
       (error, stdout, stderr) => {
         resolve({
