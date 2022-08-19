@@ -1,6 +1,7 @@
 {
   "name": "rapid-tools",
   "workspaces": [
+    "rsdl/rsdl-js",
     "csdl-xml",
     "odataUri",
     "urlEditor",
@@ -15,7 +16,7 @@
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
     "api-explorer": "cd api-explorer && npm start",
-    "test": "c8 mocha -r ts-node/register */test/**/*.test.[jt]s"
+    "test": "c8 mocha -r ts-node/register */test/*.test.[jt]s rsdl/rsdl-js/test/*.test.js"
   },
   "devDependencies": {
     "patch-package": "^6.4.7",

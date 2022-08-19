@@ -12,9 +12,12 @@ describe("CLI", () => {
   });
 
   it("Translate one file", async () => {
-    const outfile = "examples/jetsons.csdl.json";
+    const outfile = `${__dirname}/../examples/jetsons.csdl.json`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "examples/jetsons.rsdl"], ".");
+    const result = await cmd(
+      ["-p", "examples/jetsons.rsdl"],
+      `${__dirname}/..`
+    );
     expect(result.code).to.equal(0);
     expect(result.stdout).to.equal("examples/jetsons.csdl.json\n");
     expect(fs.existsSync(outfile)).to.equal(true);
@@ -34,9 +37,9 @@ describe("CLI", () => {
   });
 
   it("Translate file with includes", async () => {
-    const outfile = "test/resources/main.csdl.json";
+    const outfile = `${__dirname}/resources/main.csdl.json`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["resources/main.rsdl"], "test");
+    const result = await cmd(["resources/main.rsdl"], `${__dirname}`);
     expect(result.code).to.equal(0);
     expect(result.stdout).to.equal("resources/main.csdl.json\n");
     expect(fs.existsSync(outfile)).to.equal(true);
@@ -70,9 +73,9 @@ describe("CLI - error cases", () => {
   });
 
   it("File with syntax errors", async () => {
-    const outfile = "examples/kaputt.csdl.json";
+    const outfile = `${__dirname}/../examples/kaputt.csdl.json`;
     if (fs.existsSync(outfile)) fs.unlinkSync(outfile);
-    const result = await cmd(["-p", "examples/kaputt.rsdl"], ".");
+    const result = await cmd(["-p", "examples/kaputt.rsdl"], `${__dirname}/..`);
     expect(result.code).to.equal(0);
     expect(result.stdout).to.equal("\nexamples/kaputt.csdl.json\n");
     expect(fs.existsSync(outfile)).to.equal(true);
@@ -87,7 +90,7 @@ describe("CLI - error cases", () => {
 function cmd(args, cwd) {
   return new Promise((resolve) => {
     exec(
-      `node ${path.resolve("./lib/cli")} ${args.join(" ")}`,
+      `node ${path.resolve(`${__dirname}/../lib/cli`)} ${args.join(" ")}`,
       { cwd },
       (error, stdout, stderr) => {
         resolve({
