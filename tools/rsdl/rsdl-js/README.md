@@ -73,7 +73,7 @@ Install
 - [x] log errors from CLI
 - [x] type definitions
 - [x] doc comments
-- [x] migrate to ANTLR 4.9.2 and switch from CommonJS modules to ES modules
+- [x] migrate to ANTLR 4.9.2 and switch from CommonJS to ES module
 
 ## TODO
 
