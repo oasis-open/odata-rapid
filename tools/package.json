@@ -11,7 +11,7 @@
     "api-designer"
   ],
   "scripts": {
-    "clean": "rimraf */.parcel-cache */dist */dist-dev */node_modules .parcel-cache coverage node_modules ",
+    "clean": "rimraf */.parcel-cache */dist */dist-dev */node_modules rsdl/rsdl-js/node_modules .parcel-cache coverage node_modules ",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",

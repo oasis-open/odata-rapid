@@ -23,13 +23,13 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "xmlbuilder": "^15.1.1",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "xmlbuilder": "^15.1.1"
   },
   "devDependencies": {
     "c8": "^7.7.2",
     "chai": "^4.3.4",
-    "eslint": "^7.28.0",
-    "mocha": "^9.0.0"
+    "eslint": "^8.22.0",
+    "mocha": "^10.0.0"
   }
 }
