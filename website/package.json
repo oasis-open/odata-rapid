@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "npx rimraf .docusaurus build node_modules",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "npm run lintDocs && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "lintDocs": "prettier --write ../docs/**/*.md ../docs/**/*.mdx"

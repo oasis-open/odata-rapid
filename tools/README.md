@@ -23,6 +23,12 @@ npm install
 npm run build
 ```
 
+Check correct installation by running the tests:
+
+```
+npm test
+```
+
 ## Launch API Designer
 
 ```
