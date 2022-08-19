@@ -1,0 +1,25 @@
+{
+  "name": "odata-rapid",
+  "workspaces": [
+    "tools/rsdl/rsdl-js",
+    "tools/csdl-xml",
+    "tools/odataUri",
+    "tools/urlEditor",
+    "tools/visualModelEditor",
+    "tools/rsdlEditor",
+    "tools/api-explorer",
+    "tools/api-designer",
+    "website"
+  ],
+  "scripts": {
+    "clean": "rimraf */.parcel-cache tools/*/dist tools/*/dist-dev tools/*/node_modules tools/rsdl/rsdl-js/node_modules website/.docusaurus website/build website/node_modules .parcel-cache coverage node_modules ",
+    "build": "npm run build --workspaces --if-present",
+    "postinstall": "patch-package",
+    "start": "cd website && npm start",
+    "test": "c8 mocha"
+  },
+  "devDependencies": {
+    "patch-package": "^6.4.7",
+    "rimraf": "^3.0.2"
+  }
+}
