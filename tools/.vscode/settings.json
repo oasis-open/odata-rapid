@@ -1,4 +1,9 @@
 {
+  "antlr4.generation": {
+    "mode": "external",
+    "language": "JavaScript",
+    "outputDir": "parser"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
