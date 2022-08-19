@@ -1,8 +1,10 @@
-const expect = require("chai").expect;
+import { expect } from "chai";
+import { exec } from "child_process";
+import fs from "fs";
+import path from "path";
 
-const exec = require("child_process").exec;
-const fs = require("fs");
-const path = require("path");
+import url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 describe("rsdl-js CLI", () => {
   it("Help", async () => {

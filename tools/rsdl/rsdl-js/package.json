@@ -1,5 +1,6 @@
 {
   "name": "rsdl-js",
+  "type": "module",
   "version": "0.3.2",
   "description": "RSDL-to-CSDL Compiler",
   "homepage": "https://rapid.rocks/",
@@ -24,7 +25,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "antlr4": "4.8.0",
+    "antlr4": "4.9.2",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
