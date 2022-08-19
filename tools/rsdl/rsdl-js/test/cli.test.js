@@ -4,7 +4,7 @@ const exec = require("child_process").exec;
 const fs = require("fs");
 const path = require("path");
 
-describe("CLI", () => {
+describe("rsdl-js CLI", () => {
   it("Help", async () => {
     const result = await cmd(["-h"]);
     expect(result.code).to.equal(0);
@@ -59,7 +59,7 @@ describe("CLI", () => {
   });
 });
 
-describe("CLI - error cases", () => {
+describe("rsdl-js CLI - error cases", () => {
   it("Invalid option", async () => {
     const result = await cmd(["-x"]);
     expect(result.code).to.equal(0);

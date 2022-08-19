@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const { parse } = require("../lib/parser");
 
-describe("Parse correct RSDL", () => {
+describe("rsdl-js Parse correct RSDL", () => {
   it("Empty file", () => {
     assert.deepStrictEqual(parse(""), {
       $Version: "4.0",
@@ -478,7 +478,7 @@ describe("Parse correct RSDL", () => {
   });
 });
 
-describe("Reference test cases", () => {
+describe("rsdl-js Reference test cases", () => {
   //TODO: collect files from ../rapid-cli/rapid.rdm.transformation.tests/data
   const files = [
     { d: "abstract" },
@@ -510,7 +510,7 @@ describe("Reference test cases", () => {
   });
 });
 
-describe("Parse RSDL with errors", () => {
+describe("rsdl-js Parse RSDL with errors", () => {
   it("Parser error", () => {
     assert.deepStrictEqual(parse("type foo"), {
       $$errors: [
