@@ -406,7 +406,7 @@ describe("Parse correct RSDL", () => {
              ##
              # this is ignored and does not add a line break
              ## has nice properties
-             ##   preserves leading and trailing spaces
+             ##   preserves leading and trailing spaces  \n
              ##doesn't require a space after ##
              ## and a cool action
              type foo {
