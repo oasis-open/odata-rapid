@@ -1,9 +1,11 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
+import csdl from "odata-csdl";
+import fs from "fs";
 
-const csdl = require("odata-csdl");
-const fs = require("fs");
+import { parse } from "../lib/parser.js";
 
-const { parse } = require("../lib/parser");
+import url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 describe("rsdl-js Parse correct RSDL", () => {
   it("Empty file", () => {

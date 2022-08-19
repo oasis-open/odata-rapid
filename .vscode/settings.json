@@ -1,6 +1,5 @@
 {
   "antlr4.generation": {
-    "alternativeJar": "../grammar/antlr-4.8-complete.jar",
     "mode": "external",
     "language": "JavaScript",
     "outputDir": "parser"

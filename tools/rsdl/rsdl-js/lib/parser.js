@@ -1,7 +1,7 @@
-const antlr4 = require("antlr4");
-const rsdlLexer = require("../grammar/parser/rsdlLexer").rsdlLexer;
-const rsdlParser = require("../grammar/parser/rsdlParser").rsdlParser;
-const rsdlListener = require("../grammar/parser/rsdlListener").rsdlListener;
+import antlr4 from "antlr4";
+import rsdlLexer from "../grammar/parser/rsdlLexer.js";
+import rsdlParser from "../grammar/parser/rsdlParser.js";
+import rsdlListener from "../grammar/parser/rsdlListener.js";
 
 const TYPENAMES = {
   Boolean: "Edm.Boolean",
@@ -445,7 +445,7 @@ class ErrorListener extends antlr4.error.ErrorListener {
   }
 }
 
-function parse(input, includeReader) {
+export function parse(input, includeReader) {
   const errorListener = new ErrorListener();
 
   const chars = new antlr4.InputStream(input);
@@ -468,5 +468,3 @@ function parse(input, includeReader) {
 
   return listener.csdl;
 }
-
-module.exports = { parse };
