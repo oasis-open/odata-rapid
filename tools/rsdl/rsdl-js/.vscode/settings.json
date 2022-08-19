@@ -9,6 +9,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "antlr4.generation": {
+    "alternativeJar": "../grammar/antlr-4.8-complete.jar",
     "mode": "external",
     "language": "JavaScript",
     "outputDir": "parser"
@@ -16,6 +17,5 @@
   "editor.renderWhitespace": "trailing",
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "mochaExplorer.esmLoader": false
+  "files.trimFinalNewlines": true
 }

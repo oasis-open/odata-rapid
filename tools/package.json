@@ -1,6 +1,7 @@
 {
   "name": "rapid-tools",
   "workspaces": [
+    "rsdl/rsdl-js",
     "csdl-xml",
     "odataUri",
     "urlEditor",
@@ -10,12 +11,12 @@
     "api-designer"
   ],
   "scripts": {
-    "clean": "rimraf */.parcel-cache */dist */dist-dev */node_modules .parcel-cache coverage node_modules ",
+    "clean": "rimraf */.parcel-cache */dist */dist-dev */node_modules rsdl/rsdl-js/node_modules .parcel-cache coverage node_modules ",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package",
     "api-designer": "cd api-designer && npm start",
     "api-explorer": "cd api-explorer && npm start",
-    "test": "c8 mocha -r ts-node/register */test/**/*.test.[jt]s"
+    "test": "c8 mocha"
   },
   "devDependencies": {
     "patch-package": "^6.4.7",

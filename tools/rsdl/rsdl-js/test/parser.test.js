@@ -50,15 +50,15 @@ describe("Parse correct RSDL", () => {
 
   it("All primitive types, two keys", () => {
     assert.deepStrictEqual(
-      parse(`type foo { 
-               bar: [String] 
+      parse(`type foo {
+               bar: [String]
                baz: [Integer?]
                key qux: Boolean
                key dat: Date
                dbl: Double
                dec: Decimal
                d42: Decimal(4,2)
-               s42: String(42) 
+               s42: String(42)
                s4a: [String(4)?]
                tsp: DateTime
                tim: TimeOfDay
@@ -137,7 +137,7 @@ describe("Parse correct RSDL", () => {
   it("Navigation Properties", () => {
     assert.deepInclude(
       parse(`type foo { bar: baz}
-             type baz { 
+             type baz {
                key qux: String
                foo: foo
              }
@@ -208,7 +208,7 @@ describe("Parse correct RSDL", () => {
 
   it("Actions and Functions", () => {
     assert.deepStrictEqual(
-      parse(`type foo { 
+      parse(`type foo {
                function bar(): Boolean
                action baz( quux: Integer )
                action qux( quux: [String], quuz: foo? ): foo
@@ -320,7 +320,7 @@ describe("Parse correct RSDL", () => {
 
   it("Annotation values", () => {
     assert.deepStrictEqual(
-      parse(`type foo { 
+      parse(`type foo {
                @Validation.Maximum: 1e3
                @Validation.Minimum: 1e-2
                @a.b: { c: true, d: [], @e.f: {}, "g":./h }
@@ -353,7 +353,7 @@ describe("Parse correct RSDL", () => {
 
          @Core.Description: "ISO or custom currency"
          typedef Currency: String(5)
-         
+
          type Money { amount: Amount currency: Currency }`
       ),
       {
@@ -384,7 +384,7 @@ describe("Parse correct RSDL", () => {
 
   it("Comments", () => {
     assert.deepStrictEqual(
-      parse(`type foo { 
+      parse(`type foo {
                bar: String
                # action baz( quux: Integer )
                baz: String # ignore
@@ -402,11 +402,11 @@ describe("Parse correct RSDL", () => {
   it("Documentation comments", () => {
     assert.deepStrictEqual(
       parse(`## good type
-      
+
              ##
              # this is ignored and does not add a line break
              ## has nice properties
-             ##   preserves leading and trailing spaces  
+             ##   preserves leading and trailing spaces  \n
              ##doesn't require a space after ##
              ## and a cool action
              type foo {
@@ -414,9 +414,9 @@ describe("Parse correct RSDL", () => {
                bar: String
                ## cool action
                ## does something
-               action baz( 
+               action baz(
                  ## action parameter
-                 quux: Integer 
+                 quux: Integer
                ) : ## a string
                    String
                # just a normal comment, ignore
@@ -426,9 +426,9 @@ describe("Parse correct RSDL", () => {
              ## colors make stuff look nicer
              enum colors {
                ## tomatoes
-               red 
+               red
                ## mozzarella
-               white 
+               white
                ## basil
                green}
              `),
@@ -496,12 +496,12 @@ describe("Reference test cases", () => {
     it(f.d, function () {
       f.n = f.n || "sample";
       const input = fs.readFileSync(
-        `../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.rsdl`,
+        `${__dirname}/../../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.rsdl`,
         "utf8"
       );
       const expected = csdl.xml2json(
         fs.readFileSync(
-          `../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.csdl.xml`
+          `${__dirname}/../../rapid-cli/rapid.rdm.transformation.tests/data/${f.d}/${f.n}.csdl.xml`
         )
       );
 

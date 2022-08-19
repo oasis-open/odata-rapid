@@ -1,4 +1,9 @@
 {
+  "antlr4.generation": {
+    "mode": "external",
+    "language": "JavaScript",
+    "outputDir": "parser"
+  },
   "cSpell.words": [
     "abnf",
     "CSDL",

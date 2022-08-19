@@ -1,0 +1,4 @@
+{
+  "require": "ts-node/register",
+  "spec": ["*/test/*.test.[jt]s", "rsdl/rsdl-js/test/*.test.js"]
+}

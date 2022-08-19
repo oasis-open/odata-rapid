@@ -8,7 +8,7 @@
     "odata-openapi": "^0.18.1",
     "odata-url-editor": "file:../urlEditor",
     "rsdl-editor": "file:../rsdlEditor",
-    "rsdl-js": "0.2.0",
+    "rsdl-js": "^0.3.2",
     "swagger-ui": "3.52.5",
     "visual-model-editor": "file:../visualModelEditor"
   },
