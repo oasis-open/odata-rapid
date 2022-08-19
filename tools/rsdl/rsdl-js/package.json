@@ -1,7 +1,7 @@
 {
   "name": "rsdl-js",
   "type": "module",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "RSDL-to-CSDL Compiler",
   "homepage": "https://rapid.rocks/",
   "bugs": "https://github.com/oasis-open/odata-rapid/issues",
