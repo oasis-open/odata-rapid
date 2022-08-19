@@ -1,6 +1,6 @@
 {
   "name": "rsdl-js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "RSDL-to-CSDL Compiler",
   "homepage": "https://rapid.rocks/",
   "bugs": "https://github.com/oasis-open/odata-rapid/issues",
@@ -30,9 +30,9 @@
   "devDependencies": {
     "c8": "^7.7.2",
     "chai": "^4.3.4",
-    "eslint": "^7.28.0",
-    "mocha": "^9.0.0",
-    "odata-csdl": "^0.2.9",
+    "eslint": "^8.22.0",
+    "mocha": "^10.0.0",
+    "odata-csdl": "^0.4.5",
     "prettier": "^2.3.1"
   }
 }
