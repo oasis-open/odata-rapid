@@ -7,7 +7,7 @@
   "scripts": {
     "test": "c8 mocha -r ts-node/register test/**/*.test.ts",
     "antlr4ts": "antlr4ts -visitor -no-listener -o src/parsers src/parsers/ODataUriQuery.g4",
-    "build": "webpack"
+    "build": "npm run antlr4ts && webpack"
   },
   "author": "",
   "license": "Apache-2.0",

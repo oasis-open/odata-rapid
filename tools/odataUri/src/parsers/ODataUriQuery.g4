@@ -69,4 +69,3 @@ WS: [ ] -> skip;
 BOOLEAN: 'true' | 'false';
 STRING: '\'' .*? '\'';
 ID: [a-zA-Z][a-zA-Z0-9_]*;
-
