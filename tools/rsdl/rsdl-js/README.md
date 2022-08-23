@@ -73,11 +73,10 @@ Install
 - [x] log errors from CLI
 - [x] type definitions
 - [x] doc comments
-- [x] migrate to ANTLR 4.9.2 and switch from CommonJS to ES module
+- [x] update to ANTLR 4.9.2 and switch from CommonJS to ES module
 
 ## TODO
 
 - [ ] Model validation
 - [ ] Option `-a` for compiling all files in a folder?
 - [ ] Option `-r` for recursive compilation?
-- [ ] Update to ANTLR 4.9.x
