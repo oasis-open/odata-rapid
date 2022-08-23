@@ -24,6 +24,7 @@
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
+  "npm.exclude": ["**/archive/**"],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
