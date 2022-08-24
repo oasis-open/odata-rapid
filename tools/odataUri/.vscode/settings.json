@@ -1,14 +1,13 @@
 {
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
+  "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "antlr4.generation": {
     "mode": "external",
-    "language": "JavaScript",
-    "outputDir": "parser"
+    "language": "TypeScript",
+    "outputDir": ".",
+    "listeners": false,
+    "visitors": true
   },
   "editor.renderWhitespace": "trailing",
   "editor.formatOnSave": true,
