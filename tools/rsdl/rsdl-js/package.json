@@ -16,7 +16,8 @@
   "bin": {
     "rsdl2csdl": "lib/cli.js"
   },
-  "main": "lib/parser.js",
+  "main": "./lib/parser.js",
+  "exports": "./lib/parser.js",
   "scripts": {
     "jetsons": "node lib/cli.js -p examples/jetsons.rsdl",
     "kaputt": "node lib/cli.js -p examples/kaputt.rsdl",
