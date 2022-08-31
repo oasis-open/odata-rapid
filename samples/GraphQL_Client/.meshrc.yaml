@@ -3,3 +3,4 @@
     handler:
       odata:
         baseUrl: https://jetsons.azurewebsites.net/
+        schemaHeaders: {"accept":"application/xml"}

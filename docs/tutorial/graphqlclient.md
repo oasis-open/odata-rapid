@@ -41,7 +41,10 @@ sources:
     handler:
       odata:
         baseUrl: https://jetsons.azurewebsites.net/
+        schemaHeaders: { "accept": "application/xml" }
 ```
+
+Note the schemaHeaders line. GraphQL Mesh currently supports only the [XML CSDL metadata format](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html). Since the Jetsons service defaults to the JSON format, the `accept` header is required in order to force the service to return metadata in the `application/xml` format.
 
 More information on configuring the Handler can be found in the [OData Handler Documentation](https://www.graphql-mesh.com/docs/handlers/odata).
 
