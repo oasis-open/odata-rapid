@@ -3,3 +3,4 @@
     handler:
       odata:
         baseUrl: https://jetsons.azurewebsites.net/
+        metadata: https://jetsons.azurewebsites.net/$metadata?$format=application/xml
