@@ -3,10 +3,10 @@
 
 //TODO: glob for source file patterns
 
-const { parse } = require("./parser");
-const minimist = require("minimist");
-const fs = require("fs");
-const path = require("path");
+import { parse } from "./parser.js";
+import minimist from "minimist";
+import fs from "fs";
+import path from "path";
 
 var unknown = false;
 

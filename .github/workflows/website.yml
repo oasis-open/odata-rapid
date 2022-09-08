@@ -31,11 +31,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-          cd tools
           npm ci
           npm run build
-          npm test 
-          cd ../website 
-          npm ci 
-          npm run lintDocs 
-          npm run build
+          npm test

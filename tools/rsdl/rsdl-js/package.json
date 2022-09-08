@@ -1,6 +1,7 @@
 {
   "name": "rsdl-js",
-  "version": "0.3.2",
+  "type": "module",
+  "version": "0.4.0",
   "description": "RSDL-to-CSDL Compiler",
   "homepage": "https://rapid.rocks/",
   "bugs": "https://github.com/oasis-open/odata-rapid/issues",
@@ -15,7 +16,8 @@
   "bin": {
     "rsdl2csdl": "lib/cli.js"
   },
-  "main": "lib/parser.js",
+  "main": "./lib/parser.js",
+  "exports": "./lib/parser.js",
   "scripts": {
     "jetsons": "node lib/cli.js -p examples/jetsons.rsdl",
     "kaputt": "node lib/cli.js -p examples/kaputt.rsdl",
@@ -24,7 +26,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "antlr4": "4.8.0",
+    "antlr4": "4.9.2",
     "minimist": "^1.2.5"
   },
   "devDependencies": {

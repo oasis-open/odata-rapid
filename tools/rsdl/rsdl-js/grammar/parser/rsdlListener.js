@@ -1,330 +1,324 @@
-// Generated from c:\git\odata-rapid\tools\rsdl\rsdl-js\grammar\rsdl.g4 by ANTLR 4.8
+// Generated from c:\git\odata-rapid\tools\rsdl\rsdl-js\grammar\rsdl.g4 by ANTLR 4.9.2
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
+import antlr4 from 'antlr4';
 
 // This class defines a complete listener for a parse tree produced by rsdlParser.
-function rsdlListener() {
-	antlr4.tree.ParseTreeListener.call(this);
-	return this;
+export default class rsdlListener extends antlr4.tree.ParseTreeListener {
+
+	// Enter a parse tree produced by rsdlParser#model.
+	enterModel(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#model.
+	exitModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#namespace.
+	enterNamespace(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#namespace.
+	exitNamespace(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#include.
+	enterInclude(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#include.
+	exitInclude(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#modelElement.
+	enterModelElement(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#modelElement.
+	exitModelElement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#structuredType.
+	enterStructuredType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#structuredType.
+	exitStructuredType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#baseType.
+	enterBaseType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#baseType.
+	exitBaseType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#typeMember.
+	enterTypeMember(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#typeMember.
+	exitTypeMember(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#property.
+	enterProperty(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#property.
+	exitProperty(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#propertyName.
+	enterPropertyName(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#propertyName.
+	exitPropertyName(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#single.
+	enterSingle(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#single.
+	exitSingle(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#array.
+	enterArray(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#array.
+	exitArray(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#typeName.
+	enterTypeName(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#typeName.
+	exitTypeName(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#builtInType.
+	enterBuiltInType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#builtInType.
+	exitBuiltInType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#edmType.
+	enterEdmType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#edmType.
+	exitEdmType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#operation.
+	enterOperation(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#operation.
+	exitOperation(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#parameter.
+	enterParameter(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#parameter.
+	exitParameter(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#returnType.
+	enterReturnType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#returnType.
+	exitReturnType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#enumType.
+	enterEnumType(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#enumType.
+	exitEnumType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#enumKind.
+	enterEnumKind(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#enumKind.
+	exitEnumKind(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#enumMember.
+	enterEnumMember(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#enumMember.
+	exitEnumMember(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#typeDefinition.
+	enterTypeDefinition(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#typeDefinition.
+	exitTypeDefinition(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#service.
+	enterService(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#service.
+	exitService(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#serviceMember.
+	enterServiceMember(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#serviceMember.
+	exitServiceMember(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#entitySet.
+	enterEntitySet(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#entitySet.
+	exitEntitySet(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#singleton.
+	enterSingleton(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#singleton.
+	exitSingleton(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#serviceOperation.
+	enterServiceOperation(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#serviceOperation.
+	exitServiceOperation(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#annotation.
+	enterAnnotation(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#annotation.
+	exitAnnotation(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#value.
+	enterValue(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#value.
+	exitValue(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#arr.
+	enterArr(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#arr.
+	exitArr(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#item.
+	enterItem(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#item.
+	exitItem(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#obj.
+	enterObj(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#obj.
+	exitObj(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#pair.
+	enterPair(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#pair.
+	exitPair(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#name.
+	enterName(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#name.
+	exitName(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#path.
+	enterPath(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#path.
+	exitPath(ctx) {
+	}
+
+
+	// Enter a parse tree produced by rsdlParser#qualifiedName.
+	enterQualifiedName(ctx) {
+	}
+
+	// Exit a parse tree produced by rsdlParser#qualifiedName.
+	exitQualifiedName(ctx) {
+	}
+
+
+
 }
-
-rsdlListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
-rsdlListener.prototype.constructor = rsdlListener;
-
-// Enter a parse tree produced by rsdlParser#model.
-rsdlListener.prototype.enterModel = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#model.
-rsdlListener.prototype.exitModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#namespace.
-rsdlListener.prototype.enterNamespace = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#namespace.
-rsdlListener.prototype.exitNamespace = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#include.
-rsdlListener.prototype.enterInclude = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#include.
-rsdlListener.prototype.exitInclude = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#modelElement.
-rsdlListener.prototype.enterModelElement = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#modelElement.
-rsdlListener.prototype.exitModelElement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#structuredType.
-rsdlListener.prototype.enterStructuredType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#structuredType.
-rsdlListener.prototype.exitStructuredType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#baseType.
-rsdlListener.prototype.enterBaseType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#baseType.
-rsdlListener.prototype.exitBaseType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#typeMember.
-rsdlListener.prototype.enterTypeMember = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#typeMember.
-rsdlListener.prototype.exitTypeMember = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#property.
-rsdlListener.prototype.enterProperty = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#property.
-rsdlListener.prototype.exitProperty = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#propertyName.
-rsdlListener.prototype.enterPropertyName = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#propertyName.
-rsdlListener.prototype.exitPropertyName = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#single.
-rsdlListener.prototype.enterSingle = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#single.
-rsdlListener.prototype.exitSingle = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#array.
-rsdlListener.prototype.enterArray = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#array.
-rsdlListener.prototype.exitArray = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#typeName.
-rsdlListener.prototype.enterTypeName = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#typeName.
-rsdlListener.prototype.exitTypeName = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#builtInType.
-rsdlListener.prototype.enterBuiltInType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#builtInType.
-rsdlListener.prototype.exitBuiltInType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#edmType.
-rsdlListener.prototype.enterEdmType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#edmType.
-rsdlListener.prototype.exitEdmType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#operation.
-rsdlListener.prototype.enterOperation = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#operation.
-rsdlListener.prototype.exitOperation = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#parameter.
-rsdlListener.prototype.enterParameter = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#parameter.
-rsdlListener.prototype.exitParameter = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#returnType.
-rsdlListener.prototype.enterReturnType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#returnType.
-rsdlListener.prototype.exitReturnType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#enumType.
-rsdlListener.prototype.enterEnumType = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#enumType.
-rsdlListener.prototype.exitEnumType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#enumKind.
-rsdlListener.prototype.enterEnumKind = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#enumKind.
-rsdlListener.prototype.exitEnumKind = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#enumMember.
-rsdlListener.prototype.enterEnumMember = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#enumMember.
-rsdlListener.prototype.exitEnumMember = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#typeDefinition.
-rsdlListener.prototype.enterTypeDefinition = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#typeDefinition.
-rsdlListener.prototype.exitTypeDefinition = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#service.
-rsdlListener.prototype.enterService = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#service.
-rsdlListener.prototype.exitService = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#serviceMember.
-rsdlListener.prototype.enterServiceMember = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#serviceMember.
-rsdlListener.prototype.exitServiceMember = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#entitySet.
-rsdlListener.prototype.enterEntitySet = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#entitySet.
-rsdlListener.prototype.exitEntitySet = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#singleton.
-rsdlListener.prototype.enterSingleton = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#singleton.
-rsdlListener.prototype.exitSingleton = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#serviceOperation.
-rsdlListener.prototype.enterServiceOperation = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#serviceOperation.
-rsdlListener.prototype.exitServiceOperation = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#annotation.
-rsdlListener.prototype.enterAnnotation = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#annotation.
-rsdlListener.prototype.exitAnnotation = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#value.
-rsdlListener.prototype.enterValue = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#value.
-rsdlListener.prototype.exitValue = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#arr.
-rsdlListener.prototype.enterArr = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#arr.
-rsdlListener.prototype.exitArr = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#item.
-rsdlListener.prototype.enterItem = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#item.
-rsdlListener.prototype.exitItem = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#obj.
-rsdlListener.prototype.enterObj = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#obj.
-rsdlListener.prototype.exitObj = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#pair.
-rsdlListener.prototype.enterPair = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#pair.
-rsdlListener.prototype.exitPair = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#name.
-rsdlListener.prototype.enterName = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#name.
-rsdlListener.prototype.exitName = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#path.
-rsdlListener.prototype.enterPath = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#path.
-rsdlListener.prototype.exitPath = function(ctx) {
-};
-
-
-// Enter a parse tree produced by rsdlParser#qualifiedName.
-rsdlListener.prototype.enterQualifiedName = function(ctx) {
-};
-
-// Exit a parse tree produced by rsdlParser#qualifiedName.
-rsdlListener.prototype.exitQualifiedName = function(ctx) {
-};
-
-
-
-exports.rsdlListener = rsdlListener;
