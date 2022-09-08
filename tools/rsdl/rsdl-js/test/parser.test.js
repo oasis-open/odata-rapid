@@ -1,11 +1,13 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
+import csdl from "odata-csdl";
+import fs from "fs";
 
-const csdl = require("odata-csdl");
-const fs = require("fs");
+import { parse } from "../lib/parser.js";
 
-const { parse } = require("../lib/parser");
+import url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
-describe("Parse correct RSDL", () => {
+describe("rsdl-js Parse correct RSDL", () => {
   it("Empty file", () => {
     assert.deepStrictEqual(parse(""), {
       $Version: "4.0",
@@ -478,7 +480,7 @@ describe("Parse correct RSDL", () => {
   });
 });
 
-describe("Reference test cases", () => {
+describe("rsdl-js Reference test cases", () => {
   //TODO: collect files from ../rapid-cli/rapid.rdm.transformation.tests/data
   const files = [
     { d: "abstract" },
@@ -510,7 +512,7 @@ describe("Reference test cases", () => {
   });
 });
 
-describe("Parse RSDL with errors", () => {
+describe("rsdl-js Parse RSDL with errors", () => {
   it("Parser error", () => {
     assert.deepStrictEqual(parse("type foo"), {
       $$errors: [

@@ -4,8 +4,16 @@
 
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "ms-dotnettools.csharp",
+    "bierner.github-markdown-preview",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "forivall.abnf",
+    "hbenl.vscode-mocha-test-adapter",
+    "hbenl.vscode-test-explorer",
+    "mike-lischke.vscode-antlr4",
     "streetsidesoftware.code-spell-checker",
-    "formulahendry.dotnet-test-explorer"
+    "tamuratak.vscode-lezer",
+    "formulahendry.dotnet-test-explorer",
+    "ms-dotnettools.csharp"
   ]
 }

@@ -1,49 +1,49 @@
-# Website
+# RAPID ROCKS Website
 
-This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
 ### Installation
 
-Build the [tools](../tools/readme.md) mono-repo.
-
-Then:
+Install everything in this monorepo from the project root:
 
 ```
-cd website
+npm install
+npm run build
+```
+
+If you had installed the monorepo previously and want to start from a clean slate:
+
+```
 npm run clean
 npm install
-```
-
-Repeat this whenever you want to pull in changes from the [tools](../tools/readme.md) mono-repo.
-
-### Linting and fixing documentation issues
-
-To run linting and build locally before contributing any change to the website
-
-```sh
-npm run lintDocs
 npm run build
 ```
 
 ### Local Development
 
+In the project root or this folder:
+
 ```
 npm start
 ```
 
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-### Build
+### Deployment
+
+In the project root:
 
 ```
 npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This generates static content into the `website/build` folder that can be locally served with
 
-### Deployment
+```
+npm run serve
+```
 
-Once you have built the website, you can deploy using GIT Bash:
+Once you have tested the website locally, you can deploy using GIT Bash:
 
 ```
 GIT_USER=<Your GitHub username> npm run deploy

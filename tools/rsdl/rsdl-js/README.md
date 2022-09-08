@@ -60,11 +60,6 @@ Install
 - VS Code
 - [ANTLR4 grammar syntax support](https://marketplace.visualstudio.com/items?itemName=mike-lischke.vscode-antlr4&ssr=false#overview) (workspace recommendation)
 
-## TOOD
-
-- [ ] migrate to ANTLR 4.9.x and switch from CommonJS modules to ES modules
-- [ ] adapt all dependents in this monorepo
-
 ## Done
 
 - [x] create grammar
@@ -78,10 +73,10 @@ Install
 - [x] log errors from CLI
 - [x] type definitions
 - [x] doc comments
+- [x] update to ANTLR 4.9.2 and switch from CommonJS to ES module
 
 ## TODO
 
 - [ ] Model validation
 - [ ] Option `-a` for compiling all files in a folder?
 - [ ] Option `-r` for recursive compilation?
-- [ ] Update to ANTLR 4.9.x
