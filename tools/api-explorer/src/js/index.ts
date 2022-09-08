@@ -49,6 +49,7 @@ function initialize() {
         } catch {}
 
         resultView.innerHTML = responseText;
+        hljs.highlightAll();
       })
     );
   });

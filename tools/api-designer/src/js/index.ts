@@ -1,16 +1,12 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "swagger-ui/dist/swagger-ui.css";
 import "highlight.js/styles/default.css";
-import hljs from "highlight.js/lib/core";
-import json from "highlight.js/lib/languages/json";
 import "../css/main.scss";
 import { initRsdlEditor } from "rsdl-editor";
 import { MermaidEditor } from "visual-model-editor";
 import { schemaFormat, initUrlEditor } from "odata-url-editor";
 import { App, Listener } from "./app";
 import { initViewers } from "./viewers";
-
-hljs.registerLanguage("json", json);
 
 document.addEventListener("DOMContentLoaded", function (event) {
   // `app` is used for state management and messaging between the different components
@@ -65,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   viewerListener.configure(config);
 
   app.publishRsdl("main", currentRsdl);
-  hljs.highlightAll();
 
   const dropdown = document.getElementById("export-dropdown");
 
@@ -96,9 +91,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
         filename = `rsdl-csdl.${extension}`;
         break;
       case "CSDL-XML":
-          text = config.csdlXmlTabContent.innerText;
-          filename = `rsdl-csdl-xml.${extension}`;
-          break;
+        text = config.csdlXmlTabContent.innerText;
+        filename = `rsdl-csdl-xml.${extension}`;
+        break;
       case "Open API":
         text = config.openApiTabContent.innerText;
         filename = `rsdl-openapi3.${extension}`;
