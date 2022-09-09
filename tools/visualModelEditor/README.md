@@ -38,7 +38,7 @@ path that points to this package's root folder.
 ```ts
 import { MermaidEditor } from "visual-model-editor";
 
-const container = document.getElementById("rsdl-editor-gui-content");
+const container = document.getElementById("visual-editor-gui-content");
 
 const editor = MermaidEditor(
   container,

@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
   );
 
   const mermaidEditor = new MermaidEditor(
-    document.getElementById("rsdl-editor-gui-content"),
+    document.getElementById("visual-editor-gui-content"),
     window,
     (rsdl: string) => app.publishRsdl("visualEditor", rsdl)
   );
 
   document
-    .getElementById("rsdl-editor-gui-tab")
+    .getElementById("visual-editor-gui-tab")
     .addEventListener("shown.bs.tab", () => mermaidEditor.redraw());
 
   app.addListener(

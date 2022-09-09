@@ -75,9 +75,14 @@ export function getType(typeDef) {
 }
 
 export function getModel(schema: NormalizedEdmModel) {
+  var entityContainer = schema["$EntityContainer"];
+  if (!entityContainer) {
+    return null;
+  }
+
   var modelName;
   var serviceName;
-  [modelName, serviceName] = schema["$EntityContainer"].split(".");
+  [modelName, serviceName] = entityContainer.split(".");
 
   return schema[modelName];
 }

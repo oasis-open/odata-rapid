@@ -74,9 +74,12 @@ export class MermaidEditor {
   }
 
   public updateCsdl(jsonCsdlText: string) {
-    //todo: add error handling
-    const schema = JSON.parse(jsonCsdlText);
-    this.updateSchema(schema);
+    try {
+      const schema = JSON.parse(jsonCsdlText);
+      this.updateSchema(schema);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public updateRsdl(rsdlText: string) {
