@@ -130,8 +130,7 @@ export class MermaidEditor {
     } else {
       entries.push([edmModel.$Name, edmModel]);
     }
-    var modelName, serviceName;
-    [modelName, serviceName] = schema["$EntityContainer"].split(".");
+    var modelName = getModel(schema["$EntityContainer"]);
     schema[modelName] = Object.fromEntries(entries);
     this.publishRsdl();
   }

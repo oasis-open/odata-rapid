@@ -80,9 +80,8 @@ export function getModel(schema: NormalizedEdmModel) {
     return null;
   }
 
-  var modelName;
-  var serviceName;
-  [modelName, serviceName] = entityContainer.split(".");
+  var dot = entityContainer.lastIndexOf(".");
+  var modelName = entityContainer.substring(0, dot);
 
   return schema[modelName];
 }

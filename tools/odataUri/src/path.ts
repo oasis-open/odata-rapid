@@ -12,7 +12,7 @@ import {
   isPrimitiveType,
   PrimitiveType,
 } from "./json-model";
-import { IError, peekStack } from "./common";
+import { IError, peekStack, parseQualifiedName } from "./common";
 
 export function parsePath(
   path: string,
@@ -130,8 +130,9 @@ export class PathParser {
     this.input = input;
     this.schema = schema;
     this.typeStack = [];
-    [this.modelName, this.serviceName] =
-      this.schema["$EntityContainer"].split(".");
+    [this.modelName, this.serviceName] = parseQualifiedName(
+      schema["$EntityContainer"]
+    );
   }
 
   parse() {
@@ -246,7 +247,9 @@ export class PathAutoComplete {
     this.schema = schema;
     this.segments = segments;
     this.input = input;
-    [this.modelName, this.serviceName] = schema["$EntityContainer"].split(".");
+    [this.modelName, this.serviceName] = parseQualifiedName(
+      schema["$EntityContainer"]
+    );
   }
 
   getCompletions(pos: number): string[] {
