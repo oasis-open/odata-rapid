@@ -478,6 +478,67 @@ describe("rsdl-js Parse correct RSDL", () => {
       }
     );
   });
+
+  it("Jetsons", () => {
+    assert.deepStrictEqual(
+      parse(`type Company
+             {
+               key stockSymbol: String
+               name: String
+               incorporated: DateTime
+               employees: [Employee]
+             }
+              
+             type Employee
+             {
+               key id: Integer 
+               firstName : String?
+               lastName : String?
+               title: String?
+              }
+              
+             service
+             {
+               competitors: [Company]
+               company: Company
+             }`).Model.Service,
+      {
+        $Kind: "EntityContainer",
+        company: { $Type: "Model.Company" },
+        competitors: { $Collection: true, $Type: "Model.Company" },
+      }
+    );
+
+    // do it again, just to be sure
+    assert.deepStrictEqual(
+      parse(`type Company
+             {
+               key stockSymbol: String
+               name: String
+               incorporated: DateTime
+               employees: [Employee]
+             }
+              
+             type Employee
+             {
+               key id: Integer 
+               firstName : String?
+               lastName : String?
+               title: String?
+              }
+              
+             service
+             {
+               competitors: [Company]
+               company: Company
+             }`).Model.Service,
+      {
+        $Kind: "EntityContainer",
+        company: { $Type: "Model.Company" },
+        competitors: { $Collection: true, $Type: "Model.Company" },
+      }
+    );
+  });
 });
 
 describe("rsdl-js Reference test cases", () => {
