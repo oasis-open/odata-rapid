@@ -74,9 +74,12 @@ export class MermaidEditor {
   }
 
   public updateCsdl(jsonCsdlText: string) {
-    //todo: add error handling
-    const schema = JSON.parse(jsonCsdlText);
-    this.updateSchema(schema);
+    try {
+      const schema = JSON.parse(jsonCsdlText);
+      this.updateSchema(schema);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public updateRsdl(rsdlText: string) {
@@ -127,8 +130,7 @@ export class MermaidEditor {
     } else {
       entries.push([edmModel.$Name, edmModel]);
     }
-    var modelName, serviceName;
-    [modelName, serviceName] = schema["$EntityContainer"].split(".");
+    var modelName = getModel(schema["$EntityContainer"]);
     schema[modelName] = Object.fromEntries(entries);
     this.publishRsdl();
   }

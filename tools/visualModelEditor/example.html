@@ -5,10 +5,10 @@
     <script src="dist/index.js"></script>
 </head>
 <body>
-<div id="rsdl-editor-gui-content" style="width:500px;height:500px;"></div>
+<div id="visual-editor-gui-content" style="width:500px;height:500px;"></div>
 <script>
 const editor = new visualModelEditor.MermaidEditor(
-    document.getElementById('rsdl-editor-gui-content'),
+    document.getElementById('visual-editor-gui-content'),
     window,
     (rsdl) => editor.updateRsdl(rsdl)
 );

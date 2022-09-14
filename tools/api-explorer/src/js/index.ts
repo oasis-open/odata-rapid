@@ -19,7 +19,7 @@ const swaggerUiNode = document.getElementById("swagger-ui-desc");
 const csdlTabContent = document.getElementById("csdl-desc");
 const openApiTabContent = document.getElementById("open-api-desc");
 const mermaidEditor = new MermaidEditor(
-  document.getElementById("rsdl-editor-gui-content"),
+  document.getElementById("visual-editor-gui-content"),
   window,
   (rsdl: string) => {}
 );
@@ -38,21 +38,29 @@ function initialize() {
 
   // Initialize Send Query Button
   sendButton.addEventListener("click", async () => {
-    fetch(getServiceUrl() + urlEditor.getUrl()).then((response) =>
+    fetch(getServiceUrl() + urlEditor.getUrl()).then((response) => {
       response.text().then((responseText) => {
-        // Write results to result element
-        // TODO handle error responses
-        try {
-          const parsed = JSON.parse(responseText);
-          const pretty = JSON.stringify(parsed, null, 2);
-          responseText = pretty;
-        } catch {}
-
-        resultView.innerHTML = responseText;
-        hljs.highlightAll();
-      })
-    );
+        if (responseText) {
+          // Write results to result element
+          populateQueryResults(responseText);
+        } else {
+          resultView.innerHTML =
+            "Error " + response.status + " " + response.statusText;
+        }
+      });
+    });
   });
+
+  function populateQueryResults(results: string) {
+    try {
+      const parsed = JSON.parse(results);
+      const pretty = JSON.stringify(parsed, null, 2);
+      resultView.innerHTML = pretty;
+      hljs.highlightAll();
+    } catch {
+      resultView.innerText = results;
+    }
+  }
 
   // Export Schema
   const dropdown = document.getElementById("export-dropdown");
@@ -98,7 +106,9 @@ function getServiceUrl() {
 }
 
 function updateServiceUrl(serviceUrl: string) {
-  const metadataUrl = serviceUrl + "$metadata?$format=application/json";
+  const metadataUrl =
+    serviceUrl +
+    "$metadata?$format=application/json;q=0.8,application/xml;q=0.5";
 
   // Clear UrlEditor and resultsView
   urlEditor.setUrl("");
@@ -107,15 +117,30 @@ function updateServiceUrl(serviceUrl: string) {
   fetch(metadataUrl).then((response) =>
     response.text().then((text) => {
       // get schema from service
-      // todo: handle errors
-      const contentType = response.headers.get("Content-Type");
-      if (contentType.includes("xml")) {
-        text = JSON.stringify(xml2json(text), null, 2);
-      }
+      try {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType.includes("xml")) {
+          text = JSON.stringify(xml2json(text), null, 2);
+        }
 
-      updateSchema(serviceUrl, text);
+        updateSchema(serviceUrl, text);
+      } catch (errorMessage) {
+        onSchemaError(serviceUrl, errorMessage);
+      }
     })
   );
+}
+
+function onSchemaError(serviceUrl: string, errorText: string) {
+  // write error to CSDL tab
+  csdlTabContent.innerText = errorText;
+
+  // clear other schemas
+  var nullSchema = JSON.stringify({});
+  urlEditor.updateSchema(nullSchema, schemaFormat.jsonCsdl);
+  mermaidEditor.updateCsdl(nullSchema);
+  mermaidEditor.redraw();
+  updateSwaggerUi(serviceUrl, nullSchema);
 }
 
 function updateSchema(serviceUrl: string, schema: string) {
@@ -130,6 +155,12 @@ function updateSchema(serviceUrl: string, schema: string) {
   mermaidEditor.redraw();
 
   // Update SwaggerUI
+  updateSwaggerUi(serviceUrl, schema);
+
+  hljs.highlightAll();
+}
+
+function updateSwaggerUi(serviceUrl: string, schema: any) {
   var jsonSchema = JSON.parse(schema);
   var parsedUrl = parseUrl(serviceUrl);
   var openapi = csdl2openapi(jsonSchema, {
@@ -142,8 +173,6 @@ function updateSchema(serviceUrl: string, schema: string) {
     domNode: swaggerUiNode,
     spec: openapi,
   });
-
-  hljs.highlightAll();
 }
 
 function parseUrl(url: string) {
