@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "codemirror": "^6",
-    "odata-csdl": "^0.4.4",
+    "odata-csdl": "^0.6.0",
     "odata-uri": "file:../odataUri",
     "process": "^0.11.10",
     "rsdl-js": "file:../rsdl/rsdl-js",

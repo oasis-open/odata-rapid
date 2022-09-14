@@ -5,7 +5,7 @@
   "dependencies": {
     "bootstrap": "^5.2.0",
     "highlight.js": "^11.6.0",
-    "odata-openapi": "^0.18.1",
+    "odata-openapi": "^0.18.4",
     "odata-url-editor": "file:../urlEditor",
     "swagger-ui": "3.52.5",
     "visual-model-editor": "file:../visualModelEditor"
