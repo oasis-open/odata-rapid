@@ -10,7 +10,7 @@
     "odata-url-editor": "file:../urlEditor",
     "rsdl-editor": "file:../rsdlEditor",
     "rsdl-js": "file:../rsdl/rsdl-js",
-    "swagger-ui": "3.52.5",
+    "swagger-ui": "4.1.3",
     "visual-model-editor": "file:../visualModelEditor"
   },
   "devDependencies": {
