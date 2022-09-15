@@ -61,13 +61,13 @@
             <li class="nav-item" role="presentation">
               <button
                 type="button"
-                class="nav-link active"
+                class="nav-link"
                 id="csdl-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#csdl"
                 role="tab"
                 aria-controls="csdl"
-                aria-selected="true"
+                aria-selected="false"
               >
                 CSDL
               </button>
@@ -89,13 +89,13 @@
             <li class="nav-item" role="presentation">
               <button
                 type="button"
-                class="nav-link"
+                class="nav-link active"
                 id="visual-editor-gui-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#visual-editor-gui"
                 role="tab"
                 aria-controls="visual-editor-gui"
-                aria-selected="false"
+                aria-selected="true"
               >
                 Visualize
               </button>
@@ -103,7 +103,7 @@
           </ul>
           <div class="tab-content" id="schemaViewContent">
             <div
-              class="tab-pane fade show active"
+              class="tab-pane fade"
               id="csdl"
               role="tabpanel"
               aria-labelledby="csdl-tab"
@@ -121,7 +121,7 @@
               </div>
             </div>
             <div
-              class="tab-pane fade"
+              class="tab-pane fade show active"
               id="visual-editor-gui"
               role="tabpanel"
               aria-labelledby="swagger-ui-tab"
