@@ -21,7 +21,7 @@ function initUrlEditor(
   const manager = new AutoCompleteManager(null);
 
   const completionSource: CompletionSource = (context) => {
-    const content = context.state.doc.line(1).text;
+    const content = getDocContent(context.state.doc);
 
     let completions: ICompletions;
 
@@ -47,7 +47,7 @@ function initUrlEditor(
   };
 
   const linterSource = (view: EditorView): Diagnostic[] => {
-    const content = view.state.doc.line(1).text;
+    const content = getDocContent(view.state.doc);
     const errors = manager.getErrors(content);
 
     return errors.map((error) => ({
