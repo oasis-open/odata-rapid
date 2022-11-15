@@ -64,7 +64,7 @@ namespace Jetsons
                         new ODataMessageWriterSettings
                         {
                             Version = ODataVersion.V401,
-                            BaseUri = new Uri("http://" + serviceName, UriKind.Absolute)
+                            BaseUri = new Uri("http://" + serviceName, UriKind.Absolute),
                         })
 
                     // omit @odata prefixes
@@ -75,7 +75,7 @@ namespace Jetsons
                         return simplifiedOptions;
                     })
                     .AddScoped<ODataUriResolver>((serviceProvider) =>
-                        new ODataUriResolver
+                        new UnqualifiedODataUriResolver
                         {
                             EnableNoDollarQueryOptions = true,
                             EnableCaseInsensitive = true,
@@ -128,7 +128,6 @@ namespace Jetsons
 
             app.UseCors(corsPolicy);
 
-            app.UseThreadPrincipals();
             app.UseSession();
             app.UseJetsonsMiddleware();
 

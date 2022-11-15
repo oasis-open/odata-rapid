@@ -25,25 +25,14 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
 		<PackageReference Include="Microsoft.OpenApi.OData" Version="1.0.10-preview2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Microsoft.Restier.Providers.InMemory\Microsoft.Restier.Providers.InMemory.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="Microsoft.Restier.AspNetCore">
-			<HintPath>..\RESTierAssemblies\Microsoft.Restier.AspNetCore.dll</HintPath>
-			<CopyLocal>True</CopyLocal>
-		</Reference>
-		<Reference Include="Microsoft.Restier.Core">
-			<HintPath>..\RESTierAssemblies\Microsoft.Restier.Core.dll</HintPath>
-			<CopyLocal>True</CopyLocal>
-		</Reference>
 	</ItemGroup>
 
 </Project>
