@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/e431a482-38c5-4ec9-8147-d5c151f1ce1e/AppServices/subscriptions/e431a482-38c5-4ec9-8147-d5c151f1ce1e/resourceGroups/RAPID-PRO/providers/Microsoft.Web/sites/Jetsons",
+  "appService.deploySubpath": "."
+}
