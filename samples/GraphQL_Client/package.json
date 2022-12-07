@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@graphql-mesh/cli": "^0.48.1",
+    "@graphql-mesh/cli": "^0.80.4",
     "@graphql-mesh/odata": "^0.16.24",
     "graphql": "^16.6.0"
   }
