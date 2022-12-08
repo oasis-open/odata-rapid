@@ -98,7 +98,7 @@ namespace Jetsons
         /// <summary>
         ///     Function to return top employees.
         /// </summary>
-        [BoundOperation(OperationType = OperationType.Function)]
+        [BoundOperation(EntitySetPath="company/employees", OperationType = OperationType.Function)]
         public IEnumerable<Employee> topEmployees(Company company, int num)
         {
             return company.employees.OrderByDescending(e=>e.id).Take(num);
