@@ -5,7 +5,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Jetsons
 {
-    public class Employee
+    /// <summary>
+    /// The Employee class represents an employee in the Jetsons schema.
+    /// The same class is used both for the Entity Framework model and the OData model.
+    /// </summary>
+    public partial class Employee
     {
         [Key]
         public int id { get; set; }

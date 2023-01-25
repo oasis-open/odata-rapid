@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Restier.AspNetCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Restier.Core.Submit;
 using Microsoft.Restier.Core.Model;
-using Microsoft.Restier.Providers.InMemory.DataStoreManager;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Jetsons.Data;
+using Microsoft.Restier.Core.Submit;
 
 namespace Jetsons
 {
@@ -55,11 +55,7 @@ namespace Jetsons
                 builder.AddRestierApi<JetsonsApi>(routeServices =>
                 {
                     routeServices
-                        .AddSingleton(new ODataValidationSettings
-                        {
-                            MaxAnyAllExpressionDepth = 10,
-                            MaxExpansionDepth = 10,
-                        })
+                        // Set the OData version and BaseUri in the ODataMessageWriter
                         .AddScoped<ODataMessageWriterSettings>((sp) =>
                         new ODataMessageWriterSettings
                         {
@@ -67,43 +63,50 @@ namespace Jetsons
                             BaseUri = new Uri("http://" + serviceName, UriKind.Absolute),
                         })
 
-                    // omit @odata prefixes
-                    .AddSingleton<ODataSimplifiedOptions>((sp) =>
-                    {
-                        ODataSimplifiedOptions simplifiedOptions = new ODataSimplifiedOptions();
-                        simplifiedOptions.SetOmitODataPrefix(true);
-                        return simplifiedOptions;
-                    })
-                    .AddScoped<ODataUriResolver>((serviceProvider) =>
-                        new UnqualifiedODataUriResolver
+                        // Set max limits for expression depths
+                        .AddSingleton(new ODataValidationSettings
                         {
-                            EnableNoDollarQueryOptions = true,
-                            EnableCaseInsensitive = true,
+                            MaxAnyAllExpressionDepth = 10,
+                            MaxExpansionDepth = 10,
                         })
-                    .AddSingleton<IChangeSetInitializer, Microsoft.Restier.Providers.InMemory.Submit.ChangeSetInitializer<JetsonsApi>>()
-                    .AddSingleton<ISubmitExecutor, Microsoft.Restier.Providers.InMemory.Submit.SubmitExecutor>()
-                    .AddChainedService<IModelBuilder, JetsonsApi.ModelBuilder>()
-                    .AddSingleton<IDataStoreManager<string, JetsonsDataSource>>(new SingleDataStoreManager<string, JetsonsDataSource>())
 
-                    //.AddScoped<ODataQuerySettings>((sp) => new ODataQuerySettings
-                    //{
-                    //    PageSize = 2
-                    //});
+                        // omit @odata prefixes in response
+                        .AddSingleton<ODataSimplifiedOptions>((sp) =>
+                        {
+                            ODataSimplifiedOptions simplifiedOptions = new ODataSimplifiedOptions();
+                            simplifiedOptions.SetOmitODataPrefix(true);
+                            return simplifiedOptions;
+                        })
+
+                        // Add server-driven paging
+                        //.AddScoped<ODataQuerySettings>((sp) => new ODataQuerySettings
+                        //{
+                        //    PageSize = 2
+                        //})
+
+                        // Insert an ODataUriResolver that supports unqualified operations,
+                        // omitting $ prefix for query options, and case-insensitivity
+                        .AddScoped<ODataUriResolver>((serviceProvider) =>
+                            new UnqualifiedODataUriResolver
+                            {
+                                EnableNoDollarQueryOptions = true,
+                                EnableCaseInsensitive = true,
+                            })
+
+                        // Add change handlers
+                        .AddSingleton<IChangeSetInitializer, JetsonsDbContext>()
+                        .AddSingleton<ISubmitExecutor, JetsonsDbContext>()
+
+                        // Add our model builder
+                        .AddChainedService<IModelBuilder, JetsonsApi.ModelBuilder>()
                     ;
                 });
             });
 
+            // RESTier doesn't currently support endpoint routing
             services.AddControllers(options => options.EnableEndpointRouting = false);
 
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = false;
-            });
-
+            // Support CORS
             services.AddCors(options =>
             {
                 options.AddPolicy(name: corsPolicy,
@@ -126,15 +129,21 @@ namespace Jetsons
                 app.UseDeveloperExceptionPage();
             }
 
+            // Support CORS
             app.UseCors(corsPolicy);
 
-            app.UseSession();
+            // Handle any pre-processing
             app.UseJetsonsMiddleware();
+
+            // Support batch requests
+            app.UseRestierBatching();
 
             app.UseMvc(builder =>
             {
+                // Support query options
                 builder.Select().Expand().Filter().OrderBy().MaxTop(100).Count().SetTimeZoneInfo(TimeZoneInfo.Utc);
 
+                // Enable RESTier to build the OData paths
                 builder.MapRestier(builder =>
                 {
                     builder.MapApiRoute<JetsonsApi>(routeName, "", true);
@@ -144,7 +153,7 @@ namespace Jetsons
     }
 
     /// <summary>
-    /// Jetsons-specific request handling
+    /// Hook for customizing request before being processed
     /// </summary>
     public class JetsonsMiddleware
     {

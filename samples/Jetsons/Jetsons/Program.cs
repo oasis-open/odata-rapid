@@ -1,11 +1,13 @@
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-
 
 namespace Jetsons
 {
     /// <summary>
-    /// Main method.
+    /// The Program class is the main entry point for the Jetsons Service
     /// </summary>
     public static class Program
     {

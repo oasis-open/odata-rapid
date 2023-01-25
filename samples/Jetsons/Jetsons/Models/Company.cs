@@ -8,8 +8,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Jetsons
 {
-    public class Company
+    /// <summary>
+    /// The Company class represents a company in the Jetsons schema.
+    /// The same class is used both for the Entity Framework model and the OData model.
+    /// </summary>
+    public partial class Company
     {
+        public Company()
+        {
+            employees = new HashSet<Employee>();
+        }
+
         [Key]
         public string stockSymbol { get; set; }
 
@@ -18,7 +27,7 @@ namespace Jetsons
         public DateTime incorporated { get; set; }
 
         [Contained]
-        public List<Employee> employees { get; set; }
+        public virtual ICollection<Employee> employees { get; set; }
 
     }
 }
