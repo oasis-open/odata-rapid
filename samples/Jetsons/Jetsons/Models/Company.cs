@@ -8,8 +8,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Jetsons
 {
-    public class Company
+    public partial class Company
     {
+        public Company()
+        {
+            employees = new HashSet<Employee>();
+        }
+
         [Key]
         public string stockSymbol { get; set; }
 
@@ -18,7 +23,7 @@ namespace Jetsons
         public DateTime incorporated { get; set; }
 
         [Contained]
-        public List<Employee> employees { get; set; }
+        public virtual ICollection<Employee> employees { get; set; }
 
     }
 }

@@ -13,12 +13,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Restier.AspNetCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Restier.Core.Submit;
 using Microsoft.Restier.Core.Model;
-using Microsoft.Restier.Providers.InMemory.DataStoreManager;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Jetsons.Data;
+using Microsoft.Restier.Core.Submit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Jetsons
 {
@@ -55,6 +56,7 @@ namespace Jetsons
                 builder.AddRestierApi<JetsonsApi>(routeServices =>
                 {
                     routeServices
+//                        .AddEFCoreProviderServices<JetsonsDbContext>((services,options)=>options.UseSqlite(@"Data\Jetsons.db"))
                         .AddSingleton(new ODataValidationSettings
                         {
                             MaxAnyAllExpressionDepth = 10,
@@ -80,10 +82,9 @@ namespace Jetsons
                             EnableNoDollarQueryOptions = true,
                             EnableCaseInsensitive = true,
                         })
-                    .AddSingleton<IChangeSetInitializer, Microsoft.Restier.Providers.InMemory.Submit.ChangeSetInitializer<JetsonsApi>>()
-                    .AddSingleton<ISubmitExecutor, Microsoft.Restier.Providers.InMemory.Submit.SubmitExecutor>()
+                    .AddSingleton<IChangeSetInitializer, JetsonsDbContext>()
+                    .AddSingleton<ISubmitExecutor, JetsonsDbContext>()
                     .AddChainedService<IModelBuilder, JetsonsApi.ModelBuilder>()
-                    .AddSingleton<IDataStoreManager<string, JetsonsDataSource>>(new SingleDataStoreManager<string, JetsonsDataSource>())
 
                     //.AddScoped<ODataQuerySettings>((sp) => new ODataQuerySettings
                     //{
@@ -94,15 +95,6 @@ namespace Jetsons
             });
 
             services.AddControllers(options => options.EnableEndpointRouting = false);
-
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = false;
-            });
 
             services.AddCors(options =>
             {
@@ -128,8 +120,9 @@ namespace Jetsons
 
             app.UseCors(corsPolicy);
 
-            app.UseSession();
             app.UseJetsonsMiddleware();
+
+            app.UseRestierBatching();
 
             app.UseMvc(builder =>
             {

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Jetsons
 {
-    public class Employee
+    public partial class Employee
     {
         [Key]
         public int id { get; set; }
