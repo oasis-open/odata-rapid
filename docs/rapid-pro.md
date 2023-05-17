@@ -14,12 +14,12 @@ import Request from '../website/src/components/documentation-queries/Request.js'
 -->
 
 RAPID is a simple profile for building well-designed APIs that can scale to the level of functionality required for any situation.
+
 By following RAPID conventions, services are able to leverage common libraries and tools,
 and can share their information in a discoverable and interoperable way.
 
 Because the RAPID profile is based on, and compatible with, the industry standard OData protocol,
-services following RAPID conventions know that, as their needs grow,
-there are well defined conventions and semantics that allow them to seamlessly and incrementally grow without having to rewrite as their needs evolve.
+services following RAPID conventions know that, as their needs grow, there are well defined conventions and semantics that allow them to seamlessly and incrementally grow without having to rewrite as their needs evolve.
 
 ## What makes a RAPID service?
 
