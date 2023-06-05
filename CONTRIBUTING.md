@@ -10,7 +10,7 @@ repository projects.  Participation is expected to be consistent with the
 [OASIS TC Open Repository Guidelines and Procedures](https://www.oasis-open.org/policies-guidelines/open-repositories), 
 the [LICENSE](https://www.oasis-open.org/sites/www.oasis-open.org/files/Apache-LICENSE-2.0.txt) 
 designated for this particular repository (Apache License v 2.0), and the requirement for 
-an [Individual Contributor License Agreement](https://www.oasis-open.org/resources/open-repositories/cla/individual-cla). 
+an [Individual Contributor License Agreement](https://cla-assistant.io/oasis-open/Open-Repo-admin). 
 Please see the repository [README](https://github.com/oasis-open/odata-rapid/blob/main/README.md) 
 document for other details.
 
@@ -49,7 +49,7 @@ Formally, "contribution" to this TC Open Repository refers to content merged int
 GitHub definition of [contributor](https://help.github.com/articles/github-glossary/#contributor): 
 "someone who has contributed to a project by having a pull request merged but does not have collaborator 
 [i.e. direct write] access." Anyone who signs the TC Open Repository 
-[Individual Contributor License Agreement (CLA)](https://www.oasis-open.org/resources/open-repositories/cla/individual-cla), 
+[Individual Contributor License Agreement (CLA)](https://cla-assistant.io/oasis-open/Open-Repo-admin), 
 signifying agreement with the licensing requirement, may contribute substantive content subject to 
 evaluation of a GitHub pull request.  The main web page for this repository, as with any GitHub public 
 repository, displays a link to a document listing contributions to the repository's default branch 
