@@ -527,7 +527,7 @@ type Employee {
 
 An [Enumeration Type](rsdl-abnf#enumeration-type) is mapped to a CSDL EnumType. The enumeration members' values are automatically assigned.
 
-```json
+```rsdl
 enum employmentType { salaried hourly }
 ```
 
@@ -567,7 +567,7 @@ enum employmentType { salaried hourly }
 A [Flags Type](rsdl-abnf#enumeration-type), i.e an enumeration that starts with the keyword flags, is mapped to an CSDL EnumType with the `IsFlags` property set to `true`.
 The members' values are automatically assigned to powers of 2.
 
-```json
+```rsdl
 flags PhoneService { LandLine Cell Fax Internet Other }
 ```
 

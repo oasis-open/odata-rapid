@@ -23,6 +23,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
     - [Service](#service)
     - [Annotations](#annotations)
     - [Model Capabilities](#model-capabilities)
+    - [Paths](#paths)
     - [Path Capabilities](#path-capabilities)
     - [Capability Elements](#capability-elements)
     - [Core Syntax Elements](#core-syntax-elements)
@@ -167,6 +168,71 @@ collectionReferenceCapabilities = "{" [ collectionReferenceCapability *( separat
 
 ```
 
+### Paths
+
+```ABNF
+paths = %s"paths" OWS ":" OWS "{" *( OWS path ) OWS "}"
+
+path =   "/" entitySet [ "/" castSegment ] [ RWS collectionRefPathCapabilities ]
+       / "/" singleton [ "/" castSegment] [ RWS singleRefPathCapabilities ]
+       / "/" serviceMember *("/" interimSegment) "/" lastSegment
+       / serviceOperationPath
+
+interimSegment = singleValuedSegment / nullableValuedSegment / castSegment
+              / singleRefSegment / nullableRefSegment / collectionRefSegment "/" keySegment
+
+lastSegment = singleValuedSegment [ "/" castSegment ] [ RWS singlePathCapabilities ]
+            / nullableValuedSegment [ "/" castSegment ] [ RWS nullablePathCapabilities ]
+            / collectionValuedSegment [ "/" castSegment ] [ RWS collectionPathCapabilities ]
+            / singleRefSegment [ "/" castSegment ] [ RWS singleRefPathCapabilities ]
+            / nullableRefSegment [ "/" castSegment ] [ RWS nullableRefCapabilities ]
+            / collectionRefSegment [ "/" castSegment ] [ RWS ( collectionRefPathCapabilities / "/" keySegment RWS nullableRefPathCapabilities )]
+
+serviceOperationPath = "/" singleValuedOperation [ "/" castSegment ] [ RWS singlePathCapabilities]
+                     / "/" nullableValuedOperation [ "/" castSegment ] [ RWS nullablePathCapabilities]
+                     / "/" collectionValuedOperation [ "/" castSegment ] [ RWS collectionPathCapabilities]
+                     / "/" refValuedOperation [ "/" castSegment ] [ RWS refPathCapabilities]
+                     / "/" nullableRefValuedOperation [ "/" castSegment ] [ RWS nullableRefPathCapabilities]
+                     / "/" collectionRefValuedOperation [ "/" castSegment ] [ RWS collectionRefPathCapabilities]
+
+singleValuedSegment = identifier                   ; a single, non-nullable property
+                    / singleValuedOperation
+
+nullableValuedSegment = identifier                 ; a single, nullable property
+                    / nullableValuedOperation
+
+collectionValuedSegment = identifier               ; a collection-valued property
+                    / collectionValuedOperation
+
+singleRefSegment = identifier                      ; a single, non-nullable reference property
+                    / singleRefValuedOperation
+
+nullableRefSegment = identifier                    ; a single, nullable reference property
+                    / nullableRefValuedOperation
+
+collectionRefSegment = identifier                  ; a collection-valued reference property
+                    / collectionRefValuedOperation
+
+singleValuedOperation : identifier                 ; an operation that returns a single value
+
+nullableValuedOperation : identifier               ; an operation that returns a single, nullable value
+
+collectionValuedOperation : identifier             ; an operation that returns a collection value
+
+singleRefValuedOperation : identifier              ; an operation that returns a single reference value
+
+nullableRefValuedOperation : identifier            ; an operation that returns a nullable single reference value
+
+collectionRefValuedOperation : identifier          ; an operation that returns a collection of reference values
+
+castSegment = typeName
+
+keySegment = "{" keyProperty "}"
+
+keyProperty = identifier                               ; name of the key property
+
+```
+
 ### Path Capabilities
 
 ```ABNF
@@ -175,9 +241,9 @@ singlePathCapability = ("GET" / "PUT" / "PATCH") [noOptions]
 
 singlePathCapabilities = "{" [singlePathCapability *( separator singlePathCapability)] "}"
 
-nullableSinglePathCapability = singlePathCapability / "DELETE" noOptions
+nullablePathCapability = singlePathCapability / "DELETE" noOptions
 
-nullableSinglePathCapabilities = "{" [ nullableSinglePathCapability *( separator nullableSinglePathCapability )] "}"
+nullablePathCapabilities = "{" [ nullablePathCapability *( separator nullablePathCapability )] "}"
 
 collectionPathCapability = "GET" [ collectionCapabilities ] / "POST" [noOptions]
 

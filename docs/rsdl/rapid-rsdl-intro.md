@@ -249,3 +249,44 @@ Functions are invoked using a GET request. Function parameters are passed in the
 | Request                                                                                                                                 | Comment                            |
 | :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
 | GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
+
+#### Explicit Paths
+
+The set of paths supported by a RAPID service generally do not need to be explicitly enumerated in the RSDL because they are defined by the model. However, in some cases you may want to be explicit about the set of paths supported, either because the service supports only a subset of paths or because you want to specify [capabilities](rapid-rsdl-capabilities.md#annotating-paths) that are specific to that path.
+
+The set of paths supported by a RAPID service can be explicitly enumerated in the RSDL specification:
+
+```rsdl
+paths
+{
+  /company
+  /company/employees
+  /company/employees/{id}
+  /competitors
+  /competitors/{stockSymbol}
+  /competitors/{stockSymbol}/employees
+  /competitors/{stockSymbol}/employees/{id}
+  /company/topEmployees(num=5)
+  /company/topEmployees(num=5)/{id}
+  /company/youAreFired(reason='bad day')
+}
+```
+
+Paths that are omitted are not supported, even if valid according to the model. In addition, paths can be explicitly excluded by preceding with a comment character (`#`):
+
+```rsdl
+
+paths
+{
+  /company
+  /company/employees
+  /company/employees/{id}
+  /competitors
+  /competitors/{stockSymbol}
+# /competitors/{stockSymbol}/employees
+# /competitors/{stockSymbol}/employees/{id}
+  /company/topEmployees(num=5)
+# /company/topEmployees(num=5)/{id}
+  /company/youAreFired(reason='bad day')
+}
+```
