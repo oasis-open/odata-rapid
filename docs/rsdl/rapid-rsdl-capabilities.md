@@ -7,7 +7,6 @@ title: RSDL Capabilities
 
 RAPID uses a Schema Definition Language ([RSDL](./rsdl-intro)) to describe the structure of a REST service. Developers can be annotate their schema model with [capabilities](./rsdl-abnf#model-capabilities) in order to describe the capabilities of their service.
 
-- [Expressing Capabilities in RAPID Schema Definition Language (RSDL)](#expressing-capabilities-in-rapid-schema-definition-language-rsdl)
 - [Annotating Model Elements](#annotating-model-elements)
   - [Reading Data](#support-for-reading-data)
     - [Read Options](#read-options)
@@ -18,6 +17,16 @@ RAPID uses a Schema Definition Language ([RSDL](./rsdl-intro)) to describe the s
       - [orderby Option](#orderby-option)
       - [top/skip Options](#top-and-skip-options)
       - [count Option](#count-option)
+  - [Modifying Data](#support-for-modifying-data)
+    - [Creating Resources](#create-support)
+      - [Create options](#create-options)
+    - [Updating Resources](#update-support)
+      - [Update options](#update-options)
+    - [Replacing Resources](#replace-support)
+      - [Replace Options](#replace-options)
+    - [Deleting Resources](#delete-support)
+      - [Delete Options](#delete-options)
+  - [Invoking Operations](#operation-support)
   - [Default Capabilities](#default-capabilities)
 - [Annotating Paths](#annotating-paths)
 
@@ -60,11 +69,11 @@ States that the path `GET /competitors/{stockSymbol}` is supported.
 
 ### Read Options
 
-The `READ` capability can be further refined to specify the specific read capabilities that are supported. If no curly braces follow the `READ` capability then a default set of capabilities is assumed. If empty curly braces follow the `READ` capability then the value can be read, but not of the read capabilities are supported.
+The `READ` capability can be further refined to specify the specific read capabilities that are supported. If no curly braces follow the `READ` capability then a default set of capabilities is assumed. If empty curly braces follow the `READ` capability then the value can be read, but none of the read options are supported.
 
 #### Expand Option
 
-The `expand` option specifies that reference properties within the referenced type can be expanded.
+The `expand` option within the `READ` capability specifies that reference properties within the referenced type can be expanded.
 
 ```rsdl
 service {
@@ -226,9 +235,9 @@ Individual properties of the collection type may be annotated with the `orderabl
 ```rsdl
 type Company
 {
-  key stockSymbol: String { filterable, orderable }
-  name: String { filterable, orderable }
-  incorporated: Date { filterable, orderable }
+  key stockSymbol: String { orderable }
+  name: String { orderable }
+  incorporated: Date { orderable }
   employees: [Employee] { LIST { filter, orderby }, READ }
 }
 ```
@@ -238,7 +247,7 @@ Orderable collections of `Company` can be ordered on stockSymbol, name, and inco
 The `orderable` capability can include the set of orderby options to specify whether the property can be ordered ascending, descending, or both.
 
 ```rsdl
-  name: String { filterable { stringComp }, orderable { asc, desc} }
+  name: String { orderable { asc, desc} }
 ```
 
 The `name` property can be ordered by ascending (`asc`) or descending (`desc`).
@@ -251,7 +260,7 @@ The `top` and `skip` option within the `LIST` capability specify that `top` and 
 
 ```rsdl
 service {
-  competitors: [Company] { LIST { filter, orderby, top, skip }, READ }
+  competitors: [Company] { LIST { top, skip }, READ }
 }
 ```
 
@@ -263,13 +272,187 @@ The `count` option within the `LIST` capability specify that the [count](../rapi
 
 ```rsdl
 service {
-  competitors: [Company] { LIST { filter, orderby, top, skip }, READ }
+  competitors: [Company] { LIST { count }, READ }
 }
 ```
 
 The `count` query option can be used when listing competitors.
 
-### Default Capabilities
+## Support For Modifying Data
+
+Capabilities can be applied to top-level collections and collection-valued reference properties to specify whether they support [`POST`](#create-capability), [`PATCH`](#update-capability), [`PUT`](#replace-capability), or [`DELETE`](#delete-capability) operations.
+
+If no capabilities are applied to a top-level collection, or to a collection-valued reference property, it is assumed to support `POST`, `PATCH`, and `DELETE`, as well as `GET`, but not `PUT`.
+
+### Create Support
+
+The `CREATE` capability can be applied to a collection of reference values to state that members can be inserted into the collection.
+
+```rsdl
+service {
+  competitors: [Company] { CREATE }
+}
+
+type Company
+{
+  key stockSymbol: String
+  employees: [Employee] { CREATE }
+}
+```
+
+States that the paths `POST /competitors` and `POST /competitors/{stockSymbol}/employees` are supported.
+
+#### Create Options
+
+The `CREATE` capability can be followed by the [`expand`](#expand-option) option to specify that the `expand` query option can be applied to the `POST` request in order to include related resources when returning the created item.
+
+```rsdl
+service {
+  competitors: [Company] { CREATE { expand(employees) } }
+}
+```
+
+States that the path `POST /competitors?expand=employees` is supported to return the new competitor along with related employees.
+
+### Update Support
+
+The `UPDATE` capability can be applied to a reference-valued property to state that the property is updatable.
+
+```rsdl
+service {
+  company: Company { UPDATE }
+}
+```
+
+States that the path `PATCH /company` is supported.
+
+The `UPDATE` capability can also be applied to a collection of reference values to state that individual members of the collection can be updated.
+
+```rsdl
+service {
+  competitors: [Company] { UPDATE }
+}
+
+type Company
+{
+  key stockSymbol: String
+  employees: [Employee] { UPDATE }
+}
+```
+
+States that the paths `PATCH /competitors/{stockSymbol}` and `PATCH /competitors/{stockSymbol}/employees/{id}` are supported.
+
+### Update Options
+
+The `UPDATE` capability can be followed by the [`expand`](#expand-option) option to specify that the `expand` query option can be applied to the `PATCH` request in order to include related resources when returning the updated item.
+
+```rsdl
+service {
+  company: Company { UPDATE { expand(employees) } }
+}
+```
+
+States that the path `PATCH /company?expand=employees` is supported to return the related employees along with the updated competitor.
+
+### Replace Support
+
+The `REPLACE` capability can be applied to a reference-valued property to state that the property can be replaced.
+
+```rsdl
+service {
+  company: Company { REPLACE }
+}
+```
+
+States that the path `PUT /company` is supported.
+
+The `REPLACE` capability can be applied to a collection of reference values to state that individual members of the collection can be replaced.
+
+```rsdl
+service {
+  competitors: [Company] { REPLACE }
+}
+type Company
+{
+  key stockSymbol: String
+  employees: [Employee] { REPLACE }
+}
+```
+
+States that the paths States that the path `PUT /competitors/{stockSymbol}` and
+`PUT /competitors{stockSymbol}/employees/{id}` are supported.
+
+#### Replace Options
+
+The `REPLACE` capability can be followed by the [`expand`](#expand-option) option to specify that the `expand` query option can be applied the `PUT` request in order to include related resources when returning the replaced item.
+
+```rsdl
+service {
+  company: Company { REPLACE { expand(employees) } }
+}
+```
+
+States that the path `PUT /company?expand=employees` is supported to return the related employees along with the competitor.
+
+### Delete Support
+
+The `DELETE` capability can be applied to a reference-valued property to state that the property can be deleted.
+
+```rsdl
+service {
+  company: Company { DELETE{}} }
+}
+```
+
+States that the path `DELETE /company` is supported.
+
+The `DELETE` capability can also be applied to a collection of reference values to state that individual members of the collection can be deleted.
+
+```rsdl
+service {
+  competitors: [Company] { DELETE{} }
+}
+type Company
+{
+  key stockSymbol: String
+  employees: [Employee] { DELETE{} }
+}
+```
+
+States that the paths `DELETE /competitors/{stockSymbol}` and `DELETE /competitors/{stockSymbol}/employees/{id}` are supported.
+
+#### Delete options
+
+The `DELETE` capability does not support any delete options and must be followed by empty braces `{}` to denote that no query options are supported.
+
+## Operation Support
+
+Operations that return a single result can be followed by [`expand`](#expand-option) to specify that the `expand` query option can be applied the request in order to include related resources when returning the result.
+
+```rsdl
+service {
+  topCompany() : Company { expand(employees) }
+}
+type Company
+{
+  key stockSymbol: String
+  employees: [Employee]
+}
+```
+
+States that the path `GET /topCompany?expand=employees` is supported to return the related employees along with the top company.
+
+In addition to [`expand`](#expand-option), operations that return a collection can be followed by any of the [`LIST`](#list-options) capability options to specify [`filter`](#filter-option), [`orderby`](#orderby-option), [`top`, `skip`](#top-and-skip-options), and [`count`](#count-option) support.
+
+```rsdl
+service {
+  topCompanies( num: Integer ) : [Company] { filter, orderby, top, skip, count, expand }
+}
+```
+
+States that query options `filter`, `orderby`, `top`, `skip`, `count`, and `expand` are all supported when calling `topCompanies`.
+
+## Default Capabilities
 
 Not applying capabilities to a model element means that you support the default capabilities for that element, as defined in the following table:
 
@@ -278,9 +461,9 @@ Not applying capabilities to a model element means that you support the default 
 | Top-level collection or collection-valued reference property | LIST, READ, CREATE, UPDATE, DELETE |
 | Singleton or single-valued reference property                | READ                               |
 
-**todo: functions/actions**
-
 # Annotating Paths
+
+**todo...**
 
 ```
 

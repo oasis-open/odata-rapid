@@ -189,7 +189,7 @@ RAPID supports actions and functions.
 
 An action takes zero or more input parameters and may or may not return a value. Actions may have side effects.
 
-We can define a "youAreFired" action on our company that takes a string parameter "reason":
+We can define a "youreFired" action on our company that takes a string parameter "reason":
 
 ```rsdl
 type Company
@@ -199,7 +199,7 @@ type Company
   incorporated: Date
   employees: [Employee]
   topEmployees(num: Integer): [Employee]
-  action youAreFired(reason: String)
+  action youreFired(reason: String)
 }
 ```
 
@@ -266,9 +266,9 @@ paths
   /competitors/{stockSymbol}
   /competitors/{stockSymbol}/employees
   /competitors/{stockSymbol}/employees/{id}
-  /company/topEmployees(num=5)
-  /company/topEmployees(num=5)/{id}
-  /company/youAreFired(reason='bad day')
+  /company/topEmployees(num={num})
+  /company/topEmployees(num={num})/{id}
+  /company/youreFired
 }
 ```
 
@@ -285,8 +285,8 @@ paths
   /competitors/{stockSymbol}
 # /competitors/{stockSymbol}/employees
 # /competitors/{stockSymbol}/employees/{id}
-  /company/topEmployees(num=5)
-# /company/topEmployees(num=5)/{id}
-  /company/youAreFired(reason='bad day')
+  /company/topEmployees(num={num})
+# /company/topEmployees(num={num})/{id}
+  /company/youreFired
 }
 ```

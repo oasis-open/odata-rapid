@@ -89,7 +89,7 @@ service {
 type Company
 {
   topEmployees(num: Integer): [Employee]
-  action youAreFired(reason: String)
+  action youreFired(reason: String)
 }
 ```
 
@@ -98,6 +98,6 @@ type Company
 `/company`
 `/company/topEmployees(num=5)`
 `/company/topEmployees(num=5)/{id}`
-`/company/youAreFired(reason='bad day')`
+`/company/youreFired(reason='bad day')`
 
 where `{id}` is an integer value representing a employee's id.

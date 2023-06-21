@@ -86,6 +86,7 @@ edmType              = %s"Edm" "." identifier
 operation            = annotations operationKind RWS identifier OWS
                        "(" OWS [ parameter *( OWS "," OWS parameter) OWS ] ")"
                        [ OWS ":" OWS annotations typeReference ]
+                       [ separator collectionRefCapabilities ]
 
 operationKind        = %s"action" / %s"function"
 
