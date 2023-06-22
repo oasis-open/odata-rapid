@@ -24,7 +24,23 @@ structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier 
 
 structuredTypeMember = property / operation ; property, action, or function
 
-property             = annotations [propertyModifier RWS] identifier OWS ":" OWS typeReference
+property             = structuralProperty / referenceProperty
+
+structuralProperty   = primitiveProperty / collectionProperty
+
+primitiveProperty    = propertyDefinition [ primitivePropertyCapabilities ]
+
+collectionProperty   = propertyDefinition [ collectionPropertyCapabilities ]
+
+referenceProperty    = singleRefProperty / nullableRefProperty /collectionRefProperty
+
+singleRefProperty    = propertyDefinition [ singleReferenceCapabilities ]
+
+nullableRefProperty  = propertyDefinition [ singleNullableReferenceCapabilities ]
+
+collectionRefProperty = propertyDefinition [ collectionReferenceCapabilities ]
+
+propertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS typeReference
 
 propertyModifier     = %s"key"
 
@@ -47,6 +63,7 @@ edmType              = %s"Edm" "." identifier
 operation            = annotations operationKind RWS identifier OWS
                        "(" OWS [ parameter *( OWS "," OWS parameter) OWS ] ")"
                        [ OWS ":" OWS annotations typeReference ]
+                       [ separator collectionRefCapabilities ]
 
 operationKind        = %s"action" / %s"function"
 
@@ -77,9 +94,9 @@ service              = annotations %s"service" [ RWS identifier ] OWS "{" OWS se
 
 serviceMember        = annotations ( entitySet / singleton / serviceOperation )
 
-entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
+entitySet            = identifier OWS ":" OWS "[" qualifiedName "]" [ collectionReferenceCapabilities ]
 
-singleton            = identifier OWS ":" OWS qualifiedName
+singleton            = identifier OWS ":" OWS qualifiedName [ singleReferenceCapabilities ]
 
 serviceOperation     = operationKind RWS identifier
                        OWS "(" OWS [ parameter *(OWS "," OWS parameter) OWS ] ")"
@@ -99,8 +116,8 @@ annotationValue      = %s"true"
                      / %s"null"
                      / number
                      / DQUOTE *CHAR DQUOTE
-                     / "[" OWS [ annotationValue *( ( OWS "," OWS / RWS ) annotationValue ) OWS [ "," OWS ] ] "]"
-                     / "{" OWS [ annotationProperty *( ( OWS "," OWS /RWS ) annotationProperty ) OWS [ "," OWS ] ] "}"
+                     / "[" OWS [ annotationValue *( separator annotationValue ) OWS [ "," OWS ] ] "]"
+                     / "{" OWS [ annotationProperty *( separator annotationProperty ) OWS [ "," OWS ] ] "}"
                      / "." *( "/"  identifier )
 
 annotationProperty   = propertyName OWS ":" OWS annotationValue
@@ -109,8 +126,179 @@ propertyName         = identifier / DQUOTE 1*CHAR DQUOTE / "@" qualifiedName [ "
 
 
 ;----------------------------
+;  Model Capabilities
+;----------------------------
+
+primitivePropertyCapability = "filterable" [ filterOptions ] / "orderable" [ orderByOptions ]
+
+primitivePropertyCapabilities = "{" [ primitivePropertyCapability *( separator primitivePropertyCapability )] "}"
+
+collectionPropertyCapabilities = collectionCapabilities
+
+singleReferenceCapability = ("READ" / "UPDATE" / "REPLACE") ["{" *refCapability "}"]
+
+singleReferenceCapabilities = "{" [ singleReferenceCapability *( separator singleReferenceCapability )] "}"
+
+singleNullableReferenceCapability = singleReferenceCapability / "DELETE" noOptions
+
+singleNullableReferenceCapabilities = "{" [ singleNullableReferenceCapability *( separator singleNullableReferenceCapability )] "}"
+
+collectionReferenceCapability =  "DELETE" OWS noOptions /
+                                   "LIST" ["{" *(collectionRefCapability) "}"] /
+                                   ("READ" / "CREATE" / "REPLACE" / "UPDATE") ["{" *(refCapability) "}"]
+
+collectionReferenceCapabilities = "{" [ collectionReferenceCapability *( separator collectionReferenceCapability )] "}"
+
+
+
+;----------------------------
+;  Paths
+;----------------------------
+
+paths = %s"paths" OWS ":" OWS "{" *( OWS path ) OWS "}"
+
+path =   "/" entitySet [ "/" castSegment ] [ RWS collectionRefPathCapabilities ]
+       / "/" singleton [ "/" castSegment] [ RWS singleRefPathCapabilities ]
+       / "/" serviceMember *("/" interimSegment) "/" lastSegment
+       / serviceOperationPath
+
+interimSegment = singleValuedSegment / nullableValuedSegment / castSegment
+              / singleRefSegment / nullableRefSegment / collectionRefSegment "/" keySegment
+
+lastSegment = singleValuedSegment [ "/" castSegment ] [ RWS singlePathCapabilities ]
+            / nullableValuedSegment [ "/" castSegment ] [ RWS nullablePathCapabilities ]
+            / collectionValuedSegment [ "/" castSegment ] [ RWS collectionPathCapabilities ]
+            / singleRefSegment [ "/" castSegment ] [ RWS singleRefPathCapabilities ]
+            / nullableRefSegment [ "/" castSegment ] [ RWS singleNullableReferenceCapability ]
+            / collectionRefSegment [ "/" castSegment ] [ RWS ( collectionRefPathCapabilities / "/" keySegment RWS nullableRefPathCapabilities )]
+
+serviceOperationPath = "/" singleValuedOperation [ "/" castSegment ] [ RWS singlePathCapabilities]
+                     / "/" nullableValuedOperation [ "/" castSegment ] [ RWS nullablePathCapabilities]
+                     / "/" collectionValuedOperation [ "/" castSegment ] [ RWS collectionPathCapabilities]
+                     / "/" singleRefValuedOperation [ "/" castSegment ] [ RWS singleRefPathCapabilities]
+                     / "/" nullableRefValuedOperation [ "/" castSegment ] [ RWS nullableRefPathCapabilities]
+                     / "/" collectionRefValuedOperation [ "/" castSegment ] [ RWS collectionRefPathCapabilities]
+
+singleValuedSegment = identifier                   ; a single, non-nullable property
+                    / singleValuedOperation
+
+nullableValuedSegment = identifier                 ; a single, nullable property
+                    / nullableValuedOperation
+
+collectionValuedSegment = identifier               ; a collection-valued property
+                    / collectionValuedOperation
+
+singleRefSegment = identifier                      ; a single, non-nullable reference property
+                    / singleRefValuedOperation
+
+nullableRefSegment = identifier                    ; a single, nullable reference property
+                    / nullableRefValuedOperation
+
+collectionRefSegment = identifier                  ; a collection-valued reference property
+                    / collectionRefValuedOperation
+
+singleValuedOperation = identifier                 ; an operation that returns a single value
+
+nullableValuedOperation = identifier               ; an operation that returns a single, nullable value
+
+collectionValuedOperation = identifier             ; an operation that returns a collection value
+
+singleRefValuedOperation = identifier              ; an operation that returns a single reference value
+
+nullableRefValuedOperation = identifier            ; an operation that returns a nullable single reference value
+
+collectionRefValuedOperation = identifier          ; an operation that returns a collection of reference values
+
+castSegment = typeName
+
+keySegment = "{" keyProperty "}"
+
+keyProperty = identifier                               ; name of the key property
+
+
+
+;----------------------------
+;  Path Capabilities
+;----------------------------
+
+
+singlePathCapability = ("GET" / "PUT" / "PATCH") [noOptions]
+
+singlePathCapabilities = "{" [singlePathCapability *( separator singlePathCapability)] "}"
+
+nullablePathCapability = singlePathCapability / "DELETE" noOptions
+
+nullablePathCapabilities = "{" [ nullablePathCapability *( separator nullablePathCapability )] "}"
+
+collectionPathCapability = "GET" [ collectionCapabilities ] / "POST" [noOptions]
+
+collectionPathCapabilities = "{" [ collectionPathCapability *( separator collectionPathCapability )] "}"
+
+singleRefPathCapability = ("GET" / "PATCH" / "PUT") [ refCapabilities]
+
+singleRefPathCapabilities = "{" [singleRefPathCapability *( separator singleRefPathCapability )] "}"
+
+nullableRefPathCapability = singleRefPathCapability / "DELETE" noOptions
+
+nullableRefPathCapabilities = "{" [nullableRefPathCapability *( separator nullableRefPathCapability )] "}"
+
+collectionRefPathCapability = "GET" [ collectionRefCapabilities ] / "POST" [ refCapabilities ]
+
+collectionRefPathCapabilities = "{" [ collectionRefPathCapability *( separator collectionRefPathCapability )] "}"
+
+
+
+;----------------------------
+;  Capability Elements
+;----------------------------
+
+
+collectionCapability = filterCapability / orderByCapability / "top" / "skip" / "count"
+
+collectionCapabilities = "{" OWS [ collectionCapability *( separator collectionCapability ) OWS ] "}"
+
+collectionRefCapability = collectionCapability / refCapability
+
+collectionRefCapabilities = "{" OWS [ collectionRefCapability *( separator collectionRefCapability ) OWS ] "}"
+
+refCapability       = "expand" [ "(" [ OWS expandProperty *( "," OWS expandProperty OWS ) ] ")" ]
+
+refCapabilities     = "{" OWS [ refCapability OWS ] "}"
+
+expandProperty      = STAR /
+                      [castSegment] singleRefProperty [ refCapabilities ] /
+                      [castSegment] collectionRefProperty [ collectionRefCapabilities ]
+
+filterCapability    = "filter" [ "(" [ OWS filterProperty *( "," OWS filterProperty OWS ) ] ")" ]
+
+filterProperty    = ( ( [ typeName "/" ] propertyName ) / allProperties) [ filterOptions ]
+
+allProperties       =  "*" [ "/" typeName ]  ; all properties, optionally of a given type
+
+filterOptions        = "{" OWS [ filterOperations OWS ] "}"
+
+filterOperations     = "none" ; not filterable
+                     / "eq" ; eq
+                     / "comp" ; eq, gt, ge, lt, le
+                     / "string" ; eq, startswith, endswith, contains
+                     / "stringComp" ; eq, gt, ge, lt, le, startswith, endswith, contains
+
+orderByCapability = "orderby" [ orderByOptions ]
+
+orderByOptions = "(" [ OWS orderByProperty *( "," OWS orderByProperty OWS ) ] ")"
+
+orderByProperty = allProperties / propertyName [ OWS "{" [ OWS ascOrDesc [ "," OWS ascOrDesc OWS ] ] "}" ]
+
+ascOrDesc = "asc" / "desc"
+
+noOptions = OWS "{" OWS "}"
+
+
+
+;----------------------------
 ;  Core Syntax Elements
 ;----------------------------
+
 
 qualifiedName       = identifier *( "." identifier )
 
@@ -119,6 +307,8 @@ identifier          = identInitial *identSubsequent
 identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
 identSubsequent     = identInitial / DIGIT
+
+separator           = OWS "," OWS / RWS
 
 number              = integer [ "." 1*DIGIT ] [ "e" integer ]
 
@@ -143,6 +333,8 @@ CHAR                = %x20-21 / %x23-5B / %x5D-10FFFF
 DQUOTE              = %x22              ; "
 
 ESCAPE              = %x5C              ; \
+
+STAR                = "*"
 
 OWS                 = *WS
 RWS                 = 1*WS
