@@ -46,14 +46,14 @@
   tokens: [service, x, singleton, foo, bar]
 
 - source: |
-    service { 
+    service {
       foo: bar
       baz: [qux]
     }
   tokens: [service, singleton, foo, bar, entitySet, baz, qux]
 
 - source: |
-    service { 
+    service {
       function f():Boolean
       action a()
       action b(c:Date):[String?]
@@ -62,7 +62,7 @@
     [service, function, f, Boolean, action, a, action, b, c, Date, "[String?]"]
 
 - source: |
-    service { 
+    service {
       function f(g: DateTime): Decimal?
       action a( b :Decimal(5,2), d : Double ) : [Duration]
     }
@@ -107,7 +107,7 @@
 
 - source: |
     @aa.bb.cc:42
-    service { 
+    service {
       @a.b:""
       foo: bar
       @a.b:" "
@@ -199,3 +199,5 @@
     - entitySet
     - employees
     - Employee
+#
+# TODO: add test cases for capabilities
