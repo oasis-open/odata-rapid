@@ -9,10 +9,11 @@
     "tools/rsdlEditor",
     "tools/api-explorer",
     "tools/api-designer",
+    "tools/rsdl/abnf",
     "website"
   ],
   "scripts": {
-    "clean": "npm run clean -w website && rimraf tools/*/.parcel-cache tools/*/dist tools/*/dist-dev tools/*/node_modules tools/rsdl/rsdl-js/node_modules .parcel-cache coverage node_modules",
+    "clean": "npm run clean -w website && rimraf tools/*/.parcel-cache tools/*/dist tools/*/dist-dev tools/*/node_modules tools/rsdl/*/node_modules .parcel-cache coverage node_modules",
     "build": "npm run build --workspaces --if-present",
     "postinstall": "patch-package && npm run clean-tools",
     "clean-tools": "rimraf tools/.parcel-cache tools/coverage tools/node_modules",
