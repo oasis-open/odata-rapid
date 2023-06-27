@@ -1,4 +1,4 @@
-<# 
+<#
 .SYNOPSIS
     Unit test for RSDL ABNF grammar
 
@@ -9,7 +9,7 @@
 param (
     [switch]$watch = $false
 )
- 
+
 
 function CompileAndCheck {
     if ((get-item "rsdl.abnf").LastWriteTime -lt (get-item "../../../docs/rsdl/rapid-rsdl-abnf.md").LastWriteTime ) {
@@ -17,7 +17,7 @@ function CompileAndCheck {
         node.exe lib/extract.js
 
         Write-Output "Generate parser..."
-        node.exe node_modules/apg-js/bin/apg.sh --strict -i ./rsdl.abnf -o lib/grammar.js
+        node.exe ../../../node_modules/apg-js/bin/apg.sh --strict -i ./rsdl.abnf -o lib/grammar.js
     }
 
     node.exe lib/parse.js
@@ -34,9 +34,9 @@ if ($watch) {
     $FileSystemWatcher.NotifyFilter = [IO.NotifyFilters]::LastWrite
     $FileSystemWatcher.Filters.Add('*.md')
     $FileSystemWatcher.Filters.Add('*.yaml')
-    
+
     Write-Host "Monitoring content of $PathToMonitor"
-    
+
     while ($true) {
         $Change = $FileSystemWatcher.WaitForChanged('All', 1000)
         if ($Change.TimedOut -eq $false) {

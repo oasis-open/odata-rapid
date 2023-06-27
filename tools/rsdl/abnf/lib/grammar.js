@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 114
   //       udts = 0
-  //    opcodes = 1020
+  //    opcodes = 1021
   //        ---   ABNF original opcodes
   //        ALT = 53
   //        CAT = 204
   //        REP = 141
-  //        RNM = 404
+  //        RNM = 405
   //        TLS = 174
   //        TBS = 34
   //        TRG = 10
@@ -194,11 +194,12 @@ module.exports = function grammar(){
 
   /* modelElement */
   this.rules[3].opcodes = [];
-  this.rules[3].opcodes[0] = {type: 1, children: [1,2,3,4]};// ALT
+  this.rules[3].opcodes[0] = {type: 1, children: [1,2,3,4,5]};// ALT
   this.rules[3].opcodes[1] = {type: 4, index: 4};// RNM(structuredType)
   this.rules[3].opcodes[2] = {type: 4, index: 23};// RNM(enumType)
   this.rules[3].opcodes[3] = {type: 4, index: 25};// RNM(typeDefinition)
   this.rules[3].opcodes[4] = {type: 4, index: 26};// RNM(service)
+  this.rules[3].opcodes[5] = {type: 4, index: 45};// RNM(paths)
 
   /* structuredType */
   this.rules[4].opcodes = [];
@@ -1531,7 +1532,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "include              = %s\"include\" RWS DQUOTE 1*CHAR DQUOTE RWS %s\"as\" RWS identifier RWS\r\n";
     str += "\r\n";
-    str += "modelElement         = ( structuredType / enumType / typeDefinition / service )\r\n";
+    str += "modelElement         = ( structuredType / enumType / typeDefinition / service / paths )\r\n";
     str += "\r\n";
     str += "\r\n";
     str += ";----------------------------\r\n";

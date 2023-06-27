@@ -37,7 +37,7 @@ namespace            = %s"namespace" RWS qualifiedName
 
 include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier RWS
 
-modelElement         = ( structuredType / enumType / typeDefinition / service )
+modelElement         = ( structuredType / enumType / typeDefinition / service / paths )
 ```
 
 ### Structured Type

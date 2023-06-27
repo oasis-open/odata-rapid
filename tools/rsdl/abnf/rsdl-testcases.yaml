@@ -199,5 +199,18 @@
     - entitySet
     - employees
     - Employee
-#
+
 # TODO: add test cases for capabilities
+- source: |
+    paths : {
+      /company
+      /company/employees
+      /company/employees/{id}
+      /competitors
+      /competitors/{stockSymbol}
+      /competitors/{stockSymbol}/employees
+      /competitors/{stockSymbol}/employees/{id}
+      /company/topEmployees(num={num})
+      /company/topEmployees(num={num})/{id}
+      /company/youreFired
+    }
