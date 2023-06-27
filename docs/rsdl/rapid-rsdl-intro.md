@@ -257,7 +257,7 @@ The set of paths supported by a RAPID service generally do not need to be explic
 The set of paths supported by a RAPID service can be explicitly enumerated in the RSDL specification:
 
 ```rsdl
-paths
+paths :
 {
   /company
   /company/employees
@@ -276,7 +276,7 @@ Paths that are omitted are not supported, even if valid according to the model. 
 
 ```rsdl
 
-paths
+paths :
 {
   /company
   /company/employees

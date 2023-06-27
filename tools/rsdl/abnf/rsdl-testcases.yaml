@@ -199,3 +199,103 @@
     - entitySet
     - employees
     - Employee
+
+- source: |
+    service {
+      company: Company { READ { expand( jetsons.company/employees ) } }
+    }
+  tokens:
+    - service
+    - singleton
+    - company
+    - Company
+    - jetsons.company
+    - employees
+
+- source: |
+    service {
+      competitors: [Company] { 
+        LIST { top, skip, count, filter, orderby, expand( employees { expand(*), top, skip, count, filter}) }
+        CREATE { expand( jetsons/employees { top, skip, count, filter, orderby, expand(*) }, orders ) } 
+        READ { expand( ) } 
+        UPDATE { expand } 
+        DELETE {}
+      }
+    }
+  tokens:
+    - service
+    - entitySet
+    - competitors
+    - Company
+    - employees
+    - jetsons
+    - employees
+    - orders
+
+- source: |
+    type Company
+    {
+      key stockSymbol: String { filterable { eq }, orderable }
+      name: String { filterable { stringComp }, orderable {} }
+      incorporated: Date { filterable, orderable { asc, desc } }
+      employees: [Employee] { LIST { filter(name {stringComp}), orderby(name{asc,desc}) }, READ }
+    }
+  tokens:
+    - structuredType
+    - Company
+    - key
+    - stockSymbol
+    - String
+    - name
+    - String
+    - incorporated
+    - Date
+    - employees
+    - Employee
+    - name
+    - name
+
+- source: |
+    service {competitors: [Company] { DELETE } }
+  failAt: 41 # braces required after DELETE
+
+- source: |
+    paths :
+    {
+      /company
+      /company/employees
+      /company/employees/{id}
+      /competitors
+      /competitors/{stockSymbol}
+    # /competitors/{stockSymbol}/employees
+    # /competitors/{stockSymbol}/employees/{id}
+      /company/topEmployees(num={num})
+    # /company/topEmployees(num={num})/{id}
+      /company/youreFired
+    }
+  tokens:
+    - company
+    - company
+    - employees
+    - company
+    - employees
+    - id
+    - competitors
+    - competitors
+    - stockSymbol
+    - competitors
+    - stockSymbol
+    - employees
+    - competitors
+    - stockSymbol
+    - employees
+    - id
+    - company
+    - topEmployees
+    - num
+    - company
+    - topEmployees
+    - num
+    - id
+    - company
+    - yourFired

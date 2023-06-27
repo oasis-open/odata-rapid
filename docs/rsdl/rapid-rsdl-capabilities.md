@@ -172,7 +172,7 @@ LIST options include [expand](#expand-option), [filter](#filter-option), [orderB
 
 #### Filter Option
 
-The `filter` option within the `LIST` capability specifies that a filter can be applied when listing the collection.
+The `filter` option specifies that a filter can be applied when listing the collection.
 
 ```rsdl
 service {
@@ -181,6 +181,18 @@ service {
 ```
 
 Specifies that the [`filter`](../rapid-pro-read.md#filtering-results) query option can be used when listing competitors.
+
+The `filter` option may be followed by a list of individual reference properties that can be filtered, optionally followed by a [`filter option`](#filter-operations).
+
+```rsdl
+service {
+  competitors: [Company] { LIST { filter(name {stringComp}) } }
+}
+```
+
+The `competitors` collection can be filtered by name using the string comparison operators.
+
+If no parens follow the `filter` option, then the [`filterable`](#filterable-capability) capability, if present on a property, is used to determine whether or not that property can be filtered upon. If `filter` is followed by empty parens, then the collection does not support filtering on any properties.
 
 ##### Filterable capability
 
@@ -198,21 +210,23 @@ type Company
 
 Specifies that filterable collections of companies can be filtered on stockSymbol, name, and incorporated.
 
-The `filterable` capability can include a filter option to specify the filter operators that can be applied when filtering by the property:
+###### Filter Operations
+
+The `filterable` capability can include a filter operation to specify the filter operators that can be applied when filtering by the property:
 
 ```rsdl
   name: String { filterable { stringComp } }
 ```
 
-Possible values for filter options are as follows:
+Possible values for filter operations are as follows:
 
-| Property Type | filter option | supported filter operators                                         |
-| ------------- | ------------- | ------------------------------------------------------------------ |
-| any primitive | `none`        | not filterable                                                     |
-| any primitive | `eq`          | `eq`                                                               |
-| any primitive | `comp`        | `eq`, `gt`, `ge`, `lt`, `le`                                       |
-| string        | `string`      | `eq`, `startswith`, `endswith`, `contains`                         |
-| string        | `stringComp`  | `eq`, `gt`, `ge`, `lt`, `le`, `startswith`, `endswith`, `contains` |
+| Property Type | filter operation | supported filter operators                                         |
+| ------------- | ---------------- | ------------------------------------------------------------------ |
+| any primitive | `none`           | not filterable                                                     |
+| any primitive | `eq`             | `eq`                                                               |
+| any primitive | `comp`           | `eq`, `gt`, `ge`, `lt`, `le`                                       |
+| string        | `string`         | `eq`, `startswith`, `endswith`, `contains`                         |
+| string        | `stringComp`     | `eq`, `gt`, `ge`, `lt`, `le`, `startswith`, `endswith`, `contains` |
 
 Properties that do not have a `filterable` capability, or that have a `filterable` capability with no specified filter option, are assumed to be filterable in collections that support filtering using the filter operators appropriate to their type.
 
@@ -227,6 +241,18 @@ service {
 ```
 
 Specifies that the [`orderby`](../rapid-pro-read.md#ordering-results) query option can be used when listing competitors.
+
+The `orderby` option may be followed by a list of individual properties that can be ordered, optionally followed by a [`filter option`](#filter-operations).
+
+```rsdl
+service {
+  competitors: [Company] { LIST { orderby(name {asc, desc}) } }
+}
+```
+
+The competitors collection can be ordered by name in ascending or descending order.
+
+If no parens follow the `orderby` option, then the [`orderability`](#orderable-capability) capability, if present on a property, is used to determine whether or not that property can be ordered by. If `orderby` is followed by empty parens, then the collection does not support ordering on any properties.
 
 ##### Orderable capability
 
