@@ -35,43 +35,57 @@ structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier 
 
 structuredTypeMember = property / operation ; property, action, or function
 
-property             = primitiveProperty 
-                        / singleRefProperty 
-                        / nullableRefProperty 
-                        / collectionRefProperty 
-                        / collectionProperty
-
-primitiveProperty    = singlePropertyDefinition [ primitivePropertyCapabilities ]
 
 
-
-collectionProperty   = collectionPropertyDefinition [ collectionCapabilities ]
-
-
-singleRefProperty    = singlePropertyDefinition [ singleReferenceCapabilities ]
+property             = primitiveProperty
+                     / singleRefProperty
+                     / nullableRefProperty
+                     / collectionRefProperty
+                     / collectionProperty
 
 
 
-nullableRefProperty  = singlePropertyDefinition [ nullableReferenceCapabilities ]
+primitiveProperty    = singlePropertyDefinition [ OWS primitivePropertyCapabilities ]
+
+collectionProperty   = collectionPropertyDefinition [ OWS collectionCapabilities ]
 
 
 
-collectionRefProperty = collectionPropertyDefinition [ collectionReferenceCapabilities ]
+singleRefProperty    = singlePropertyDefinition [ OWS singleReferenceCapabilities ]
+
+
+
+nullableRefProperty  = singlePropertyDefinition [ OWS nullableReferenceCapabilities ]
+
+
+
+collectionRefProperty = collectionPropertyDefinition [ OWS collectionReferenceCapabilities ]
 
 
 
 singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS singleTypeReference
 
+
+
 collectionPropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS collectionTypeReference
+
 
 
 propertyModifier     = %s"key"
 
+
+
 singleTypeReference      = typeName [ "?" ]
+
+
 
 collectionTypeReference  = "[" typeName [ "?" ] "]"
 
+
+
 typeReference            = singleTypeReference / collectionTypeReference
+
+
 
 typeName             = builtInType / edmType / qualifiedName
 
@@ -197,11 +211,7 @@ primitivePropertyCapability = "filterable" [ OWS filterOptions ] / "orderable" [
 
 
 
-primitivePropertyCapabilities = OWS "{" OWS [ primitivePropertyCapability *( separator primitivePropertyCapability )] OWS "}"
-
-
-
-collectionPropertyCapabilities = collectionCapabilities
+primitivePropertyCapabilities = "{" OWS [ primitivePropertyCapability *( separator primitivePropertyCapability )] OWS "}"
 
 
 
@@ -209,7 +219,7 @@ singleReferenceCapability = ("READ" / "UPDATE" / "REPLACE") [ OWS refCapabilitie
 
 
 
-singleReferenceCapabilities = OWS "{" [ OWS singleReferenceCapability *( separator singleReferenceCapability )] OWS "}"
+singleReferenceCapabilities = "{" OWS [ singleReferenceCapability *( separator singleReferenceCapability )] OWS "}"
 
 
 
@@ -217,7 +227,7 @@ nullableReferenceCapability = singleReferenceCapability / "DELETE" noOptions
 
 
 
-nullableReferenceCapabilities = OWS "{" OWS [ nullableReferenceCapability *( separator nullableReferenceCapability )] OWS "}"
+nullableReferenceCapabilities = "{" OWS [ nullableReferenceCapability *( separator nullableReferenceCapability )] OWS "}"
 
 
 
@@ -227,7 +237,7 @@ collectionReferenceCapability =  "DELETE" OWS noOptions /
 
 
 
-collectionReferenceCapabilities = OWS "{" OWS [ collectionReferenceCapability *( separator collectionReferenceCapability )] OWS "}"
+collectionReferenceCapabilities = "{" OWS [ collectionReferenceCapability *( separator collectionReferenceCapability )] OWS "}"
 
 
 
@@ -241,13 +251,15 @@ collectionReferenceCapabilities = OWS "{" OWS [ collectionReferenceCapability *(
 paths = %s"paths" OWS ":" OWS "{" *( OWS path ) OWS "}"
 
 
-path =   "/" entitySet [ "/" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( "/" keySegment [ ( RWS singleRefPathCapabilities / *( "/" interimSegment ) ) ] )  ] 
+
+path =   "/" entitySet [ "/" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( "/" keySegment [ ( RWS singleRefPathCapabilities / *( "/" interimSegment ) ) ] )  ]
        / "/" singleton [ "/" castSegment] [ ( RWS singleRefPathCapabilities ) / *( "/" interimSegment) ]
        / serviceOperationPath
 
 
-interimSegment = collectionRefSegment "/" keySegment / singleValuedSegment / nullableValuedSegment / castSegment
-              / singleRefSegment / nullableRefSegment
+
+interimSegment = singleValuedSegment / nullableValuedSegment / castSegment
+              / singleRefSegment / nullableRefSegment / collectionRefSegment "/" keySegment
 
 
 
@@ -256,7 +268,7 @@ lastSegment = singleValuedSegment [ "/" castSegment ] [ RWS singlePathCapabiliti
             / collectionValuedSegment [ "/" castSegment ] [ RWS collectionPathCapabilities ]
             / singleRefSegment [ "/" castSegment ] [ RWS singleRefPathCapabilities ]
             / nullableRefSegment [ "/" castSegment ] [ RWS nullableReferenceCapabilities ]
-            / collectionRefSegment [ "/" castSegment ] [ ( RWS collectionRefPathCapabilities / "/" keySegment [ RWS nullableRefPathCapabilities] )]
+            / collectionRefSegment [ "/" castSegment ] [ RWS ( collectionRefPathCapabilities / "/" keySegment RWS nullableRefPathCapabilities )]
 
 
 
@@ -284,7 +296,7 @@ collectionValuedSegment = identifier               ; a collection-valued propert
 
 
 
-singleRefSegment =  singleton                      ; a single, non-nullable reference property
+singleRefSegment = singleton                      ; a single, non-nullable reference property
                     / singleNavigationProperty
                     / singleRefValuedOperation
 
@@ -334,13 +346,22 @@ keySegment = "{" keyProperty "}"
 
 
 
-keyProperty = identifier                               ; name of the key property
+keyProperty = identifier                           ; name of the key property
+
+
 
 singleNavigationProperty = identifier              ; a single valued navigation property
 
-nullableNavigationProperty = identifier              ; a nullable, single valued navigation property
+
+
+nullableNavigationProperty = identifier            ; a nullable, single valued navigation property
+
+
 
 collectionNavigationProperty = identifier          ; a collection valued navigation property
+
+
+
 
 
 ;----------------------------
@@ -411,7 +432,7 @@ collectionCapability = filterCapability / orderByCapability / "top" / "skip" / "
 
 
 
-collectionCapabilities = "{" OWS [ collectionCapability *( separator collectionCapability ) OWS ] "}"
+collectionCapabilities =  "{" OWS [ collectionCapability *( separator collectionCapability ) OWS ] "}"
 
 
 
@@ -423,18 +444,17 @@ collectionRefCapabilities = "{" OWS [ collectionRefCapability *( separator colle
 
 
 
-refCapability       = "expand" [ OWS "(" OWS [ expandProperty *( "," OWS expandProperty OWS ) ] OWS ")" ]
+refCapability       = "expand" [ OWS "(" OWS [ expandProperty *( OWS "," OWS expandProperty OWS ) ] OWS ")" ]
 
 
 
-refCapabilities     = "{" OWS [ refCapability OWS ] "}"
+refCapabilities     =  "{" OWS [ refCapability OWS ] "}"
 
 
 
 expandProperty      = star /
                       [ castSegment "/" ] collectionNavigationProperty [ OWS collectionRefCapabilities ] /
                       [ castSegment "/" ] ( singleNavigationProperty / nullableNavigationProperty ) [ OWS refCapabilities ]
-
 
 
 
@@ -469,9 +489,13 @@ orderByCapability = "orderby" [ OWS orderByProperties ]
 orderByProperties = "(" OWS [ orderByProperty *( "," OWS orderByProperty OWS ) ] ")"
 
 
+
 orderByProperty = allProperties / propertyName [ OWS orderByDirection ]
 
+
+
 orderByDirection ="{" [ OWS ascOrDesc [ "," OWS ascOrDesc OWS ] ] "}"
+
 
 
 ascOrDesc = "asc" / "desc"
@@ -508,6 +532,10 @@ identSubsequent     = identInitial / DIGIT
 
 
 separator           = OWS "," OWS / RWS
+
+
+
+star                = "*"
 
 
 
@@ -555,7 +583,7 @@ DQUOTE              = %x22              ; "
 
 ESCAPE              = %x5C              ; \
 
-star                = "*"
+
 
 OWS                 = *WS
 

@@ -53,13 +53,13 @@ property             = primitiveProperty
                      / collectionRefProperty
                      / collectionProperty
 
-primitiveProperty    = singlePropertyDefinition [ primitivePropertyCapabilities ]
+primitiveProperty    = singlePropertyDefinition [ OWS primitivePropertyCapabilities ]
 
-collectionProperty   = collectionPropertyDefinition [ collectionCapabilities ]
+collectionProperty   = collectionPropertyDefinition [ OWS collectionCapabilities ]
 
-singleRefProperty    = singlePropertyDefinition [ singleReferenceCapabilities ]
+singleRefProperty    = singlePropertyDefinition [ OWS singleReferenceCapabilities ]
 
-nullableRefProperty  = singlePropertyDefinition [ nullableReferenceCapabilities ]
+nullableRefProperty  = singlePropertyDefinition [ OWS nullableReferenceCapabilities ]
 
 collectionRefProperty = collectionPropertyDefinition [ collectionReferenceCapabilities ]
 
