@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 "use strict";
 
-const { dir } = require("console");
 const fs = require("fs");
-const path = require("path");
 
 const rsdlDoc = "../../../docs/rsdl/rapid-rsdl-abnf.md";
 const abnfFile = "./rsdl.abnf";
 
-const markdown = fs.readFileSync(rsdlDoc, "utf8").split("\n");
+const markdown = fs.readFileSync(rsdlDoc, "utf8").split(/\r?\n/);
 
 const abnf = [
   ";----------------------------",
@@ -23,7 +21,7 @@ for (const line of markdown) {
       "",
       "",
       ";----------------------------",
-      `; ${line.substr(3)}`,
+      `; ${line.substring(3)}`,
       ";----------------------------",
       ""
     );
