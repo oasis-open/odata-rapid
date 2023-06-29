@@ -50,7 +50,7 @@ where `{stockSymbol}` is a string value representing the stock symbol of a compe
 
 ## Structured Properties
 
-Path segments that represent a single [structured type](rapid-rsdl-intro.md#defining-a-structured-type) can be followed by the name of a structured-typed property defined on that structured type:
+Path segments that represent a single [structured type](rapid-rsdl-intro.md#defining-a-structured-type) can be followed by the name of a property defined on that structured type:
 
 ```rsdl
 service {
