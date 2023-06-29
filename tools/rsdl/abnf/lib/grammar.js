@@ -1764,8 +1764,8 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "paths = %s\"paths\" OWS \":\" OWS \"{\" *( OWS path ) OWS \"}\"\r\n";
     str += "\r\n";
-    str += "path = \"/\" identifier [ \"/\" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( \"/\" keySegment [ ( RWS singleRefPathCapabilities / *( \"/\" interimSegment ) ) ] )  ]\r\n";
-    str += "     / \"/\" identifier [ \"/\" castSegment ] [ ( RWS singleRefPathCapabilities ) / *( \"/\" interimSegment) ]\r\n";
+    str += "path = \"/\" identifier [ \"/\" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( \"/\" keySegment [ ( RWS singleRefPathCapabilities / *( \"/\" interimSegment ) ) ] ) ]\r\n";
+    str += "     / \"/\" identifier [ \"/\" castSegment ] [ ( RWS singleRefPathCapabilities ) / *( \"/\" interimSegment ) ]\r\n";
     str += "     / serviceOperationPath\r\n";
     str += "\r\n";
     str += "interimSegment = collectionRefSegment \"/\" keySegment\r\n";
