@@ -5,7 +5,7 @@ title: RAPID Paths
 
 # Paths in a RAPID Service
 
-The set of valid paths for a RAPID service is the result of applying common path conventions to the model, as described below. You can optionally specify an subset of these paths that are supported by your service using [explicit paths](rapid-rsdl-intro.md#explicit-paths) in your RSDL.
+The set of valid paths for a RAPID service is the result of applying common path conventions to the model, as described below. You can optionally specify a subset of these paths that are supported by your service using [explicit paths](rapid-rsdl-intro.md#explicit-paths) in your RSDL.
 
 - [Service Root](#service-root)
 - [Key Segment](#key-segment)
