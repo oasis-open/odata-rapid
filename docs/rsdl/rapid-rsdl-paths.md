@@ -22,7 +22,7 @@ service {
 }
 ```
 
-## | supported path |
+### Supported Path
 
 `/company`
 
@@ -41,7 +41,7 @@ type Company
 }
 ```
 
-## | supported paths |
+### Supported Paths
 
 `/competitors`
 `/competitors/{stockSymbol}`
@@ -69,7 +69,7 @@ type Employee
 }
 ```
 
-## | supported paths |
+### Supported Paths
 
 `/company`
 `/company/employees`
@@ -93,7 +93,7 @@ type Company
 }
 ```
 
-## | supported paths |
+### Supported Paths
 
 `/company`
 `/company/topEmployees(num=5)`
