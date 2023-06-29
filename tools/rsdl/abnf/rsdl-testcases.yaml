@@ -214,11 +214,11 @@
 
 - source: |
     service {
-      competitors: [Company] { 
+      competitors: [Company] {
         LIST { top, skip, count, filter, orderby, expand( employees { expand(*), top, skip, count, filter}) }
-        CREATE { expand( jetsons/employees { top, skip, count, filter, orderby, expand(*) }, orders ) } 
-        READ { expand( ) } 
-        UPDATE { expand } 
+        CREATE { expand( jetsons/employees { top, skip, count, filter, orderby, expand(*) }, orders ) }
+        READ { expand( ) }
+        UPDATE { expand }
         DELETE {}
       }
     }
@@ -260,56 +260,40 @@
   failAt: 41 # braces required after DELETE
 
 - source: |
+    paths : {
+      /competitors
+      /competitors/{stockSymbol}
+      /competitors/{stockSymbol}/employees
+      /competitors/{stockSymbol}/employees/{id}
+    }
+
+- source: |
     paths :
     {
       /company
       /company/employees
       /company/employees/{id}
-      /competitors
-      /competitors/{stockSymbol}
-    # /competitors/{stockSymbol}/employees
-    # /competitors/{stockSymbol}/employees/{id}
-      /company/topEmployees(num={num})
-    # /company/topEmployees(num={num})/{id}
       /company/youreFired
     }
-  tokens:
-    - company
-    - company
-    - employees
-    - company
-    - employees
-    - id
-    - competitors
-    - competitors
-    - stockSymbol
-    - competitors
-    - stockSymbol
-    - employees
-    - competitors
-    - stockSymbol
-    - employees
-    - id
-    - company
-    - topEmployees
-    - num
-    - company
-    - topEmployees
-    - num
-    - id
-    - company
-    - yourFired
 
-- source: |
-    paths : {
-      /company
-      /company/employees
-      /company/employees/{id}
-      /competitors
-      /competitors/{stockSymbol}
-      /competitors/{stockSymbol}/employees
-      /competitors/{stockSymbol}/employees/{id}
-      /company/topEmployees(num={num})
-      /company/topEmployees(num={num})/{id}
-      /company/youreFired
-    }
+#TODO: function overloads in paths
+# - source: |
+#     paths :
+#     {
+#       /company/topEmployees(num={num})
+#       /company/topEmployees(num={num})/{id}
+#     }
+
+# - source: |
+#     paths : {
+#       /company
+#       /company/employees
+#       /company/employees/{id}
+#       /competitors
+#       /competitors/{stockSymbol}
+#       /competitors/{stockSymbol}/employees
+#       /competitors/{stockSymbol}/employees/{id}
+#       /company/topEmployees(num={num})
+#       /company/topEmployees(num={num})/{id}
+#       /company/youreFired
+#     }

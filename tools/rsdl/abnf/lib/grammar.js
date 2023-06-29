@@ -796,7 +796,7 @@ module.exports = function grammar(){
   this.rules[46].opcodes[0] = {type: 1, children: [1,25,41]};// ALT
   this.rules[46].opcodes[1] = {type: 2, children: [2,3,4,8]};// CAT
   this.rules[46].opcodes[2] = {type: 7, string: [47]};// TLS
-  this.rules[46].opcodes[3] = {type: 4, index: 29};// RNM(entitySet)
+  this.rules[46].opcodes[3] = {type: 4, index: 99};// RNM(identifier)
   this.rules[46].opcodes[4] = {type: 3, min: 0, max: 1};// REP
   this.rules[46].opcodes[5] = {type: 2, children: [6,7]};// CAT
   this.rules[46].opcodes[6] = {type: 7, string: [47]};// TLS
@@ -820,7 +820,7 @@ module.exports = function grammar(){
   this.rules[46].opcodes[24] = {type: 4, index: 47};// RNM(interimSegment)
   this.rules[46].opcodes[25] = {type: 2, children: [26,27,28,32]};// CAT
   this.rules[46].opcodes[26] = {type: 7, string: [47]};// TLS
-  this.rules[46].opcodes[27] = {type: 4, index: 30};// RNM(singleton)
+  this.rules[46].opcodes[27] = {type: 4, index: 99};// RNM(identifier)
   this.rules[46].opcodes[28] = {type: 3, min: 0, max: 1};// REP
   this.rules[46].opcodes[29] = {type: 2, children: [30,31]};// CAT
   this.rules[46].opcodes[30] = {type: 7, string: [47]};// TLS
@@ -838,16 +838,16 @@ module.exports = function grammar(){
 
   /* interimSegment */
   this.rules[47].opcodes = [];
-  this.rules[47].opcodes[0] = {type: 1, children: [1,2,3,4,5,6]};// ALT
-  this.rules[47].opcodes[1] = {type: 4, index: 50};// RNM(singleValuedSegment)
-  this.rules[47].opcodes[2] = {type: 4, index: 51};// RNM(nullableValuedSegment)
-  this.rules[47].opcodes[3] = {type: 4, index: 62};// RNM(castSegment)
-  this.rules[47].opcodes[4] = {type: 4, index: 53};// RNM(singleRefSegment)
-  this.rules[47].opcodes[5] = {type: 4, index: 54};// RNM(nullableRefSegment)
-  this.rules[47].opcodes[6] = {type: 2, children: [7,8,9]};// CAT
-  this.rules[47].opcodes[7] = {type: 4, index: 55};// RNM(collectionRefSegment)
-  this.rules[47].opcodes[8] = {type: 7, string: [47]};// TLS
-  this.rules[47].opcodes[9] = {type: 4, index: 63};// RNM(keySegment)
+  this.rules[47].opcodes[0] = {type: 1, children: [1,5,6,7,8,9]};// ALT
+  this.rules[47].opcodes[1] = {type: 2, children: [2,3,4]};// CAT
+  this.rules[47].opcodes[2] = {type: 4, index: 55};// RNM(collectionRefSegment)
+  this.rules[47].opcodes[3] = {type: 7, string: [47]};// TLS
+  this.rules[47].opcodes[4] = {type: 4, index: 63};// RNM(keySegment)
+  this.rules[47].opcodes[5] = {type: 4, index: 50};// RNM(singleValuedSegment)
+  this.rules[47].opcodes[6] = {type: 4, index: 51};// RNM(nullableValuedSegment)
+  this.rules[47].opcodes[7] = {type: 4, index: 62};// RNM(castSegment)
+  this.rules[47].opcodes[8] = {type: 4, index: 53};// RNM(singleRefSegment)
+  this.rules[47].opcodes[9] = {type: 4, index: 54};// RNM(nullableRefSegment)
 
   /* lastSegment */
   this.rules[48].opcodes = [];
@@ -1764,12 +1764,13 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "paths = %s\"paths\" OWS \":\" OWS \"{\" *( OWS path ) OWS \"}\"\r\n";
     str += "\r\n";
-    str += "path =   \"/\" entitySet [ \"/\" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( \"/\" keySegment [ ( RWS singleRefPathCapabilities / *( \"/\" interimSegment ) ) ] )  ]\r\n";
-    str += "       / \"/\" singleton [ \"/\" castSegment] [ ( RWS singleRefPathCapabilities ) / *( \"/\" interimSegment) ]\r\n";
-    str += "       / serviceOperationPath\r\n";
+    str += "path = \"/\" identifier [ \"/\" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( \"/\" keySegment [ ( RWS singleRefPathCapabilities / *( \"/\" interimSegment ) ) ] )  ]\r\n";
+    str += "     / \"/\" identifier [ \"/\" castSegment ] [ ( RWS singleRefPathCapabilities ) / *( \"/\" interimSegment) ]\r\n";
+    str += "     / serviceOperationPath\r\n";
     str += "\r\n";
-    str += "interimSegment = singleValuedSegment / nullableValuedSegment / castSegment\r\n";
-    str += "              / singleRefSegment / nullableRefSegment / collectionRefSegment \"/\" keySegment\r\n";
+    str += "interimSegment = collectionRefSegment \"/\" keySegment\r\n";
+    str += "               / singleValuedSegment / nullableValuedSegment / castSegment\r\n";
+    str += "               / singleRefSegment / nullableRefSegment\r\n";
     str += "\r\n";
     str += "lastSegment = singleValuedSegment [ \"/\" castSegment ] [ RWS singlePathCapabilities ]\r\n";
     str += "            / nullableValuedSegment [ \"/\" castSegment ] [ RWS nullablePathCapabilities ]\r\n";

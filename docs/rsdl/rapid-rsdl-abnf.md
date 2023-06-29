@@ -178,12 +178,13 @@ collectionReferenceCapabilities = "{" OWS [ collectionReferenceCapability *( sep
 ```ABNF
 paths = %s"paths" OWS ":" OWS "{" *( OWS path ) OWS "}"
 
-path =   "/" entitySet [ "/" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( "/" keySegment [ ( RWS singleRefPathCapabilities / *( "/" interimSegment ) ) ] )  ]
-       / "/" singleton [ "/" castSegment] [ ( RWS singleRefPathCapabilities ) / *( "/" interimSegment) ]
-       / serviceOperationPath
+path = "/" identifier [ "/" castSegment ] [ ( RWS collectionRefPathCapabilities ) / ( "/" keySegment [ ( RWS singleRefPathCapabilities / *( "/" interimSegment ) ) ] )  ]
+     / "/" identifier [ "/" castSegment ] [ ( RWS singleRefPathCapabilities ) / *( "/" interimSegment) ]
+     / serviceOperationPath
 
-interimSegment = singleValuedSegment / nullableValuedSegment / castSegment
-              / singleRefSegment / nullableRefSegment / collectionRefSegment "/" keySegment
+interimSegment = collectionRefSegment "/" keySegment
+               / singleValuedSegment / nullableValuedSegment / castSegment
+               / singleRefSegment / nullableRefSegment
 
 lastSegment = singleValuedSegment [ "/" castSegment ] [ RWS singlePathCapabilities ]
             / nullableValuedSegment [ "/" castSegment ] [ RWS nullablePathCapabilities ]
