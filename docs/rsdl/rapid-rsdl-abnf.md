@@ -61,7 +61,7 @@ singleRefProperty    = singlePropertyDefinition [ OWS singleReferenceCapabilitie
 
 nullableRefProperty  = singlePropertyDefinition [ OWS nullableReferenceCapabilities ]
 
-collectionRefProperty = collectionPropertyDefinition [ collectionReferenceCapabilities ]
+collectionRefProperty = collectionPropertyDefinition [ OWS collectionReferenceCapabilities ]
 
 singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS singleTypeReference
 
@@ -165,9 +165,9 @@ nullableReferenceCapability = singleReferenceCapability / "DELETE" noOptions
 
 nullableReferenceCapabilities = "{" OWS [ nullableReferenceCapability *( separator nullableReferenceCapability )] OWS "}"
 
-collectionReferenceCapability =  "DELETE" OWS noOptions /
-                                   "LIST" [ OWS collectionRefCapabilities ] /
-                                   ("READ" / "CREATE" / "REPLACE" / "UPDATE") [ OWS refCapabilities ]
+collectionReferenceCapability = "DELETE" OWS noOptions
+                              / "LIST" [ OWS collectionRefCapabilities ]
+                              / ("READ" / "CREATE" / "REPLACE" / "UPDATE") [ OWS refCapabilities ]
 
 collectionReferenceCapabilities = "{" OWS [ collectionReferenceCapability *( separator collectionReferenceCapability )] OWS "}"
 

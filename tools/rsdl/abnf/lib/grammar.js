@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 118
   //       udts = 0
-  //    opcodes = 1087
+  //    opcodes = 1089
   //        ---   ABNF original opcodes
   //        ALT = 55
-  //        CAT = 226
+  //        CAT = 227
   //        REP = 141
-  //        RNM = 451
+  //        RNM = 452
   //        TLS = 170
   //        TBS = 34
   //        TRG = 10
@@ -286,7 +286,9 @@ module.exports = function grammar(){
   this.rules[11].opcodes[0] = {type: 2, children: [1,2]};// CAT
   this.rules[11].opcodes[1] = {type: 4, index: 13};// RNM(collectionPropertyDefinition)
   this.rules[11].opcodes[2] = {type: 3, min: 0, max: 1};// REP
-  this.rules[11].opcodes[3] = {type: 4, index: 44};// RNM(collectionReferenceCapabilities)
+  this.rules[11].opcodes[3] = {type: 2, children: [4,5]};// CAT
+  this.rules[11].opcodes[4] = {type: 4, index: 115};// RNM(OWS)
+  this.rules[11].opcodes[5] = {type: 4, index: 44};// RNM(collectionReferenceCapabilities)
 
   /* singlePropertyDefinition */
   this.rules[12].opcodes = [];
@@ -1639,7 +1641,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "nullableRefProperty  = singlePropertyDefinition [ OWS nullableReferenceCapabilities ]\r\n";
     str += "\r\n";
-    str += "collectionRefProperty = collectionPropertyDefinition [ collectionReferenceCapabilities ]\r\n";
+    str += "collectionRefProperty = collectionPropertyDefinition [ OWS collectionReferenceCapabilities ]\r\n";
     str += "\r\n";
     str += "singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS \":\" OWS singleTypeReference\r\n";
     str += "\r\n";
@@ -1748,9 +1750,9 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "nullableReferenceCapabilities = \"{\" OWS [ nullableReferenceCapability *( separator nullableReferenceCapability )] OWS \"}\"\r\n";
     str += "\r\n";
-    str += "collectionReferenceCapability =  \"DELETE\" OWS noOptions /\r\n";
-    str += "                                   \"LIST\" [ OWS collectionRefCapabilities ] /\r\n";
-    str += "                                   (\"READ\" / \"CREATE\" / \"REPLACE\" / \"UPDATE\") [ OWS refCapabilities ]\r\n";
+    str += "collectionReferenceCapability = \"DELETE\" OWS noOptions\r\n";
+    str += "                              / \"LIST\" [ OWS collectionRefCapabilities ]\r\n";
+    str += "                              / (\"READ\" / \"CREATE\" / \"REPLACE\" / \"UPDATE\") [ OWS refCapabilities ]\r\n";
     str += "\r\n";
     str += "collectionReferenceCapabilities = \"{\" OWS [ collectionReferenceCapability *( separator collectionReferenceCapability )] OWS \"}\"\r\n";
     str += "\r\n";
