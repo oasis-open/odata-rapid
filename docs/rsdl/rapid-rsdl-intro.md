@@ -272,7 +272,9 @@ paths :
 }
 ```
 
-Paths that are omitted are not supported, even if valid according to the model. In addition, paths can be explicitly excluded by preceding with a comment character (`#`):
+Paths that are omitted are not supported, even if valid according to the model. 
+
+A nice way of documenting that a path is not supported is by it by adding it as a comment. From a syntax perspective this is equivalent to omitting that path:
 
 ```rsdl
 
