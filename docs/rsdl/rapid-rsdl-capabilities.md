@@ -268,7 +268,7 @@ type Company
 }
 ```
 
-Orderable collections of `Company` can be ordered on stockSymbol, name, and incorporated.
+Orderable collections of `Company` can be ordered on `stockSymbol`, `name`, and `incorporated`.
 
 The `orderable` capability can include the set of orderby options to specify whether the property can be ordered ascending, descending, or both.
 
