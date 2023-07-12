@@ -7,7 +7,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
     <title>Rapid API Designer</title>
   </head>
 
@@ -44,8 +43,10 @@
                 RSDL editor
               </button>
             </li>
+            <!-- Hide Visual Designer-->
             <li class="nav-item" role="presentation">
-              <button
+              <button 
+                hidden="true"
                 type="button"
                 class="nav-link"
                 id="visual-editor-gui-tab"
@@ -59,26 +60,28 @@
               </button>
             </li>
           </ul>
+
           <div class="tab-content" id="editorTabContent">
             <div
               class="tab-pane fade show active"
               id="rsdl-editor"
               role="tabpanel"
-              aria-labelledby="swagger-ui-tab"
+              aria-labelledby="rsdl-editor-tab"
             >
               <div id="editor" class="mirror-editor"></div>
             </div>
+
             <div
               class="tab-pane fade"
               id="visual-editor-gui"
               role="tabpanel"
-              aria-labelledby="swagger-ui-tab"
+              aria-labelledby="visual-editor-gui-tab"
             >
               <div id="visual-editor-gui-content"></div>
             </div>
-          </div>
 
-<!--
+          </div>
+<!-- Hide Mock Service         
           <div class="row">
             <div class="col">
               <div class="input-group input-group-sm">
@@ -114,6 +117,7 @@
           </div>
 -->
         </div>
+
         <div class="col-md-6">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -212,6 +216,7 @@
         </div>
       </div>
 
+      <!--URL Editor-->
       <div class="my-3">
         <label for="uri-editor" class="form-label">
           Generate a request here
@@ -231,6 +236,7 @@
         <pre><code id="results" class="language-json"></code></pre>
       </div>
 -->
+      <!-- Export -->
       <div class="row">
         <div class="col">
           <div class="dropdown">

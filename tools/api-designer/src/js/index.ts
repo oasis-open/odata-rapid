@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   // this was a quick hack, not the best solution
   const app = new App();
 
+  // RSDL Editor
   const rsdlEditor = initRsdlEditor(
     document.getElementById("editor"),
     (rsdl) => {
@@ -28,11 +29,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     () => {}
   );
   app.addListener(
-    new Listener("urlEditor", (rsdl) =>
-      urlEditor.updateSchema(rsdl, schemaFormat.rsdl)
-    )
+    new Listener("urlEditor", (rsdl) => {
+      urlEditor.updateSchema(rsdl, schemaFormat.rsdl);
+    })
   );
 
+  // Visual Editor
   const mermaidEditor = new MermaidEditor(
     document.getElementById("visual-editor-gui-content"),
     window,
@@ -62,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   app.publishRsdl("main", currentRsdl);
 
+  // Export
   const dropdown = document.getElementById("export-dropdown");
 
   const downloadToFile = (content, filename, contentType) => {

@@ -86,6 +86,7 @@
                 Swagger UI
               </button>
             </li>
+<!--
             <li class="nav-item" role="presentation">
               <button
                 type="button"
@@ -100,8 +101,10 @@
                 Visualize
               </button>
             </li>
+-->
           </ul>
           <div class="tab-content" id="schemaViewContent">
+            <!-- CSDL Tab -->
             <div
               class="tab-pane fade show active"
               id="csdl"
@@ -110,25 +113,29 @@
             >
               <pre><code id="csdl-desc" class="language-json"></code></pre>
             </div>
+
+            <!-- Swagger Tab -->
             <div
               class="tab-pane fade"
               id="swagger-ui"
               role="tabpanel"
               aria-labelledby="swagger-ui-tab"
             >
-              <div>
-                <div id="swagger-ui-desc"></div>
-              </div>
+              <div id="swagger-ui-desc"></div>
             </div>
+
+            <!-- Visual Editor Tab -->
+<!--
             <div
               class="tab-pane fade"
               id="visual-editor-gui"
               role="tabpanel"
-              aria-labelledby="swagger-ui-tab"
+              aria-labelledby="visual-editor-gui-tab"
             >
               <div id="visual-editor-gui-content"></div>
             </div>
-          </div>
+-->
+            </div>
         </div>
       </div>
 
