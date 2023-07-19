@@ -40,7 +40,7 @@ Capabilities for a model element are specified in curly braces following the mod
 
 ## Support for reading data
 
-A top level singleton or single-valued reference property can be annotated with the `READ` capability to show that it supports reading.
+A top level singleton or single-valued navigation property can be annotated with the `READ` capability to show that it supports reading.
 
 ```rsdl
 service {
@@ -50,7 +50,7 @@ service {
 
 States that the path `GET /company` is supported.
 
-Applying the `READ` capability to a top-level collection or collection valued reference property states that individual members of the collection can be read using their key value.
+Applying the `READ` capability to a top-level collection or collection valued navigation property states that individual members of the collection can be read using their key value.
 
 ```rsdl
 service {
@@ -73,7 +73,7 @@ The `READ` capability can be further refined to specify the specific read capabi
 
 #### Expand Option
 
-The `expand` option within the `READ` capability specifies that reference properties within the referenced type can be expanded.
+The `expand` option within the `READ` capability specifies that navigation properties within the referenced type can be expanded.
 
 ```rsdl
 service {
@@ -81,9 +81,9 @@ service {
 }
 ```
 
-The `expand` option alone means that all reference properties within the referenced type can be expanded. So, for example, the user can specify `GET /company?$expand=employees`.
+The `expand` option alone means that all navigation properties within the referenced type can be expanded. So, for example, the user can specify `GET /company?$expand=employees`.
 
-The `expand` option may be followed by a list of individual reference properties that can be expanded.
+The `expand` option may be followed by a list of individual navigation properties that can be expanded.
 
 ```rsdl
 service {
@@ -91,13 +91,13 @@ service {
 }
 ```
 
-Means that only the employees reference property can be expanded.
+Means that only the employees navigation property can be expanded.
 
 ##### Nested Expand Options
 
 The `expand` option followed by an empty set of parens means that no properties can be expanded.
 
-Collection-valued reference properties can include nested expand [expand](#expand-option), [filter](#filter-option), [orderBy](#orderby-option), [top/skip](#top-and-skip-options) and [count](#count-option) options, as appropriate.
+Collection-valued navigation properties can include nested expand [expand](#expand-option), [filter](#filter-option), [orderBy](#orderby-option), [top/skip](#top-and-skip-options) and [count](#count-option) options, as appropriate.
 
 In the example:
 
@@ -111,7 +111,7 @@ service {
 
 `GET /company?expand=employees(top=10;skip=1;count=true;filter=lastName eq 'Jetson';orderby=firstName)`
 
-Expand options can be applied to all reference properties not otherwise specified using the `*`
+Expand options can be applied to all navigation properties not otherwise specified using the `*`
 
 ```rsdl
 service {
@@ -119,13 +119,13 @@ service {
 }
 ```
 
-`top`, `skip`, `count`, `filter`, and `orderby` query options are supported when expanding all reference properties from company.
+`top`, `skip`, `count`, `filter`, and `orderby` query options are supported when expanding all navigation properties from company.
 
-If no curly braces follow a collection-valued reference property, then top, skip, count, filter, and orderby are all assumed to be supported.
+If no curly braces follow a collection-valued navigation property, then top, skip, count, filter, and orderby are all assumed to be supported.
 
-Additionally, if no curly braces follow a reference property or `*`, then it is assumed that `expand` supports nested expands according to the capabilities of each reference property of the target type, recursively.
+Additionally, if no curly braces follow a navigation property or `*`, then it is assumed that `expand` supports nested expands according to the capabilities of each navigation property of the target type, recursively.
 
-If the reference property or `*` is suffixed by empty curly braces, then no expand options are supported when expanding the property.
+If the navigation property or `*` is suffixed by empty curly braces, then no expand options are supported when expanding the property.
 
 ## Listing Collections
 
@@ -139,7 +139,7 @@ service {
 
 States that the path `GET /competitors` is supported.
 
-Similarly, a collection-valued reference property can be annotated with the same capability:
+Similarly, a collection-valued navigation property can be annotated with the same capability:
 
 ```rsdl
 service {
@@ -162,7 +162,7 @@ The `LIST` capability on `employees`, along with the `READ` capability on `compe
 
 The `LIST` capability on `employees`, together with the `READ` capability on `company`, means that the path `GET /company/{stockSymbol}/employees` is supported.
 
-If there are no curly braces following a top-level collection or collection-valued reference property within a type, it is assumed to support `LIST` and `READ`, as well as `CREATE`, `UPDATE`, and `DELETE`.
+If there are no curly braces following a top-level collection or collection-valued navigation property within a type, it is assumed to support `LIST` and `READ`, as well as `CREATE`, `UPDATE`, and `DELETE`.
 
 ### List Options
 
@@ -182,7 +182,7 @@ service {
 
 Specifies that the [`filter`](../rapid-pro-read.md#filtering-results) query option can be used when listing competitors.
 
-The `filter` option may be followed by a list of individual reference properties that can be filtered, optionally followed by a [`filter option`](#filter-operations).
+The `filter` option may be followed by a list of individual navigation properties that can be filtered, optionally followed by a [`filter option`](#filter-operations).
 
 ```rsdl
 service {
@@ -306,13 +306,13 @@ The `count` query option can be used when listing competitors.
 
 ## Support For Modifying Data
 
-Capabilities can be applied to top-level collections and collection-valued reference properties to specify whether they support [`POST`](#create-capability), [`PATCH`](#update-capability), [`PUT`](#replace-capability), or [`DELETE`](#delete-capability) operations.
+Capabilities can be applied to top-level collections and collection-valued navigation properties to specify whether they support [`POST`](#create-capability), [`PATCH`](#update-capability), [`PUT`](#replace-capability), or [`DELETE`](#delete-capability) operations.
 
-If no capabilities are applied to a top-level collection, or to a collection-valued reference property, it is assumed to support `POST`, `PATCH`, and `DELETE`, as well as `GET`, but not `PUT`.
+If no capabilities are applied to a top-level collection, or to a collection-valued navigation property, it is assumed to support `POST`, `PATCH`, and `DELETE`, as well as `GET`, but not `PUT`.
 
 ### Create Support
 
-The `CREATE` capability can be applied to a collection of reference values to state that members can be inserted into the collection.
+The `CREATE` capability can be applied to a collection of navigation values to state that members can be inserted into the collection.
 
 ```rsdl
 service {
@@ -342,7 +342,7 @@ States that the path `POST /competitors?expand=employees` is supported to return
 
 ### Update Support
 
-The `UPDATE` capability can be applied to a reference-valued property to state that the property is updatable.
+The `UPDATE` capability can be applied to a navigation property to state that the property is updatable.
 
 ```rsdl
 service {
@@ -352,7 +352,7 @@ service {
 
 States that the path `PATCH /company` is supported.
 
-The `UPDATE` capability can also be applied to a collection of reference values to state that individual members of the collection can be updated.
+The `UPDATE` capability can also be applied to an entity set or collection-valued navigation property to state that individual members of the collection can be updated.
 
 ```rsdl
 service {
@@ -382,7 +382,7 @@ States that the path `PATCH /company?expand=employees` is supported to return th
 
 ### Replace Support
 
-The `REPLACE` capability can be applied to a reference-valued property to state that the property can be replaced.
+The `REPLACE` capability can be applied to a navigation property to state that the property can be replaced.
 
 ```rsdl
 service {
@@ -392,7 +392,7 @@ service {
 
 States that the path `PUT /company` is supported.
 
-The `REPLACE` capability can be applied to a collection of reference values to state that individual members of the collection can be replaced.
+The `REPLACE` capability can be applied to an entity set or collection-valued navigation property to state that individual members of the collection can be replaced.
 
 ```rsdl
 service {
@@ -422,7 +422,7 @@ States that the path `PUT /company?expand=employees` is supported to return the 
 
 ### Delete Support
 
-The `DELETE` capability can be applied to a reference-valued property to state that the property can be deleted.
+The `DELETE` capability can be applied to a navigation property to state that the property can be deleted.
 
 ```rsdl
 service {
@@ -432,7 +432,7 @@ service {
 
 States that the path `DELETE /company` is supported.
 
-The `DELETE` capability can also be applied to a collection of reference values to state that individual members of the collection can be deleted.
+The `DELETE` capability can also be applied to an entity set or collection-valued navigation property to state that individual members of the collection can be deleted.
 
 ```rsdl
 service {
@@ -482,10 +482,10 @@ States that query options `filter`, `orderby`, `top`, `skip`, `count`, and `expa
 
 Not applying capabilities to a model element means that you support the default capabilities for that element, as defined in the following table:
 
-| Model Element                                                | Default Capabilities               |
-| ------------------------------------------------------------ | ---------------------------------- |
-| Top-level collection or collection-valued reference property | LIST, READ, CREATE, UPDATE, DELETE |
-| Singleton or single-valued reference property                | READ                               |
+| Model Element                                                 | Default Capabilities               |
+| ------------------------------------------------------------- | ---------------------------------- |
+| Top-level collection or collection-valued navigation property | LIST, READ, CREATE, UPDATE, DELETE |
+| Singleton or single-valued navigation property                | READ                               |
 
 # Annotating Paths
 

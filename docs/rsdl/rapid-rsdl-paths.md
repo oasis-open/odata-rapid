@@ -46,7 +46,7 @@ type Company
 `/competitors`
 `/competitors/{stockSymbol}`
 
-where `{stockSymbol}` is a string value representing the stock symbol of a competitor.
+where `{stockSymbol}` is a placeholder for the stock symbol of a competitor.
 
 ## Structured Properties
 
@@ -75,7 +75,7 @@ type Employee
 `/company/employees`
 `/company/employees/{id}`
 
-where `{id}` is an integer value representing a employee's id.
+where `{id}` is placeholder for an employee's id.
 
 ## Nested Operations
 
@@ -96,8 +96,8 @@ type Company
 ### Supported Paths
 
 `/company`
-`/company/topEmployees(num=5)`
-`/company/topEmployees(num=5)/{id}`
-`/company/youreFired(reason='bad day')`
+`/company/topEmployees(num={num})`
+`/company/topEmployees(num={num})/{id}`
+`/company/youreFired(reason='{reason}')`
 
-where `{id}` is an integer value representing a employee's id.
+where `{num}` is a placeholder for a number, `{id}` is a placeholder for an employee's id, and `{reason}` is a placeholder for a reason.

@@ -1,4 +1,33 @@
 # test cases for rsdl.abnf
+- source: |
+    namespace Jetsons
+    include "core" as Core
+    type Company
+    {
+        key stockSymbol: String
+    }
+    service {
+        competitors: [Company]
+    }
+    paths {
+      /competitors/{stockSymbol}
+    }
+  tokens:
+    - namespace
+    - Jetsons
+    - include
+    - Core
+    - structuredType
+    - Company
+    - key
+    - stockSymbol
+    - String
+    - service
+    - entitySet
+    - competitors
+    - Company
+    - competitors
+    - stockSymbol
 
 - source: "namespace foo\n" # whitespace required after namespace identifier
   tokens: [namespace, foo]
@@ -209,14 +238,15 @@
     - singleton
     - company
     - Company
-    - jetsons.company
+    - jetsons
+    - company
     - employees
 
 - source: |
     service {
       competitors: [Company] {
         LIST { top, skip, count, filter, orderby, expand( employees { expand(*), top, skip, count, filter}) }
-        CREATE { expand( jetsons/employees { top, skip, count, filter, orderby, expand(*) }, orders ) }
+        CREATE { expand( employees { top, skip, count, filter, orderby, expand(*) }, orders ) }
         READ { expand( ) }
         UPDATE { expand }
         DELETE {}
@@ -228,7 +258,6 @@
     - competitors
     - Company
     - employees
-    - jetsons
     - employees
     - orders
 
@@ -260,7 +289,7 @@
   failAt: 41 # braces required after DELETE
 
 - source: |
-    paths : {
+    paths {
       /competitors
       /competitors/{stockSymbol}
       /competitors/{stockSymbol}/employees
@@ -268,32 +297,41 @@
     }
 
 - source: |
-    paths :
-    {
+    paths {
       /company
       /company/employees
       /company/employees/{id}
       /company/youreFired
     }
 
-#TODO: function overloads in paths
-# - source: |
-#     paths :
-#     {
-#       /company/topEmployees(num={num})
-#       /company/topEmployees(num={num})/{id}
-#     }
+- source: |
+    paths {
+      /company
+      /company/employees
+      /company/employees/{id}
+      /competitors
+      /competitors/{stockSymbol}
+      /competitors/{stockSymbol}/employees
+      /competitors/{stockSymbol}/employees/{id}
+      /company/topEmployees(num={num})
+      /company/topEmployees(num={num})/{id}
+      /company/youreFired
+    }
 
-# - source: |
-#     paths : {
-#       /company
-#       /company/employees
-#       /company/employees/{id}
-#       /competitors
-#       /competitors/{stockSymbol}
-#       /competitors/{stockSymbol}/employees
-#       /competitors/{stockSymbol}/employees/{id}
-#       /company/topEmployees(num={num})
-#       /company/topEmployees(num={num})/{id}
-#       /company/youreFired
-#     }
+- source: |
+    paths
+    {
+      /company/topEmployees(num={num})
+      /company/topEmployees(num={num},num2={num2})
+      /company/topEmployees(num={num})/{id}
+      /company/topEmployees(num={num},num2={num2})/{id}
+    }
+
+- source: |
+    paths
+    {
+      /topEmployees(num={num})
+      /topEmployees(num={num},num2={num2})
+      /topEmployees(num={num})/{id}
+      /topEmployees(num={num},num2={num2})/{id}
+    }
