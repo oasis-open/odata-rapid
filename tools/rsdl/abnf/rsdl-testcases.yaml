@@ -231,7 +231,7 @@
 
 - source: |
     service {
-      company: Company { READ { expand( jetsons.company/employees ) } }
+      company: Company { READ { expand { jetsons.company/employees } } }
     }
   tokens:
     - service
@@ -245,9 +245,9 @@
 - source: |
     service {
       competitors: [Company] {
-        LIST { top, skip, count, filter, orderby, expand( employees { expand(*), top, skip, count, filter}) }
-        CREATE { expand( employees { top, skip, count, filter, orderby, expand(*) }, orders ) }
-        READ { expand( ) }
+        LIST { top, skip, count, filter, orderby, expand { employees { expand {*}, top, skip, count, filter}} }
+        CREATE { expand{ employees { top, skip, count, filter, orderby, expand{ * } }, orders } }
+        READ { expand{ } }
         UPDATE { expand }
         DELETE {}
       }
@@ -267,7 +267,7 @@
       key stockSymbol: String { filterable { eq }, orderable }
       name: String { filterable { stringComp }, orderable {} }
       incorporated: Date { filterable, orderable { asc, desc } }
-      employees: [Employee] { LIST { filter(name {stringComp}), orderby(name{asc,desc}) }, READ }
+      employees: [Employee] { LIST { filter{name {stringComp}}, orderby{name{asc,desc}} }, READ }
     }
   tokens:
     - structuredType
@@ -348,7 +348,7 @@
 
 - source: |
     paths {
-      /company/employees { GET { orderby(name {asc, desc}) } }
+      /company/employees { GET { orderby{name {asc, desc}} } }
     }
 
 - source: |
@@ -358,12 +358,12 @@
 
 - source: |
     paths {
-      /company/employees { GET { filter(name {stringComp}) } }
+      /company/employees { GET { filter{name {stringComp}} } }
     }
 
 - source: |
     paths {
-      /company/employees { GET { expand( employees { top, skip, count, filter, orderby } ) } }
+      /company/employees { GET { expand{ employees { top, skip, count, filter, orderby } } } }
     }
 
 - source: |
@@ -373,17 +373,17 @@
 
 - source: |
     paths {
-      /company/employees { GET { orderby(name) filter(name) expand( employees ) } }
+      /company/employees { GET { orderby{name} filter{name} expand{ employees } } }
     }
 
 - source: |
     paths {
-      /company/employees { GET { orderby(name {asc, desc}) top skip count filter(name {stringComp}) expand( employees { top, skip, count, filter, orderby } ) } }
+      /company/employees { GET { orderby{name {asc, desc}} top skip count filter{name {stringComp}} expand{ employees { top, skip, count, filter, orderby } } } }
     }
 
 - source: |
     paths {
-      /company/employees { GET { orderby(*) filter(*) } }
+      /company/employees { GET { orderby{*} filter{*} } }
     }
 
 - source: |
@@ -413,11 +413,11 @@
 
 - source: |
     paths {
-      /company/employees/{id} { GET { expand( employees { top, skip, count, filter, orderby } ) } }
+      /company/employees/{id} { GET { expand{ employees { top, skip, count, filter, orderby } } } }
     }
 
 - source: |
     paths {
-      /company/employees/{id} { GET { orderby(name {asc, desc}) top skip count filter(name {stringComp}) expand( employees { top, skip, count, filter, orderby } ) } }
+      /company/employees/{id} { GET { orderby{name {asc, desc}} top skip count filter{name {stringComp}} expand{ employees { top, skip, count, filter, orderby } } } }
     }
   failAt: 42 # collection valued capabilities not supported for a single valued collection

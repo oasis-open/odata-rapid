@@ -147,14 +147,14 @@ paths = %s"paths" OWS "{" *( OWS "/" path ) OWS "}"
 path =  propertySegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
         / serviceOperationSegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
         / serviceOperationSegment [ pathSegment / ( RWS capabilities ) ]
-        / castSegment [ pathSegment / collectionPathCapabilities / ( RWS collectionNavPathCapabilities ) ]
+        / castSegment [ pathSegment / ( RWS capabilities ) ]
         / propertySegment  [  pathSegment / ( RWS capabilities ) ]
 
 propertySegment = identifier;  structural or navigation property
 
 pathSegment = "/" path
 
-castSegment = identifier 1*( "." identifier )
+castSegment = identifier 1*( "." identifier )      ; qualified type name
 
 keySegment = "{" keyProperty "}"
 
@@ -206,7 +206,7 @@ collectionNavCapability = collectionCapability / navCapability
 
 collectionNavCapabilities = "{" OWS [ collectionNavCapability *( separator collectionNavCapability ) OWS ] "}"
 
-navCapability       = "expand" [ OWS "(" OWS [ expandProperty *( OWS "," OWS expandProperty OWS ) ] OWS ")" ]
+navCapability       = "expand" [ OWS "{" OWS [ expandProperty *( OWS "," OWS expandProperty OWS ) ] OWS "}" ]
 
 navCapabilities     =  "{" OWS [ navCapability OWS ] "}"
 
@@ -214,7 +214,7 @@ expandProperty      = star / [ castSegment "/" ] navigationProperty ( [ OWS coll
 
 navigationProperty = identifier     ; single or collection valued navigation property
 
-filterCapability    = "filter" [ "(" [ OWS filterProperty *( "," OWS filterProperty OWS ) ] ")" ]
+filterCapability    = "filter" [ "{" [ OWS filterProperty *( "," OWS filterProperty OWS ) ] "}" ]
 
 filterProperty    = ( ( [ typeName "/" ] propertyName ) / allProperties) [ OWS filterOptions ]
 
@@ -230,7 +230,7 @@ filterOperations     =  "none" ; not filterable
 
 orderByCapability = "orderby" [ OWS orderByProperties ]
 
-orderByProperties = "(" OWS [ orderByProperty *( "," OWS orderByProperty OWS ) ] ")"
+orderByProperties = "{" OWS [ orderByProperty *( "," OWS orderByProperty OWS ) ] "}"
 
 orderByProperty = allProperties / propertyName [ OWS orderByDirection ]
 

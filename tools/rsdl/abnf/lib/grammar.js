@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 96
   //       udts = 0
-  //    opcodes = 913
+  //    opcodes = 912
   //        ---   ABNF original opcodes
   //        ALT = 49
   //        CAT = 182
   //        REP = 111
-  //        RNM = 379
+  //        RNM = 378
   //        TLS = 148
   //        TBS = 34
   //        TRG = 10
@@ -723,7 +723,7 @@ module.exports = function grammar(){
 
   /* path */
   this.rules[39].opcodes = [];
-  this.rules[39].opcodes[0] = {type: 1, children: [1,11,21,29,38]};// ALT
+  this.rules[39].opcodes[0] = {type: 1, children: [1,11,21,29,37]};// ALT
   this.rules[39].opcodes[1] = {type: 2, children: [2,3,4,5]};// CAT
   this.rules[39].opcodes[2] = {type: 4, index: 40};// RNM(propertySegment)
   this.rules[39].opcodes[3] = {type: 7, string: [47]};// TLS
@@ -755,20 +755,19 @@ module.exports = function grammar(){
   this.rules[39].opcodes[29] = {type: 2, children: [30,31]};// CAT
   this.rules[39].opcodes[30] = {type: 4, index: 42};// RNM(castSegment)
   this.rules[39].opcodes[31] = {type: 3, min: 0, max: 1};// REP
-  this.rules[39].opcodes[32] = {type: 1, children: [33,34,35]};// ALT
+  this.rules[39].opcodes[32] = {type: 1, children: [33,34]};// ALT
   this.rules[39].opcodes[33] = {type: 4, index: 41};// RNM(pathSegment)
-  this.rules[39].opcodes[34] = {type: 4, index: 52};// RNM(collectionPathCapabilities)
-  this.rules[39].opcodes[35] = {type: 2, children: [36,37]};// CAT
-  this.rules[39].opcodes[36] = {type: 4, index: 94};// RNM(RWS)
-  this.rules[39].opcodes[37] = {type: 4, index: 56};// RNM(collectionNavPathCapabilities)
-  this.rules[39].opcodes[38] = {type: 2, children: [39,40]};// CAT
-  this.rules[39].opcodes[39] = {type: 4, index: 40};// RNM(propertySegment)
-  this.rules[39].opcodes[40] = {type: 3, min: 0, max: 1};// REP
-  this.rules[39].opcodes[41] = {type: 1, children: [42,43]};// ALT
-  this.rules[39].opcodes[42] = {type: 4, index: 41};// RNM(pathSegment)
-  this.rules[39].opcodes[43] = {type: 2, children: [44,45]};// CAT
-  this.rules[39].opcodes[44] = {type: 4, index: 94};// RNM(RWS)
-  this.rules[39].opcodes[45] = {type: 4, index: 48};// RNM(capabilities)
+  this.rules[39].opcodes[34] = {type: 2, children: [35,36]};// CAT
+  this.rules[39].opcodes[35] = {type: 4, index: 94};// RNM(RWS)
+  this.rules[39].opcodes[36] = {type: 4, index: 48};// RNM(capabilities)
+  this.rules[39].opcodes[37] = {type: 2, children: [38,39]};// CAT
+  this.rules[39].opcodes[38] = {type: 4, index: 40};// RNM(propertySegment)
+  this.rules[39].opcodes[39] = {type: 3, min: 0, max: 1};// REP
+  this.rules[39].opcodes[40] = {type: 1, children: [41,42]};// ALT
+  this.rules[39].opcodes[41] = {type: 4, index: 41};// RNM(pathSegment)
+  this.rules[39].opcodes[42] = {type: 2, children: [43,44]};// CAT
+  this.rules[39].opcodes[43] = {type: 4, index: 94};// RNM(RWS)
+  this.rules[39].opcodes[44] = {type: 4, index: 48};// RNM(capabilities)
 
   /* propertySegment */
   this.rules[40].opcodes = [];
@@ -1014,7 +1013,7 @@ module.exports = function grammar(){
   this.rules[61].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[61].opcodes[3] = {type: 2, children: [4,5,6,7,17,18]};// CAT
   this.rules[61].opcodes[4] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[61].opcodes[5] = {type: 7, string: [40]};// TLS
+  this.rules[61].opcodes[5] = {type: 7, string: [123]};// TLS
   this.rules[61].opcodes[6] = {type: 4, index: 93};// RNM(OWS)
   this.rules[61].opcodes[7] = {type: 3, min: 0, max: 1};// REP
   this.rules[61].opcodes[8] = {type: 2, children: [9,10]};// CAT
@@ -1027,7 +1026,7 @@ module.exports = function grammar(){
   this.rules[61].opcodes[15] = {type: 4, index: 63};// RNM(expandProperty)
   this.rules[61].opcodes[16] = {type: 4, index: 93};// RNM(OWS)
   this.rules[61].opcodes[17] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[61].opcodes[18] = {type: 7, string: [41]};// TLS
+  this.rules[61].opcodes[18] = {type: 7, string: [125]};// TLS
 
   /* navCapabilities */
   this.rules[62].opcodes = [];
@@ -1070,7 +1069,7 @@ module.exports = function grammar(){
   this.rules[65].opcodes[1] = {type: 7, string: [102,105,108,116,101,114]};// TLS
   this.rules[65].opcodes[2] = {type: 3, min: 0, max: 1};// REP
   this.rules[65].opcodes[3] = {type: 2, children: [4,5,15]};// CAT
-  this.rules[65].opcodes[4] = {type: 7, string: [40]};// TLS
+  this.rules[65].opcodes[4] = {type: 7, string: [123]};// TLS
   this.rules[65].opcodes[5] = {type: 3, min: 0, max: 1};// REP
   this.rules[65].opcodes[6] = {type: 2, children: [7,8,9]};// CAT
   this.rules[65].opcodes[7] = {type: 4, index: 93};// RNM(OWS)
@@ -1081,7 +1080,7 @@ module.exports = function grammar(){
   this.rules[65].opcodes[12] = {type: 4, index: 93};// RNM(OWS)
   this.rules[65].opcodes[13] = {type: 4, index: 66};// RNM(filterProperty)
   this.rules[65].opcodes[14] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[65].opcodes[15] = {type: 7, string: [41]};// TLS
+  this.rules[65].opcodes[15] = {type: 7, string: [125]};// TLS
 
   /* filterProperty */
   this.rules[66].opcodes = [];
@@ -1140,7 +1139,7 @@ module.exports = function grammar(){
   /* orderByProperties */
   this.rules[71].opcodes = [];
   this.rules[71].opcodes[0] = {type: 2, children: [1,2,3,12]};// CAT
-  this.rules[71].opcodes[1] = {type: 7, string: [40]};// TLS
+  this.rules[71].opcodes[1] = {type: 7, string: [123]};// TLS
   this.rules[71].opcodes[2] = {type: 4, index: 93};// RNM(OWS)
   this.rules[71].opcodes[3] = {type: 3, min: 0, max: 1};// REP
   this.rules[71].opcodes[4] = {type: 2, children: [5,6]};// CAT
@@ -1151,7 +1150,7 @@ module.exports = function grammar(){
   this.rules[71].opcodes[9] = {type: 4, index: 93};// RNM(OWS)
   this.rules[71].opcodes[10] = {type: 4, index: 72};// RNM(orderByProperty)
   this.rules[71].opcodes[11] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[71].opcodes[12] = {type: 7, string: [41]};// TLS
+  this.rules[71].opcodes[12] = {type: 7, string: [125]};// TLS
 
   /* orderByProperty */
   this.rules[72].opcodes = [];
@@ -1486,14 +1485,14 @@ module.exports = function grammar(){
     str += "path =  propertySegment \"/\" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]\r\n";
     str += "        / serviceOperationSegment \"/\" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]\r\n";
     str += "        / serviceOperationSegment [ pathSegment / ( RWS capabilities ) ]\r\n";
-    str += "        / castSegment [ pathSegment / collectionPathCapabilities / ( RWS collectionNavPathCapabilities ) ]\r\n";
+    str += "        / castSegment [ pathSegment / ( RWS capabilities ) ]\r\n";
     str += "        / propertySegment  [  pathSegment / ( RWS capabilities ) ]\r\n";
     str += "\r\n";
     str += "propertySegment = identifier;  structural or navigation property\r\n";
     str += "\r\n";
     str += "pathSegment = \"/\" path\r\n";
     str += "\r\n";
-    str += "castSegment = identifier 1*( \".\" identifier )\r\n";
+    str += "castSegment = identifier 1*( \".\" identifier )      ; qualified type name\r\n";
     str += "\r\n";
     str += "keySegment = \"{\" keyProperty \"}\"\r\n";
     str += "\r\n";
@@ -1545,7 +1544,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "collectionNavCapabilities = \"{\" OWS [ collectionNavCapability *( separator collectionNavCapability ) OWS ] \"}\"\r\n";
     str += "\r\n";
-    str += "navCapability       = \"expand\" [ OWS \"(\" OWS [ expandProperty *( OWS \",\" OWS expandProperty OWS ) ] OWS \")\" ]\r\n";
+    str += "navCapability       = \"expand\" [ OWS \"{\" OWS [ expandProperty *( OWS \",\" OWS expandProperty OWS ) ] OWS \"}\" ]\r\n";
     str += "\r\n";
     str += "navCapabilities     =  \"{\" OWS [ navCapability OWS ] \"}\"\r\n";
     str += "\r\n";
@@ -1553,7 +1552,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "navigationProperty = identifier     ; single or collection valued navigation property\r\n";
     str += "\r\n";
-    str += "filterCapability    = \"filter\" [ \"(\" [ OWS filterProperty *( \",\" OWS filterProperty OWS ) ] \")\" ]\r\n";
+    str += "filterCapability    = \"filter\" [ \"{\" [ OWS filterProperty *( \",\" OWS filterProperty OWS ) ] \"}\" ]\r\n";
     str += "\r\n";
     str += "filterProperty    = ( ( [ typeName \"/\" ] propertyName ) / allProperties) [ OWS filterOptions ]\r\n";
     str += "\r\n";
@@ -1569,7 +1568,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "orderByCapability = \"orderby\" [ OWS orderByProperties ]\r\n";
     str += "\r\n";
-    str += "orderByProperties = \"(\" OWS [ orderByProperty *( \",\" OWS orderByProperty OWS ) ] \")\"\r\n";
+    str += "orderByProperties = \"{\" OWS [ orderByProperty *( \",\" OWS orderByProperty OWS ) ] \"}\"\r\n";
     str += "\r\n";
     str += "orderByProperty = allProperties / propertyName [ OWS orderByDirection ]\r\n";
     str += "\r\n";
