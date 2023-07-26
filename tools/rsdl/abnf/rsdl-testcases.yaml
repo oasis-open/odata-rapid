@@ -335,3 +335,89 @@
       /topEmployees(num={num})/{id}
       /topEmployees(num={num},num2={num2})/{id}
     }
+
+- source: |
+    paths {
+      /company/employees { GET }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET {} }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby(name {asc, desc}) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { top skip count } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { filter(name {stringComp}) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { expand( employees { top, skip, count, filter, orderby } ) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby top skip count filter expand } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby(name) filter(name) expand( employees ) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby(name {asc, desc}) top skip count filter(name {stringComp}) expand( employees { top, skip, count, filter, orderby } ) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby(*) filter(*) } }
+    }
+
+- source: |
+    paths {
+      /company/employees { POST }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET }
+    }
+
+- source: |
+    paths {
+      /company/employees { PATCH }
+    }
+
+- source: |
+    paths {
+      /company/employees { PUT }
+    }
+
+- source: |
+    paths {
+      /company/employees { DELETE }
+    }
+
+- source: |
+    paths {
+      /company/employees/{id} { GET { expand( employees { top, skip, count, filter, orderby } ) } }
+    }
+
+- source: |
+    paths {
+      /company/employees/{id} { GET { orderby(name {asc, desc}) top skip count filter(name {stringComp}) expand( employees { top, skip, count, filter, orderby } ) } }
+    }
+  failAt: 42 # collection valued capabilities not supported for a single valued collection

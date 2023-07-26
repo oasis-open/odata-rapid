@@ -161,61 +161,29 @@ collectionNavigationCapabilities = "{" OWS [ collectionNavigationCapability *( s
 ```ABNF
 paths = %s"paths" OWS "{" *( OWS "/" path ) OWS "}"
 
-path = serviceOperationSegment [ ( RWS serviceOperationCapabilities ) / ( *( "/" interimSegment ) "/" lastSegment ) ]
-     / identifier [ "/" castSegment ] [ ( RWS collectionNavPathCapabilities ) / ( "/" keySegment [ ( RWS singleNavPathCapabilities / ( *( "/" interimSegment ) "/" lastSegment ) ) ] ) ]
-     / identifier [ "/" castSegment ] [ ( RWS singleNavPathCapabilities ) / ( *( "/" interimSegment ) "/" lastSegment ) ]
+path =  propertySegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
+        / serviceOperationSegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
+        / serviceOperationSegment [ pathSegment / ( RWS capabilities ) ]
+        / castSegment [ pathSegment / collectionPathCapabilities / ( RWS collectionNavPathCapabilities ) ]
+        / propertySegment  [  pathSegment / ( RWS capabilities ) ]
 
-interimSegment = collectionNavSegment "/" keySegment
-               / serviceOperationSegment
-               / castSegment
-               / singleValuedSegment
-               / singleNavSegment
+propertySegment = identifier;  structural or navigation property
 
-lastSegment = serviceOperationSegment [ RWS serviceOperationCapabilities ]
-            / singleValuedSegment [ "/" castSegment ] [ RWS singlePathCapabilities ]
-            / collectionValuedSegment [ "/" castSegment ] [ RWS collectionPathCapabilities ]
-            / singleNavSegment [ "/" castSegment ] [ RWS singleNavPathCapabilities ]
-            / collectionNavSegment [ "/" castSegment ] [ RWS ( collectionNavPathCapabilities / "/" keySegment RWS singleNavPathCapabilities )]
+pathSegment = "/" path
 
-serviceOperationSegment = identifier parameters [ "/" castSegment ] [ "/" keySegment ]
-
-serviceOperationCapabilities = singlePathCapabilities / collectionPathCapabilities / singleNavPathCapabilities / collectionNavPathCapabilities
-
-singleValuedSegment = identifier                   ; a single property
-                    / singleValuedOperation
-
-collectionValuedSegment = identifier               ; a collection-valued property
-                    / collectionValuedOperation
-
-singleNavSegment = identifier                      ; a single navigation property
-                    / singleNavigationProperty
-                    / singleNavValuedOperation
-
-collectionNavSegment = identifier                  ; a collection-valued navigation property
-                    / collectionNavigationProperty
-                    / collectionNavValuedOperation
-
-singleValuedOperation = identifier                 ; an operation that returns a single value
-
-collectionValuedOperation = identifier             ; an operation that returns a collection value
-
-singleNavValuedOperation = identifier              ; an operation that returns a single navigation value
-
-collectionNavValuedOperation = identifier          ; an operation that returns a collection of navigation values
-
-parameters = "(" OWS parameterSpecification *( "," OWS parameterSpecification ) OWS ")"
-
-parameterSpecification = identifier OWS "=" OWS "{" identifier "}"
-
-castSegment = identifier 1*( "." identifier )
+castSegment = identifier 1*( "." identifier )      ; qualified type name
 
 keySegment = "{" keyProperty "}"
 
 keyProperty = identifier                           ; name of the key property
 
-singleNavigationProperty = identifier              ; a single valued navigation property
+serviceOperationSegment = identifier parameters [ "/" castSegment ] [ "/" keySegment ]
 
-collectionNavigationProperty = identifier          ; a collection valued navigation property
+parameters = "(" OWS parameterSpecification *( "," OWS parameterSpecification ) OWS ")"
+
+parameterSpecification = identifier OWS "=" OWS "{" identifier "}"
+
+capabilities = singlePathCapabilities / collectionPathCapabilities / singleNavPathCapabilities / collectionNavPathCapabilities
 
 ```
 
@@ -225,19 +193,19 @@ collectionNavigationProperty = identifier          ; a collection valued navigat
 
 singlePathCapability = ("GET" / "PUT" / "PATCH" / "DELETE") [noOptions]
 
-singlePathCapabilities = "{" [singlePathCapability *( separator singlePathCapability)] "}"
+singlePathCapabilities = "{" OWS [singlePathCapability *( separator singlePathCapability) OWS] "}"
 
 collectionPathCapability = "GET" [ collectionCapabilities ] / "POST" [noOptions]
 
-collectionPathCapabilities = "{" [ collectionPathCapability *( separator collectionPathCapability )] "}"
+collectionPathCapabilities = "{" OWS [ collectionPathCapability *( separator collectionPathCapability ) OWS ] "}"
 
 singleNavPathCapability = ("GET" / "PATCH" / "PUT") [ OWS navCapabilities ] / "DELETE" noOptions
 
-singleNavPathCapabilities = "{" [singleNavPathCapability *( separator singleNavPathCapability )] "}"
+singleNavPathCapabilities = "{" OWS [singleNavPathCapability *( separator singleNavPathCapability ) OWS ] "}"
 
 collectionNavPathCapability = "GET" [ OWS collectionNavCapabilities ] / "POST" [ OWS navCapabilities ]
 
-collectionNavPathCapabilities = "{" [ collectionNavPathCapability *( separator collectionNavPathCapability )] "}"
+collectionNavPathCapabilities = "{" OWS [ collectionNavPathCapability *( separator collectionNavPathCapability ) OWS ] "}"
 
 ```
 
@@ -257,9 +225,9 @@ navCapability       = "expand" [ OWS "(" OWS [ expandProperty *( OWS "," OWS exp
 
 navCapabilities     =  "{" OWS [ navCapability OWS ] "}"
 
-expandProperty      = star /
-                      [ castSegment "/" ] collectionNavigationProperty [ OWS collectionNavCapabilities ] /
-                      [ castSegment "/" ] ( singleNavigationProperty ) [ OWS navCapabilities ]
+expandProperty      = star / [ castSegment "/" ] navigationProperty ( [ OWS collectionNavCapabilities ] / [ OWS navCapabilities ] )
+
+navigationProperty = identifier     ; single or collection valued navigation property
 
 filterCapability    = "filter" [ "(" [ OWS filterProperty *( "," OWS filterProperty OWS ) ] ")" ]
 
