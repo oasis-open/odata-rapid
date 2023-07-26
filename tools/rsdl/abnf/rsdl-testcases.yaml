@@ -302,6 +302,7 @@
       /company/employees
       /company/employees/{id}
       /company/youreFired
+      /company/youreFired/{id}
     }
 
 - source: |

@@ -28,7 +28,7 @@ service {
 
 ## Key Segment
 
-Path segments that represent a collection of [structured types](rapid-rsdl-intro.md#defining-a-structured-type) with identity may be followed by a segment containing the key value of an instance within the collection:
+Path segments that represent a collection of [structured types](rapid-rsdl-intro.md#defining-a-structured-type) with identity may be followed by a segment containing the name of the key property enclosed in parens as a placeholder for the key value of an instance within the collection.
 
 ```rsdl
 service {

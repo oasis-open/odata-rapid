@@ -272,7 +272,7 @@ paths :
 }
 ```
 
-Paths that are omitted are not supported, even if valid according to the model. 
+Paths that are omitted are not supported, even if valid according to the model.
 
 A nice way of documenting that a path is not supported is by it by adding it as a comment. From a syntax perspective this is equivalent to omitting that path:
 

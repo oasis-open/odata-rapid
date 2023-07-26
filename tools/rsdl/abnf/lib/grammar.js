@@ -7,12 +7,12 @@ module.exports = function grammar(){
   // SUMMARY
   //      rules = 96
   //       udts = 0
-  //    opcodes = 912
+  //    opcodes = 910
   //        ---   ABNF original opcodes
   //        ALT = 49
   //        CAT = 182
   //        REP = 111
-  //        RNM = 378
+  //        RNM = 376
   //        TLS = 148
   //        TBS = 34
   //        TRG = 10
@@ -256,17 +256,13 @@ module.exports = function grammar(){
 
   /* collectionPropertyDefinition */
   this.rules[8].opcodes = [];
-  this.rules[8].opcodes[0] = {type: 2, children: [1,2,6,7,8,9,10]};// CAT
+  this.rules[8].opcodes[0] = {type: 2, children: [1,2,3,4,5,6]};// CAT
   this.rules[8].opcodes[1] = {type: 4, index: 27};// RNM(annotations)
-  this.rules[8].opcodes[2] = {type: 3, min: 0, max: 1};// REP
-  this.rules[8].opcodes[3] = {type: 2, children: [4,5]};// CAT
-  this.rules[8].opcodes[4] = {type: 4, index: 9};// RNM(propertyModifier)
-  this.rules[8].opcodes[5] = {type: 4, index: 94};// RNM(RWS)
-  this.rules[8].opcodes[6] = {type: 4, index: 77};// RNM(identifier)
-  this.rules[8].opcodes[7] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[8].opcodes[8] = {type: 7, string: [58]};// TLS
-  this.rules[8].opcodes[9] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[8].opcodes[10] = {type: 4, index: 11};// RNM(collectionTypeReference)
+  this.rules[8].opcodes[2] = {type: 4, index: 77};// RNM(identifier)
+  this.rules[8].opcodes[3] = {type: 4, index: 93};// RNM(OWS)
+  this.rules[8].opcodes[4] = {type: 7, string: [58]};// TLS
+  this.rules[8].opcodes[5] = {type: 4, index: 93};// RNM(OWS)
+  this.rules[8].opcodes[6] = {type: 4, index: 11};// RNM(collectionTypeReference)
 
   /* propertyModifier */
   this.rules[9].opcodes = [];
@@ -815,17 +811,19 @@ module.exports = function grammar(){
 
   /* parameters */
   this.rules[46].opcodes = [];
-  this.rules[46].opcodes[0] = {type: 2, children: [1,2,3,4,9,10]};// CAT
+  this.rules[46].opcodes[0] = {type: 2, children: [1,2,3,12]};// CAT
   this.rules[46].opcodes[1] = {type: 7, string: [40]};// TLS
   this.rules[46].opcodes[2] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[46].opcodes[3] = {type: 4, index: 47};// RNM(parameterSpecification)
-  this.rules[46].opcodes[4] = {type: 3, min: 0, max: Infinity};// REP
-  this.rules[46].opcodes[5] = {type: 2, children: [6,7,8]};// CAT
-  this.rules[46].opcodes[6] = {type: 7, string: [44]};// TLS
-  this.rules[46].opcodes[7] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[46].opcodes[8] = {type: 4, index: 47};// RNM(parameterSpecification)
+  this.rules[46].opcodes[3] = {type: 3, min: 0, max: 1};// REP
+  this.rules[46].opcodes[4] = {type: 2, children: [5,6,11]};// CAT
+  this.rules[46].opcodes[5] = {type: 4, index: 47};// RNM(parameterSpecification)
+  this.rules[46].opcodes[6] = {type: 3, min: 0, max: Infinity};// REP
+  this.rules[46].opcodes[7] = {type: 2, children: [8,9,10]};// CAT
+  this.rules[46].opcodes[8] = {type: 7, string: [44]};// TLS
   this.rules[46].opcodes[9] = {type: 4, index: 93};// RNM(OWS)
-  this.rules[46].opcodes[10] = {type: 7, string: [41]};// TLS
+  this.rules[46].opcodes[10] = {type: 4, index: 47};// RNM(parameterSpecification)
+  this.rules[46].opcodes[11] = {type: 4, index: 93};// RNM(OWS)
+  this.rules[46].opcodes[12] = {type: 7, string: [41]};// TLS
 
   /* parameterSpecification */
   this.rules[47].opcodes = [];
@@ -1367,7 +1365,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS \":\" OWS singleTypeReference\r\n";
     str += "\r\n";
-    str += "collectionPropertyDefinition  = annotations [propertyModifier RWS] identifier OWS \":\" OWS collectionTypeReference\r\n";
+    str += "collectionPropertyDefinition  = annotations identifier OWS \":\" OWS collectionTypeReference\r\n";
     str += "\r\n";
     str += "propertyModifier     = %s\"key\"\r\n";
     str += "\r\n";
@@ -1500,7 +1498,7 @@ module.exports = function grammar(){
     str += "\r\n";
     str += "serviceOperationSegment = identifier parameters [ \"/\" castSegment ] [ \"/\" keySegment ]\r\n";
     str += "\r\n";
-    str += "parameters = \"(\" OWS parameterSpecification *( \",\" OWS parameterSpecification ) OWS \")\"\r\n";
+    str += "parameters = \"(\" OWS [ parameterSpecification *( \",\" OWS parameterSpecification ) OWS ] \")\"\r\n";
     str += "\r\n";
     str += "parameterSpecification = identifier OWS \"=\" OWS \"{\" identifier \"}\"\r\n";
     str += "\r\n";

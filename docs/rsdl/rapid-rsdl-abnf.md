@@ -52,7 +52,7 @@ property             = singlePropertyDefinition [ OWS (primitivePropertyCapabili
 
 singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS singleTypeReference
 
-collectionPropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS collectionTypeReference
+collectionPropertyDefinition  = annotations identifier OWS ":" OWS collectionTypeReference
 
 propertyModifier     = %s"key"
 
@@ -179,7 +179,7 @@ keyProperty = identifier                           ; name of the key property
 
 serviceOperationSegment = identifier parameters [ "/" castSegment ] [ "/" keySegment ]
 
-parameters = "(" OWS parameterSpecification *( "," OWS parameterSpecification ) OWS ")"
+parameters = "(" OWS [ parameterSpecification *( "," OWS parameterSpecification ) OWS ] ")"
 
 parameterSpecification = identifier OWS "=" OWS "{" identifier "}"
 

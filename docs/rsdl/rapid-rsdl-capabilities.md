@@ -87,7 +87,7 @@ The `expand` option may be followed by a list of individual navigation propertie
 
 ```rsdl
 service {
-  company: Company { READ { expand(employees) } }
+  company: Company { READ { expand { employees } } }
 }
 ```
 
@@ -95,7 +95,7 @@ Means that only the employees navigation property can be expanded.
 
 ##### Nested Expand Options
 
-The `expand` option followed by an empty set of parens means that no properties can be expanded.
+The `expand` option followed by an empty set of curly braces means that no properties can be expanded.
 
 Collection-valued navigation properties can include nested expand [expand](#expand-option), [filter](#filter-option), [orderBy](#orderby-option), [top/skip](#top-and-skip-options) and [count](#count-option) options, as appropriate.
 
@@ -103,7 +103,7 @@ In the example:
 
 ```rsdl
 service {
-  company: Company { READ { expand( employees { top, skip, count, filter, orderby } ) } }
+  company: Company { READ { expand { employees { top, skip, count, filter, orderby } } } }
 }
 ```
 
@@ -115,7 +115,7 @@ Expand options can be applied to all navigation properties not otherwise specifi
 
 ```rsdl
 service {
-  company: Company { READ { expand( * { top, skip, count, filter, orderby } ) } }
+  company: Company { READ { expand { * { top, skip, count, filter, orderby } } } }
 }
 ```
 
@@ -186,13 +186,13 @@ The `filter` option may be followed by a list of individual navigation propertie
 
 ```rsdl
 service {
-  competitors: [Company] { LIST { filter(name {stringComp}) } }
+  competitors: [Company] { LIST { filter { name {stringComp} } } }
 }
 ```
 
 The `competitors` collection can be filtered by name using the string comparison operators.
 
-If no parens follow the `filter` option, then the [`filterable`](#filterable-capability) capability, if present on a property, is used to determine whether or not that property can be filtered upon. If `filter` is followed by empty parens, then the collection does not support filtering on any properties.
+If no curly braces follow the `filter` option, then the [`filterable`](#filterable-capability) capability, if present on a property, is used to determine whether or not that property can be filtered upon. If `filter` is followed by empty curly braces, then the collection does not support filtering on any properties.
 
 ##### Filterable capability
 
@@ -246,13 +246,13 @@ The `orderby` option may be followed by a list of individual properties that can
 
 ```rsdl
 service {
-  competitors: [Company] { LIST { orderby(name {asc, desc}) } }
+  competitors: [Company] { LIST { orderby { name {asc, desc} } } }
 }
 ```
 
 The competitors collection can be ordered by name in ascending or descending order.
 
-If no parens follow the `orderby` option, then the [`orderability`](#orderable-capability) capability, if present on a property, is used to determine whether or not that property can be ordered by. If `orderby` is followed by empty parens, then the collection does not support ordering on any properties.
+If no curly braces follow the `orderby` option, then the [`orderability`](#orderable-capability) capability, if present on a property, is used to determine whether or not that property can be ordered by. If `orderby` is followed by empty curly braces, then the collection does not support ordering on any properties.
 
 ##### Orderable capability
 
@@ -334,7 +334,7 @@ The `CREATE` capability can be followed by the [`expand`](#expand-option) option
 
 ```rsdl
 service {
-  competitors: [Company] { CREATE { expand(employees) } }
+  competitors: [Company] { CREATE { expand { employees } } }
 }
 ```
 
@@ -374,7 +374,7 @@ The `UPDATE` capability can be followed by the [`expand`](#expand-option) option
 
 ```rsdl
 service {
-  company: Company { UPDATE { expand(employees) } }
+  company: Company { UPDATE { expand { employees } } }
 }
 ```
 
@@ -414,7 +414,7 @@ The `REPLACE` capability can be followed by the [`expand`](#expand-option) optio
 
 ```rsdl
 service {
-  company: Company { REPLACE { expand(employees) } }
+  company: Company { REPLACE { expand { employees } } }
 }
 ```
 
@@ -426,7 +426,7 @@ The `DELETE` capability can be applied to a navigation property to state that th
 
 ```rsdl
 service {
-  company: Company { DELETE{}} }
+  company: Company { DELETE {} }
 }
 ```
 
@@ -457,7 +457,7 @@ Operations that return a single result can be followed by [`expand`](#expand-opt
 
 ```rsdl
 service {
-  topCompany() : Company { expand(employees) }
+  topCompany() : Company { expand { employees } }
 }
 type Company
 {
