@@ -7,7 +7,7 @@ title: RSDL Intro
 
 RAPID Schema Definition Language (RSDL) is a language to define Web APIs.
 
-RSDL is based on the [RAPID Profile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
+RSDL is based on the RAPID [Profile](<https://en.wikipedia.org/wiki/Profile_(engineering)>) of the
 [OData](https://en.wikipedia.org/wiki/Open_Data_Protocol) specification. RAPID provides an easy way
 to envision, create, and consume a Web API that is compatible with the OData Standard and can evolve over time to support more advanced scenarios.
 
@@ -189,7 +189,7 @@ RAPID supports actions and functions.
 
 An action takes zero or more input parameters and may or may not return a value. Actions may have side effects.
 
-We can define a "youAreFired" action on our company that takes a string parameter "reason":
+We can define a "youreFired" action on our company that takes a string parameter "reason":
 
 ```rsdl
 type Company
@@ -199,7 +199,7 @@ type Company
   incorporated: Date
   employees: [Employee]
   topEmployees(num: Integer): [Employee]
-  action youAreFired(reason: String)
+  action youreFired(reason: String)
 }
 ```
 
@@ -249,3 +249,46 @@ Functions are invoked using a GET request. Function parameters are passed in the
 | Request                                                                                                                                 | Comment                            |
 | :-------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
 | GET [http://rapid-pro.org/company/topEmployees?num=10](<https://jetsons.azurewebsites.net/company/Jetsons.Models.topEmployees(num=10)>) | get the company's top 10 employees |
+
+#### Explicit Paths
+
+The set of paths supported by a RAPID service generally do not need to be explicitly enumerated in the RSDL because they are defined by the model. However, in some cases you may want to be explicit about the set of paths supported, either because the service supports only a subset of paths or because you want to specify [capabilities](rapid-rsdl-capabilities.md#annotating-paths) that are specific to that path.
+
+The set of paths supported by a RAPID service can be explicitly enumerated in the RSDL specification:
+
+```rsdl
+paths :
+{
+  /company
+  /company/employees
+  /company/employees/{id}
+  /competitors
+  /competitors/{stockSymbol}
+  /competitors/{stockSymbol}/employees
+  /competitors/{stockSymbol}/employees/{id}
+  /company/topEmployees(num={num})
+  /company/topEmployees(num={num})/{id}
+  /company/youreFired
+}
+```
+
+Paths that are omitted are not supported, even if valid according to the model.
+
+A nice way of documenting that a path is not supported is by it by adding it as a comment. From a syntax perspective this is equivalent to omitting that path:
+
+```rsdl
+
+paths :
+{
+  /company
+  /company/employees
+  /company/employees/{id}
+  /competitors
+  /competitors/{stockSymbol}
+# /competitors/{stockSymbol}/employees
+# /competitors/{stockSymbol}/employees/{id}
+  /company/topEmployees(num={num})
+# /company/topEmployees(num={num})/{id}
+  /company/youreFired
+}
+```

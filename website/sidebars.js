@@ -38,7 +38,7 @@ const sidebars = {
     {
       type: "category",
       label: "RAPID Schema Definition Language (RSDL)",
-      items: ["rsdl/rsdl-intro", "rsdl/rsdl-semantics", "rsdl/rsdl-abnf"],
+      items: ["rsdl/rsdl-intro", "rsdl/rsdl-paths", "rsdl/rsdl-semantics", "rsdl/rsdl-capabilities", "rsdl/rsdl-abnf"],
     },
     {
       type: "category",

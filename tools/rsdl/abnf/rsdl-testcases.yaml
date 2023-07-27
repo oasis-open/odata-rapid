@@ -1,4 +1,33 @@
 # test cases for rsdl.abnf
+- source: |
+    namespace Jetsons
+    include "core" as Core
+    type Company
+    {
+        key stockSymbol: String
+    }
+    service {
+        competitors: [Company]
+    }
+    paths {
+      /competitors/{stockSymbol}
+    }
+  tokens:
+    - namespace
+    - Jetsons
+    - include
+    - Core
+    - structuredType
+    - Company
+    - key
+    - stockSymbol
+    - String
+    - service
+    - entitySet
+    - competitors
+    - Company
+    - competitors
+    - stockSymbol
 
 - source: "namespace foo\n" # whitespace required after namespace identifier
   tokens: [namespace, foo]
@@ -46,14 +75,14 @@
   tokens: [service, x, singleton, foo, bar]
 
 - source: |
-    service { 
+    service {
       foo: bar
       baz: [qux]
     }
   tokens: [service, singleton, foo, bar, entitySet, baz, qux]
 
 - source: |
-    service { 
+    service {
       function f():Boolean
       action a()
       action b(c:Date):[String?]
@@ -62,7 +91,7 @@
     [service, function, f, Boolean, action, a, action, b, c, Date, "[String?]"]
 
 - source: |
-    service { 
+    service {
       function f(g: DateTime): Decimal?
       action a( b :Decimal(5,2), d : Double ) : [Duration]
     }
@@ -107,7 +136,7 @@
 
 - source: |
     @aa.bb.cc:42
-    service { 
+    service {
       @a.b:""
       foo: bar
       @a.b:" "
@@ -199,3 +228,197 @@
     - entitySet
     - employees
     - Employee
+
+- source: |
+    service {
+      company: Company { READ { expand { jetsons.company/employees } } }
+    }
+  tokens:
+    - service
+    - singleton
+    - company
+    - Company
+    - jetsons
+    - company
+    - employees
+
+- source: |
+    service {
+      competitors: [Company] {
+        LIST { top, skip, count, filter, orderby, expand { employees { expand {*}, top, skip, count, filter}} }
+        CREATE { expand{ employees { top, skip, count, filter, orderby, expand{ * } }, orders } }
+        READ { expand{ } }
+        UPDATE { expand }
+        DELETE {}
+      }
+    }
+  tokens:
+    - service
+    - entitySet
+    - competitors
+    - Company
+    - employees
+    - employees
+    - orders
+
+- source: |
+    type Company
+    {
+      key stockSymbol: String { filterable { eq }, orderable }
+      name: String { filterable { stringComp }, orderable {} }
+      incorporated: Date { filterable, orderable { asc, desc } }
+      employees: [Employee] { LIST { filter{name {stringComp}}, orderby{name{asc,desc}} }, READ }
+    }
+  tokens:
+    - structuredType
+    - Company
+    - key
+    - stockSymbol
+    - String
+    - name
+    - String
+    - incorporated
+    - Date
+    - employees
+    - Employee
+    - name
+    - name
+
+- source: |
+    service {competitors: [Company] { DELETE } }
+  failAt: 41 # braces required after DELETE
+
+- source: |
+    paths {
+      /competitors
+      /competitors/{stockSymbol}
+      /competitors/{stockSymbol}/employees
+      /competitors/{stockSymbol}/employees/{id}
+    }
+
+- source: |
+    paths {
+      /company
+      /company/employees
+      /company/employees/{id}
+      /company/youreFired
+      /company/youreFired/{id}
+    }
+
+- source: |
+    paths {
+      /company
+      /company/employees
+      /company/employees/{id}
+      /competitors
+      /competitors/{stockSymbol}
+      /competitors/{stockSymbol}/employees
+      /competitors/{stockSymbol}/employees/{id}
+      /company/topEmployees(num={num})
+      /company/topEmployees(num={num})/{id}
+      /company/youreFired
+    }
+
+- source: |
+    paths
+    {
+      /company/topEmployees(num={num})
+      /company/topEmployees(num={num},num2={num2})
+      /company/topEmployees(num={num})/{id}
+      /company/topEmployees(num={num},num2={num2})/{id}
+    }
+
+- source: |
+    paths
+    {
+      /topEmployees(num={num})
+      /topEmployees(num={num},num2={num2})
+      /topEmployees(num={num})/{id}
+      /topEmployees(num={num},num2={num2})/{id}
+    }
+
+- source: |
+    paths {
+      /company/employees { GET }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET {} }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby{name {asc, desc}} } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { top skip count } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { filter{name {stringComp}} } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { expand{ employees { top, skip, count, filter, orderby } } } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby top skip count filter expand } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby{name} filter{name} expand{ employees } } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby{name {asc, desc}} top skip count filter{name {stringComp}} expand{ employees { top, skip, count, filter, orderby } } } }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET { orderby{*} filter{*} } }
+    }
+
+- source: |
+    paths {
+      /company/employees { POST }
+    }
+
+- source: |
+    paths {
+      /company/employees { GET }
+    }
+
+- source: |
+    paths {
+      /company/employees { PATCH }
+    }
+
+- source: |
+    paths {
+      /company/employees { PUT }
+    }
+
+- source: |
+    paths {
+      /company/employees { DELETE }
+    }
+
+- source: |
+    paths {
+      /company/employees/{id} { GET { expand{ employees { top, skip, count, filter, orderby } } } }
+    }
+
+- source: |
+    paths {
+      /company/employees/{id} { GET { orderby{name {asc, desc}} top skip count filter{name {stringComp}} expand{ employees { top, skip, count, filter, orderby } } } }
+    }
+  failAt: 42 # collection valued capabilities not supported for a single valued collection

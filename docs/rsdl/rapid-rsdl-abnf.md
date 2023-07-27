@@ -3,10 +3,7 @@ id: rsdl-abnf
 title: RSDL ABNF
 ---
 
-# RAPID Pro Syntax
-
-> DRAFT
-> March 2021
+# RAPID Schema Definition Language (RSDL) Syntax
 
 ## Overview
 
@@ -16,7 +13,7 @@ Note: to increase readability of the grammar, whitespace is not reflected
 
 ## Syntax rules
 
-- [RAPID Pro Syntax](#rapid-pro-syntax)
+- [RAPID Schema Definition Language (RSDL) Syntax](<#rapid-schema-definition-language-(RSDL)-Syntax>)
   - [Overview](#overview)
   - [Syntax rules](#syntax-rules)
     - [Model](#model)
@@ -25,18 +22,22 @@ Note: to increase readability of the grammar, whitespace is not reflected
     - [Type Definition](#type-definition)
     - [Service](#service)
     - [Annotations](#annotations)
+    - [Model Capabilities](#model-capabilities)
+    - [Paths](#paths)
+    - [Path Capabilities](#path-capabilities)
+    - [Capability Elements](#capability-elements)
     - [Core Syntax Elements](#core-syntax-elements)
 
 ### Model
 
 ```ABNF
-model                = OWS [ namespace RWS ] *include [ modelElement *( RWS modelElement ) ] OWS
+model                = OWS [ namespace RWS ] *include [ modelElement *( RWS modelElement ) ] [ OWS service ] [ OWS paths ] OWS
 
 namespace            = %s"namespace" RWS qualifiedName
 
 include              = %s"include" RWS DQUOTE 1*CHAR DQUOTE RWS %s"as" RWS identifier RWS
 
-modelElement         = ( structuredType / enumType / typeDefinition / service )
+modelElement         = ( structuredType / enumType / typeDefinition )
 ```
 
 ### Structured Type
@@ -46,11 +47,20 @@ structuredType       = annotations [ %s"abstract" RWS ] %s"type" RWS identifier 
 
 structuredTypeMember = property / operation ; property, action, or function
 
-property             = annotations [propertyModifier RWS] identifier OWS ":" OWS typeReference
+property             = singlePropertyDefinition [ OWS (primitivePropertyCapabilities / singleNavigationCapabilities) ]
+                     / collectionPropertyDefinition [ OWS ( collectionCapabilities / collectionNavigationCapabilities) ]
+
+singlePropertyDefinition  = annotations [propertyModifier RWS] identifier OWS ":" OWS singleTypeReference
+
+collectionPropertyDefinition  = annotations identifier OWS ":" OWS collectionTypeReference
 
 propertyModifier     = %s"key"
 
-typeReference        = typeName [ "?" ] / "[" typeName [ "?" ] "]"
+singleTypeReference      = typeName [ "?" ]
+
+collectionTypeReference  = "[" typeName [ "?" ] "]"
+
+typeReference            = singleTypeReference / collectionTypeReference
 
 typeName             = builtInType / edmType / qualifiedName
 
@@ -69,6 +79,7 @@ edmType              = %s"Edm" "." identifier
 operation            = annotations operationKind RWS identifier OWS
                        "(" OWS [ parameter *( OWS "," OWS parameter) OWS ] ")"
                        [ OWS ":" OWS annotations typeReference ]
+                       [ separator collectionNavCapabilities ]
 
 operationKind        = %s"action" / %s"function"
 
@@ -96,9 +107,9 @@ service              = annotations %s"service" [ RWS identifier ] OWS "{" OWS se
 
 serviceMember        = annotations ( entitySet / singleton / serviceOperation )
 
-entitySet            = identifier OWS ":" OWS "[" qualifiedName "]"
+entitySet            = identifier OWS ":" OWS "[" qualifiedName "]" [ OWS collectionNavigationCapabilities ]
 
-singleton            = identifier OWS ":" OWS qualifiedName
+singleton            = identifier OWS ":" OWS qualifiedName [ OWS singleNavigationCapabilities ]
 
 serviceOperation     = operationKind RWS identifier
                        OWS "(" OWS [ parameter *(OWS "," OWS parameter) OWS ] ")"
@@ -117,8 +128,8 @@ annotationValue      = %s"true"
                      / %s"null"
                      / number
                      / DQUOTE *CHAR DQUOTE
-                     / "[" OWS [ annotationValue *( ( OWS "," OWS / RWS ) annotationValue ) OWS [ "," OWS ] ] "]"
-                     / "{" OWS [ annotationProperty *( ( OWS "," OWS /RWS ) annotationProperty ) OWS [ "," OWS ] ] "}"
+                     / "[" OWS [ annotationValue *( separator annotationValue ) OWS [ "," OWS ] ] "]"
+                     / "{" OWS [ annotationProperty *( separator annotationProperty ) OWS [ "," OWS ] ] "}"
                      / "." *( "/"  identifier )
 
 annotationProperty   = propertyName OWS ":" OWS annotationValue
@@ -126,9 +137,130 @@ annotationProperty   = propertyName OWS ":" OWS annotationValue
 propertyName         = identifier / DQUOTE 1*CHAR DQUOTE / "@" qualifiedName [ "#" identifier ]
 ```
 
+### Model Capabilities
+
+```ABNF
+primitivePropertyCapability = "filterable" [ OWS filterOptions ] / "orderable" [ OWS orderByDirection ]
+
+primitivePropertyCapabilities = "{" OWS [ primitivePropertyCapability *( separator primitivePropertyCapability )] OWS "}"
+
+singleNavigationCapability = ("READ" / "UPDATE" / "REPLACE") [ OWS navCapabilities ] / "DELETE" noOptions
+
+singleNavigationCapabilities = "{" OWS [ singleNavigationCapability *( separator singleNavigationCapability )] OWS "}"
+
+collectionNavigationCapability = "DELETE" OWS noOptions
+                              / "LIST" [ OWS collectionNavCapabilities ]
+                              / ("READ" / "CREATE" / "REPLACE" / "UPDATE") [ OWS navCapabilities ]
+
+collectionNavigationCapabilities = "{" OWS [ collectionNavigationCapability *( separator collectionNavigationCapability )] OWS "}"
+
+```
+
+### Paths
+
+```ABNF
+paths = %s"paths" OWS "{" *( OWS "/" path ) OWS "}"
+
+path =  propertySegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
+        / serviceOperationSegment "/" keySegment [ pathSegment / ( RWS singleNavPathCapabilities ) ]
+        / serviceOperationSegment [ pathSegment / ( RWS capabilities ) ]
+        / castSegment [ pathSegment / ( RWS capabilities ) ]
+        / propertySegment  [  pathSegment / ( RWS capabilities ) ]
+
+propertySegment = identifier;  structural or navigation property
+
+pathSegment = "/" path
+
+castSegment = identifier 1*( "." identifier )      ; qualified type name
+
+keySegment = "{" keyProperty "}"
+
+keyProperty = identifier                           ; name of the key property
+
+serviceOperationSegment = identifier parameters [ "/" castSegment ] [ "/" keySegment ]
+
+parameters = "(" OWS [ parameterSpecification *( "," OWS parameterSpecification ) OWS ] ")"
+
+parameterSpecification = identifier OWS "=" OWS "{" identifier "}"
+
+capabilities = singlePathCapabilities / collectionPathCapabilities / singleNavPathCapabilities / collectionNavPathCapabilities
+
+```
+
+### Path Capabilities
+
+```ABNF
+
+singlePathCapability = ("GET" / "PUT" / "PATCH" / "DELETE") [noOptions]
+
+singlePathCapabilities = "{" OWS [singlePathCapability *( separator singlePathCapability) OWS] "}"
+
+collectionPathCapability = "GET" [ collectionCapabilities ] / "POST" [noOptions]
+
+collectionPathCapabilities = "{" OWS [ collectionPathCapability *( separator collectionPathCapability ) OWS ] "}"
+
+singleNavPathCapability = ("GET" / "PATCH" / "PUT") [ OWS navCapabilities ] / "DELETE" noOptions
+
+singleNavPathCapabilities = "{" OWS [singleNavPathCapability *( separator singleNavPathCapability ) OWS ] "}"
+
+collectionNavPathCapability = "GET" [ OWS collectionNavCapabilities ] / "POST" [ OWS navCapabilities ]
+
+collectionNavPathCapabilities = "{" OWS [ collectionNavPathCapability *( separator collectionNavPathCapability ) OWS ] "}"
+
+```
+
+### Capability Elements
+
+```ABNF
+
+collectionCapability = filterCapability / orderByCapability / "top" / "skip" / "count"
+
+collectionCapabilities =  "{" OWS [ collectionCapability *( separator collectionCapability ) OWS ] "}"
+
+collectionNavCapability = collectionCapability / navCapability
+
+collectionNavCapabilities = "{" OWS [ collectionNavCapability *( separator collectionNavCapability ) OWS ] "}"
+
+navCapability       = "expand" [ OWS "{" OWS [ expandProperty *( OWS "," OWS expandProperty OWS ) ] OWS "}" ]
+
+navCapabilities     =  "{" OWS [ navCapability OWS ] "}"
+
+expandProperty      = star / [ castSegment "/" ] navigationProperty ( [ OWS collectionNavCapabilities ] / [ OWS navCapabilities ] )
+
+navigationProperty = identifier     ; single or collection valued navigation property
+
+filterCapability    = "filter" [ "{" [ OWS filterProperty *( "," OWS filterProperty OWS ) ] "}" ]
+
+filterProperty    = ( ( [ typeName "/" ] propertyName ) / allProperties) [ OWS filterOptions ]
+
+allProperties       =  star [ "/" typeName ]  ; all properties, optionally of a given type
+
+filterOptions        = "{" OWS [ filterOperations OWS ] "}"
+
+filterOperations     =  "none" ; not filterable
+                     / "eq" ; eq
+                     / "comp" ; eq, gt, ge, lt, le
+                     / "stringComp" ; eq, gt, ge, lt, le, startswith, endswith, contains
+                     / "string" ; eq, startswith, endswith, contains
+
+orderByCapability = "orderby" [ OWS orderByProperties ]
+
+orderByProperties = "{" OWS [ orderByProperty *( "," OWS orderByProperty OWS ) ] "}"
+
+orderByProperty = allProperties / propertyName [ OWS orderByDirection ]
+
+orderByDirection ="{" [ OWS ascOrDesc [ "," OWS ascOrDesc OWS ] ] "}"
+
+ascOrDesc = "asc" / "desc"
+
+noOptions = OWS "{" OWS "}"
+
+```
+
 ### Core Syntax Elements
 
 ```ABNF
+
 qualifiedName       = identifier *( "." identifier )
 
 identifier          = identInitial *identSubsequent
@@ -136,6 +268,10 @@ identifier          = identInitial *identSubsequent
 identInitial        = ALPHA / "_" ; Note: actually all Unicode letters
 
 identSubsequent     = identInitial / DIGIT
+
+separator           = OWS "," OWS / RWS
+
+star                = "*"
 
 number              = integer [ "." 1*DIGIT ] [ "e" integer ]
 

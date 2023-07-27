@@ -6,11 +6,14 @@ sidebar_label: Actions and Functions
 
 Although a pure REST service would perform operations through manipulating the state of resources,
 we have found that many services require the ability to encapsulate complex processing logic into atomic operations.
+
 Rather than requiring services to expose a separate endpoint for such business logic,
 RAPID allows services to support Operations.
+
 Operations are exposed as resources at the root of the service or "bound" to the resource on which they operate.
 
 Operations bound to a resource are invoked by appending a segment containing the name of the operation to the URL of the resource.
+
 The name of the operation must not conflict with the name of any properties or other operations bound to that
 resource.
 
