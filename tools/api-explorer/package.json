@@ -4,6 +4,7 @@
   "description": "",
   "dependencies": {
     "bootstrap": "^5.2.0",
+    "csdl2xml": "file:../csdl-xml",
     "highlight.js": "^11.6.0",
     "odata-openapi": "^0.18.4",
     "odata-url-editor": "file:../urlEditor",
