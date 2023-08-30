@@ -72,6 +72,22 @@
                 CSDL
               </button>
             </li>
+
+            <li class="nav-item" role="presentation">
+              <button
+                type="button"
+                class="nav-link"
+                id="csdl-xml-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#csdl-xml"
+                role="tab"
+                aria-controls="csdl-xml"
+                aria-selected="false"
+              >
+                CSDL-XML
+              </button>
+            </li>
+
             <li class="nav-item" role="presentation">
               <button
                 type="button"
@@ -114,6 +130,16 @@
               <pre><code id="csdl-desc" class="language-json"></code></pre>
             </div>
 
+            <!-- CSDL XML Tab -->
+            <div
+              class="tab-pane fade"
+              id="csdl-xml"
+              role="tabpanel"
+              aria-labelledby="csdl-xml-tab"
+            >
+              <pre><code id="csdl-xml-desc" class="language-xml"></code></pre>
+            </div>
+
             <!-- Swagger Tab -->
             <div
               class="tab-pane fade"
@@ -125,7 +151,7 @@
             </div>
 
             <!-- Visual Editor Tab -->
-<!--
+
             <div
               class="tab-pane fade"
               id="visual-editor-gui"
@@ -134,7 +160,7 @@
             >
               <div id="visual-editor-gui-content"></div>
             </div>
--->
+
             </div>
         </div>
       </div>
@@ -158,15 +184,13 @@
               aria-labelledby="exportBtn"
             >
               <li>
-                <a id="export-rsdl" class="dropdown-item" href="#">RSDL</a>
+                <a id="export-csdlJson" class="dropdown-item" href="#">JSON</a>
               </li>
               <li>
-                <a id="export-csdl" class="dropdown-item" href="#">CSDL</a>
+                <a id="export-csdlXml" class="dropdown-item" href="#">XML</a>
               </li>
               <li>
-                <a id="export-open-api" class="dropdown-item" href="#"
-                  >Open API</a
-                >
+                <a id="export-open-api" class="dropdown-item" href="#">Open API</a>
               </li>
             </ul>
           </div>

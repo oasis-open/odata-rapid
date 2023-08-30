@@ -4,10 +4,12 @@ import "swagger-ui/dist/swagger-ui.css";
 import "highlight.js/styles/default.css";
 import hljs from "highlight.js/lib/core";
 import json from "highlight.js/lib/languages/json";
+import xml from "highlight.js/lib/languages/xml";
 import "../css/main.scss";
 import { MermaidEditor } from "visual-model-editor";
 import { initUrlEditor, schemaFormat } from "odata-url-editor";
 import { xml2json } from "odata-csdl";
+import { serializeToXml } from "csdl2xml";
 import { csdl2openapi } from "odata-openapi/lib/csdl2openapi";
 
 const editor = document.getElementById("editor");
@@ -17,7 +19,9 @@ const sendButton = document.getElementById("send-request-button");
 const resultView = document.getElementById("results");
 const swaggerUiNode = document.getElementById("swagger-ui-desc");
 const csdlTabContent = document.getElementById("csdl-desc");
+const csdlXmlTabContent = document.getElementById("csdl-xml-desc");
 const openApiTabContent = document.getElementById("open-api-desc");
+
 const mermaidEditor = new MermaidEditor(
   document.getElementById("visual-editor-gui-content"),
   window,
@@ -25,6 +29,7 @@ const mermaidEditor = new MermaidEditor(
 );
 
 hljs.registerLanguage("json", json);
+hljs.registerLanguage("xml", xml);
 
 initialize();
 
@@ -65,7 +70,11 @@ function initialize() {
   // Export Schema
   const dropdown = document.getElementById("export-dropdown");
 
-  const downloadToFile = (content, filename, contentType) => {
+  const downloadToFile = (
+    content: string,
+    filename: string,
+    contentType: string
+  ) => {
     const a = document.createElement("a");
     const file = new Blob([content], { type: contentType });
 
@@ -78,21 +87,36 @@ function initialize() {
 
   dropdown.addEventListener("click", (event) => {
     const format = (event.target as HTMLElement).innerText;
-    let extension = "json";
-    let text;
-    let filename;
     switch (format) {
-      case "CSDL":
-        text = csdlTabContent.innerText;
-        filename = `rsdl-csdl.${extension}`;
+      case "JSON":
+        downloadToFile(
+          csdlTabContent.innerText,
+          `csdl.json`,
+          "application/json"
+        );
+        break;
+      case "XML":
+        downloadToFile(
+          csdlXmlTabContent.innerText,
+          `csdl.xml`,
+          "application/xml"
+        );
         break;
       case "Open API":
-        text = openApiTabContent.innerText;
-        filename = `rsdl-openapi3.${extension}`;
+        const serviceUri = getServiceUrl();
+        const uri = new URL(serviceUri);
+        const openApi = csdl2openapi(JSON.parse(csdlTabContent.innerText), {
+          basePath: uri.pathname,
+          host: uri.host,
+          scheme: uri.protocol,
+        });
+        downloadToFile(
+          JSON.stringify(openApi, null, 2),
+          `openapi3.json`,
+          "application/json"
+        );
         break;
     }
-
-    downloadToFile(text, filename, "application/json");
   });
 }
 
@@ -119,45 +143,71 @@ function updateServiceUrl(serviceUrl: string) {
       // get schema from service
       try {
         const contentType = response.headers.get("Content-Type");
+        let format = schemaFormat.jsonCsdl;
         if (contentType.includes("xml")) {
-          text = JSON.stringify(xml2json(text), null, 2);
+          format = schemaFormat.xmlCsdl;
         }
 
-        updateSchema(serviceUrl, text);
+        updateSchema(serviceUrl, text, format);
       } catch (errorMessage) {
-        onSchemaError(serviceUrl, errorMessage);
+        onSchemaError(serviceUrl, errorMessage as string);
       }
     })
   );
 }
 
 function onSchemaError(serviceUrl: string, errorText: string) {
-  // write error to CSDL tab
+  // write error to CSDL and CSDL-XML tabs
   csdlTabContent.innerText = errorText;
+  csdlXmlTabContent.innerText = errorText;
 
   // clear other schemas
   var nullSchema = JSON.stringify({});
   urlEditor.updateSchema(nullSchema, schemaFormat.jsonCsdl);
-  mermaidEditor.updateCsdl(nullSchema);
-  mermaidEditor.redraw();
+  //mermaidEditor.updateCsdl(nullSchema);
+  //mermaidEditor.redraw();
   updateSwaggerUi(serviceUrl, nullSchema);
 }
 
-function updateSchema(serviceUrl: string, schema: string) {
+function updateSchema(serviceUrl: string, csdl: string, format: schemaFormat) {
+  let csdlJson: string, csdlXml: string;
+
   // Update UrlEditor
-  urlEditor.updateSchema(schema, schemaFormat.jsonCsdl);
+  urlEditor.updateSchema(csdl, format);
+
+  if (format == schemaFormat.jsonCsdl) {
+    csdlJson = csdl;
+    csdlXml = convert2csdlxml(csdlJson);
+  } else {
+    csdlXml = csdl;
+    csdlJson = JSON.stringify(xml2json(csdlXml), null, 2);
+  }
 
   // Update CSDL Pane
-  csdlTabContent.innerHTML = schema;
+  csdlTabContent.innerHTML = csdlJson;
+
+  // Update CSDL-XML Pane
+  csdlXmlTabContent.innerHTML = csdlXml
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 
   // Update Visual Editor
-  mermaidEditor.updateCsdl(schema);
-  mermaidEditor.redraw();
+  //mermaidEditor.updateCsdl(csdlJson);
+  //mermaidEditor.redraw();
 
   // Update SwaggerUI
-  updateSwaggerUi(serviceUrl, schema);
+  updateSwaggerUi(serviceUrl, csdlJson);
 
   hljs.highlightAll();
+}
+
+function convert2csdlxml(csdl: string): string {
+  try {
+    return serializeToXml(JSON.parse(csdl));
+  } catch (e) {
+    console.error(e);
+    return e as string;
+  }
 }
 
 function updateSwaggerUi(serviceUrl: string, schema: any) {
