@@ -40,7 +40,7 @@ sources:
   - name: Jetsons
     handler:
       odata:
-        baseUrl: https://jetsons.azurewebsites.net/
+        endpoint: https://jetsons.azurewebsites.net/
         schemaHeaders: { "accept": "application/xml" }
 ```
 
