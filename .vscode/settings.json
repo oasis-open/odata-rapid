@@ -37,5 +37,6 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "dotnet.defaultSolution": "disable"
 }

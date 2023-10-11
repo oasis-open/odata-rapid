@@ -45,7 +45,7 @@ export class AutoComplete {
     core.preferredRules = new Set([
       QueryParser.RULE_identifier,
       QueryParser.RULE_basicExpression,
-      QueryParser.RULE_orderByOption,
+      QueryParser.RULE_orderSpecList,
       QueryParser.RULE_selectFieldList,
       QueryParser.RULE_expandFieldList,
     ]);
@@ -53,7 +53,10 @@ export class AutoComplete {
 
   getSuggestions(pos: number): string[] {
     const keywords: string[] = [];
-    const candidates = this.core.collectCandidates(pos);
+    const candidates = this.core.collectCandidates(
+      pos,
+      this.queryParser.context
+    );
 
     candidates.tokens.forEach((_, k) => {
       let name = this.queryParser.vocabulary.getDisplayName(k);
@@ -78,8 +81,8 @@ export class AutoComplete {
         case QueryParser.RULE_basicExpression:
           identifiers.push(...this.basicExpressionSuggestions(key, rule));
           break;
-        case QueryParser.RULE_orderByOption:
-          identifiers.push(...this.orderBySuggestions(key, rule));
+        case QueryParser.RULE_orderSpecList:
+          identifiers.push(...this.orderSpecSuggestions(key, rule));
           break;
       }
     });
@@ -125,7 +128,10 @@ export class AutoComplete {
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
       if (typeDef) {
-        const properties = getAllPropertiesNames(typeDef);
+        const properties = getAllProperties(typeDef)
+          .filter((prop) => prop.type.$Kind !== "NavigationProperty")
+          .map((prop) => prop.name);
+        // todo: if the last character token is "," only return properties, else only return ","
         if (node.children.length) {
           properties.push(",");
         }
@@ -153,6 +159,7 @@ export class AutoComplete {
         const properties = getAllProperties(typeDef)
           .filter((prop) => prop.type.$Kind === "NavigationProperty")
           .map((prop) => prop.name);
+        // todo: if the last character token is ",", return properties, otherwise return ","
         if (node.children.length) {
           properties.push(",");
         }
@@ -164,7 +171,7 @@ export class AutoComplete {
     return [];
   }
 
-  private orderBySuggestions(ruleKey: number, rule: CandidateRule): string[] {
+  private orderSpecSuggestions(ruleKey: number, rule: CandidateRule): string[] {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
     if (!node) return [];
 
@@ -176,7 +183,9 @@ export class AutoComplete {
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
       if (typeDef) {
-        const properties = getAllPropertiesNames(typeDef);
+        const properties = getAllProperties(typeDef)
+          .filter((property) => !property.type.$Collection)
+          .map((property) => property.name);
         // TODO: add 'prop desc' manually, the completion core will not visit the token DESC since the upper-level rule orderByOption is already visited
         return properties.reduce<string[]>(
           (list, item) => [...list, item, `${item} desc`],

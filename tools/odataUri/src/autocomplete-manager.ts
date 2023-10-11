@@ -1,4 +1,8 @@
-import { SemanticNode, parseQueryOptionsSemantics } from "./semantic-model";
+import {
+  SemanticNode,
+  parseQueryOptionsSemantics,
+  parseCollectionQueryOptionsSemantics,
+} from "./semantic-model";
 import { ISchema, ISchemaType } from "./json-model";
 import { CharStreams, CommonTokenStream } from "antlr4ts";
 import { ODataUriQueryParser } from "./parsers/ODataUriQueryParser";
@@ -92,14 +96,25 @@ export class AutoCompleteManager {
     const queryLexer = new ODataUriQueryLexer(inputStream);
     const tokens = new CommonTokenStream(queryLexer);
     const queryParser = new ODataUriQueryParser(tokens);
-    const ast = queryParser.queryOptions();
+    var semanticResult;
+    if (rootType.$Collection) {
+      const ast = queryParser.collectionQueryOptions();
 
-    const semanticResult = parseQueryOptionsSemantics(
-      ast,
-      this.schema,
-      rootType
-    );
-    this.queryOptions = semanticResult.tree;
+      semanticResult = parseCollectionQueryOptionsSemantics(
+        ast,
+        this.schema,
+        rootType
+      );
+      this.queryOptions = semanticResult.tree;
+      queryParser.context = ast;
+    } else {
+      const ast = queryParser.queryOptions();
+
+      semanticResult = parseQueryOptionsSemantics(ast, this.schema, rootType);
+      this.queryOptions = semanticResult.tree;
+      queryParser.context = ast;
+    }
+
     this.errors.push(
       ...semanticResult.errors.map((err) => {
         err.range.start += this.queryStart;

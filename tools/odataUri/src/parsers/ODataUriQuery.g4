@@ -1,18 +1,24 @@
 grammar ODataUriQuery;
 
+queryOption: selectOption | expandOption;
 queryOptions: queryOption queryOptionsList;
 queryOptionsList: AMP queryOption queryOptionsList |;
-queryOption:
-	filterOption
-	| selectOption
+collectionQueryOption:
+	selectOption
 	| expandOption
+	| filterOption
 	| orderByOption
 	| topOption
 	| skipOption;
+collectionQueryOptions:
+	collectionQueryOption collectionQueryOptionsList;
+collectionQueryOptionsList:
+	AMP collectionQueryOption collectionQueryOptionsList
+	|;
 filterOption: FILTER ASSIGN expression;
 selectOption: SELECT ASSIGN selectFieldList;
 expandOption: EXPAND ASSIGN expandFieldList;
-orderByOption: ORDERBY ASSIGN orderSpec;
+orderByOption: ORDERBY ASSIGN orderSpecList;
 topOption: TOP ASSIGN NUMBER;
 skipOption: SKIPKW ASSIGN NUMBER;
 selectFieldList:
@@ -21,7 +27,7 @@ selectFieldList:
 expandFieldList:
 	expandField
 	| expandField COMMA expandFieldList;
-// distinguish expand and select fields to make semantic validation easier (expand only supports navprops)
+orderSpecList: orderSpec | orderSpec COMMA orderSpecList;
 selectField: identifier;
 expandField: identifier;
 orderSpec: orderField | orderField DESC;
