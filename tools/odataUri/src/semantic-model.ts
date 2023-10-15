@@ -751,12 +751,11 @@ abstract class QueryOptionsVisitorBase extends AbstractParseTreeVisitor<Semantic
     }
   }
 
-  /*
-  visitParenExpression(ctx: ParenExpressionContext) {
+  visitParenExpression(ctx: ParenExpressionContext): SemanticNode {
     const expression = ctx.expression();
     return expression?.accept<SemanticNode>(this);
   }
-*/
+
   visitOrExpression(ctx: OrExpressionContext) {
     const resultType = createPrimitiveType(PrimitiveType.Boolean);
     return this.visitBinaryExpression(ctx, resultType);
@@ -779,16 +778,16 @@ abstract class QueryOptionsVisitorBase extends AbstractParseTreeVisitor<Semantic
   ): SemanticNode {
     const leftChild = ctx.getChild(0);
     const left = leftChild.accept<SemanticNode>(this);
-    if (ctx.childCount === 1) return left;
+    if (ctx.childCount < 3) return left;
 
-    const operator = ctx.getChild(1).text;
+    const operator = ctx.getChild(2).text;
 
     const node = createBinaryOperator(ctx, type, operator);
     this.semanticMap.set(ctx, node);
     node.left = left;
 
-    if (ctx.childCount > 1) {
-      const rightChild = ctx.getChild(2);
+    if (ctx.childCount > 3) {
+      const rightChild = ctx.getChild(4);
       const right = rightChild.accept<SemanticNode>(this);
       node.right = right;
     }

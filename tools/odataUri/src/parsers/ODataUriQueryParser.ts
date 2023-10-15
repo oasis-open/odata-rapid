@@ -48,10 +48,11 @@ export class ODataUriQueryParser extends Parser {
 	public static readonly RPAREN = 19;
 	public static readonly COMMA = 20;
 	public static readonly NUMBER = 21;
-	public static readonly WS = 22;
-	public static readonly BOOLEAN = 23;
-	public static readonly STRING = 24;
-	public static readonly ID = 25;
+	public static readonly RWS = 22;
+	public static readonly WS = 23;
+	public static readonly BOOLEAN = 24;
+	public static readonly STRING = 25;
+	public static readonly ID = 26;
 	public static readonly RULE_queryOption = 0;
 	public static readonly RULE_queryOptions = 1;
 	public static readonly RULE_queryOptionsList = 2;
@@ -93,12 +94,12 @@ export class ODataUriQueryParser extends Parser {
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
 		undefined, "'$filter'", "'$select'", "'$expand'", "'$orderby'", "'$top'", 
 		"'$skip'", "'desc'", "'or'", "'and'", "'eq'", "'ne'", "'gt'", "'ge'", 
-		"'lt'", "'le'", "'&'", "'='", "'('", "')'", "','",
+		"'lt'", "'le'", "'&'", "'='", "'('", "')'", "','", undefined, "' '",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
 		undefined, "FILTER", "SELECT", "EXPAND", "ORDERBY", "TOP", "SKIPKW", "DESC", 
 		"OR", "AND", "EQ", "NEQ", "GT", "GTE", "LT", "LTE", "AMP", "ASSIGN", "LPAREN", 
-		"RPAREN", "COMMA", "NUMBER", "WS", "BOOLEAN", "STRING", "ID",
+		"RPAREN", "COMMA", "NUMBER", "RWS", "WS", "BOOLEAN", "STRING", "ID",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(ODataUriQueryParser._LITERAL_NAMES, ODataUriQueryParser._SYMBOLIC_NAMES, []);
 
@@ -732,7 +733,7 @@ export class ODataUriQueryParser extends Parser {
 		let _localctx: OrderSpecContext = new OrderSpecContext(this._ctx, this.state);
 		this.enterRule(_localctx, 34, ODataUriQueryParser.RULE_orderSpec);
 		try {
-			this.state = 139;
+			this.state = 140;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 7, this._ctx) ) {
 			case 1:
@@ -749,6 +750,8 @@ export class ODataUriQueryParser extends Parser {
 				this.state = 136;
 				this.orderField();
 				this.state = 137;
+				this.match(ODataUriQueryParser.RWS);
+				this.state = 138;
 				this.match(ODataUriQueryParser.DESC);
 				}
 				break;
@@ -775,7 +778,7 @@ export class ODataUriQueryParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 141;
+			this.state = 142;
 			this.identifier();
 			}
 		}
@@ -800,7 +803,7 @@ export class ODataUriQueryParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 143;
+			this.state = 144;
 			this.orExpression(0);
 			}
 		}
@@ -838,11 +841,11 @@ export class ODataUriQueryParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			{
-			this.state = 146;
+			this.state = 147;
 			this.andExpression(0);
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 153;
+			this.state = 156;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 8, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -855,18 +858,22 @@ export class ODataUriQueryParser extends Parser {
 					{
 					_localctx = new OrExpressionContext(_parentctx, _parentState);
 					this.pushNewRecursionContext(_localctx, _startState, ODataUriQueryParser.RULE_orExpression);
-					this.state = 148;
+					this.state = 149;
 					if (!(this.precpred(this._ctx, 1))) {
 						throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 					}
-					this.state = 149;
-					this.match(ODataUriQueryParser.OR);
 					this.state = 150;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 151;
+					this.match(ODataUriQueryParser.OR);
+					this.state = 152;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 153;
 					this.andExpression(0);
 					}
 					}
 				}
-				this.state = 155;
+				this.state = 158;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 8, this._ctx);
 			}
@@ -906,11 +913,11 @@ export class ODataUriQueryParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			{
-			this.state = 157;
+			this.state = 160;
 			this.compExpression(0);
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 164;
+			this.state = 169;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -923,18 +930,22 @@ export class ODataUriQueryParser extends Parser {
 					{
 					_localctx = new AndExpressionContext(_parentctx, _parentState);
 					this.pushNewRecursionContext(_localctx, _startState, ODataUriQueryParser.RULE_andExpression);
-					this.state = 159;
+					this.state = 162;
 					if (!(this.precpred(this._ctx, 1))) {
 						throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 					}
-					this.state = 160;
+					this.state = 163;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 164;
 					this.match(ODataUriQueryParser.AND);
-					this.state = 161;
+					this.state = 165;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 166;
 					this.compExpression(0);
 					}
 					}
 				}
-				this.state = 166;
+				this.state = 171;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
 			}
@@ -974,11 +985,11 @@ export class ODataUriQueryParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			{
-			this.state = 168;
+			this.state = 173;
 			this.basicExpression();
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 176;
+			this.state = 183;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 10, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -991,18 +1002,22 @@ export class ODataUriQueryParser extends Parser {
 					{
 					_localctx = new CompExpressionContext(_parentctx, _parentState);
 					this.pushNewRecursionContext(_localctx, _startState, ODataUriQueryParser.RULE_compExpression);
-					this.state = 170;
+					this.state = 175;
 					if (!(this.precpred(this._ctx, 1))) {
 						throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 					}
-					this.state = 171;
+					this.state = 176;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 177;
 					this.compOperator();
-					this.state = 172;
+					this.state = 178;
+					this.match(ODataUriQueryParser.RWS);
+					this.state = 179;
 					this.basicExpression();
 					}
 					}
 				}
-				this.state = 178;
+				this.state = 185;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 10, this._ctx);
 			}
@@ -1027,41 +1042,41 @@ export class ODataUriQueryParser extends Parser {
 		let _localctx: BasicExpressionContext = new BasicExpressionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 46, ODataUriQueryParser.RULE_basicExpression);
 		try {
-			this.state = 184;
+			this.state = 191;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case ODataUriQueryParser.NUMBER:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 179;
+				this.state = 186;
 				this.match(ODataUriQueryParser.NUMBER);
 				}
 				break;
 			case ODataUriQueryParser.STRING:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 180;
+				this.state = 187;
 				this.match(ODataUriQueryParser.STRING);
 				}
 				break;
 			case ODataUriQueryParser.BOOLEAN:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 181;
+				this.state = 188;
 				this.match(ODataUriQueryParser.BOOLEAN);
 				}
 				break;
 			case ODataUriQueryParser.ID:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 182;
+				this.state = 189;
 				this.identifier();
 				}
 				break;
 			case ODataUriQueryParser.LPAREN:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 183;
+				this.state = 190;
 				this.parenExpression();
 				}
 				break;
@@ -1090,11 +1105,11 @@ export class ODataUriQueryParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 186;
+			this.state = 193;
 			this.match(ODataUriQueryParser.LPAREN);
-			this.state = 187;
+			this.state = 194;
 			this.expression();
-			this.state = 188;
+			this.state = 195;
 			this.match(ODataUriQueryParser.RPAREN);
 			}
 		}
@@ -1120,7 +1135,7 @@ export class ODataUriQueryParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 190;
+			this.state = 197;
 			_la = this._input.LA(1);
 			if (!((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << ODataUriQueryParser.EQ) | (1 << ODataUriQueryParser.NEQ) | (1 << ODataUriQueryParser.GT) | (1 << ODataUriQueryParser.GTE) | (1 << ODataUriQueryParser.LT) | (1 << ODataUriQueryParser.LTE))) !== 0))) {
 			this._errHandler.recoverInline(this);
@@ -1155,7 +1170,7 @@ export class ODataUriQueryParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 192;
+			this.state = 199;
 			this.match(ODataUriQueryParser.ID);
 			}
 		}
@@ -1210,7 +1225,7 @@ export class ODataUriQueryParser extends Parser {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03\x1B\xC5\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03\x1C\xCC\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
@@ -1224,71 +1239,74 @@ export class ODataUriQueryParser extends Parser {
 		"\f\x03\f\x03\f\x03\r\x03\r\x03\r\x03\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E" +
 		"\x03\x0E\x05\x0Ev\n\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x05\x0F" +
 		"}\n\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x05\x10\x84\n\x10\x03" +
-		"\x11\x03\x11\x03\x12\x03\x12\x03\x13\x03\x13\x03\x13\x03\x13\x05\x13\x8E" +
-		"\n\x13\x03\x14\x03\x14\x03\x15\x03\x15\x03\x16\x03\x16\x03\x16\x03\x16" +
-		"\x03\x16\x03\x16\x07\x16\x9A\n\x16\f\x16\x0E\x16\x9D\v\x16\x03\x17\x03" +
-		"\x17\x03\x17\x03\x17\x03\x17\x03\x17\x07\x17\xA5\n\x17\f\x17\x0E\x17\xA8" +
-		"\v\x17\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x07\x18" +
-		"\xB1\n\x18\f\x18\x0E\x18\xB4\v\x18\x03\x19\x03\x19\x03\x19\x03\x19\x03" +
-		"\x19\x05\x19\xBB\n\x19\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1B\x03\x1B" +
-		"\x03\x1C\x03\x1C\x03\x1C\x02\x02\x05*,.\x1D\x02\x02\x04\x02\x06\x02\b" +
-		"\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02" +
-		"\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x02" +
-		"6\x02\x02\x03\x03\x02\f\x11\x02\xBC\x02:\x03\x02\x02\x02\x04<\x03\x02" +
-		"\x02\x02\x06D\x03\x02\x02\x02\bL\x03\x02\x02\x02\nN\x03\x02\x02\x02\f" +
-		"V\x03\x02\x02\x02\x0EX\x03\x02\x02\x02\x10\\\x03\x02\x02\x02\x12`\x03" +
-		"\x02\x02\x02\x14d\x03\x02\x02\x02\x16h\x03\x02\x02\x02\x18l\x03\x02\x02" +
-		"\x02\x1Au\x03\x02\x02\x02\x1C|\x03\x02\x02\x02\x1E\x83\x03\x02\x02\x02" +
-		" \x85\x03\x02\x02\x02\"\x87\x03\x02\x02\x02$\x8D\x03\x02\x02\x02&\x8F" +
-		"\x03\x02\x02\x02(\x91\x03\x02\x02\x02*\x93\x03\x02\x02\x02,\x9E\x03\x02" +
-		"\x02\x02.\xA9\x03\x02\x02\x020\xBA\x03\x02\x02\x022\xBC\x03\x02\x02\x02" +
-		"4\xC0\x03\x02\x02\x026\xC2\x03\x02\x02\x028;\x05\x10\t\x029;\x05\x12\n" +
-		"\x02:8\x03\x02\x02\x02:9\x03\x02\x02\x02;\x03\x03\x02\x02\x02<=\x05\x02" +
-		"\x02\x02=>\x05\x06\x04\x02>\x05\x03\x02\x02\x02?@\x07\x12\x02\x02@A\x05" +
-		"\x02\x02\x02AB\x05\x06\x04\x02BE\x03\x02\x02\x02CE\x03\x02\x02\x02D?\x03" +
-		"\x02\x02\x02DC\x03\x02\x02\x02E\x07\x03\x02\x02\x02FM\x05\x10\t\x02GM" +
-		"\x05\x12\n\x02HM\x05\x0E\b\x02IM\x05\x14\v\x02JM\x05\x16\f\x02KM\x05\x18" +
-		"\r\x02LF\x03\x02\x02\x02LG\x03\x02\x02\x02LH\x03\x02\x02\x02LI\x03\x02" +
-		"\x02\x02LJ\x03\x02\x02\x02LK\x03\x02\x02\x02M\t\x03\x02\x02\x02NO\x05" +
-		"\b\x05\x02OP\x05\f\x07\x02P\v\x03\x02\x02\x02QR\x07\x12\x02\x02RS\x05" +
-		"\b\x05\x02ST\x05\f\x07\x02TW\x03\x02\x02\x02UW\x03\x02\x02\x02VQ\x03\x02" +
-		"\x02\x02VU\x03\x02\x02\x02W\r\x03\x02\x02\x02XY\x07\x03\x02\x02YZ\x07" +
-		"\x13\x02\x02Z[\x05(\x15\x02[\x0F\x03\x02\x02\x02\\]\x07\x04\x02\x02]^" +
-		"\x07\x13\x02\x02^_\x05\x1A\x0E\x02_\x11\x03\x02\x02\x02`a\x07\x05\x02" +
-		"\x02ab\x07\x13\x02\x02bc\x05\x1C\x0F\x02c\x13\x03\x02\x02\x02de\x07\x06" +
-		"\x02\x02ef\x07\x13\x02\x02fg\x05\x1E\x10\x02g\x15\x03\x02\x02\x02hi\x07" +
-		"\x07\x02\x02ij\x07\x13\x02\x02jk\x07\x17\x02\x02k\x17\x03\x02\x02\x02" +
-		"lm\x07\b\x02\x02mn\x07\x13\x02\x02no\x07\x17\x02\x02o\x19\x03\x02\x02" +
-		"\x02pv\x05 \x11\x02qr\x05 \x11\x02rs\x07\x16\x02\x02st\x05\x1A\x0E\x02" +
-		"tv\x03\x02\x02\x02up\x03\x02\x02\x02uq\x03\x02\x02\x02v\x1B\x03\x02\x02" +
-		"\x02w}\x05\"\x12\x02xy\x05\"\x12\x02yz\x07\x16\x02\x02z{\x05\x1C\x0F\x02" +
-		"{}\x03\x02\x02\x02|w\x03\x02\x02\x02|x\x03\x02\x02\x02}\x1D\x03\x02\x02" +
-		"\x02~\x84\x05$\x13\x02\x7F\x80\x05$\x13\x02\x80\x81\x07\x16\x02\x02\x81" +
-		"\x82\x05\x1E\x10\x02\x82\x84\x03\x02\x02\x02\x83~\x03\x02\x02\x02\x83" +
-		"\x7F\x03\x02\x02\x02\x84\x1F\x03\x02\x02\x02\x85\x86\x056\x1C\x02\x86" +
-		"!\x03\x02\x02\x02\x87\x88\x056\x1C\x02\x88#\x03\x02\x02\x02\x89\x8E\x05" +
-		"&\x14\x02\x8A\x8B\x05&\x14\x02\x8B\x8C\x07\t\x02\x02\x8C\x8E\x03\x02\x02" +
-		"\x02\x8D\x89\x03\x02\x02\x02\x8D\x8A\x03\x02\x02\x02\x8E%\x03\x02\x02" +
-		"\x02\x8F\x90\x056\x1C\x02\x90\'\x03\x02\x02\x02\x91\x92\x05*\x16\x02\x92" +
-		")\x03\x02\x02\x02\x93\x94\b\x16\x01\x02\x94\x95\x05,\x17\x02\x95\x9B\x03" +
-		"\x02\x02\x02\x96\x97\f\x03\x02\x02\x97\x98\x07\n\x02\x02\x98\x9A\x05," +
-		"\x17\x02\x99\x96\x03\x02\x02\x02\x9A\x9D\x03\x02\x02\x02\x9B\x99\x03\x02" +
-		"\x02\x02\x9B\x9C\x03\x02\x02\x02\x9C+\x03\x02\x02\x02\x9D\x9B\x03\x02" +
-		"\x02\x02\x9E\x9F\b\x17\x01\x02\x9F\xA0\x05.\x18\x02\xA0\xA6\x03\x02\x02" +
-		"\x02\xA1\xA2\f\x03\x02\x02\xA2\xA3\x07\v\x02\x02\xA3\xA5\x05.\x18\x02" +
-		"\xA4\xA1\x03\x02\x02\x02\xA5\xA8\x03\x02\x02\x02\xA6\xA4\x03\x02\x02\x02" +
-		"\xA6\xA7\x03\x02\x02\x02\xA7-\x03\x02\x02\x02\xA8\xA6\x03\x02\x02\x02" +
-		"\xA9\xAA\b\x18\x01\x02\xAA\xAB\x050\x19\x02\xAB\xB2\x03\x02\x02\x02\xAC" +
-		"\xAD\f\x03\x02\x02\xAD\xAE\x054\x1B\x02\xAE\xAF\x050\x19\x02\xAF\xB1\x03" +
-		"\x02\x02\x02\xB0\xAC\x03\x02\x02\x02\xB1\xB4\x03\x02\x02\x02\xB2\xB0\x03" +
-		"\x02\x02\x02\xB2\xB3\x03\x02\x02\x02\xB3/\x03\x02\x02\x02\xB4\xB2\x03" +
-		"\x02\x02\x02\xB5\xBB\x07\x17\x02\x02\xB6\xBB\x07\x1A\x02\x02\xB7\xBB\x07" +
-		"\x19\x02\x02\xB8\xBB\x056\x1C\x02\xB9\xBB\x052\x1A\x02\xBA\xB5\x03\x02" +
-		"\x02\x02\xBA\xB6\x03\x02\x02\x02\xBA\xB7\x03\x02\x02\x02\xBA\xB8\x03\x02" +
-		"\x02\x02\xBA\xB9\x03\x02\x02\x02\xBB1\x03\x02\x02\x02\xBC\xBD\x07\x14" +
-		"\x02\x02\xBD\xBE\x05(\x15\x02\xBE\xBF\x07\x15\x02\x02\xBF3\x03\x02\x02" +
-		"\x02\xC0\xC1\t\x02\x02\x02\xC15\x03\x02\x02\x02\xC2\xC3\x07\x1B\x02\x02" +
-		"\xC37\x03\x02\x02\x02\x0E:DLVu|\x83\x8D\x9B\xA6\xB2\xBA";
+		"\x11\x03\x11\x03\x12\x03\x12\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x05" +
+		"\x13\x8F\n\x13\x03\x14\x03\x14\x03\x15\x03\x15\x03\x16\x03\x16\x03\x16" +
+		"\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x07\x16\x9D\n\x16\f\x16\x0E\x16" +
+		"\xA0\v\x16\x03\x17\x03\x17\x03\x17\x03\x17\x03\x17\x03\x17\x03\x17\x03" +
+		"\x17\x07\x17\xAA\n\x17\f\x17\x0E\x17\xAD\v\x17\x03\x18\x03\x18\x03\x18" +
+		"\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x07\x18\xB8\n\x18\f\x18" +
+		"\x0E\x18\xBB\v\x18\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x05\x19\xC2" +
+		"\n\x19\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1B\x03\x1B\x03\x1C\x03\x1C" +
+		"\x03\x1C\x02\x02\x05*,.\x1D\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02" +
+		"\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02" +
+		" \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x02\x02\x03" +
+		"\x03\x02\f\x11\x02\xC3\x02:\x03\x02\x02\x02\x04<\x03\x02\x02\x02\x06D" +
+		"\x03\x02\x02\x02\bL\x03\x02\x02\x02\nN\x03\x02\x02\x02\fV\x03\x02\x02" +
+		"\x02\x0EX\x03\x02\x02\x02\x10\\\x03\x02\x02\x02\x12`\x03\x02\x02\x02\x14" +
+		"d\x03\x02\x02\x02\x16h\x03\x02\x02\x02\x18l\x03\x02\x02\x02\x1Au\x03\x02" +
+		"\x02\x02\x1C|\x03\x02\x02\x02\x1E\x83\x03\x02\x02\x02 \x85\x03\x02\x02" +
+		"\x02\"\x87\x03\x02\x02\x02$\x8E\x03\x02\x02\x02&\x90\x03\x02\x02\x02(" +
+		"\x92\x03\x02\x02\x02*\x94\x03\x02\x02\x02,\xA1\x03\x02\x02\x02.\xAE\x03" +
+		"\x02\x02\x020\xC1\x03\x02\x02\x022\xC3\x03\x02\x02\x024\xC7\x03\x02\x02" +
+		"\x026\xC9\x03\x02\x02\x028;\x05\x10\t\x029;\x05\x12\n\x02:8\x03\x02\x02" +
+		"\x02:9\x03\x02\x02\x02;\x03\x03\x02\x02\x02<=\x05\x02\x02\x02=>\x05\x06" +
+		"\x04\x02>\x05\x03\x02\x02\x02?@\x07\x12\x02\x02@A\x05\x02\x02\x02AB\x05" +
+		"\x06\x04\x02BE\x03\x02\x02\x02CE\x03\x02\x02\x02D?\x03\x02\x02\x02DC\x03" +
+		"\x02\x02\x02E\x07\x03\x02\x02\x02FM\x05\x10\t\x02GM\x05\x12\n\x02HM\x05" +
+		"\x0E\b\x02IM\x05\x14\v\x02JM\x05\x16\f\x02KM\x05\x18\r\x02LF\x03\x02\x02" +
+		"\x02LG\x03\x02\x02\x02LH\x03\x02\x02\x02LI\x03\x02\x02\x02LJ\x03\x02\x02" +
+		"\x02LK\x03\x02\x02\x02M\t\x03\x02\x02\x02NO\x05\b\x05\x02OP\x05\f\x07" +
+		"\x02P\v\x03\x02\x02\x02QR\x07\x12\x02\x02RS\x05\b\x05\x02ST\x05\f\x07" +
+		"\x02TW\x03\x02\x02\x02UW\x03\x02\x02\x02VQ\x03\x02\x02\x02VU\x03\x02\x02" +
+		"\x02W\r\x03\x02\x02\x02XY\x07\x03\x02\x02YZ\x07\x13\x02\x02Z[\x05(\x15" +
+		"\x02[\x0F\x03\x02\x02\x02\\]\x07\x04\x02\x02]^\x07\x13\x02\x02^_\x05\x1A" +
+		"\x0E\x02_\x11\x03\x02\x02\x02`a\x07\x05\x02\x02ab\x07\x13\x02\x02bc\x05" +
+		"\x1C\x0F\x02c\x13\x03\x02\x02\x02de\x07\x06\x02\x02ef\x07\x13\x02\x02" +
+		"fg\x05\x1E\x10\x02g\x15\x03\x02\x02\x02hi\x07\x07\x02\x02ij\x07\x13\x02" +
+		"\x02jk\x07\x17\x02\x02k\x17\x03\x02\x02\x02lm\x07\b\x02\x02mn\x07\x13" +
+		"\x02\x02no\x07\x17\x02\x02o\x19\x03\x02\x02\x02pv\x05 \x11\x02qr\x05 " +
+		"\x11\x02rs\x07\x16\x02\x02st\x05\x1A\x0E\x02tv\x03\x02\x02\x02up\x03\x02" +
+		"\x02\x02uq\x03\x02\x02\x02v\x1B\x03\x02\x02\x02w}\x05\"\x12\x02xy\x05" +
+		"\"\x12\x02yz\x07\x16\x02\x02z{\x05\x1C\x0F\x02{}\x03\x02\x02\x02|w\x03" +
+		"\x02\x02\x02|x\x03\x02\x02\x02}\x1D\x03\x02\x02\x02~\x84\x05$\x13\x02" +
+		"\x7F\x80\x05$\x13\x02\x80\x81\x07\x16\x02\x02\x81\x82\x05\x1E\x10\x02" +
+		"\x82\x84\x03\x02\x02\x02\x83~\x03\x02\x02\x02\x83\x7F\x03\x02\x02\x02" +
+		"\x84\x1F\x03\x02\x02\x02\x85\x86\x056\x1C\x02\x86!\x03\x02\x02\x02\x87" +
+		"\x88\x056\x1C\x02\x88#\x03\x02\x02\x02\x89\x8F\x05&\x14\x02\x8A\x8B\x05" +
+		"&\x14\x02\x8B\x8C\x07\x18\x02\x02\x8C\x8D\x07\t\x02\x02\x8D\x8F\x03\x02" +
+		"\x02\x02\x8E\x89\x03\x02\x02\x02\x8E\x8A\x03\x02\x02\x02\x8F%\x03\x02" +
+		"\x02\x02\x90\x91\x056\x1C\x02\x91\'\x03\x02\x02\x02\x92\x93\x05*\x16\x02" +
+		"\x93)\x03\x02\x02\x02\x94\x95\b\x16\x01\x02\x95\x96\x05,\x17\x02\x96\x9E" +
+		"\x03\x02\x02\x02\x97\x98\f\x03\x02\x02\x98\x99\x07\x18\x02\x02\x99\x9A" +
+		"\x07\n\x02\x02\x9A\x9B\x07\x18\x02\x02\x9B\x9D\x05,\x17\x02\x9C\x97\x03" +
+		"\x02\x02\x02\x9D\xA0\x03\x02\x02\x02\x9E\x9C\x03\x02\x02\x02\x9E\x9F\x03" +
+		"\x02\x02\x02\x9F+\x03\x02\x02\x02\xA0\x9E\x03\x02\x02\x02\xA1\xA2\b\x17" +
+		"\x01\x02\xA2\xA3\x05.\x18\x02\xA3\xAB\x03\x02\x02\x02\xA4\xA5\f\x03\x02" +
+		"\x02\xA5\xA6\x07\x18\x02\x02\xA6\xA7\x07\v\x02\x02\xA7\xA8\x07\x18\x02" +
+		"\x02\xA8\xAA\x05.\x18\x02\xA9\xA4\x03\x02\x02\x02\xAA\xAD\x03\x02\x02" +
+		"\x02\xAB\xA9\x03\x02\x02\x02\xAB\xAC\x03\x02\x02\x02\xAC-\x03\x02\x02" +
+		"\x02\xAD\xAB\x03\x02\x02\x02\xAE\xAF\b\x18\x01\x02\xAF\xB0\x050\x19\x02" +
+		"\xB0\xB9\x03\x02\x02\x02\xB1\xB2\f\x03\x02\x02\xB2\xB3\x07\x18\x02\x02" +
+		"\xB3\xB4\x054\x1B\x02\xB4\xB5\x07\x18\x02\x02\xB5\xB6\x050\x19\x02\xB6" +
+		"\xB8\x03\x02\x02\x02\xB7\xB1\x03\x02\x02\x02\xB8\xBB\x03\x02\x02\x02\xB9" +
+		"\xB7\x03\x02\x02\x02\xB9\xBA\x03\x02\x02\x02\xBA/\x03\x02\x02\x02\xBB" +
+		"\xB9\x03\x02\x02\x02\xBC\xC2\x07\x17\x02\x02\xBD\xC2\x07\x1B\x02\x02\xBE" +
+		"\xC2\x07\x1A\x02\x02\xBF\xC2\x056\x1C\x02\xC0\xC2\x052\x1A\x02\xC1\xBC" +
+		"\x03\x02\x02\x02\xC1\xBD\x03\x02\x02\x02\xC1\xBE\x03\x02\x02\x02\xC1\xBF" +
+		"\x03\x02\x02\x02\xC1\xC0\x03\x02\x02\x02\xC21\x03\x02\x02\x02\xC3\xC4" +
+		"\x07\x14\x02\x02\xC4\xC5\x05(\x15\x02\xC5\xC6\x07\x15\x02\x02\xC63\x03" +
+		"\x02\x02\x02\xC7\xC8\t\x02\x02\x02\xC85\x03\x02\x02\x02\xC9\xCA\x07\x1C" +
+		"\x02\x02\xCA7\x03\x02\x02\x02\x0E:DLVu|\x83\x8E\x9E\xAB\xB9\xC1";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!ODataUriQueryParser.__ATN) {
@@ -1696,6 +1714,7 @@ export class OrderSpecContext extends ParserRuleContext {
 	public orderField(): OrderFieldContext {
 		return this.getRuleContext(0, OrderFieldContext);
 	}
+	public RWS(): TerminalNode | undefined { return this.tryGetToken(ODataUriQueryParser.RWS, 0); }
 	public DESC(): TerminalNode | undefined { return this.tryGetToken(ODataUriQueryParser.DESC, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
@@ -1760,6 +1779,15 @@ export class OrExpressionContext extends ParserRuleContext {
 	public orExpression(): OrExpressionContext | undefined {
 		return this.tryGetRuleContext(0, OrExpressionContext);
 	}
+	public RWS(): TerminalNode[];
+	public RWS(i: number): TerminalNode;
+	public RWS(i?: number): TerminalNode | TerminalNode[] {
+		if (i === undefined) {
+			return this.getTokens(ODataUriQueryParser.RWS);
+		} else {
+			return this.getToken(ODataUriQueryParser.RWS, i);
+		}
+	}
 	public OR(): TerminalNode | undefined { return this.tryGetToken(ODataUriQueryParser.OR, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
@@ -1784,6 +1812,15 @@ export class AndExpressionContext extends ParserRuleContext {
 	public andExpression(): AndExpressionContext | undefined {
 		return this.tryGetRuleContext(0, AndExpressionContext);
 	}
+	public RWS(): TerminalNode[];
+	public RWS(i: number): TerminalNode;
+	public RWS(i?: number): TerminalNode | TerminalNode[] {
+		if (i === undefined) {
+			return this.getTokens(ODataUriQueryParser.RWS);
+		} else {
+			return this.getToken(ODataUriQueryParser.RWS, i);
+		}
+	}
 	public AND(): TerminalNode | undefined { return this.tryGetToken(ODataUriQueryParser.AND, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
@@ -1807,6 +1844,15 @@ export class CompExpressionContext extends ParserRuleContext {
 	}
 	public compExpression(): CompExpressionContext | undefined {
 		return this.tryGetRuleContext(0, CompExpressionContext);
+	}
+	public RWS(): TerminalNode[];
+	public RWS(i: number): TerminalNode;
+	public RWS(i?: number): TerminalNode | TerminalNode[] {
+		if (i === undefined) {
+			return this.getTokens(ODataUriQueryParser.RWS);
+		} else {
+			return this.getToken(ODataUriQueryParser.RWS, i);
+		}
 	}
 	public compOperator(): CompOperatorContext | undefined {
 		return this.tryGetRuleContext(0, CompOperatorContext);

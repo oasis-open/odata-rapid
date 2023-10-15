@@ -23,6 +23,7 @@ export class AutoComplete {
   private core: CodeCompletionCore;
   private map: ISyntaxToSemanticMap;
   private schema: ISchema;
+  static emptyResult = { suggestions: [] as string[], match: false };
 
   constructor(
     parser: QueryParser,
@@ -51,7 +52,10 @@ export class AutoComplete {
     ]);
   }
 
-  getSuggestions(pos: number): string[] {
+  getSuggestions(
+    pos: number,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const keywords: string[] = [];
     const candidates = this.core.collectCandidates(
       pos,
@@ -68,26 +72,35 @@ export class AutoComplete {
     });
 
     const identifiers: string[] = [];
+    var match = false;
     candidates.rules.forEach((rule, key) => {
       switch (key) {
         case QueryParser.RULE_identifier:
           identifiers.push(...this.identifierSuggestions(key, rule));
           break;
         case QueryParser.RULE_selectFieldList:
-          identifiers.push(...this.selectFieldSuggestions(key, rule));
+          var result = this.selectFieldSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
           break;
         case QueryParser.RULE_expandFieldList:
-          identifiers.push(...this.expandSuggestions(key, rule));
+          result = this.expandSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
+          break;
         case QueryParser.RULE_basicExpression:
-          identifiers.push(...this.basicExpressionSuggestions(key, rule));
+          result = this.basicExpressionSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
           break;
         case QueryParser.RULE_orderSpecList:
           identifiers.push(...this.orderSpecSuggestions(key, rule));
           break;
       }
     });
+
     const suggestions = [...keywords, ...identifiers];
-    return suggestions;
+    return { suggestions: suggestions, match: match };
   }
 
   private identifierSuggestions(
@@ -114,16 +127,16 @@ export class AutoComplete {
 
   private selectFieldSuggestions(
     ruleKey: number,
-    rule: CandidateRule
-  ): string[] {
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
-
-    if (!node) return [];
+    if (!node) return AutoComplete.emptyResult;
 
     if (node instanceof SelectNode) {
       const instanceType = node.schemaType;
       if (isPrimitiveType(instanceType)) {
-        return [];
+        return AutoComplete.emptyResult;
       }
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
@@ -131,27 +144,31 @@ export class AutoComplete {
         const properties = getAllProperties(typeDef)
           .filter((prop) => prop.type.$Kind !== "NavigationProperty")
           .map((prop) => prop.name);
-        // todo: if the last character token is "," only return properties, else only return ","
-        if (node.children.length) {
-          properties.push(",");
+
+        if (properties.indexOf(lastSegment) > -1) {
+          return { suggestions: [","], match: true };
         }
 
-        return properties;
+        return { suggestions: properties, match: false };
       }
     }
 
-    return [];
+    return { suggestions: [], match: false };
   }
 
-  private expandSuggestions(ruleKey: number, rule: CandidateRule): string[] {
+  private expandSuggestions(
+    ruleKey: number,
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
 
-    if (!node) return [];
+    if (!node) return AutoComplete.emptyResult;
 
     if (node instanceof ExpandNode) {
       const instanceType = node.schemaType;
       if (isPrimitiveType(instanceType)) {
-        return [];
+        return AutoComplete.emptyResult;
       }
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
@@ -159,16 +176,15 @@ export class AutoComplete {
         const properties = getAllProperties(typeDef)
           .filter((prop) => prop.type.$Kind === "NavigationProperty")
           .map((prop) => prop.name);
-        // todo: if the last character token is ",", return properties, otherwise return ","
-        if (node.children.length) {
-          properties.push(",");
+        if (properties.indexOf(lastSegment) > -1) {
+          return { suggestions: [","], match: true };
         }
 
-        return properties;
+        return { suggestions: properties, match: false };
       }
     }
 
-    return [];
+    return AutoComplete.emptyResult;
   }
 
   private orderSpecSuggestions(ruleKey: number, rule: CandidateRule): string[] {
@@ -204,23 +220,26 @@ export class AutoComplete {
 
   private basicExpressionSuggestions(
     ruleKey: number,
-    rule: CandidateRule
-  ): string[] {
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
-    if (!node) return [];
+    if (!node) AutoComplete.emptyResult;
     if (node instanceof BasicExpressionNode) {
       const instanceType = node.parentType;
-      const candidates = ["true", "false"];
-      if (isPrimitiveType(instanceType)) {
-        return candidates;
+      var candidates = ["true", "false"];
+      if (!isPrimitiveType(instanceType)) {
+        const typeDef = findStructuredType(instanceType.$Type, this.schema);
+        if (typeDef) {
+          candidates = getAllPropertiesNames(typeDef).concat(candidates);
+        }
       }
-
-      const typeDef = findStructuredType(instanceType.$Type, this.schema);
-      if (typeDef) {
-        return getAllPropertiesNames(typeDef).concat(candidates);
-      }
+      return {
+        suggestions: candidates,
+        match: candidates.indexOf(lastSegment) > -1,
+      };
     }
 
-    return [];
+    return AutoComplete.emptyResult;
   }
 }

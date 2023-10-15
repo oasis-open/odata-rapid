@@ -167,10 +167,35 @@ export class AutoCompleteManager {
 
     if (this.separatorPos > -1 && pos >= this.separatorPos) {
       // query
-      const relativePos = pos - this.queryStart;
-      const suggestions = this.queryAutoComplete.getSuggestions(relativePos);
-      //TODO: from
-      return { from: pos, suggestions };
+      const separators = ["?", "&", ",", "="];
+      const queryOptions = [
+        "$select",
+        "$expand",
+        "$filter",
+        "$orderby",
+        "$top",
+        "$skip",
+      ];
+      var lastSegmentStart = this.queryStart;
+      separators.forEach((separator) => {
+        lastSegmentStart = Math.max(
+          lastSegmentStart,
+          input.lastIndexOf(separator) + 1
+        );
+      });
+      const lastSegment = input.substring(lastSegmentStart);
+      if (queryOptions.indexOf(lastSegment) > -1) {
+        return { from: pos, suggestions: ["="] };
+      }
+      const completionResult = this.queryAutoComplete.getSuggestions(
+        lastSegmentStart,
+        lastSegment
+      );
+
+      return {
+        from: completionResult.match ? pos : lastSegmentStart,
+        suggestions: completionResult.suggestions,
+      };
     } else {
       // path
       const suggestions = this.pathAutoComplete.getCompletions(pos);

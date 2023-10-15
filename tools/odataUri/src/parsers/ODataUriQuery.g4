@@ -30,16 +30,18 @@ expandFieldList:
 orderSpecList: orderSpec | orderSpec COMMA orderSpecList;
 selectField: identifier;
 expandField: identifier;
-orderSpec: orderField | orderField DESC;
+orderSpec: orderField | orderField RWS DESC;
 orderField: identifier;
 expression: orExpression;
-orExpression: andExpression | orExpression OR andExpression;
+orExpression:
+	andExpression
+	| orExpression RWS OR RWS andExpression;
 andExpression:
 	compExpression
-	| andExpression AND compExpression;
+	| andExpression RWS AND RWS compExpression;
 compExpression:
 	basicExpression
-	| compExpression compOperator basicExpression;
+	| compExpression RWS compOperator RWS basicExpression;
 basicExpression:
 	NUMBER
 	| STRING
@@ -71,6 +73,7 @@ LPAREN: '(';
 RPAREN: ')';
 COMMA: ',';
 NUMBER: [0-9]+;
+RWS: ' ';
 WS: [ ] -> skip;
 BOOLEAN: 'true' | 'false';
 STRING: '\'' .*? '\'';
