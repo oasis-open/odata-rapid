@@ -47,7 +47,7 @@ This allows us to make simple requests against our company:
 | Request                                                                                                                        | Comment                                      |
 | :----------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
 | GET [http://rapid-pro.org/company?select=stockSymbol,name](https://jetsons.azurewebsites.net/company?$select=stockSymbol,name) | get the stock symbol and name of the company |
-| PATCH http://rapid-pro.org/company <br/> { "name":"Spacely's Space Sprockets" }                                                | update the company name                      |
+| PATCH http://rapid-pro.org/company <br/> \{ "name":"Spacely's Space Sprockets" \}                                              | update the company name                      |
 
 ### Defining a Structured Type Property
 
@@ -88,8 +88,8 @@ Now we can get employees for our company:
 | GET [http://rapid-pro.org/company/employees?select=lastName,title](https://jetsons.azurewebsites.net/company/employees?$select=lastName,title)                                 | list the last name and title for all employees for the company  |
 | GET [http://rapid-pro.org/company/employees/1?select=lastName,title](https://jetsons.azurewebsites.net/company/employees/1?$select=lastName,title)                             | get the last name and title of the employee with id=1           |
 | GET [http://rapid-pro.org/company?select=name&expand=employees(select=lastName)](<https://jetsons.azurewebsites.net/company?$select=name&$expand=employees($select=lastName)>) | get the company name and the last names of all of its employees |
-| POST http://rapid-pro.org/company/employees <br/> { "firstName": "Cosmo","lastName": "Spacely","title": "CEO" }                                                                | add a new employee                                              |
-| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) {"title": "Assistant to the Assistant Regional Manager"}               | change the title of the employee with id=1                      |
+| POST http://rapid-pro.org/company/employees <br/> \{ "firstName": "Cosmo","lastName": "Spacely","title": "CEO" \}                                                              | add a new employee                                              |
+| PATCH [http://rapid-pro.org/company/employees/1](https://jetsons.azurewebsites.net/company/employees/1) \{"title": "Assistant to the Assistant Regional Manager"\}             | change the title of the employee with id=1                      |
 | DELETE http://rapid-pro.org/company/employees/1                                                                                                                                | delete the employee with id=1                                   |
 
 ### Defining a Top-Level Collection
@@ -123,7 +123,7 @@ Now we can request individual companies within the competitors collection:
 
 | Request                                                                                                                                                | Comment                                                                       |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
-| POST http://rapid-pro.org/competitors <br/> { "stockSymbol":"cgswl", "name":"Cogswell's Cosmic COGs" "incorporated":"2054-10-04T00:00:00Z" }           | create a new competitor                                                       |
+| POST http://rapid-pro.org/competitors <br/> \{ "stockSymbol":"cgswl", "name":"Cogswell's Cosmic COGs" "incorporated":"2054-10-04T00:00:00Z" \}         | create a new competitor                                                       |
 | GET [http://rapid-pro.org/competitors?select=name](https://jetsons.azurewebsites.net/competitors?$select=name)                                         | list the names of all of the competitors                                      |
 | GET [http://rapid-pro.org/competitors/cgswl?select=name](https://jetsons.azurewebsites.net/competitors/cgswl?$select=name)                             | get the name of the competitor with the stock symbol cgswl                    |
 | GET [http://rapid-pro.org/competitors/cgswl/employees?select=lastName](https://jetsons.azurewebsites.net/competitors/cgswl/employees?$select=lastName) | get the last name of employees for the competitor with the stock symbol cgswl |
@@ -207,9 +207,9 @@ youreFired has the `action` attribute to show that it is an action and may have 
 
 Because actions may have side-affects, they are invoked using POST. Their parameters are passed in the body of the request.
 
-| Request                                                                                     | Comment                                              |
-| :------------------------------------------------------------------------------------------ | :--------------------------------------------------- |
-| POST http://rapid-pro.org/company/employees/1/youreFired <br/> { "reason": "Embezzlement" } | invoke the youreFired action on employee with id = 1 |
+| Request                                                                                       | Comment                                              |
+| :-------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
+| POST http://rapid-pro.org/company/employees/1/youreFired <br/> \{ "reason": "Embezzlement" \} | invoke the youreFired action on employee with id = 1 |
 
 Actions and functions may also be defined on the service.
 

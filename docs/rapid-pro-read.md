@@ -146,7 +146,7 @@ RAPID allows you to pass the query string in the body, making it easy to write a
 The target is still the resource being queried or modified, making it easy to route the request,
 and the syntax is the same, making it easy to execute.
 
-| Template    | POST {single-resource-path}/\$query        |
+| Template    | POST \{single-resource-path\}/\$query      |
 | ----------- | :----------------------------------------- |
 | **Example** | POST `http://rapid-pro.org/company/$query` |
 
