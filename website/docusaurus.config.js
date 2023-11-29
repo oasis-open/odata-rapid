@@ -7,7 +7,7 @@ const lightTheme = themes.github;
 const darkTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
-const config = {
+export default {
   title: "RAPID",
   tagline: "Fastest way to build your RESTful API",
   url: "https://rapid.rocks",
@@ -129,5 +129,3 @@ const config = {
       },
     }),
 };
-
-module.exports = config;
