@@ -27,7 +27,7 @@
         "ava-ts": "^0.25.2",
         "graphql": "14.6.0",
         "rimraf": "3.0.2",
-        "ts-node": "8.10.2",
+        "ts-node": "10.9.1",
         "tsutils": "3.17.1",
         "typescript": "^5.3.2"
     },
