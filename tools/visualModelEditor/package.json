@@ -19,7 +19,6 @@
     "rsdl-js": "file:../rsdl/rsdl-js"
   },
   "devDependencies": {
-    "@tsconfig/recommended": "^1.0.1",
     "css-loader": "^6.6.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.2.6",
