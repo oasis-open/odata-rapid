@@ -36,6 +36,10 @@ jobs:
           cache: "npm"
           
       - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          check-latest: true
 
       - run: npm ci
       - run: npm run build
