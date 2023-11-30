@@ -28,7 +28,8 @@
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "build": "rimraf dist && parcel build --dist-dir ./dist/api-explorer",
+    "prebuild": "rimraf dist",
+    "build": "parcel build --dist-dir ./dist/api-explorer",
     "start": "parcel -p 2345 --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",

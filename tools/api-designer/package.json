@@ -26,7 +26,8 @@
   },
   "scripts": {
     "# postinstall": "patch-package",
-    "build": "rimraf dist && parcel build --dist-dir ./dist/api-designer",
+    "prepublish": "rimraf dist",
+    "build": "parcel build --dist-dir ./dist/api-designer",
     "start": "parcel --open --dist-dir ./dist-dev"
   },
   "source": "src/html/index.html",
