@@ -29,7 +29,6 @@ export class DiagramView {
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
-      useMaxWidth: false,
       // logLevel: 1,
     });
 
