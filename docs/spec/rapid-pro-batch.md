@@ -12,7 +12,7 @@ The request payload consists of an array of individual requests,
 and the response payload consists of an array of individual responses.
 Requests and responses are correlated via an `id` for each individual request.
 
-| Template    | POST {service-root}/\$batch      |
+| Template    | POST \{service-root\}/\$batch    |
 | ----------- | :------------------------------- |
 | **Example** | POST http://rapid-pro.org/$batch |
 

@@ -7,7 +7,8 @@
   "scripts": {
     "test": "c8 mocha",
     "antlr4ts": "antlr4ts -visitor -no-listener -o src/parsers src/parsers/ODataUriQuery.g4",
-    "build": "npm run antlr4ts && webpack"
+    "prebuild": "npm run antlr4ts",
+    "build": "webpack"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -27,7 +28,6 @@
     "@babel/preset-typescript": "^7.15.0",
     "@parcel/transformer-typescript-tsc": "^2.0.0-alpha.3",
     "@parcel/transformer-typescript-types": "^2.0.0-rc.0",
-    "@tsconfig/recommended": "^1.0.1",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
     "antlr4ts-cli": "^0.5.0-alpha.4",
@@ -35,9 +35,10 @@
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
     "ts-loader": "^9.2.5",
-    "ts-node": "^10.8.2",
-    "typescript": "^4.3.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2",
     "webpack": "^5.48.0",
-    "webpack-cli": "^4.7.2"
+    "webpack-cli": "^4.7.2",
+    "@tsconfig/recommended": "^1.0.3"
   }
 }

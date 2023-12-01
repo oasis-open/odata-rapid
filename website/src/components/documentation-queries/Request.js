@@ -1,4 +1,3 @@
-import React from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Component } from 'react';

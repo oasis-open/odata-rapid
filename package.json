@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "npm run clean -w website && rimraf tools/*/.parcel-cache tools/*/dist tools/*/dist-dev tools/*/node_modules tools/rsdl/*/node_modules .parcel-cache coverage node_modules",
     "build": "npm run build --workspaces --if-present",
-    "postinstall": "patch-package && npm run clean-tools",
+    "postinstall": "patch-package",
     "clean-tools": "rimraf tools/.parcel-cache tools/coverage tools/node_modules",
     "api-designer": "cd tools/api-designer && npm start",
     "api-explorer": "cd tools/api-explorer && npm start",
@@ -25,7 +25,8 @@
     "deploy": "npm run deploy -w website"
   },
   "devDependencies": {
-    "patch-package": "^6.4.7",
-    "rimraf": "^3.0.2"
+    "@tsconfig/recommended": "^1.0.3",
+    "patch-package": "^8.0.0",
+    "rimraf": "^5.0.5"
   }
 }

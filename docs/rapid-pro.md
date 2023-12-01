@@ -110,7 +110,7 @@ RAPID services support retrieving a resource using the GET method.
 <InteractiveQuerying defaultQuery="company" id="1"/>
 -->
 
-| Template    | GET {resource-path}                                                             |
+| Template    | GET \{resource-path\}                                                           |
 | ----------- | :------------------------------------------------------------------------------ |
 | **Example** | GET [`http://rapid-pro.org/company`](https://jetsons.azurewebsites.net/company) |
 
@@ -144,7 +144,7 @@ RAPID services support modifying a resource using the PATCH, POST, and DELETE me
 
 This example PATCH call changes the name in the Company singleton to a given replacement:
 
-| Template    | PATCH {single-resource-path}       |
+| Template    | PATCH \{single-resource-path\}       |
 | ----------- | :--------------------------------- |
 | **Example** | PATCH http://rapid-pro.org/company |
 

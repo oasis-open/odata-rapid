@@ -1,9 +1,0 @@
-type Person {
-    UserName: String! @RapidID
-    FirstName: String
-    LastName: String!
-    Value: Float!
-    ValueInt: Int!
-    Condition: Boolean!
-    StartDate: Date
-}

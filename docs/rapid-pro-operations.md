@@ -23,7 +23,7 @@ Operations include Actions and Functions.
 
 Actions have effects on resources, are invoked using `POST`, and have parameters specified in the body.
 
-| Template | POST {resource-path}/{actionName}                        |
+| Template | POST \{resource-path\}/\{actionName\}                    |
 | -------- | :------------------------------------------------------- |
 | Example  | POST http://rapid-pro.org/company/employees/1/youreFired |
 
@@ -40,6 +40,6 @@ Actions have effects on resources, are invoked using `POST`, and have parameters
 Functions are invoked using `GET` and must have no side effects.
 Parameters are passed to functions as query options.
 
-| Template | GET {resource-path}/{functionName}?{@param=value...}                                                                    |
+| Template | GET \{resource-path\}/\{functionName\}?\{@param=value...\}                                                              |
 | -------- | :---------------------------------------------------------------------------------------------------------------------- |
 | Example  | GET [http://rapid-pro.org/company/topEmployees?@num=2](<https://jetsons.azurewebsites.net/company/topEmployees(num=2)>) |
