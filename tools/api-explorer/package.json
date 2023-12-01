@@ -8,7 +8,7 @@
     "highlight.js": "^11.6.0",
     "odata-openapi": "^0.18.4",
     "odata-url-editor": "file:../urlEditor",
-    "swagger-ui": "3.52.5",
+    "swagger-ui": "4.1.3",
     "visual-model-editor": "file:../visualModelEditor"
   },
   "devDependencies": {
