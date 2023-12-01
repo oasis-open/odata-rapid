@@ -9,8 +9,6 @@ const jetsons: ISchema = JSON.parse(
   readFileSync(`${__dirname}/resources/jetsons.csdl.json`, "utf8")
 );
 
-//TODO: also expect "from" for completions
-
 describe("odataUri", () => {
   it("completions for empty input", () => {
     const manager = new AutoCompleteManager(jetsons);
@@ -35,18 +33,7 @@ describe("odataUri", () => {
 
   it("completions for singleton", () => {
     const manager = new AutoCompleteManager(jetsons);
-    expectCompletions(
-      manager,
-      "company?",
-      [
-        "$filter", //TODO: should not be suggested
-        "$select",
-        "$expand",
-        "$top", //TODO: should not be suggested
-        "$skip", //TODO: should not be suggested] });
-      ],
-      8
-    );
+    expectCompletions(manager, "company?", ["$select", "$expand"], 8);
     expectCompletions(
       manager,
       "company/",
@@ -56,14 +43,7 @@ describe("odataUri", () => {
     expectCompletions(
       manager,
       "company/employees?",
-      [
-        "$filter",
-        "$select",
-        "$expand",
-        "$top",
-        "$skip",
-        //TODO: $orderby should also be suggested
-      ],
+      ["$select", "$expand", "$filter", "$orderby", "$top", "$skip"],
       18
     );
   });
@@ -73,14 +53,13 @@ describe("odataUri", () => {
     expectCompletions(
       manager,
       "competitors?",
-      [
-        "$filter",
-        "$select",
-        "$expand",
-        "$top",
-        "$skip",
-        //TODO: $orderby should also be suggested
-      ],
+      ["$select", "$expand", "$filter", "$orderby", "$top", "$skip"],
+      12
+    );
+    expectCompletions(
+      manager,
+      "competitors?$ex",
+      ["$select", "$expand", "$filter", "$orderby", "$top", "$skip"],
       12
     );
     expectCompletions(
@@ -118,14 +97,7 @@ describe("odataUri", () => {
     expectCompletions(
       manager,
       "competitors?",
-      [
-        "$filter",
-        "$select",
-        "$expand",
-        "$top",
-        "$skip",
-        //TODO: $orderby should also be suggested
-      ],
+      ["$select", "$expand", "$filter", "$orderby", "$top", "$skip"],
       12
     );
   });
@@ -136,14 +108,26 @@ describe("odataUri", () => {
     expectCompletions(
       manager,
       "competitors?$select=",
-      ["stockSymbol", "name", "incorporated", "employees"],
+      ["stockSymbol", "name", "incorporated"],
+      20
+    );
+    expectCompletions(
+      manager,
+      "competitors?$select=stock",
+      ["&", "stockSymbol", "name", "incorporated"],
       20
     );
     expectCompletions(
       manager,
       "competitors?$select=stockSymbol",
-      ["&", "stockSymbol", "name", "incorporated", "employees", ","],
+      ["&", ","],
       31
+    );
+    expectCompletions(
+      manager,
+      "competitors?$select=stockSymbol,",
+      ["stockSymbol", "name", "incorporated"],
+      32
     );
   });
 
@@ -151,81 +135,70 @@ describe("odataUri", () => {
     const manager = new AutoCompleteManager(jetsons);
     expectCompletions(manager, "company?$expand", ["="], 15);
     expectCompletions(manager, "company?$expand=", ["employees"], 16);
-    expectCompletions(
-      manager,
-      "company?$expand=employees",
-      ["&", "employees", ","],
-      25
-    );
+    expectCompletions(manager, "company?$expand=emp", ["&", "employees"], 16);
+    expectCompletions(manager, "company?$expand=employees", ["&", ","], 25);
   });
 
   it("completions for $filter", () => {
     const manager = new AutoCompleteManager(jetsons);
-    expectCompletions(manager, "company?$filter", ["="], 15);
+    expectCompletions(manager, "competitors?$filter", ["="], 19);
     expectCompletions(
       manager,
-      "company?$filter=",
+      "competitors?$filter=",
       ["stockSymbol", "name", "incorporated", "employees", "true", "false"],
-      16
+      20
     );
     expectCompletions(
       manager,
-      "company?$filter=stocksymbol",
-      ["eq", "ne", "gt", "ge", "lt", "le", "and", "or", "&"],
-      27
-    );
-    expectCompletions(
-      manager,
-      "company?$filter=stocksymbol eq",
+      "competitors?$filter=stock",
       ["stockSymbol", "name", "incorporated", "employees", "true", "false"],
-      30
+      20
     );
     expectCompletions(
       manager,
-      "company?$filter=stocksymbol eq 123",
-      [
-        "eq", //TODO: makes no sense here
-        "ne", //TODO: makes no sense here
-        "gt", //TODO: makes no sense here
-        "ge", //TODO: makes no sense here
-        "lt", //TODO: makes no sense here
-        "le", //TODO: makes no sense here
-        "and",
-        "or",
-        "&",
-      ],
-      34
+      "competitors?$filter=stockSymbol",
+      [" ", "&"],
+      31
     );
     expectCompletions(
       manager,
-      "company?$filter=stocksymbol eq 'FOO'",
-      [
-        "eq", //TODO: makes no sense here
-        "ne", //TODO: makes no sense here
-        "gt", //TODO: makes no sense here
-        "ge", //TODO: makes no sense here
-        "lt", //TODO: makes no sense here
-        "le", //TODO: makes no sense here
-        "and",
-        "or",
-        "&",
-      ],
-      36
+      "competitors?$filter=stockSymbol ",
+      ["eq", "ne", "gt", "ge", "lt", "le", "and", "or"],
+      32
+    );
+    expectCompletions(manager, "competitors?$filter=stockSymbol eq", [" "], 34);
+    expectCompletions(
+      manager,
+      "competitors?$filter=stockSymbol eq ",
+      ["stockSymbol", "name", "incorporated", "employees", "true", "false"],
+      35
     );
     expectCompletions(
       manager,
-      "company?$filter=(stocksymbol eq true",
+      "competitors?$filter=stockSymbol eq 123",
+      [" ", "&"],
+      38
+    );
+    expectCompletions(
+      manager,
+      "competitors?$filter=stocksymbol eq 'FOO'",
+      [" ", "&"],
+      40
+    );
+    expectCompletions(
+      manager,
+      "competitors?$filter=(stocksymbol eq true",
       [], //TODO: would expect closing paren
-      36
+      40
     );
   });
 
   it("completions for $orderby", () => {
     const manager = new AutoCompleteManager(jetsons);
+    expectCompletions(manager, "competitors?$orderby", ["="], 20);
     expectCompletions(
       manager,
-      // "company?$orderby": ["="],
-      "company?$orderby=",
+      "competitors?$orderby=",
       [
         "stockSymbol",
         "stockSymbol desc",
@@ -233,14 +206,12 @@ describe("odataUri", () => {
         "name desc",
         "incorporated",
         "incorporated desc",
-        "employees", //TODO: that doesn't make much sense
-        "employees desc", //TODO: that doesn't make much sense
       ],
-      17
+      21
     );
     expectCompletions(
       manager,
-      "company?$orderby=name",
+      "competitors?$orderby=name",
       [
         "&",
         "stockSymbol",
@@ -249,23 +220,21 @@ describe("odataUri", () => {
         "name desc",
         "incorporated",
         "incorporated desc",
-        "employees", //TODO: that doesn't make much sense
-        "employees desc", //TODO: that doesn't make much sense
         //TODO: would have expected "," here
       ],
-      21
+      25
     );
   });
 
   it("completions for $skip & $top", () => {
     const manager = new AutoCompleteManager(jetsons);
-    // "competitors?$skip": [???], //TODO: throws exception
+    expectCompletions(manager, "competitors?$skip", ["="], 17);
     expectCompletions(manager, "competitors?$skip=", ["NUMBER"], 18);
-    expectCompletions(manager, "competitors?$skip=3", ["&"], 19);
+    expectCompletions(manager, "competitors?$skip=3", ["&"], 18);
 
-    // "competitors?$top": [???], //TODO: throws exception
+    expectCompletions(manager, "competitors?$top", ["="], 16);
     expectCompletions(manager, "competitors?$top=", ["NUMBER"], 17);
-    expectCompletions(manager, "competitors?$top=3", ["&"], 18);
+    expectCompletions(manager, "competitors?$top=3", ["&"], 17);
   });
 
   it("errors for invalid input", () => {

@@ -1,4 +1,8 @@
-import { SemanticNode, parseQueryOptionsSemantics } from "./semantic-model";
+import {
+  SemanticNode,
+  parseQueryOptionsSemantics,
+  parseCollectionQueryOptionsSemantics,
+} from "./semantic-model";
 import { ISchema, ISchemaType } from "./json-model";
 import { CharStreams, CommonTokenStream } from "antlr4ts";
 import { ODataUriQueryParser } from "./parsers/ODataUriQueryParser";
@@ -92,14 +96,25 @@ export class AutoCompleteManager {
     const queryLexer = new ODataUriQueryLexer(inputStream);
     const tokens = new CommonTokenStream(queryLexer);
     const queryParser = new ODataUriQueryParser(tokens);
-    const ast = queryParser.queryOptions();
+    var semanticResult;
+    if (rootType.$Collection) {
+      const ast = queryParser.collectionQueryOptions();
 
-    const semanticResult = parseQueryOptionsSemantics(
-      ast,
-      this.schema,
-      rootType
-    );
-    this.queryOptions = semanticResult.tree;
+      semanticResult = parseCollectionQueryOptionsSemantics(
+        ast,
+        this.schema,
+        rootType
+      );
+      this.queryOptions = semanticResult.tree;
+      queryParser.context = ast;
+    } else {
+      const ast = queryParser.queryOptions();
+
+      semanticResult = parseQueryOptionsSemantics(ast, this.schema, rootType);
+      this.queryOptions = semanticResult.tree;
+      queryParser.context = ast;
+    }
+
     this.errors.push(
       ...semanticResult.errors.map((err) => {
         err.range.start += this.queryStart;
@@ -152,10 +167,35 @@ export class AutoCompleteManager {
 
     if (this.separatorPos > -1 && pos >= this.separatorPos) {
       // query
-      const relativePos = pos - this.queryStart;
-      const suggestions = this.queryAutoComplete.getSuggestions(relativePos);
-      //TODO: from
-      return { from: pos, suggestions };
+      const separators = ["?", "&", ",", "="];
+      const queryOptions = [
+        "$select",
+        "$expand",
+        "$filter",
+        "$orderby",
+        "$top",
+        "$skip",
+      ];
+      var lastSegmentStart = this.queryStart;
+      separators.forEach((separator) => {
+        lastSegmentStart = Math.max(
+          lastSegmentStart,
+          input.lastIndexOf(separator) + 1
+        );
+      });
+      const lastSegment = input.substring(lastSegmentStart);
+      if (queryOptions.indexOf(lastSegment) > -1) {
+        return { from: pos, suggestions: ["="] };
+      }
+      const completionResult = this.queryAutoComplete.getSuggestions(
+        lastSegmentStart,
+        lastSegment
+      );
+
+      return {
+        from: completionResult.match ? pos : lastSegmentStart,
+        suggestions: completionResult.suggestions,
+      };
     } else {
       // path
       const suggestions = this.pathAutoComplete.getCompletions(pos);

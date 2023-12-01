@@ -3,9 +3,12 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
+import { QueryOptionContext } from "./ODataUriQueryParser";
 import { QueryOptionsContext } from "./ODataUriQueryParser";
 import { QueryOptionsListContext } from "./ODataUriQueryParser";
-import { QueryOptionContext } from "./ODataUriQueryParser";
+import { CollectionQueryOptionContext } from "./ODataUriQueryParser";
+import { CollectionQueryOptionsContext } from "./ODataUriQueryParser";
+import { CollectionQueryOptionsListContext } from "./ODataUriQueryParser";
 import { FilterOptionContext } from "./ODataUriQueryParser";
 import { SelectOptionContext } from "./ODataUriQueryParser";
 import { ExpandOptionContext } from "./ODataUriQueryParser";
@@ -14,6 +17,7 @@ import { TopOptionContext } from "./ODataUriQueryParser";
 import { SkipOptionContext } from "./ODataUriQueryParser";
 import { SelectFieldListContext } from "./ODataUriQueryParser";
 import { ExpandFieldListContext } from "./ODataUriQueryParser";
+import { OrderSpecListContext } from "./ODataUriQueryParser";
 import { SelectFieldContext } from "./ODataUriQueryParser";
 import { ExpandFieldContext } from "./ODataUriQueryParser";
 import { OrderSpecContext } from "./ODataUriQueryParser";
@@ -37,6 +41,13 @@ import { IdentifierContext } from "./ODataUriQueryParser";
  */
 export interface ODataUriQueryVisitor<Result> extends ParseTreeVisitor<Result> {
 	/**
+	 * Visit a parse tree produced by `ODataUriQueryParser.queryOption`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitQueryOption?: (ctx: QueryOptionContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `ODataUriQueryParser.queryOptions`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -51,11 +62,25 @@ export interface ODataUriQueryVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitQueryOptionsList?: (ctx: QueryOptionsListContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `ODataUriQueryParser.queryOption`.
+	 * Visit a parse tree produced by `ODataUriQueryParser.collectionQueryOption`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitQueryOption?: (ctx: QueryOptionContext) => Result;
+	visitCollectionQueryOption?: (ctx: CollectionQueryOptionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `ODataUriQueryParser.collectionQueryOptions`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCollectionQueryOptions?: (ctx: CollectionQueryOptionsContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `ODataUriQueryParser.collectionQueryOptionsList`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCollectionQueryOptionsList?: (ctx: CollectionQueryOptionsListContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `ODataUriQueryParser.filterOption`.
@@ -112,6 +137,13 @@ export interface ODataUriQueryVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitExpandFieldList?: (ctx: ExpandFieldListContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `ODataUriQueryParser.orderSpecList`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitOrderSpecList?: (ctx: OrderSpecListContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `ODataUriQueryParser.selectField`.

@@ -6,6 +6,9 @@ import {
 import {
   AndExpressionContext,
   BasicExpressionContext,
+  CollectionQueryOptionContext,
+  CollectionQueryOptionsContext,
+  CollectionQueryOptionsListContext,
   CompExpressionContext,
   ExpandFieldListContext,
   ExpandOptionContext,
@@ -15,6 +18,7 @@ import {
   OrderByOptionContext,
   OrderFieldContext,
   OrderSpecContext,
+  OrderSpecListContext,
   OrExpressionContext,
   ParenExpressionContext,
   QueryOptionContext,
@@ -62,6 +66,22 @@ export function parseQueryOptionsSemantics(
   rootType: ISchemaType
 ): ISemanticParseResult<QueryOptionsNode> {
   const visitor = new QueryOptionsVisitor(schema, rootType);
+  const semanticTree = syntaxTree.accept(visitor) as QueryOptionsNode;
+
+  return {
+    tree: semanticTree,
+    errors: visitor.errors,
+    syntaxSemanticMap: visitor.semanticMap,
+    schema: visitor.schema,
+  };
+}
+
+export function parseCollectionQueryOptionsSemantics(
+  syntaxTree: CollectionQueryOptionsContext,
+  schema: ISchema,
+  rootType: ISchemaType
+): ISemanticParseResult<QueryOptionsNode> {
+  const visitor = new CollectionQueryOptionsVisitor(schema, rootType);
   const semanticTree = syntaxTree.accept(visitor) as QueryOptionsNode;
 
   return {
@@ -295,7 +315,7 @@ export class Int32ConstantNode extends ConstantNode {
   }
 }
 
-export class StringContantNode extends ConstantNode {
+export class StringConstantNode extends ConstantNode {
   get value() {
     return this.rawValue;
   }
@@ -347,10 +367,7 @@ export class SyntaxToSemanticMap {
   }
 }
 
-export class QueryOptionsVisitor
-  extends AbstractParseTreeVisitor<SemanticNode>
-  implements ODataUriQueryVisitor<SemanticNode>
-{
+abstract class QueryOptionsVisitorBase extends AbstractParseTreeVisitor<SemanticNode> {
   schema: ISchema;
   rootType: ISchemaType;
   errors: IError[];
@@ -369,70 +386,6 @@ export class QueryOptionsVisitor
 
   protected defaultResult(): SemanticNode {
     return null;
-  }
-
-  visitQueryOptions(ctx: QueryOptionsContext): SemanticNode {
-    if (!ctx) return null;
-    const node = new QueryOptionsNode(ctx, this.rootType);
-    this.root = node;
-    this.semanticMap.set(ctx, node);
-    this.typeStack.push(this.rootType);
-    const option = ctx.queryOption();
-    if (option) {
-      this.visitQueryOption(option);
-    }
-
-    const optionsList = ctx.childCount > 1 && ctx.queryOptionsList();
-    if (optionsList) {
-      this.visitQueryOptionsList(optionsList);
-    }
-
-    return node;
-  }
-
-  visitQueryOption(ctx: QueryOptionContext): SemanticNode {
-    if (!ctx) return null;
-
-    const options = [
-      "filterOption",
-      "selectOption",
-      "expandOption",
-      "orderByOption",
-      "topOption",
-      "skipOption",
-    ];
-    options.forEach((option) => this.checkAndAddQueryOption(option, ctx));
-
-    return null;
-  }
-
-  visitQueryOptionsList(ctx: QueryOptionsListContext): SemanticNode {
-    if (ctx.childCount === 0) return;
-    const option = ctx.queryOption();
-    if (option) {
-      this.visitQueryOption(option);
-    }
-
-    const optionsList = ctx.childCount > 1 && ctx.queryOptionsList();
-    if (optionsList) {
-      this.visitQueryOptionsList(optionsList);
-    }
-
-    return null;
-  }
-
-  checkAndAddQueryOption(option: string, ctx: QueryOptionContext) {
-    // @ts-ignore
-    const optionCtx = ctx[option]() as ParserRuleContext;
-    if (optionCtx) {
-      // @ts-ignore
-      if (this.root[option]) {
-        const optName = option.split("Option")[0];
-        this.addError(`Duplicate query option $${optName}`, optionCtx);
-      }
-      // @ts-ignore
-      this.root[option] = optionCtx.accept(this);
-    }
   }
 
   visitFilterOption(ctx: FilterOptionContext) {
@@ -640,8 +593,21 @@ export class QueryOptionsVisitor
 
     this.typeStack.push(itemType);
 
-    const orderSpec = ctx.tryGetRuleContext(0, OrderSpecContext);
+    const orderSpecList = ctx.tryGetRuleContext(0, OrderSpecListContext);
     // console.log("order spec", orderSpec);
+    if (orderSpecList) {
+      this.visitOrderNode(orderSpecList, node);
+    }
+
+    this.typeStack.pop();
+
+    return node;
+  }
+
+  visitOrderNode(ctx: OrderSpecListContext, node: OrderByNode): SemanticNode {
+    this.semanticMap.set(ctx, node);
+    const orderSpec =
+      ctx.children && ctx.tryGetRuleContext(0, OrderSpecContext);
     if (orderSpec) {
       const field = orderSpec.tryGetRuleContext(0, OrderFieldContext);
       const fieldNode = field && this.visitOrderField(field);
@@ -661,14 +627,9 @@ export class QueryOptionsVisitor
         node.isAsc = false;
       }
     }
-
-    this.typeStack.pop();
-
-    return node;
   }
 
   visitOrderField(ctx: OrderFieldContext) {
-    console.log("visiting order field");
     const instanceType = peekStack(this.typeStack);
     const propName = ctx.text;
 
@@ -685,6 +646,10 @@ export class QueryOptionsVisitor
 
       if (!isPrimitiveType(property)) {
         this.addError(`Cannot order by a non-primitive type`, ctx);
+      }
+
+      if (property.$Collection) {
+        this.addError("Cannot order by a collection-valued property", ctx);
       }
 
       const node = new PropertyAccessNode(ctx, type);
@@ -711,7 +676,7 @@ export class QueryOptionsVisitor
     }
 
     const node = new TopNode(ctx, createPrimitiveType(PrimitiveType.Int32)); // TODO should type be long?
-    if (ctx.NUMBER()) {
+    if (ctx.childCount > 1 && ctx.NUMBER()) {
       node.value = Number(ctx.NUMBER().text);
     }
 
@@ -725,7 +690,7 @@ export class QueryOptionsVisitor
     }
 
     const node = new SkipNode(ctx, createPrimitiveType(PrimitiveType.Int32)); // TODO should type be long?
-    if (ctx.NUMBER()) {
+    if (ctx.childCount > 1 && ctx.NUMBER()) {
       node.value = Number(ctx.NUMBER().text);
     }
 
@@ -786,7 +751,7 @@ export class QueryOptionsVisitor
     }
   }
 
-  visitParenExpression(ctx: ParenExpressionContext) {
+  visitParenExpression(ctx: ParenExpressionContext): SemanticNode {
     const expression = ctx.expression();
     return expression?.accept<SemanticNode>(this);
   }
@@ -813,16 +778,16 @@ export class QueryOptionsVisitor
   ): SemanticNode {
     const leftChild = ctx.getChild(0);
     const left = leftChild.accept<SemanticNode>(this);
-    if (ctx.childCount === 1) return left;
+    if (ctx.childCount < 3) return left;
 
-    const operator = ctx.getChild(1).text;
+    const operator = ctx.getChild(2).text;
 
     const node = createBinaryOperator(ctx, type, operator);
     this.semanticMap.set(ctx, node);
     node.left = left;
 
-    if (ctx.childCount > 1) {
-      const rightChild = ctx.getChild(2);
+    if (ctx.childCount > 3) {
+      const rightChild = ctx.getChild(4);
       const right = rightChild.accept<SemanticNode>(this);
       node.right = right;
     }
@@ -841,7 +806,7 @@ export class QueryOptionsVisitor
 
       node.rawValue = ctx.text;
     } else if (tokenIndex === ODataUriQueryParser.STRING) {
-      const node = new StringContantNode(
+      const node = new StringConstantNode(
         ctx.parent.ruleContext as ParserRuleContext,
         createPrimitiveType(PrimitiveType.String)
       );
@@ -867,5 +832,150 @@ export class QueryOptionsVisitor
         stop: ctx.start.stopIndex,
       },
     });
+  }
+}
+
+export class QueryOptionsVisitor
+  extends QueryOptionsVisitorBase
+  implements ODataUriQueryVisitor<SemanticNode>
+{
+  constructor(schema: ISchema, rootType: ISchemaType) {
+    super(schema, rootType);
+  }
+
+  visitQueryOptions(ctx: QueryOptionsContext): SemanticNode {
+    if (!ctx) return null;
+    const node = new QueryOptionsNode(ctx, this.rootType);
+    this.root = node;
+    this.semanticMap.set(ctx, node);
+    this.typeStack.push(this.rootType);
+    const option = ctx.queryOption();
+    if (option) {
+      this.visitQueryOption(option);
+    }
+
+    const optionsList = ctx.childCount > 1 && ctx.queryOptionsList();
+    if (optionsList) {
+      this.visitQueryOptionsList(optionsList);
+    }
+
+    return node;
+  }
+
+  visitQueryOption(ctx: QueryOptionContext): SemanticNode {
+    if (!ctx) return null;
+
+    const options = ["selectOption", "expandOption"];
+
+    options.forEach((option) => this.checkAndAddQueryOption(option, ctx));
+
+    return null;
+  }
+
+  visitQueryOptionsList(ctx: QueryOptionsListContext): SemanticNode {
+    if (ctx.childCount === 0) return;
+    const option = ctx.queryOption();
+    if (option) {
+      this.visitQueryOption(option);
+    }
+
+    const optionsList = ctx.childCount > 1 && ctx.queryOptionsList();
+    if (optionsList) {
+      this.visitQueryOptionsList(optionsList);
+    }
+
+    return null;
+  }
+
+  checkAndAddQueryOption(option: string, ctx: QueryOptionContext) {
+    // @ts-ignore
+    const optionCtx = ctx[option]() as ParserRuleContext;
+    if (optionCtx) {
+      // @ts-ignore
+      if (this.root[option]) {
+        const optName = option.split("Option")[0];
+        this.addError(`Duplicate query option $${optName}`, optionCtx);
+      }
+      // @ts-ignore
+      this.root[option] = optionCtx.accept(this);
+    }
+  }
+}
+
+export class CollectionQueryOptionsVisitor
+  extends QueryOptionsVisitorBase
+  implements ODataUriQueryVisitor<SemanticNode>
+{
+  constructor(schema: ISchema, rootType: ISchemaType) {
+    super(schema, rootType);
+  }
+
+  visitCollectionQueryOptions(
+    ctx: CollectionQueryOptionsContext
+  ): SemanticNode {
+    if (!ctx) return null;
+    const node = new QueryOptionsNode(ctx, this.rootType);
+    this.root = node;
+    this.semanticMap.set(ctx, node);
+    this.typeStack.push(this.rootType);
+    const option = ctx.collectionQueryOption();
+    if (option) {
+      this.visitCollectionQueryOption(option);
+    }
+
+    const optionsList = ctx.childCount > 1 && ctx.collectionQueryOptionsList();
+    if (optionsList) {
+      this.visitCollectionQueryOptionsList(optionsList);
+    }
+
+    return node;
+  }
+
+  visitCollectionQueryOption(ctx: CollectionQueryOptionContext): SemanticNode {
+    if (!ctx) return null;
+
+    const options = [
+      "filterOption",
+      "selectOption",
+      "expandOption",
+      "orderByOption",
+      "topOption",
+      "skipOption",
+    ];
+
+    options.forEach((option) => this.checkAndAddQueryOption(option, ctx));
+
+    return null;
+  }
+
+  visitCollectionQueryOptionsList(
+    ctx: CollectionQueryOptionsListContext
+  ): SemanticNode {
+    if (ctx.childCount === 0) return;
+    const option = ctx.collectionQueryOption();
+    if (option) {
+      this.visitCollectionQueryOption(option);
+    }
+
+    const optionsList = ctx.childCount > 1 && ctx.collectionQueryOptionsList();
+    if (optionsList) {
+      this.visitCollectionQueryOptionsList(optionsList);
+    }
+
+    return null;
+  }
+
+  checkAndAddQueryOption(option: string, ctx: CollectionQueryOptionContext) {
+    // @ts-ignore
+    const optionCtx = ctx[option]() as ParserRuleContext;
+    if (optionCtx) {
+      // @ts-ignore
+      if (this.root[option]) {
+        const optName = option.split("Option")[0];
+        this.addError(`Duplicate query option $${optName}`, optionCtx);
+      }
+      // @ts-ignore
+      this.root[option] = optionCtx.accept(this);
+    }
   }
 }

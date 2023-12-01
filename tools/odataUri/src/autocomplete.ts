@@ -23,6 +23,7 @@ export class AutoComplete {
   private core: CodeCompletionCore;
   private map: ISyntaxToSemanticMap;
   private schema: ISchema;
+  static emptyResult = { suggestions: [] as string[], match: false };
 
   constructor(
     parser: QueryParser,
@@ -45,15 +46,21 @@ export class AutoComplete {
     core.preferredRules = new Set([
       QueryParser.RULE_identifier,
       QueryParser.RULE_basicExpression,
-      QueryParser.RULE_orderByOption,
+      QueryParser.RULE_orderSpecList,
       QueryParser.RULE_selectFieldList,
       QueryParser.RULE_expandFieldList,
     ]);
   }
 
-  getSuggestions(pos: number): string[] {
+  getSuggestions(
+    pos: number,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const keywords: string[] = [];
-    const candidates = this.core.collectCandidates(pos);
+    const candidates = this.core.collectCandidates(
+      pos,
+      this.queryParser.context
+    );
 
     candidates.tokens.forEach((_, k) => {
       let name = this.queryParser.vocabulary.getDisplayName(k);
@@ -65,26 +72,35 @@ export class AutoComplete {
     });
 
     const identifiers: string[] = [];
+    var match = false;
     candidates.rules.forEach((rule, key) => {
       switch (key) {
         case QueryParser.RULE_identifier:
           identifiers.push(...this.identifierSuggestions(key, rule));
           break;
         case QueryParser.RULE_selectFieldList:
-          identifiers.push(...this.selectFieldSuggestions(key, rule));
+          var result = this.selectFieldSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
           break;
         case QueryParser.RULE_expandFieldList:
-          identifiers.push(...this.expandSuggestions(key, rule));
-        case QueryParser.RULE_basicExpression:
-          identifiers.push(...this.basicExpressionSuggestions(key, rule));
+          result = this.expandSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
           break;
-        case QueryParser.RULE_orderByOption:
-          identifiers.push(...this.orderBySuggestions(key, rule));
+        case QueryParser.RULE_basicExpression:
+          result = this.basicExpressionSuggestions(key, rule, lastSegment);
+          identifiers.push(...result.suggestions);
+          match = result.match;
+          break;
+        case QueryParser.RULE_orderSpecList:
+          identifiers.push(...this.orderSpecSuggestions(key, rule));
           break;
       }
     });
+
     const suggestions = [...keywords, ...identifiers];
-    return suggestions;
+    return { suggestions: suggestions, match: match };
   }
 
   private identifierSuggestions(
@@ -111,41 +127,48 @@ export class AutoComplete {
 
   private selectFieldSuggestions(
     ruleKey: number,
-    rule: CandidateRule
-  ): string[] {
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
-
-    if (!node) return [];
+    if (!node) return AutoComplete.emptyResult;
 
     if (node instanceof SelectNode) {
       const instanceType = node.schemaType;
       if (isPrimitiveType(instanceType)) {
-        return [];
+        return AutoComplete.emptyResult;
       }
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
       if (typeDef) {
-        const properties = getAllPropertiesNames(typeDef);
-        if (node.children.length) {
-          properties.push(",");
+        const properties = getAllProperties(typeDef)
+          .filter((prop) => prop.type.$Kind !== "NavigationProperty")
+          .map((prop) => prop.name);
+
+        if (properties.indexOf(lastSegment) > -1) {
+          return { suggestions: [","], match: true };
         }
 
-        return properties;
+        return { suggestions: properties, match: false };
       }
     }
 
-    return [];
+    return { suggestions: [], match: false };
   }
 
-  private expandSuggestions(ruleKey: number, rule: CandidateRule): string[] {
+  private expandSuggestions(
+    ruleKey: number,
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
 
-    if (!node) return [];
+    if (!node) return AutoComplete.emptyResult;
 
     if (node instanceof ExpandNode) {
       const instanceType = node.schemaType;
       if (isPrimitiveType(instanceType)) {
-        return [];
+        return AutoComplete.emptyResult;
       }
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
@@ -153,18 +176,18 @@ export class AutoComplete {
         const properties = getAllProperties(typeDef)
           .filter((prop) => prop.type.$Kind === "NavigationProperty")
           .map((prop) => prop.name);
-        if (node.children.length) {
-          properties.push(",");
+        if (properties.indexOf(lastSegment) > -1) {
+          return { suggestions: [","], match: true };
         }
 
-        return properties;
+        return { suggestions: properties, match: false };
       }
     }
 
-    return [];
+    return AutoComplete.emptyResult;
   }
 
-  private orderBySuggestions(ruleKey: number, rule: CandidateRule): string[] {
+  private orderSpecSuggestions(ruleKey: number, rule: CandidateRule): string[] {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
     if (!node) return [];
 
@@ -176,7 +199,9 @@ export class AutoComplete {
 
       const typeDef = findStructuredType(instanceType.$Type, this.schema);
       if (typeDef) {
-        const properties = getAllPropertiesNames(typeDef);
+        const properties = getAllProperties(typeDef)
+          .filter((property) => !property.type.$Collection)
+          .map((property) => property.name);
         // TODO: add 'prop desc' manually, the completion core will not visit the token DESC since the upper-level rule orderByOption is already visited
         return properties.reduce<string[]>(
           (list, item) => [...list, item, `${item} desc`],
@@ -195,23 +220,26 @@ export class AutoComplete {
 
   private basicExpressionSuggestions(
     ruleKey: number,
-    rule: CandidateRule
-  ): string[] {
+    rule: CandidateRule,
+    lastSegment: string
+  ): { suggestions: string[]; match: boolean } {
     const node = this.map.getByRuleAndToken(ruleKey, rule.startTokenIndex);
-    if (!node) return [];
+    if (!node) AutoComplete.emptyResult;
     if (node instanceof BasicExpressionNode) {
       const instanceType = node.parentType;
-      const candidates = ["true", "false"];
-      if (isPrimitiveType(instanceType)) {
-        return candidates;
+      var candidates = ["true", "false"];
+      if (!isPrimitiveType(instanceType)) {
+        const typeDef = findStructuredType(instanceType.$Type, this.schema);
+        if (typeDef) {
+          candidates = getAllPropertiesNames(typeDef).concat(candidates);
+        }
       }
-
-      const typeDef = findStructuredType(instanceType.$Type, this.schema);
-      if (typeDef) {
-        return getAllPropertiesNames(typeDef).concat(candidates);
-      }
+      return {
+        suggestions: candidates,
+        match: candidates.indexOf(lastSegment) > -1,
+      };
     }
 
-    return [];
+    return AutoComplete.emptyResult;
   }
 }
