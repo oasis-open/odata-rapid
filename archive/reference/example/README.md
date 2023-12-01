@@ -1,1 +1,0 @@
-#  Rapid Pro Example application

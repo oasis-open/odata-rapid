@@ -1,5 +1,0 @@
-type Person {
-    UserName: String! @RapidID
-    FirstName: String @RapidID
-    LastName: String!
-}

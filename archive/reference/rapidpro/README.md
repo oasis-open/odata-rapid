@@ -1,2 +1,0 @@
-## Rapid Profile Reference Implementation
-
